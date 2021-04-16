@@ -1,0 +1,28 @@
+name = "HetaSimulator"
+uuid = "630b40c4-2f38-41ff-bcb3-b2c7232fed0d"
+authors = ["Ivan Borisov", "Evgeny Metelkin"]
+version = "0.3.0"
+
+[deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+DataStructures = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
+DiffEqBase = "2b5f629d-d688-5b77-993f-72d75c75574e"
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+LabelledArrays = "2ee39098-c373-598a-b85f-a56591580800"
+NLopt = "76087f3c-5699-56af-9a33-bf431cd00edd"
+NodeJS = "2bd173c7-0d6d-553b-b6af-13a54713934c"
+OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"
+RecipesBase = "3cdcf5f2-1ef4-517c-9805-6587b60abb01"
+Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
+StructArrays = "09ab397b-f2b6-538f-b94a-2f83cf4a842a"
+Sundials = "c3572dad-4567-51f8-b174-8c6c989267f4"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
