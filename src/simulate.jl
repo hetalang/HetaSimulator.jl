@@ -132,7 +132,8 @@ function sim(
   conditions::Union{AbstractVector{Symbol}, Nothing} = nothing,
   kwargs... # other arguments to sim(::Vector{Pair})
 ) 
-  @assert length(platform.conditions) != 0 "Platform should contain at least one condition"
+  @assert length(platform.conditions) != 0 "Platform should contain at least one condition."
+
   if conditions === nothing
     condition_pairs = [platform.conditions...]
   else
