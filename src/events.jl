@@ -1,15 +1,16 @@
 function add_event(evt::TimeEvent, cons; evt_save::Tuple{Bool, Bool}=(true,true))
-  tstops = evt.condition_func(cons)
-  cond_func(u, t, integrator) = t in tstops
+  #tstops = evt.condition_func(cons)
+  #cond_func(u, t, integrator) = t in tstops
 
   function init_time_event(cb,u,t,integrator)
+      tstops = evt.condition_func(cons,times=integrator.sol.prob.tspan)
       tf = integrator.sol.prob.tspan[2]
       [add_tstop!(integrator, tstop) for tstop in tstops if tstop <= tf]
       cb.condition(u,t,integrator) ? cb.affect!(integrator) : nothing
   end
 
   DiscreteCallback(
-        cond_func,
+        (u,t,integrator) -> t in integrator.opts.tstops,
         (integrator) -> evt_func_wrapper(integrator, evt.affect_func, evt_save, evt.name),
         initialize = init_time_event,
         save_positions=(false,false)

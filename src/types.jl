@@ -154,12 +154,14 @@ struct DEvent{F1,F2} <: AbstractEvent
   condition_func::F1
   affect_func::F2
   name::Symbol
+  atStart::Bool
 end
 
 struct CEvent{F1,F2} <: AbstractEvent
   condition_func::F1
   affect_func::F2
   name::Symbol
+  atStart::Bool
 end
 
 ################################## Fitting ###########################################

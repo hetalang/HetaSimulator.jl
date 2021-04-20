@@ -108,7 +108,7 @@ end
 function read_conditions_csv(filepath::String; kwargs...)
   csv = CSV.File(
     filepath,
-    types = Dict(:id => Symbol, :tspan => Float64);
+    types = Dict(:id => Symbol, :model=>Symbol, :tspan => Float64);
     kwargs...
   )
   return csv
