@@ -3,7 +3,7 @@ function add_event(evt::TimeEvent, cons; evt_save::Tuple{Bool, Bool}=(true,true)
   #cond_func(u, t, integrator) = t in tstops
 
   function init_time_event(cb,u,t,integrator)
-      tstops = evt.condition_func(cons,times=integrator.sol.prob.tspan)
+      tstops = evt.condition_func(cons,integrator.sol.prob.tspan)
       tf = integrator.sol.prob.tspan[2]
       [add_tstop!(integrator, tstop) for tstop in tstops if tstop <= tf]
       cb.condition(u,t,integrator) ? cb.affect!(integrator) : nothing
