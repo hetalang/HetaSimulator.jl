@@ -10,7 +10,7 @@ function add_event(evt::TimeEvent, cons; evt_save::Tuple{Bool, Bool}=(true,true)
   end
 
   DiscreteCallback(
-        (u,t,integrator) -> t in integrator.opts.tstops,
+        (u,t,integrator) -> t in integrator.opts.tstops.valtree,
         (integrator) -> evt_func_wrapper(integrator, evt.affect_func, evt_save, evt.name),
         initialize = init_time_event,
         save_positions=(false,false)
