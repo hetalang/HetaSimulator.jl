@@ -23,7 +23,7 @@ function mc(
   r=RemoteChannel(()->Channel{Vector{time_type}}(1)) # to pass t from workers
 
   function prob_func(prob,i,repeat)
-    verbose && @info "Processing iteration $i on worker $(myid())"
+    verbose && println("Processing iteration $i")
 
     cons_i = generate_cons(params,i)
     merged_cons_i = update(prob.p.constants, cons_i)

@@ -38,7 +38,7 @@ end
 
 function evt_func_wrapper(integrator, evt_func, evt_save, evt_name)
   affect_func! = integrator.opts.callback.discrete_callbacks[1].affect!
-  affect_func!(integrator) #produces wrong results in Sundials
+ # affect_func!(integrator) #produces wrong results in Sundials
 
   first(evt_save) && save_position(integrator, :ode_) #affect_func!(integrator, true)
   evt_func(integrator)
