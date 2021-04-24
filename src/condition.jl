@@ -113,3 +113,13 @@ function read_conditions_csv(filepath::String; kwargs...)
   )
   return csv
 end
+#=
+function read_conditions_xlsx(filepath::String, sheet=1; kwargs...)
+  df = DataFrame(XLSX.readtable("myfile.xlsx", sheet)...)
+
+end
+
+function read_conditions(filepath::String, sheet=1; kwargs...)
+  extension = splitext("D:/.sp/sdd/./julia.jl")[end]
+end
+=#

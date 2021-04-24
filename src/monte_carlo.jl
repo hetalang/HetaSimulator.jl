@@ -5,21 +5,27 @@ function mc(
   num_iter::Int;
   saveat_measurements::Bool = false, # do we need it here ?
   evt_save::Tuple{Bool,Bool}=(true,true),
+  verbose=true,
   time_type=Float64,
   title=nothing,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
+  parallel_type=EnsembleSerial(),
   kwargs...
 ) where P<:Pair
   !has_saveat(cond) && error("Add saveat values to Condition in order to run Monte-Carlo simulations.")
 
   prob0 = build_ode_problem(cond, Pair{Symbol,Float64}[], saveat_measurements; time_type = time_type)
   init_func = cond.model.init_func
-  t = time_type[]
+  #t = time_type[]
+
+  r=RemoteChannel(()->Channel{Vector{time_type}}(1)) # to pass t from workers
 
   function prob_func(prob,i,repeat)
-    cons_i = generate_cons(params)
+    verbose && @info "Processing iteration $i on worker $(myid())"
+
+    cons_i = generate_cons(params,i)
     merged_cons_i = update(prob.p.constants, cons_i)
 
     u0, p0 = init_func(merged_cons_i)
@@ -30,7 +36,7 @@ function mc(
   end
 
   function output_func(sol, i)
-    i==1 && append!(t, sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values.t)
+    i==1 && put!(r,sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values.t) # clumsy
     sim = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values.vals
     (sim, false)
   end
@@ -38,10 +44,10 @@ function mc(
   prob = EnsembleProblem(prob0;
     prob_func = prob_func,
     output_func = output_func,
-  # reduction = reduction
+    #reduction = reduction_func
   )
 
-  solution = solve(prob, alg;
+  solution = solve(prob, alg, parallel_type;
     trajectories = num_iter,
     reltol = reltol,
     abstol = abstol,
@@ -51,7 +57,28 @@ function mc(
     kwargs...
   )
 
+  t = take!(r)
+
   return MCResults(title,t,solution.u,cond)
+end
+
+function mc(
+  cond::Cond,
+  params::DataFrame;
+  num_iter::Int= size(params)[1],
+  kwargs...
+) 
+  cons = keys(cond.model.constants)
+  params_pairs = Pair[]
+  
+
+  for pstr in names(params)
+    psym = Symbol(pstr)
+    @assert (psym in cons) "$psym is not found in models constants."   
+    push!(params_pairs, psym=>params[!,psym])
+  end
+
+  return mc(cond,params_pairs,num_iter;kwargs...)
 end
 
 function mc(
@@ -134,6 +161,23 @@ function DiffEqBase.EnsembleAnalysis.EnsembleSummary(sim::MCResults,
 end
 
 
-generate_cons(v::Vector{P})  where P<:Pair = [k=>generate_cons(v) for (k,v) in v]
-generate_cons(v::Distribution) = rand(v)
-generate_cons(v::Real) = v
+generate_cons(v::Vector{P},i)  where P<:Pair = [k=>generate_cons(v,i) for (k,v) in v]
+generate_cons(v::Distribution,i) = rand(v)
+generate_cons(v::Real,i) = v
+generate_cons(v::Vector{R},i) where R<:Float64 = v[i]
+
+read_mcvecs(filepath::String) = DataFrame(CSV.File(filepath))
+#=
+function save_as_df(mcMCSimulation; groupby=:observations)
+  obs = observables(mc[1])
+  lobs = length(obs)
+
+  for ob in obs
+    df = DataFrame()
+    df[!,:t] = mc[1].t
+    [df[!,string(i)] = sim[ob,:] for (i,sim) in enumerate(mc)]
+    CSV.write("$ob.csv", df)
+  end
+  return nothing 
+end
+=#

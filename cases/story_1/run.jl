@@ -149,3 +149,13 @@ timeseries_steps_meancor(mcsim1) # Computes the correlation matrix and means at 
 # Ensemble Summary
 ens = EnsembleSummary(mcsim1;quantiles=[0.05,0.95])
 plot(ens)
+
+################################## Monte-Carlo Parallel #####################
+
+using Distributed
+addprocs(2)
+@everywhere using HetaSimulator
+
+mccond1 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.01], saveat = [50., 80., 150.]);
+mcsim0 = mc(mccond1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 20)
+mcsim1 = mc(mccond1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 40, parallel_type=EnsembleDistributed())

@@ -16,6 +16,7 @@ module HetaSimulator
   # utils
   @reexport using DataFrames
   @reexport using Distributions
+  using Distributed
   # measurements 
   using CSV
   #plots
@@ -43,9 +44,12 @@ module HetaSimulator
   export read_conditions_csv, add_conditions!
   export read_measurements_csv, add_measurements!
   export constants, observables, conditions, events, models # parameters, variables, dynamic, static
+  export CVODE_BDF, CVODE_Adams
   export optim, obj
   export sim, mc
   export fit, loss
   export HetaSimulatorDir
   export update
+  export read_mcvecs
+  export save_results
 end

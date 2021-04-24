@@ -159,6 +159,32 @@ function DataFrames.DataFrame(sol::SimResults)
   for (i,v) in enumerate(labels)
       df[!, v] = sol[i,:]
   end
-  df[!,:scope]=sol.scope
+  if hasproperty(sol,:scope) && !isempty(sol.scope)
+     df[!,:scope]=sol.scope
+  end
   return df
+end
+
+
+############################ Save Results ########################################
+
+function save_results(filepath::String, sim::SimResults) 
+  df = DataFrame(sim)
+  CSV.write(filepath, df)
+end
+
+function save_results(path::String, mcsim::MCResults; groupby::Symbol=:observables) 
+  if groupby == :simulations
+    for i in 1:length(mcsim)
+      save_results("$path/$i.csv", mcsim[i])
+    end
+  elseif groupby == :observables
+    obs = observables(mcsim[1])
+    lobs = length(obs)
+    for ob in obs
+      df = DataFrame(t = mcsim[1].t)
+      [df[!,string(i)] = mcsim[i][ob,:] for i in 1:length(mcsim)]
+      CSV.write("$path/$ob.csv", df)
+    end
+  end
 end

@@ -132,7 +132,7 @@ struct MCResults{T,V,C} <: AbstractResults
 end
 
 function Base.show(io::IO, m::MIME"text/plain", MC::MCResults)
-  println(io, "Monte-Carlo results for $(length(MC.vals[1])) iterations. You can plot results with `plot(sol::MCResults)`")
+  println(io, "Monte-Carlo results for $(length(MC)) iterations. You can plot results with `plot(sol::MCResults)`")
 end
 
 function Base.show(io::IO, m::MIME"text/plain", VMC::Vector{MC}) where MC<:MCResults
