@@ -18,9 +18,9 @@ function mc(
 
   prob0 = build_ode_problem(cond, Pair{Symbol,Float64}[], saveat_measurements; time_type = time_type)
   init_func = cond.model.init_func
-  #t = time_type[]
+  t = time_type[]
 
-  r=RemoteChannel(()->Channel{Vector{time_type}}(1)) # to pass t from workers
+  #r=RemoteChannel(()->Channel{Vector{time_type}}(1)) # to pass t from workers
 
   function prob_func(prob,i,repeat)
     verbose && println("Processing iteration $i")
@@ -36,8 +36,8 @@ function mc(
   end
 
   function output_func(sol, i)
-    i==1 && put!(r,sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values.t) # clumsy
-    sim = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values.vals
+    i==num_iter && println(sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values.t) # tofix
+    sim = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
     (sim, false)
   end
 
@@ -57,7 +57,7 @@ function mc(
     kwargs...
   )
 
-  t = take!(r)
+  #t = take!(r)
 
   return MCResults(title,t,solution.u,cond)
 end
