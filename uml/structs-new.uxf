@@ -32,8 +32,8 @@ observables::Vector{Symbol}
 --
 saving::Function
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>681</x><y>59</y><w>190</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-
-</panel_attributes><additional_attributes>10;20;170;20;170;60</additional_attributes></element><element><id>Relation</id><coordinates><x>901</x><y>199</y><w>120</w><h>170</h></coordinates><panel_attributes>lt=&lt;.
-</panel_attributes><additional_attributes>80;150;10;150;10;20;100;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>701</x><y>339</y><w>280</w><h>20</h></coordinates><panel_attributes>AbstractMeasurementPoint</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>725</x><y>489</y><w>210</w><h>120</h></coordinates><panel_attributes>NormalMeasurementPoint{M,SD}
+</panel_attributes><additional_attributes>10;20;170;20;170;60</additional_attributes></element><element><id>Relation</id><coordinates><x>901</x><y>199</y><w>160</w><h>180</h></coordinates><panel_attributes>lt=&lt;.
+</panel_attributes><additional_attributes>140;160;10;150;10;20;100;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>761</x><y>349</y><w>280</w><h>20</h></coordinates><panel_attributes>AbstractMeasurementPoint</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>725</x><y>489</y><w>210</w><h>120</h></coordinates><panel_attributes>NormalMeasurementPoint{M,SD}
 --
 t::Float64
 --
@@ -43,8 +43,8 @@ scope::Symbol
 --
 μ::M
 --
-σ::SD</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>841</x><y>349</y><w>120</w><h>170</h></coordinates><panel_attributes>lt=&lt;.
-</panel_attributes><additional_attributes>100;150;10;60;100;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>299</y><w>210</w><h>30</h></coordinates><panel_attributes>AbstractEvent</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>51</x><y>369</y><w>160</w><h>100</h></coordinates><panel_attributes>TimeEvent
+σ::SD</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>841</x><y>359</y><w>180</w><h>160</h></coordinates><panel_attributes>lt=&lt;.
+</panel_attributes><additional_attributes>100;140;10;50;160;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>299</y><w>210</w><h>30</h></coordinates><panel_attributes>AbstractEvent</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>51</x><y>369</y><w>160</w><h>100</h></coordinates><panel_attributes>TimeEvent
 --
 - tstops_func :: Function
 - affect_func :: Function
@@ -60,7 +60,7 @@ scope::Symbol
 --
 - constants :: Float64[]
 - static :: Float64[]
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>11</x><y>319</y><w>60</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>40;60;10;60;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>11</x><y>319</y><w>60</w><h>200</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>40;180;10;180;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>331</x><y>49</y><w>170</w><h>120</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>150;10;10;10;10;100</additional_attributes></element><element><id>UMLClass</id><coordinates><x>251</x><y>379</y><w>450</w><h>180</h></coordinates><panel_attributes>Model
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>11</x><y>319</y><w>60</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>40;60;10;60;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>11</x><y>319</y><w>60</w><h>200</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>40;180;10;180;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>331</x><y>49</y><w>170</w><h>120</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>150;10;10;10;10;100</additional_attributes></element><element><id>UMLClass</id><coordinates><x>261</x><y>359</y><w>450</w><h>180</h></coordinates><panel_attributes>Model (Tuple)
 --
 - init_func :: Function (const :: Float64[]) -&gt; Tuple{Float64[],Float64[]}
 - ode_func :: Function(du :: Float64[], u :: Float64[], p :: Params, t :: Float64)
