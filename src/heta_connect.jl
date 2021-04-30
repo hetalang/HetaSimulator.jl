@@ -139,7 +139,7 @@ function load_jlplatform(
   # tmp fix to output model without task
   # (models, tasks,) = Base.invokelatest(Main.Platform)
 
-  platform = Base.invokelatest(QPlatform, Main.__platform__)
+  platform = Base.invokelatest(QPlatform, Main.__platform__...)
 
   return platform
 end
