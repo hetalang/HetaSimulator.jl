@@ -2,6 +2,7 @@ using HetaSimulator, Plots
 using DataFrames, CSV
 
 ################################## Model Upload ###########################################
+# heta_update_dev()
 
 platform = load_platform("$HetaSimulatorDir/cases/story_1", rm_out=false);
 model = platform.models[:nameless]

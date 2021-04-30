@@ -18,15 +18,6 @@ function add_event(evt::TimeEvent, cons; evt_save::Tuple{Bool, Bool}=(true,true)
   )
 end
 
-function add_event(evt::DEvent, cons; evt_save::Tuple{Bool, Bool}=(true,true))
-  ContinuousCallback(
-        evt.condition_func,
-        (integrator) -> evt_func_wrapper(integrator, evt.affect_func, evt_save, evt.name),
-        (integrator) -> nothing,
-        save_positions=(false,false)
-  )
-end
-
 function add_event(evt::CEvent, cons; evt_save::Tuple{Bool, Bool}=(true,true))
   ContinuousCallback(
       evt.condition_func,
