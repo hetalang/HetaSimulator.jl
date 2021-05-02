@@ -166,10 +166,11 @@ end
 
 ################################## Fitting ###########################################
 
-struct FitResults{L<:Real}
+struct FitResults{L<:Real, I}
   obj::L
   optim::Vector{Pair{Symbol,Float64}}
   status::Symbol
+  numevals::I
 end
 
 function Base.show(io::IO, m::MIME"text/plain", F::FitResults)
@@ -177,6 +178,7 @@ function Base.show(io::IO, m::MIME"text/plain", F::FitResults)
   println(io, "  status: $(F.status)")
   println(io, "  optim: $(F.optim). Access optim estimate with `optim(f::FitResults)`")
   println(io, "  objective function value: $(F.obj). Access objective value with `obj(f::FitResults)`")
+  println(io, "  number of objective function evaluations: $(F.numevals)")
 end
 
 optim(f::FitResults) = f.optim

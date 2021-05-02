@@ -103,23 +103,46 @@ function _add_condition!(platform::QPlatform, row::Any) # maybe not any
   push!(platform.conditions, _id => condition)
 end
 
-# helper to read from csv
+# helper to read from csv and xlsx
 
 function read_conditions_csv(filepath::String; kwargs...)
-  csv = CSV.File(
+  df = DataFrame(CSV.File(
     filepath,
     types = Dict(:id => Symbol, :model=>Symbol, :tspan => Float64);
-    kwargs...
+    kwargs...)
   )
-  return csv
+  assert_conditions(df)
+  
+  return df
 end
-#=
-function read_conditions_xlsx(filepath::String, sheet=1; kwargs...)
-  df = DataFrame(XLSX.readtable("myfile.xlsx", sheet)...)
 
+function read_conditions_xlsx(filepath::String, sheet=1; kwargs...)
+  df = DataFrame(XLSX.readtable(filepath, sheet,infer_eltypes=true)...)
+  assert_conditions(df)
+
+  df[!,:id] .= Symbol.(df[!,:id])
+  "tspan" in names(df) && (df[!,:tspan] .= float64.(df[!,:tspan]))
+  "model" in names(df) && (df[!,:model] .= Symbol.(df[!,:model]))
+  return df
 end
 
 function read_conditions(filepath::String, sheet=1; kwargs...)
-  extension = splitext("D:/.sp/sdd/./julia.jl")[end]
+  ext = splitext(filepath)[end]
+
+  if ext == ".csv"
+    df = read_conditions_csv(filepath; kwargs...)
+  elseif ext == ".xlsx"
+    df = read_conditions_xlsx(filepath, sheet)
+  else  
+    error("Extension $ext is not supported.")
+  end
+  return df
 end
-=#
+
+function assert_conditions(df)
+  names_df = names(df)
+  for f in ["id"]
+    @assert f ∈ names_df "Required column name $f is not found in measurements table."
+  end
+  return nothing
+end

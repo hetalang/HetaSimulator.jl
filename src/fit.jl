@@ -79,7 +79,7 @@ function fit(
   # to create pairs from Float64
   minx_pairs = [key=>value for (key, value) in zip(first.(param), minx)]
   
-  return FitResults(minf, minx_pairs, ret)
+  return FitResults(minf, minx_pairs, ret, opt.numevals)
 end
 
 ### fit many conditions

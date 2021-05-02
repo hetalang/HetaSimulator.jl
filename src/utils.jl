@@ -65,3 +65,6 @@ function update(d1::Dict, d2::Dict)
 
   return d
 end
+
+float64(n::Number) = Float64(n)
+float64(m::Missing) = m

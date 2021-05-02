@@ -81,14 +81,50 @@ function _add_measurement!(condition::Cond, row::Any) # maybe not any
   push!(condition.measurements, point)
 end
 
-# helper to read from csv
+# helper to read from csv and xlsx
 
 function read_measurements_csv(filepath::String; kwargs...)
-  csv = CSV.File(
+  df = DataFrame(CSV.File(
     filepath;
     typemap = Dict(Int64=>Float64, Int32=>Float64),
     types = Dict(:t=>Float64, :measurement=>Float64, :scope=>Symbol, :condition=>Symbol, :distribution=>Symbol),
-    kwargs...
+    kwargs...)
   )
-  return csv
+  assert_measurements(df)
+  
+  return df
+end
+
+function read_measurements_xlsx(filepath::String, sheet=1; kwargs...)
+  df = DataFrame(XLSX.readtable(filepath, sheet,infer_eltypes=true)...)
+  assert_measurements(df)
+
+  df[!,:t] .= Float64.(df[!,:t])
+  df[!,:measurement] .= Float64.(df[!,:measurement])
+  df[!,:scope] .= Symbol.(df[!,:scope])
+  df[!,:condition] .= Symbol.(df[!,:condition])
+  df[!,:distribution] .= Symbol.(df[!,:distribution])
+
+  return df
+end
+
+function read_measurements(filepath::String, sheet=1; kwargs...)
+  ext = splitext(filepath)[end]
+
+  if ext == ".csv"
+    df = read_measurements_csv(filepath; kwargs...)
+  elseif ext == ".xlsx"
+    df = read_measurements_xlsx(filepath, sheet)
+  else  
+    error("Extension $ext is not supported.")
+  end
+  return df
+end
+
+function assert_measurements(df)
+  names_df = names(df)
+  for f in ["t", "measurement", "scope", "condition", "distribution"]
+    @assert f ∈ names_df "Required column name $f is not found in measurements table."
+  end
+  return nothing
 end

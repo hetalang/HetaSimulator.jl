@@ -35,7 +35,8 @@ sim([cond1, cond2, cond3]) |> plot
 sim([:x => cond1, :y=>cond2, :z=>cond3]) |> plot
 
 ### load measurements from CSV
-measurements_csv = read_measurements_csv("./cases/story_1/measurements.csv")
+measurements_csv = read_measurements("./cases/story_1/measurements.csv")
+measurements_xlsx = read_measurements("./cases/story_1/measurements.xlsx")
 cond4 = Cond(model; constants = [:k2=>0.001, :k3=>0.04], saveat = [0.0, 50., 150., 250.]);
 add_measurements!(cond4, measurements_csv; subset = Dict(:condition => :dataone)) # from CSV
 
@@ -68,7 +69,8 @@ sim0 |> plot
 ################################## "high level" i.e. using Platform  #####################
 
 ### load conditions from csv
-conditions_csv = read_conditions_csv("./cases/story_1/conditions.csv")
+conditions_csv = read_conditions("./cases/story_1/conditions.csv")
+conditions_xlsx = read_conditions("./cases/story_1/conditions.xlsx")
 add_conditions!(platform, conditions_csv)
 
 ### sim
@@ -79,7 +81,7 @@ sim_all |> plot
 
 ### Measurements
 # load from csv to model
-measurements = read_measurements_csv("./cases/story_1/measurements.csv");
+measurements = read_measurements("./cases/story_1/measurements.csv");
 add_measurements!(platform, measurements)
 
 ### Fitting
@@ -106,7 +108,7 @@ mcsim2 = mc([:mc1=>mccond1,:mc2=>mccond2,:mc3=>mccond3], [:k1=>0.01, :k2=>Normal
 plot(mcsim2)
 
 # QPlatform MC Simulation
-conditions_csv = read_conditions_csv("$HetaSimulatorDir/cases/story_1/conditions.csv")
+conditions_csv = read_conditions("$HetaSimulatorDir/cases/story_1/conditions.csv")
 add_conditions!(platform, conditions_csv)
 
 mcsim = mc(platform, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000; conditions=[:dataone, :withdata2])
