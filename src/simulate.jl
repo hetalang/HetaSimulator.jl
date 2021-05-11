@@ -203,15 +203,23 @@ function build_ode_problem(
     Symbol[], 
     condition
     )
+  scb = SavingEventWrapper(condition.saving, sim; saveat = _saveat)
 
   # events
+  #= Ivan's part
   cbs = []
-  push!(cbs, SavingEventWrapper(condition.saving, sim; saveat = _saveat))
-  !isnothing(termination) && push!(cbs, DiscreteCallback(termination, terminate!; save_positions=(false,false)))
-
-  active_events_names = update(events(model), events(condition)) # evts_dict
-  active_events = [push!(cbs, add_event(evt, _constants; evt_save = evt_save)) for evt in model.events if active_events_names[evt.name]]
-  evts = CallbackSet(cbs...)
+    push!(cbs, SavingEventWrapper(condition.saving, sim; saveat = _saveat))
+    !isnothing(termination) && push!(cbs, DiscreteCallback(termination, terminate!; save_positions=(false,false)))
+  =#
+  if isempty(model.events)
+    evts = CallbackSet(scb)
+  else
+    # merging active events
+    active_events_names = update(events(model), events(condition)) # evts_dict
+    # XXX: currently all StopEvents are skipped
+    active_events = [add_event(evt, _constants; evt_save = evt_save) for evt in model.events if (active_events_names[evt.name] && typeof(evt) != StopEvent)]
+    evts = CallbackSet(scb, active_events...)
+  end
 
   prob = ODEProblem(
     _ode, # ODE function

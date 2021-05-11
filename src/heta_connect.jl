@@ -24,7 +24,7 @@ heta_update_dev(branch::String = "master") = run(`$NPM_PATH i https://github.com
       skip_export::Bool = false,
       log_mode::String = "error",
       debug::Bool = false,
-      ss_only::Bool = false,
+      julia_only::Bool = false,
       dist_dir::String = "dist",
       meta_dir::String = "meta",
       source::String = "index.heta",
@@ -39,7 +39,7 @@ function heta_build(
   skip_export::Bool = false,
   log_mode::String = "error",
   debug::Bool = false,
-  ss_only::Bool = false,
+  julia_only::Bool = false,
   dist_dir::String = "dist",
   meta_dir::String = "meta",
   source::String = "index.heta",
@@ -63,7 +63,7 @@ function heta_build(
   skip_export && push!(options_array, "--skip-export")
   log_mode != "error" && push!(options_array, "--log-mode", log_mode)
   debug && push!(options_array, "--debug")
-  ss_only && push!(options_array, "--ss-only")
+  julia_only && push!(options_array, "--julia-only")
   dist_dir != "dist" && push!(options_array, "--dist-dir", dist_dir)
   meta_dir != "meta" && push!(options_array, "--meta-dir", meta_dir)
   source != "index.heta" && push!(options_array, "--source", source)
@@ -87,7 +87,7 @@ end
     load_platform(  
       heta_index::AbstractString;
       rm_out::Bool = true,
-      ss_only::Bool = true, 
+      julia_only::Bool = true, 
       dist_dir::String = ".",
       source::String = "index.heta",
       type::String = "heta",
@@ -99,14 +99,14 @@ Converts heta model to Julia and outputs model struct and task draft
 function load_platform(
   heta_index::AbstractString;
   rm_out::Bool = true,
-  ss_only::Bool = true, 
+  julia_only::Bool = true, 
   dist_dir::String = ".",
   source::String = "index.heta",
   type::String = "heta",
   kwargs...
 )
   # convert heta model to julia 
-  build_exitcode = heta_build(heta_index; ss_only, dist_dir, source, type, kwargs...)
+  build_exitcode = heta_build(heta_index; julia_only, dist_dir, source, type, kwargs...)
     
   # check the exitcode (0 - success, 1 - failure) 
   build_exitcode == 1 && throw("Compilation errors. Likely there is an error in the code of the model. See logs")
@@ -137,13 +137,14 @@ function load_jlplatform(
   rm_out && rm(dirname("$model_jl"); force=true, recursive=true)
   
   # tmp fix to output model without task
-  (models, tasks,) = Base.invokelatest(Main.Platform)
-  model_pairs = pairs(models)
+  # (models, tasks,) = Base.invokelatest(Main.Platform)
 
-  return QPlatform(Dict{Symbol,QModel}(model_pairs), Dict{Symbol,Cond}())
+  platform = Base.invokelatest(QPlatform, Main.__platform__...)
+
+  return platform
 end
 
-# tmp solution to add model only 
+# tmp solution to add model only
 function load_jlmodel(model_jl::AbstractString; rm_out::Bool = false)
   platform = load_jlplatform(model_jl; rm_out = rm_out)
   

@@ -24,7 +24,7 @@ struct QModel{IF,O,EV,SF,C} <: AbstractModel
   events::EV # Should it be inside of prob or not?
   saving_generator::SF
   observables::Vector{Symbol}
-  constants::C # LArray{Float64,1,Array{Float64,1},C}
+  constants::C # LArray{Float64,1,Array{Float64,1},(:a, :b)}
   events_on::Vector{Pair{Symbol,Bool}}
 end
 
@@ -150,16 +150,15 @@ struct TimeEvent{F1,F2} <: AbstractEvent
   atStart::Bool
 end
 
-struct DEvent{F1,F2} <: AbstractEvent
+struct CEvent{F1,F2} <: AbstractEvent
   condition_func::F1
   affect_func::F2
   name::Symbol
   atStart::Bool
 end
 
-struct CEvent{F1,F2} <: AbstractEvent
+struct StopEvent{F1} <: AbstractEvent
   condition_func::F1
-  affect_func::F2
   name::Symbol
   atStart::Bool
 end

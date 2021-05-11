@@ -32,16 +32,16 @@ module HetaSimulator
   include("measurements.jl")
   include("condition.jl")
   include("simulate.jl")
-  include("ode_model.jl")
   include("saving.jl")
   include("solution_interface.jl")
   include("loss.jl")
   include("fit.jl")
   include("monte_carlo.jl")
+  include("import_platform.jl")
 
   export heta_update, heta_update_dev, heta_build, load_platform, load_jlplatform, load_jlmodel
-  export QPlatform, Model, Cond, Params
-  export TimeEvent, CEvent, DEvent
+  export QPlatform, QModel, Cond, Params
+  export TimeEvent, CEvent, StopEvent
   export read_conditions, add_conditions!
   export read_measurements, add_measurements!
   export constants, observables, conditions, events, models # parameters, variables, dynamic, static
