@@ -209,7 +209,8 @@ function build_ode_problem(
   else
     # merging active events
     active_events_names = update(events(model), events(condition)) # evts_dict
-    active_events = [add_event(evt, _constants; evt_save = evt_save) for evt in model.events if active_events_names[evt.name]]
+    # XXX: currently all StopEvents are skipped
+    active_events = [add_event(evt, _constants; evt_save = evt_save) for evt in model.events if (active_events_names[evt.name] && typeof(evt) != StopEvent)]
     evts = CallbackSet(scb, active_events...)
   end
 

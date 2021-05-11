@@ -18,3 +18,15 @@ r2 := k2 * b * c - k3 * d;
 k1 @Const = 1e-3;
 k2 @Const = 1e-4;
 k3 @const = 2.2e-2;
+
+// test
+sw1 @TimeSwitcher {start: 50};
+a [sw1]= a + 1;
+
+//sw2 @TimeSwitcher {start: 100};
+//b [sw2]= 0;
+
+//sw3 @DSwitcher {trigger: a <= 9};
+//a [sw3]= a + 2;
+
+ss1 @StopSwitcher {trigger: t > 10};

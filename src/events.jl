@@ -27,6 +27,10 @@ function add_event(evt::CEvent, cons; evt_save::Tuple{Bool, Bool}=(true,true))
   )
 end
 
+function add_event(evt::StopEvent, cons; evt_save::Tuple{Bool, Bool}=(true,true))
+  nothing
+end
+
 function evt_func_wrapper(integrator, evt_func, evt_save, evt_name)
   affect_func! = integrator.opts.callback.discrete_callbacks[1].affect!
  # affect_func!(integrator) #produces wrong results in Sundials

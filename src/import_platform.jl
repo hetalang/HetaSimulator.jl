@@ -31,6 +31,7 @@ function QModel(
     ode_func::Function,
     time_events::NamedTuple,
     c_events::NamedTuple,
+    stop_events::NamedTuple,
     saving_generator::Function,
     constants_num::NamedTuple,
     event_active::NamedTuple,
@@ -43,6 +44,10 @@ function QModel(
     end
     for event_tuple in c_events # c events
         evt = CEvent(event_tuple...)
+        push!(events, evt)
+    end
+    for event_tuple in stop_events # stop events
+        evt = StopEvent(event_tuple...)
         push!(events, evt)
     end
 

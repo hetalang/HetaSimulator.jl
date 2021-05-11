@@ -40,7 +40,7 @@ module HetaSimulator
 
   export heta_update, heta_update_dev, heta_build, load_platform, load_jlplatform, load_jlmodel
   export QPlatform, QModel, Cond, Params
-  export TimeEvent, CEvent
+  export TimeEvent, CEvent, StopEvent
   export read_conditions_csv, add_conditions!
   export read_measurements_csv, add_measurements!
   export constants, observables, conditions, events, models # parameters, variables, dynamic, static

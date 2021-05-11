@@ -157,6 +157,12 @@ struct CEvent{F1,F2} <: AbstractEvent
   atStart::Bool
 end
 
+struct StopEvent{F1} <: AbstractEvent
+  condition_func::F1
+  name::Symbol
+  atStart::Bool
+end
+
 ################################## Fitting ###########################################
 
 struct FitResults{L<:Real}
