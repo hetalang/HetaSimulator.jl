@@ -177,7 +177,7 @@ function save_as_df(mcMCSimulation; groupby=:observations)
     df = DataFrame()
     df[!,:t] = mc[1].t
     [df[!,string(i)] = sim[ob,:] for (i,sim) in enumerate(mc)]
-    CSV.write("$ob.csv", df)
+    CSV.write("$ob.csv", df, delim=";")
   end
   return nothing 
 end

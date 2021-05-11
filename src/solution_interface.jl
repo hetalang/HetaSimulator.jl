@@ -170,7 +170,7 @@ end
 
 function save_results(filepath::String, sim::SimResults) 
   df = DataFrame(sim)
-  CSV.write(filepath, df)
+  CSV.write(filepath, df, delim=";")
 end
 
 function save_results(path::String, mcsim::MCResults; groupby::Symbol=:observables) 
@@ -184,7 +184,7 @@ function save_results(path::String, mcsim::MCResults; groupby::Symbol=:observabl
     for ob in obs
       df = DataFrame(t = mcsim[1].t)
       [df[!,string(i)] = mcsim[i][ob,:] for i in 1:length(mcsim)]
-      CSV.write("$path/$ob.csv", df)
+      CSV.write("$path/$ob.csv", df, delim=";")
     end
   end
 end
