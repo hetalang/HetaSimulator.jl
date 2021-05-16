@@ -13,13 +13,12 @@ function sim(
   saveat_measurements::Bool = false,
   evt_save::Tuple{Bool,Bool}=(true,true),
   time_type=Float64,
-  termination=nothing,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
   kwargs...
 )
-  prob = build_ode_problem(condition, constants, saveat_measurements; time_type = time_type, termination=termination)
+  prob = build_ode_problem(condition, constants, saveat_measurements; time_type = time_type)
 
   sol = solve(prob, alg; reltol = reltol, abstol = abstol,
     save_start = false, save_end = false, save_everystep = false, kwargs...)
@@ -154,7 +153,6 @@ function build_ode_problem(
   saveat_measurements::Bool;
   evt_save::Tuple{Bool,Bool} = (true, true),
   time_type = Float64,
-  termination=nothing,
   title::Union{String,Nothing} = nothing
   # params - fitting
 )
@@ -196,7 +194,6 @@ function build_ode_problem(
   # saving cb
   U = eltype(_u0)
   sim = SimResults(
-    title,
     _constants,
     time_type[],
     LabelledArrays.LArray{U,1,Array{U,1},Tuple(condition.observables)}[],
@@ -206,18 +203,13 @@ function build_ode_problem(
   scb = SavingEventWrapper(condition.saving, sim; saveat = _saveat)
 
   # events
-  #= Ivan's part
-  cbs = []
-    push!(cbs, SavingEventWrapper(condition.saving, sim; saveat = _saveat))
-    !isnothing(termination) && push!(cbs, DiscreteCallback(termination, terminate!; save_positions=(false,false)))
-  =#
   if isempty(model.events)
     evts = CallbackSet(scb)
   else
     # merging active events
     active_events_names = update(events(model), events(condition)) # evts_dict
-    # XXX: currently all StopEvents are skipped
-    active_events = [add_event(evt, _constants; evt_save = evt_save) for evt in model.events if (active_events_names[evt.name] && typeof(evt) != StopEvent)]
+
+    active_events = [add_event(evt, _constants; evt_save = evt_save) for evt in model.events if active_events_names[evt.name]]
     evts = CallbackSet(scb, active_events...)
   end
 

@@ -28,7 +28,11 @@ function add_event(evt::CEvent, cons; evt_save::Tuple{Bool, Bool}=(true,true))
 end
 
 function add_event(evt::StopEvent, cons; evt_save::Tuple{Bool, Bool}=(true,true))
-  nothing
+  DiscreteCallback(
+    evt.condition_func,
+    terminate!,
+    save_positions=(false,false)
+  )
 end
 
 function evt_func_wrapper(integrator, evt_func, evt_save, evt_name)

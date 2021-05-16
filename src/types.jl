@@ -96,24 +96,23 @@ end
 ################################## SimResults ###########################################
 abstract type AbstractResults end
 
-struct SimResults{LA,T,V,C} <: AbstractResults
-  title::Union{String,Nothing} # name::Union{Symbol,Nothing} 
-  constants::LA
-  t::T
-  vals::V
-  scope::Vector{Symbol} # do we need it?
-  condition::C
+@inline Base.length(S::AbstractResults) = length(S.sim.u)
+
+struct Simulation{uType,tType,scopeType,consType}
+  u::uType
+  t::tType
+  scope::scopeType
+  cons::consType
+  retcode::Symbol
+end
+
+struct SimResults{S<:Simulation,C<:Cond} <: AbstractResults
+  sim::S
+  cond::C # do we need it?
 end
 
 function Base.show(io::IO, m::MIME"text/plain", S::SimResults)
-  println(io, "Simulation results:")
-  print(io,"t: ")
-  show(io,m,S.t)
-  println(io)
-  print(io,"u: ")
-  show(io,m,S.vals)
-  println(io)
-  println(io)
+  println(io, "Simulation status is $(S.sim.retcode):")
   println(io, "You can plot simulation results with `plot(sim::SimResults)` or convert them to DataFrame with `DataFrame(sim::SimResults)`")
 end
 
@@ -124,11 +123,9 @@ end
 
 ################################## Monte-Carlo Simulation ##############################
 
-struct MCResults{T,V,C} <: AbstractResults
-  title::Union{String,Nothing}
-  t::T
-  vals::V
-  condition::C
+struct MCResults{S<:Simulation,C<:Cond} <: AbstractResults
+  sim::Vector{S}
+  condition::C # do we need it?
 end
 
 function Base.show(io::IO, m::MIME"text/plain", MC::MCResults)
@@ -159,7 +156,7 @@ end
 
 struct StopEvent{F1} <: AbstractEvent
   condition_func::F1
-  name::Symbol
+  name::Symbol # do we need it?
   atStart::Bool
 end
 

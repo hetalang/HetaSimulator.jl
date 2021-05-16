@@ -7,8 +7,6 @@ function mc(
   evt_save::Tuple{Bool,Bool}=(true,true),
   verbose=true,
   time_type=Float64,
-  termination=nothing,
-  title=nothing,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
@@ -17,7 +15,7 @@ function mc(
 ) where P<:Pair
   !has_saveat(cond) && error("Add saveat values to Condition in order to run Monte-Carlo simulations.")
 
-  prob0 = build_ode_problem(cond, Pair{Symbol,Float64}[], saveat_measurements; time_type = time_type, termination = termination)
+  prob0 = build_ode_problem(cond, Pair{Symbol,Float64}[], saveat_measurements; time_type = time_type)
   init_func = cond.model.init_func
   t = time_type[]
 
@@ -60,7 +58,7 @@ function mc(
 
   #t = take!(r)
 
-  return MCResults(title,t,solution.u,cond)
+  return MCResults(solution.u,t,cond)
 end
 
 function mc(
@@ -120,11 +118,10 @@ function mc(
   mcsol = Vector{MCResults}(undef, length(cond_pairs))
   for (i,cond) in enumerate(cond_pairs)
     mcsol[i] = mc(last(cond),params,num_iter;
-      title=String(first(cond)),kwargs...)
+      kwargs...)
   end
   return mcsol
 end
-
 
 function mc(
   platform::QPlatform,
@@ -168,17 +165,3 @@ generate_cons(v::Real,i) = v
 generate_cons(v::Vector{R},i) where R<:Float64 = v[i]
 
 read_mcvecs(filepath::String) = DataFrame(CSV.File(filepath))
-#=
-function save_as_df(mcMCSimulation; groupby=:observations)
-  obs = observables(mc[1])
-  lobs = length(obs)
-
-  for ob in obs
-    df = DataFrame()
-    df[!,:t] = mc[1].t
-    [df[!,string(i)] = sim[ob,:] for (i,sim) in enumerate(mc)]
-    CSV.write("$ob.csv", df, delim=";")
-  end
-  return nothing 
-end
-=#
