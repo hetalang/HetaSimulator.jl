@@ -96,20 +96,22 @@ end
 ################################## SimResults ###########################################
 abstract type AbstractResults end
 
-@inline Base.length(S::AbstractResults) = length(S.sim.u)
+struct SavedVals{uType,tType,scopeType}
+  u::uType
+  t::tType
+  scope::scopeType
+end
 
-struct Simulation{uType,tType,scopeType,consType}
+struct SimResults{uType,tType,scopeType,consType,C<:Cond} <: AbstractResults
   u::uType
   t::tType
   scope::scopeType
   cons::consType
-  retcode::Symbol
-end
-
-struct SimResults{S<:Simulation,C<:Cond} <: AbstractResults
-  sim::S
+  status::Symbol
   cond::C # do we need it?
 end
+
+@inline Base.length(S::SimResults) = length(S.sim.u)
 
 function Base.show(io::IO, m::MIME"text/plain", S::SimResults)
   println(io, "Simulation status is $(S.sim.retcode):")
@@ -123,10 +125,14 @@ end
 
 ################################## Monte-Carlo Simulation ##############################
 
-struct MCResults{S<:Simulation,C<:Cond} <: AbstractResults
-  sim::Vector{S}
-  condition::C # do we need it?
+struct MCResults{S} <: AbstractResults
+  sim::S
+  # converged
+  # elapsed_time
 end
+
+@inline Base.length(S::MCResults) = length(S.sim)
+status_summary(MC::MCResults) = counter([sim.status for sim in MC])
 
 function Base.show(io::IO, m::MIME"text/plain", MC::MCResults)
   println(io, "Monte-Carlo results for $(length(MC)) iterations. You can plot results with `plot(sol::MCResults)`")

@@ -8,20 +8,24 @@ const EMPTY_PROBLEM = ODEProblem(() -> nothing, [0.0], (0.,1.))
 ### simulate condition
 
 function sim(
-  condition::Cond; 
-  constants::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
+  cond::Cond; 
+  cons::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
   saveat_measurements::Bool = false,
   evt_save::Tuple{Bool,Bool}=(true,true),
-  time_type=Float64,
+  save_scope=true,
+  save_cons=false,
+  time_type=Float64, # ??? do we need it
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
   kwargs...
 )
-  prob = build_ode_problem(condition, constants, saveat_measurements; time_type = time_type)
+  prob = build_ode_problem(cond, cons, saveat_measurements; time_type = time_type)
 
   sol = solve(prob, alg; reltol = reltol, abstol = abstol,
     save_start = false, save_end = false, save_everystep = false, kwargs...)
+
+  sim = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
 
   return sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
 end
