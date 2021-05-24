@@ -18,7 +18,7 @@ end
 
 abstract type AbstractModel end
 
-struct QModel{IF,O,EV,SF,C} <: AbstractModel
+struct Model{IF,O,EV,SF,C} <: AbstractModel
   init_func::IF
   ode::O
   events::EV # Should it be inside of prob or not?
@@ -28,15 +28,15 @@ struct QModel{IF,O,EV,SF,C} <: AbstractModel
   events_on::Vector{Pair{Symbol,Bool}}
 end
 
-constants(m::QModel) = m.constants
-events(m::QModel) = m.events_on
-observables(m::QModel) = m.observables
+constants(m::Model) = m.constants
+events_on(m::Model) = m.events_on
+observables(m::Model) = m.observables
 
-function Base.show(io::IO, ::MIME"text/plain", m::QModel)
+function Base.show(io::IO, ::MIME"text/plain", m::Model)
   println(io, "Model contains:")
-  println(io, "  $(length(constants(m))) constant(s). Use `constants(m::QModel)` for details.")
-  println(io, "  $(length(observables(m))) observable(s). Use `observables(m::QModel)` for details.")
-  println(io, "  $(length(events(m))) event(s). Use `events(m::QModel)` for details.")
+  println(io, "  $(length(constants(m))) constant(s). Use `constants(m::Model)` for details.")
+  println(io, "  $(length(observables(m))) observable(s). Use `observables(m::Model)` for details.")
+  println(io, "  $(length(events(m))) event(s). Use `events(m::Model)` for details.")
 end
 
 ################################## Params ###########################################
@@ -61,53 +61,45 @@ end
 
 const MeasurementVector{P} = AbstractVector{P} where P<:AbstractMeasurementPoint
 
-################################## Cond ###########################################
+################################## Condition ###########################################
 
-abstract type AbstractCond end
-
-# TODO temporal mutable solution
-mutable struct Cond{D,SF} <: AbstractCond
-  model::QModel
-  constants::Vector{Pair{Symbol,Float64}}
-  events_on::Vector{Pair{Symbol,Bool}} # store here event to update
-  measurements::D
-  saveat::Union{Nothing,AbstractVector{T}} where T<:Real
-  tspan::Union{Nothing,Tuple{S,S}} where S<:Real
-  observables::Vector{Symbol} # list of condition-specific observables
-  saving::SF # saving function for ODEProblem, created from observables
+struct Cond{F,P,M}
+  init_func::F
+  prob::P
+  measurements::M
 end 
 
-constants(c::Cond) = c.constants
-events(c::Cond) = c.events_on
-observables(c::Cond) = c.observables
 measurements(c::Cond) = c.measurements
 
 function Base.show(io::IO, ::MIME"text/plain", c::Cond)
-  println(io, "Condition contains:")
-  println(io, "  saveat values: $(c.saveat)")
-  println(io, "  tspan: $(c.tspan)")
+  println(io, "Simulation condition:")
+  #println(io, "  saveat values: $(c.saveat)")
+  println(io, "  tspan: $(c.prob.tspan)")
   println(io)
-  println(io, "  $(length(constants(c))) constant(s). Use `constants(c::Cond)` for details.")
-  println(io, "  $(length(observables(c))) observable(s). Use `observables(c::Cond)` for details.")
-  println(io, "  $(length(events(c))) event(s). Use `events(c::Cond)` for details.")
+  #println(io, "  $(length(constants(c))) constant(s). Use `constants(c::Cond)` for details.")
+  #println(io, "  $(length(observables(c))) observable(s). Use `observables(c::Cond)` for details.")
+  #println(io, "  $(length(events(c))) event(s). Use `events(c::Cond)` for details.")
   println(io, "  $(length(measurements(c))) data measurement(s). Use `measurements(c::Cond)` for details.")
 end
 
 ################################## SimResults ###########################################
 abstract type AbstractResults end
 
-struct SavedVals{uType,tType,scopeType}
+struct SavedValues{uType,tType,scopeType}
   u::uType
   t::tType
   scope::scopeType
 end
 
-struct SimResults{uType,tType,scopeType,consType,C<:Cond} <: AbstractResults
+struct Simulation{uType,tType,scopeType}
   u::uType
   t::tType
   scope::scopeType
-  cons::consType
   status::Symbol
+end
+
+struct SimResults{S, C<:Cond} <: AbstractResults
+  sim::S
   cond::C # do we need it?
 end
 
@@ -125,8 +117,10 @@ end
 
 ################################## Monte-Carlo Simulation ##############################
 
-struct MCResults{S} <: AbstractResults
+struct MCResults{S,C<:Cond} <: AbstractResults
   sim::S
+  cond::C
+  saveat::Bool
   # converged
   # elapsed_time
 end

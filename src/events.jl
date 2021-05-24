@@ -1,9 +1,15 @@
-function add_event(evt::TimeEvent, cons; evt_save::Tuple{Bool, Bool}=(true,true))
+active_events(events, events_on, events_save::Tuple) =
+  active_events(events, events_on, fill(events_save, length(events)))
+
+active_events(events, events_on, events_save::Vector{Tuple}) =
+  Tuple(add_event(evt; events_save) for evt in events if events_on)
+
+function add_event(evt::TimeEvent; events_save::Tuple{Bool, Bool}=(true,true))
   tstops = Float64[]
   #cond_func(u, t, integrator) = t in tstops
 
   function init_time_event(cb,u,t,integrator)
-      append!(tstops, evt.condition_func(cons,integrator.sol.prob.tspan))
+      append!(tstops, evt.condition_func(integrator.sol.prob.p.constants, integrator.sol.prob.tspan))
       #tf = integrator.sol.prob.tspan[2]
       #[add_tstop!(integrator, tstop) for tstop in tstops if tstop <= tf]
       [add_tstop!(integrator, tstop) for tstop in tstops]
@@ -12,22 +18,22 @@ function add_event(evt::TimeEvent, cons; evt_save::Tuple{Bool, Bool}=(true,true)
 
   DiscreteCallback(
         (u,t,integrator) -> t in tstops,
-        (integrator) -> evt_func_wrapper(integrator, evt.affect_func, evt_save, evt.name),
+        (integrator) -> evt_func_wrapper(integrator, evt.affect_func, events_save, evt.name),
         initialize = init_time_event,
         save_positions=(false,false)
   )
 end
 
-function add_event(evt::CEvent, cons; evt_save::Tuple{Bool, Bool}=(true,true))
+function add_event(evt::CEvent; events_save::Tuple{Bool, Bool}=(true,true))
   ContinuousCallback(
       evt.condition_func,
-      (integrator) -> evt_func_wrapper(integrator, evt.affect_func, evt_save, evt.name),
+      (integrator) -> evt_func_wrapper(integrator, evt.affect_func, events_save, evt.name),
       (integrator) -> nothing,
       save_positions=(false,false)
   )
 end
 
-function add_event(evt::StopEvent, cons; evt_save::Tuple{Bool, Bool}=(true,true))
+function add_event(evt::StopEvent; kwargs...)
   DiscreteCallback(
     evt.condition_func,
     terminate!,
@@ -35,13 +41,13 @@ function add_event(evt::StopEvent, cons; evt_save::Tuple{Bool, Bool}=(true,true)
   )
 end
 
-function evt_func_wrapper(integrator, evt_func, evt_save, evt_name)
+function evt_func_wrapper(integrator, evt_func, events_save, evt_name)
   affect_func! = integrator.opts.callback.discrete_callbacks[1].affect!
  # affect_func!(integrator) #produces wrong results in Sundials
 
-  first(evt_save) && save_position(integrator, :ode_) #affect_func!(integrator, true)
+  first(events_save) && save_position(integrator, :ode_) #affect_func!(integrator, true)
   evt_func(integrator)
-  last(evt_save) && save_position(integrator, evt_name)
+  last(events_save) && save_position(integrator, evt_name)
   reset_dt!(integrator)
 end
 

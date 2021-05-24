@@ -1,4 +1,3 @@
-
 const DEFAULT_SIMULATION_RELTOL=1e-3
 const DEFAULT_SIMULATION_ABSTOL=1e-6
 const DEFAULT_ALG = AutoTsit5(Rosenbrock23())
@@ -9,33 +8,34 @@ const EMPTY_PROBLEM = ODEProblem(() -> nothing, [0.0], (0.,1.))
 
 function sim(
   cond::Cond; 
-  cons::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
-  saveat_measurements::Bool = false,
-  evt_save::Tuple{Bool,Bool}=(true,true),
-  save_scope=true,
-  save_cons=false,
-  time_type=Float64, # ??? do we need it
+  # the following two kwargs
+  # are currently needed for fitting
+  constants::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[], # to be removed
+  saveat_measurements::Bool = false, # to be removed
+  #
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
-  kwargs...
+  kwargs... # other solver arguments
 )
-  prob = build_ode_problem(cond, cons, saveat_measurements; time_type = time_type)
+  prob = cond.prob
 
   sol = solve(prob, alg; reltol = reltol, abstol = abstol,
     save_start = false, save_end = false, save_everystep = false, kwargs...)
 
-  sim = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-
-  return sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
+  return build_results(sol, cond)
 end
 
-### simulate QModel
+function build_results(sol::ODESolution, cond)
+  sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
+  return SimResults(Simulation(sv.u, sv.t, sv.scope), sol.retcode, cond)
+end
+### simulate Model
 
 function sim(
-  model::QModel;
+  model::Model;
 
-  ## arguments for Cond(::QModel,...)
+  ## arguments for Cond(::Model,...)
   # constants::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
   events_on::Vector{Pair{Symbol,Bool}} = Pair{Symbol,Bool}[],
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
@@ -151,83 +151,6 @@ function sim(
   return sim(condition_pairs; kwargs...)
 end
 
-function build_ode_problem(
-  condition::Cond,
-  cons::Vector{Pair{Symbol,Float64}},
-  saveat_measurements::Bool;
-  evt_save::Tuple{Bool,Bool} = (true, true),
-  time_type = Float64,
-  title::Union{String,Nothing} = nothing
-  # params - fitting
-)
-  model = condition.model
-
-  #= check if default alg can solve the prob
-  integrator = init(prob, DEFAULT_ALG)
-  step!(integrator)
-  ret = check_error(integrator)
-  ret != :Success && @warn "Default algorithm returned $ret status. Consider using a different algorithm."
-  =#
-
-  ### Cond part
-  # saveat and tspan
-  if saveat_measurements
-    _saveat = unique([dp.t for dp in condition.measurements])
-    _tspan = (zero(time_type), time_type(maximum(_saveat)))
-  elseif condition.saveat !== nothing && !isempty(condition.saveat)
-    _saveat = collect_saveat(condition.saveat)
-    _tspan = (zero(time_type), time_type(maximum(_saveat)))
-  elseif condition.tspan !== nothing
-    _saveat = time_type[]
-    _tspan = (zero(time_type), time_type(last(condition.tspan))) # tspan should begin from zero?
-  else
-    error("Please, provide either `saveat` or `tspan` value.")
-  end
-
-  ### Merging
-  merged_cons0 = update(model.constants, condition.constants)
-  _constants = update(merged_cons0, cons)
-  
-  # Model part
-  # future _u0 @LArray u0 (names_[:variables]...,)
-  # future _p0 @LArray p0 (names_[:parameters]...,)
-  _ode = model.ode
-  _u0, _p0 = model.init_func(_constants)
-  _params = Params{typeof(_constants),typeof(_p0)}(_constants, _p0)
-
-  # saving cb
-  U = eltype(_u0)
-  sim = SimResults(
-    _constants,
-    time_type[],
-    LabelledArrays.LArray{U,1,Array{U,1},Tuple(condition.observables)}[],
-    Symbol[], 
-    condition
-    )
-  scb = SavingEventWrapper(condition.saving, sim; saveat = _saveat)
-
-  # events
-  if isempty(model.events)
-    evts = CallbackSet(scb)
-  else
-    # merging active events
-    active_events_names = update(events(model), events(condition)) # evts_dict
-
-    active_events = [add_event(evt, _constants; evt_save = evt_save) for evt in model.events if active_events_names[evt.name]]
-    evts = CallbackSet(scb, active_events...)
-  end
-
-  prob = ODEProblem(
-    _ode, # ODE function
-    _u0, # u0
-    _tspan, # tspan
-    _params; # const and static
-    callback = evts # callback
-    # mass_matrix
-    )
-
-  return prob
-end
 
 function default_output(sol,i)
   sim = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values

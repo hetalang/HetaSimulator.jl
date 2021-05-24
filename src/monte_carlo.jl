@@ -81,7 +81,7 @@ function mc(
 end
 
 function mc(
-  model::QModel,
+  model::Model,
   params::Vector{P},
   num_iter::Int;
 

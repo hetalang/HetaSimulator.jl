@@ -6,18 +6,14 @@ const OBSERVABLES_HEADER = Symbol("observables[]")
 
 # general interface
 function Cond(
-  model::QModel;
-  constants::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
-  events_on::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[], 
+  model::Model;
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
-  saveat::Union{Nothing,AbstractVector{T}} = nothing,
-  tspan::Union{Nothing,Tuple{S,S}} = nothing,
-  observables::Union{Nothing,Vector{Symbol}} = nothing
-) where {T<:Real,S<:Real}
-  _observables = observables === nothing ? model.observables : observables # use default if not set
-  _saving = model.saving_generator(_observables)
+  kwargs...
+)
+  # ode problem
+  prob = build_ode_problem(model; kwargs...)
 
-  return Cond(model, constants, events_on, measurements, saveat, tspan, _observables, _saving)
+  return Cond(model.init_func, prob, measurements)
 end
 
 # CSV methods

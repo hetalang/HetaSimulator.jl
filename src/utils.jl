@@ -1,8 +1,3 @@
-
-collect_saveat(saveat::Tuple{S1,S2}) where {S1<:Real,S2<:Real} = Float64[]
-collect_saveat(saveat::Vector{S}) where S<:Real = Float64.(saveat)
-collect_saveat(saveat::AbstractRange{S}) where S<:Real = Float64.(saveat)
-
 dictkeys(d::Dict) = (collect(keys(d))...,)
 dictvalues(d::Dict) = (collect(values(d))...,)
 

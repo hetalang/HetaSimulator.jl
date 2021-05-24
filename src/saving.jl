@@ -34,14 +34,15 @@ end
 end
 =#
 
-mutable struct SavingEvent{SaveFunc, SaveVal, saveatType, saveatCacheType}
+mutable struct SavingEvent{SaveFunc, SavedValues, saveatType, saveatCacheType}
   save_func::SaveFunc
-  saved_values::SaveVal
+  saved_values::SavedValues
   saveat::saveatType
   saveat_cache::saveatCacheType
   save_everystep::Bool
   save_start::Bool
   save_end::Bool
+  save_scope::Bool
   saveiter::Int
 end
 
@@ -65,13 +66,13 @@ function (affect!::SavingEvent)(integrator,force_save = false; scope = :ode_)
               integrator(curu,curt) # inplace since save_func allocates
           end
           copyat_or_push!(affect!.saved_values.t, affect!.saveiter, curt)
-          !isnothing(affect!.saved_values.scope) && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope, Val{false})
+          affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope, Val{false})
           copyat_or_push!(affect!.saved_values.u, affect!.saveiter,
                           affect!.save_func(curu, curt, integrator),Val{false})
       else # ==t, just save
           just_saved = true
           copyat_or_push!(affect!.saved_values.t, affect!.saveiter, integrator.t)
-          !isnothing(affect!.saved_values.scope) && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope, Val{false})
+          affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope, Val{false})
           copyat_or_push!(affect!.saved_values.u, affect!.saveiter, affect!.save_func(integrator.u, integrator.t, integrator),Val{false})
       end
   end
@@ -81,7 +82,7 @@ function (affect!::SavingEvent)(integrator,force_save = false; scope = :ode_)
 
       affect!.saveiter += 1
       copyat_or_push!(affect!.saved_values.t, affect!.saveiter, integrator.t)
-      !isnothing(affect!.saved_values.scope) && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope, Val{false})
+      affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope, Val{false})
       copyat_or_push!(affect!.saved_values.u, affect!.saveiter, affect!.save_func(integrator.u, integrator.t, integrator),Val{false})
   end
   u_modified!(integrator, false)
@@ -115,11 +116,12 @@ interpolation if necessary.
 If the time `tdir` direction is not positive, i.e. `tspan[1] > tspan[2]`,
 `tdir = -1` has to be specified.
 """
-function SavingEventWrapper(save_func, saved_values::Simulation;
+function saving_wrapper(save_func, saved_values::SavedValues;
                       saveat=Vector{eltype(saved_values.t)}(),
                       save_everystep=isempty(saveat),
                       save_start = false,
                       save_end = save_everystep || isempty(saveat) || saveat isa Number,
+                      save_scope = true,
                       tdir=1)
   # saveat conversions, see OrdinaryDiffEq.jl -> integrators/type.jl
   saveat_vec = collect(saveat) 
@@ -128,7 +130,7 @@ function SavingEventWrapper(save_func, saved_values::Simulation;
   else
       saveat_internal = BinaryMaxHeap(saveat_vec)
   end
-  affect! = SavingEvent(save_func, saved_values, saveat_internal, saveat_vec, save_everystep, save_start, save_end, 0)
+  affect! = SavingEvent(save_func, saved_values, saveat_internal, saveat_vec, save_everystep, save_start, save_end, save_scope, 0)
   condtion = (u, t, integrator) -> true
   DiscreteCallback(condtion, affect!;
                    initialize = saving_initialize,

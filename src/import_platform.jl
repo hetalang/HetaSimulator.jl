@@ -14,10 +14,10 @@ function QPlatform(
     @assert length(indexin(version, SUPPORTED_VERSIONS)) > 0 "Heta compiler of the version \"$version\" is not supported."
 
     print("Loading platform... ")
-    model_pairs = [pair[1] => QModel(pair[2]...) for pair in pairs(models)]
+    model_pairs = [pair[1] => Model(pair[2]...) for pair in pairs(models)]
     
     platform = QPlatform(
-        Dict{Symbol,QModel}(model_pairs),
+        Dict{Symbol,Model}(model_pairs),
         Dict{Symbol,Cond}()
     )
     println("OK!")
@@ -25,8 +25,8 @@ function QPlatform(
     return platform
 end
 
-# transformation of tuple to QModel
-function QModel(
+# transformation of tuple to Model
+function Model(
     init_func::Function,
     ode_func::Function,
     time_events::NamedTuple,
@@ -69,7 +69,7 @@ function QModel(
     ret = check_error(integrator)
     ret != :Success && @warn "Default algorithm returned $ret status. Consider using a different algorithm."
     
-    model = QModel(
+    model = Model(
         init_func,          # init_func
         ode_func,           # ode
         events,             # events

@@ -17,6 +17,7 @@ module HetaSimulator
   @reexport using DataFrames
   @reexport using Distributions
   using Distributed
+  using RecursiveArrayTools
   # measurements 
   using CSV
   using XLSX
@@ -30,6 +31,7 @@ module HetaSimulator
   include("utils.jl")
   include("events.jl")
   include("measurements.jl")
+  include("ode_problem.jl")
   include("condition.jl")
   include("simulate.jl")
   include("saving.jl")
@@ -40,11 +42,11 @@ module HetaSimulator
   include("import_platform.jl")
 
   export heta_update, heta_update_dev, heta_build, load_platform, load_jlplatform, load_jlmodel
-  export QPlatform, QModel, Cond, Params
+  export QPlatform, Model, Cond, Params
   export TimeEvent, CEvent, StopEvent
   export read_conditions, add_conditions!
   export read_measurements, add_measurements!
-  export constants, observables, conditions, events, models # parameters, variables, dynamic, static
+  export constants, observables, conditions, events_on, models # parameters, variables, dynamic, static
   export CVODE_BDF, CVODE_Adams
   export optim, obj
   export sim, mc
