@@ -30,7 +30,7 @@ function _subset(vector::AbstractVector, subset::Union{Dict{Symbol}, Nothing} = 
   end
 end
 
-has_saveat(c::Cond) = !isnothing(c.saveat) && length(c.saveat) != 0
+has_saveat(c::Cond) = !isempty(c.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values.u) 
 
 # auxilary method to update values in LVector
 # TODO: not optimal method

@@ -5,7 +5,11 @@ const DEFAULT_ESTIMATION_ABSTOL = 1e-12
 
 function fit(
   condition_pairs::AbstractVector{Pair{Symbol, C}},
-  param::Vector{Pair{Symbol,Float64}};
+  params::Vector{Pair{Symbol,Float64}};
+  alg=DEFAULT_ALG,
+  reltol=DEFAULT_ESTIMATION_RELTOL,
+  abstol=DEFAULT_ESTIMATION_ABSTOL,
+  parallel_type=EnsembleSerial(),
   ftol_abs = 0.0,
   ftol_rel = 1e-4, 
   xtol_rel = 0.0,
@@ -13,8 +17,8 @@ function fit(
   fit_alg = :LN_NELDERMEAD,
   maxeval = 10000,
   maxtime = 0.0,
-  lbounds = fill(0.0, length(param)),
-  ubounds = fill(Inf, length(param)),
+  lbounds = fill(0.0, length(params)),
+  ubounds = fill(Inf, length(params)),
   kwargs... # other arguments to sim()
 ) where C<:AbstractCond
 
@@ -28,10 +32,20 @@ function fit(
   end
   
   isempty(selected_condition_pairs) && throw("No measurements points included in conditions.")
+  
+  selected_prob = [remake_saveat(last(cond).prob, last(cond).measurements) for cond in selected_condition_pairs]
+
+
+  function prob_func(x)
+    function internal_prob_func(prob,i,repeat)
+      update_init_values(selected_prob[i],last(selected_condition_pairs[i]).init_func,x)
+    end
+  end
 
   function _output(sol, i)
-    sim = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-    loss_val = loss(sim, last(selected_condition_pairs[i]).measurements) 
+    sol.retcode != :Success && error("Cond_ID $i returned $(sol.retcode) status")
+    sim = build_results(sol,last(selected_condition_pairs[i]))
+    loss_val = loss(sim, sim.cond.measurements) 
     (loss_val, false)
   end
 
@@ -39,28 +53,36 @@ function fit(
     (sum(batch),false)
   end
 
+  prob(x) = EnsembleProblem(EMPTY_PROBLEM;
+    prob_func = prob_func(x),
+    output_func = _output,
+    reduction = _reduction
+  )
+
+  params_names = first.(params)
+
   function obj_func(x, grad)
     # try - catch is a tmp solution for NLopt 
-    x_pairs = [key=>value for (key, value) in zip(first.(param), x)]
+    x_nt = NamedTuple{Tuple(params_names)}(x)
+    prob_i = prob(x_nt)
     sol = try
-        sim(
-          selected_condition_pairs;
-          constants = x_pairs,
-          output_func = _output,
-          reduction = _reduction,
-          saveat_measurements = true,
-          kwargs...
-        )
+      solve(prob_i, alg, parallel_type;
+        trajectories = length(selected_condition_pairs),
+        reltol,
+        abstol,
+        save_start = false, 
+        save_end = false, 
+        save_everystep = false, 
+        kwargs...
+    )
     catch e
-        @warn "Error when calling loss_func($x)"
-        throw(e)
+        @warn "Error when calling loss_func($x): $e"
     end
     #println(x_pairs)
-    #println(sim)
-    return sol
+    return sol.u
   end
 
-  opt = Opt(fit_alg, length(param))
+  opt = Opt(fit_alg, length(params))
   opt.min_objective = obj_func
 
   opt.ftol_rel = ftol_rel
@@ -74,34 +96,35 @@ function fit(
 
   lower_bounds!(opt, lbounds)
   upper_bounds!(opt, ubounds)
-  (minf, minx, ret) = NLopt.optimize(opt, last.(param))
+  (minf, minx, ret) = NLopt.optimize(opt, last.(params))
 
   # to create pairs from Float64
-  minx_pairs = [key=>value for (key, value) in zip(first.(param), minx)]
+  minx_pairs = [key=>value for (key, value) in zip(first.(params), minx)]
   
   return FitResults(minf, minx_pairs, ret, opt.numevals)
+
 end
 
 ### fit many conditions
 
 function fit(
   conditions::AbstractVector{C},
-  param::Vector{Pair{Symbol,Float64}};
+  params::Vector{Pair{Symbol,Float64}};
   kwargs... # other arguments to sim(::Vector{Pair})
 ) where {C<:AbstractCond}
-  condition_pairs = Pair{Symbol,AbstractCond}[Symbol("#$i") => cond for (i, cond) in pairs(conditions)]
-  return fit(condition_pairs, param; kwargs...)
+  condition_pairs = Pair{Symbol,AbstractCond}[Symbol("Cond_ID$i") => cond for (i, cond) in pairs(conditions)]
+  return fit(condition_pairs, params; kwargs...)
 end
 
 ### fit platform
 
 function fit(
-  platform::QPlatform,
-  param::Vector{Pair{Symbol,Float64}};
+  platform::Platform,
+  params::Vector{Pair{Symbol,Float64}};
   conditions::Union{AbstractVector{Symbol}, Nothing} = nothing, # all if nothing
   kwargs... # other arguments to fit()
 )
-  if conditions === nothing
+  if isnothing(conditions)
     condition_pairs = [platform.conditions...]
   else
     condition_pairs = Pair{Symbol,AbstractCond}[]
@@ -111,5 +134,5 @@ function fit(
     end
   end
 
-  return fit(condition_pairs, param; kwargs...)
+  return fit(condition_pairs, params; kwargs...)
 end

@@ -18,7 +18,7 @@ end
 
 # CSV methods
 function add_conditions!(
-  platform::QPlatform,
+  platform::Platform,
   vector::AbstractVector;
   subset::Union{Dict{Symbol}, Nothing} = nothing
 )
@@ -33,7 +33,7 @@ end
 
 # DataFrame methods
 function add_conditions!(
-  platform::QPlatform,
+  platform::Platform,
   df::DataFrame;
   kwargs...
 )
@@ -42,7 +42,7 @@ end
 
 # private function to add one condition row into platform
 
-function _add_condition!(platform::QPlatform, row::Any) # maybe not any
+function _add_condition!(platform::Platform, row::Any) # maybe not any
   _id = row[:id]
   model_name = get(row, :model, :nameless)
 

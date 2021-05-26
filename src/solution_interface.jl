@@ -1,49 +1,28 @@
 ############################ Accessing Solution Values #####################
 
-observables(sim::SimResults) = collect(keys(sim.vals[1]))
-observables(sim::MCResults) = collect(keys(sim.vals[1][1]))
-constants(sim::SimResults) = sim.constants
+observables(sr::SimResults) = observables(sr.sim)
+observables(sim::Simulation) = collect(keys(sim.vals.u[1]))
+observables(sim::MCResults) = collect(keys(sim.u[1][1]))
+constants(sim::SimResults) = sim.cond.prob.p.constants
 
-@inline Base.firstindex(S::SimResults) = firstindex(S.vals)
-@inline Base.lastindex(S::SimResults) = lastindex(S.vals)
+@inline Base.getindex(sim::Simulation, I...) = sim.vals[I...]
+@inline Base.getindex(sim::Simulation, i::Symbol,::Colon) = [sim.vals[j][i] for j in 1:length(sim.vals)]
+@inline Base.getindex(sr::SimResults, I...) = sr.sim[I...]
+@inline Base.getindex(mc::MCResults, I...) = mc.sim[I...]
 
-@inline Base.length(S::AbstractResults) = length(S.vals)
-@inline Base.eachindex(S::SimResults) = Base.OneTo(length(S.vals))
-@inline Base.IteratorSize(S::SimResults) = Base.HasLength()
+solat(sr::SimResults, args...) = solat(sr.sim, args...)
 
-
-Base.@propagate_inbounds Base.getindex(S::SimResults, I::Int) = S.vals[I]
-Base.@propagate_inbounds Base.getindex(S::SimResults, I::Colon) = S.vals[I]
-Base.@propagate_inbounds Base.getindex(S::SimResults, I::AbstractArray{Int}) = S.vals[I]
-Base.@propagate_inbounds Base.getindex(S::SimResults, i::Int,::Colon) = [S.vals[j][i] for j in 1:length(S.vals)]
-Base.@propagate_inbounds Base.getindex(S::SimResults, i::Symbol,::Colon) = [S.vals[j][i] for j in 1:length(S.vals)]
-
-@inline Base.getindex(S::MCResults, I::Int) = as_simulation(S,I)
-
-as_simulation(mc::MCResults, i;title=nothing) = SimResults(title,LVector(),mc.t,mc.vals[i],Symbol[],mc.condition)
-
-function sol_atvalue(sol::SimResults, idx, t, scope)
+function solat(sim::Simulation, t, idx, scope)
   if scope == :ode_ || scope == :start_
-      _id = findfirst(x->x==t, sol.t) # change to searchsortedfirst ?
+      _id = findfirst(x->x==t, sim.vals.t) # change to searchsortedfirst ?
   else
-      t_id = findall(x->x==t, sol.t)
-      _id = t_id[findfirst(x->x==scope, @view(sol.scope[t_id]))]
+      t_id = findall(x->x==t, sim.vals.t)
+      _id = t_id[findfirst(x->x==scope, @view(sim.scope[t_id]))]
   end
-  return sol[_id][idx]
+  return sim[_id][idx]
 end
 
-# tmp 
-function sol_atvalue(sol::SimResults, idx::Colon, t, scope)
-  if scope == :ode_ || scope == :start_
-      _id = findfirst(x->x==t, sol.t) # change to searchsortedfirst ?
-  else
-      t_id = findall(x->x==t, sol.t)
-      _id = t_id[findfirst(x->x==scope, @view(sol.scope[t_id]))]
-  end
-  return sol[_id]
-end
-
-(sol::SimResults)(idx, t, scope=:ode_) = sol_atvalue(sol, idx, t, scope)
+(sr::SimResults)(t, idx=:, scope=:ode_) = solat(sr.sim, t, idx, scope)
 
 ############################ Plots ########################################
 
@@ -55,15 +34,28 @@ function good_layout(n)
   n > 4  && return n
 end
 
-@recipe function plot(sol::SimResults; vars=observables(sol), measurements=true)
+@recipe function plot(sim::Simulation; vars=observables(sim))
+  @assert !isempty(sim.vals) "Results don't contain output. You should probably add output observables to your model"
 
-  @assert !isempty(sol.vals) "Results don't contain output. You should probably add output observables to your model"
+  time = sim.vals.t
+  vals = [sim[id,:] for id in vars]
+ 
+  xguide --> "time"
+  label --> permutedims(string.(vars))
+  xlims --> (time[1],time[end])
+  linewidth --> 3
+  (time, vals)
+end
 
-  time = sol.t
-  vals = [sol[id,:] for id in vars]
+
+@recipe function plot(sr::SimResults; vars=observables(sr), measurements=true)
+
+  @assert !isempty(sr.sim.vals) "Results don't contain output. You should probably add output observables to your model"
+
+  time = sr.sim.vals.t
+  vals = [sr[id,:] for id in vars]
  
   @series begin
-    title := "Condition ID:$(sol.title)"
     xguide --> "time"
     label --> permutedims(string.(vars))
     xlims --> (time[1],time[end])
@@ -71,10 +63,10 @@ end
     (time, vals)
   end
 
-  if measurements == true && !isempty(sol.condition.measurements)
+  if measurements == true && !isempty(sr.cond.measurements)
     t_meas = NamedTuple{Tuple(vars)}([Float64[] for i in eachindex(vars)])
     vals_meas = NamedTuple{Tuple(vars)}([Float64[] for i in eachindex(vars)])
-    for meas in sol.condition.measurements
+    for meas in sr.cond.measurements
       μ = meas.μ 
       if isa(μ,Symbol) && μ ∈ vars 
         push!(t_meas[μ], meas.t)
@@ -85,7 +77,6 @@ end
       if !isempty(t_meas[v])
         @series begin
           seriestype --> :scatter
-          title := "Condition ID:$(sol.title)"
           xguide --> "time"
           label --> "$(v)"
           (t_meas[v], vals_meas[v])
@@ -96,10 +87,10 @@ end
   nothing
 end
 
-@recipe function plot(sol::Vector{S}) where S <: SimResults
-  layout := good_layout(length(sol))
-  for (i, s) in enumerate(sol)
-    if isempty(s.vals) 
+@recipe function plot(sim::Vector{S}) where S <: SimResults
+  layout := good_layout(length(sim))
+  for (i, s) in enumerate(sim)
+    if isempty(s.sim.vals) 
       @warn "Results don't contain output. You should probably add output observables to your model"
       break
     end
@@ -113,31 +104,17 @@ end
 #https://github.com/SciML/SciMLBase.jl/blob/7151bbe784df70cc572073d76d3a818aa8d1f4d0/src/ensemble/ensemble_solutions.jl#L102
 @recipe function plot(sol::MCResults)
   for i in 1:length(sol)
-    sim = as_simulation(sol,i;title=sol.title)
     @series begin
       legend := false
-      sim
+      sol[i]
     end
   end
-  #=
-    time = sol.t
-    for i in eachindex(sol.vals)
-      size(sol.vals[i], 1) == 0 && continue
-      @series begin
-        title := "Condition ID:$(sol.title)"
-        legend := false
-        vals = [[si[j] for si in sol.vals[i]] for j in 1:length(sol.vals[i][1])]
-        #xlims --> (time[1],time[end])
-        (time, vals)
-      end
-    end
-    =#
 end
 
 @recipe function plot(sol::Vector{S}) where S <: MCResults
   layout := good_layout(length(sol))
   for (i, s) in enumerate(sol)
-    if isempty(s.vals) 
+    if isempty(s.sim[1].sim.vals) 
       @warn "Results don't contain output. You should probably add output observables to your model"
       break
     end
@@ -150,18 +127,17 @@ end
 
 ############################ DataFrames ########################################
 
-function DataFrames.DataFrame(sol::SimResults)
+function DataFrames.DataFrame(sr::SimResults)
   # df performance
-  df = DataFrame(
-    t = sol.t
-  )
-  labels = keys(sol.vals[1])
+  df = DataFrame(t=sr.sim.vals.t)
+
+  labels = observables(sr)
   for (i,v) in enumerate(labels)
-      df[!, v] = sol[i,:]
+      df[!, v] = sr[i,:]
   end
-  if hasproperty(sol,:scope) && !isempty(sol.scope)
-     df[!,:scope]=sol.scope
-  end
+
+  !isnothing(sr.sim.scope) && (df[!,:scope]=sr.sim.scope)
+  
   return df
 end
 
@@ -173,6 +149,7 @@ function save_results(filepath::String, sim::SimResults)
   CSV.write(filepath, df, delim=";")
 end
 
+#=FIXME
 function save_results(path::String, mcsim::MCResults; groupby::Symbol=:observables) 
   if groupby == :simulations
     for i in 1:length(mcsim)
@@ -188,3 +165,4 @@ function save_results(path::String, mcsim::MCResults; groupby::Symbol=:observabl
     end
   end
 end
+=#

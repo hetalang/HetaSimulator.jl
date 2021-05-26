@@ -3,40 +3,26 @@ function mc(
   cond::Cond,
   params::Vector{P},
   num_iter::Int;
-  saveat_measurements::Bool = false, # do we need it here ?
-  evt_save::Tuple{Bool,Bool}=(true,true),
   verbose=true,
-  time_type=Float64,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
   parallel_type=EnsembleSerial(),
   kwargs...
 ) where P<:Pair
-  !has_saveat(cond) && error("Add saveat values to Condition in order to run Monte-Carlo simulations.")
 
-  prob0 = build_ode_problem(cond, Pair{Symbol,Float64}[], saveat_measurements; time_type = time_type)
-  init_func = cond.model.init_func
-  t = time_type[]
-
-  #r=RemoteChannel(()->Channel{Vector{time_type}}(1)) # to pass t from workers
+  prob0 = cond.prob
+  init_func = cond.init_func
+  params_nt = NamedTuple(params)
 
   function prob_func(prob,i,repeat)
     verbose && println("Processing iteration $i")
 
-    cons_i = generate_cons(params,i)
-    merged_cons_i = update(prob.p.constants, cons_i)
-
-    u0, p0 = init_func(merged_cons_i)
-    prob.u0 .= u0
-    prob.p.constants .= merged_cons_i
-    prob.p.static .= p0
-    prob
+    update_init_values(prob, init_func, generate_cons(params_nt,i))
   end
 
   function output_func(sol, i)
-    i==num_iter && println(sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values.t) # tofix
-    sim = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
+    sim = build_results(sol,cond)
     (sim, false)
   end
 
@@ -58,7 +44,7 @@ function mc(
 
   #t = take!(r)
 
-  return MCResults(solution.u,t,cond)
+  return MCResults(solution.u, !has_saveat(cond), cond)
 end
 
 function mc(
@@ -67,7 +53,7 @@ function mc(
   num_iter::Int= size(params)[1],
   kwargs...
 ) 
-  cons = keys(cond.model.constants)
+  cons = keys(constants(cond))
   params_pairs = Pair[]
   
 
@@ -80,6 +66,7 @@ function mc(
   return mc(cond,params_pairs,num_iter;kwargs...)
 end
 
+#=FIXME
 function mc(
   model::Model,
   params::Vector{P},
@@ -106,7 +93,7 @@ function mc(
   )
   return mc(cond,params,num_iter;kwargs...)
 end
-
+=#
 # multi condition Monte-Carlo
 function mc(
   cond_pairs::AbstractVector{Pair{Symbol, C}},
@@ -124,7 +111,7 @@ function mc(
 end
 
 function mc(
-  platform::QPlatform,
+  platform::Platform,
   params::Vector{P},
   num_iter::Int;
   conditions::Union{AbstractVector{Symbol}, Nothing} = nothing,
@@ -143,6 +130,7 @@ function mc(
   return mc(cond_pairs,params,num_iter;kwargs...)
 end
 
+#=FIXME
 DiffEqBase.EnsembleAnalysis.get_timestep(mc::MCResults,i) = (getindex(as_simulation(mc,j),i) for j in 1:length(mc))
 DiffEqBase.EnsembleAnalysis.get_timepoint(mc::MCResults,t) = (as_simulation(mc,j)(:,t) for j in 1:length(mc))
 
@@ -157,9 +145,10 @@ function DiffEqBase.EnsembleAnalysis.EnsembleSummary(sim::MCResults,
 
   EnsembleSummary{Float64,2,typeof(t),typeof(m),typeof(v),typeof(qlow),typeof(qhigh)}(t,m,v,qlow,qhigh,trajectories,0.0,true)
 end
+=#
 
-
-generate_cons(v::Vector{P},i)  where P<:Pair = [k=>generate_cons(v,i) for (k,v) in v]
+generate_cons(vp::Vector{P},i)  where P<:Pair = NamedTuple([k=>generate_cons(v,i) for (k,v) in vp])
+generate_cons(nt::NamedTuple,i) = NamedTuple{keys(nt)}([generate_cons(v,i) for v in nt])
 generate_cons(v::Distribution,i) = rand(v)
 generate_cons(v::Real,i) = v
 generate_cons(v::Vector{R},i) where R<:Float64 = v[i]

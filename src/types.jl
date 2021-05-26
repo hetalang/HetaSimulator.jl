@@ -1,31 +1,31 @@
 ################################## Platform ###########################################
 
-struct QPlatform{M,C}
+struct Platform{M,C}
   models::Dict{Symbol,M}
   conditions::Dict{Symbol,C}
 end
 
-models(p::QPlatform) = p.models
-conditions(p::QPlatform) = p.conditions
+models(p::Platform) = p.models
+conditions(p::Platform) = p.conditions
 
-function Base.show(io::IO, ::MIME"text/plain", p::QPlatform)
+function Base.show(io::IO, ::MIME"text/plain", p::Platform)
   println(io, "Platform contains:")
-  println(io, "  $(length(models(p))) model(s). Use `models(p::QPlatform)` for details.")
-  println(io, "  $(length(conditions(p))) condition(s). Use `conditions(p::QPlatform)` for details.")
+  println(io, "  $(length(models(p))) model(s). Use `models(p::Platform)` for details.")
+  println(io, "  $(length(conditions(p))) condition(s). Use `conditions(p::Platform)` for details.")
 end
 
 ################################## Model ###########################################
 
 abstract type AbstractModel end
 
-struct Model{IF,O,EV,SF,C} <: AbstractModel
+struct Model{IF,O,EV,SF,C,EO} <: AbstractModel
   init_func::IF
   ode::O
   events::EV # Should it be inside of prob or not?
   saving_generator::SF
   observables::Vector{Symbol}
   constants::C # LArray{Float64,1,Array{Float64,1},(:a, :b)}
-  events_on::Vector{Pair{Symbol,Bool}}
+  events_on::EO
 end
 
 constants(m::Model) = m.constants
@@ -36,7 +36,7 @@ function Base.show(io::IO, ::MIME"text/plain", m::Model)
   println(io, "Model contains:")
   println(io, "  $(length(constants(m))) constant(s). Use `constants(m::Model)` for details.")
   println(io, "  $(length(observables(m))) observable(s). Use `observables(m::Model)` for details.")
-  println(io, "  $(length(events(m))) event(s). Use `events(m::Model)` for details.")
+  println(io, "  $(length(events_on(m))) event(s). Use `events_on(m::Model)` for details.")
 end
 
 ################################## Params ###########################################
@@ -62,20 +62,24 @@ end
 const MeasurementVector{P} = AbstractVector{P} where P<:AbstractMeasurementPoint
 
 ################################## Condition ###########################################
+abstract type AbstractCond end
 
-struct Cond{F,P,M}
+struct Cond{F,P,M} <: AbstractCond
   init_func::F
   prob::P
   measurements::M
 end 
 
 measurements(c::Cond) = c.measurements
+tspan(c::Cond) = c.prob.tspan
+saveat(c::Cond) = c.prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat.valtree
+constants(c::Cond) = c.prob.p.constants
 
 function Base.show(io::IO, ::MIME"text/plain", c::Cond)
-  println(io, "Simulation condition:")
-  #println(io, "  saveat values: $(c.saveat)")
-  println(io, "  tspan: $(c.prob.tspan)")
-  println(io)
+  println(io, "Condition contains:")
+  println(io, "  saveat values: $(saveat(c))")
+  println(io, "  tspan: $(tspan(c))")
+  #println(io)
   #println(io, "  $(length(constants(c))) constant(s). Use `constants(c::Cond)` for details.")
   #println(io, "  $(length(observables(c))) observable(s). Use `observables(c::Cond)` for details.")
   #println(io, "  $(length(events(c))) event(s). Use `events(c::Cond)` for details.")
@@ -91,12 +95,13 @@ struct SavedValues{uType,tType,scopeType}
   scope::scopeType
 end
 
-struct Simulation{uType,tType,scopeType}
-  u::uType
-  t::tType
+struct Simulation{V,scopeType}
+  vals::V
   scope::scopeType
   status::Symbol
 end
+
+Simulation(sv::SavedValues,status::Symbol) = Simulation(DiffEqArray(sv.u,sv.t),sv.scope,status)
 
 struct SimResults{S, C<:Cond} <: AbstractResults
   sim::S
@@ -106,7 +111,7 @@ end
 @inline Base.length(S::SimResults) = length(S.sim.u)
 
 function Base.show(io::IO, m::MIME"text/plain", S::SimResults)
-  println(io, "Simulation status is $(S.sim.retcode):")
+  println(io, "Simulation status is $(S.sim.status).")
   println(io, "You can plot simulation results with `plot(sim::SimResults)` or convert them to DataFrame with `DataFrame(sim::SimResults)`")
 end
 
@@ -119,8 +124,8 @@ end
 
 struct MCResults{S,C<:Cond} <: AbstractResults
   sim::S
-  cond::C
   saveat::Bool
+  cond::C
   # converged
   # elapsed_time
 end
@@ -143,20 +148,17 @@ abstract type AbstractEvent end
 struct TimeEvent{F1,F2} <: AbstractEvent
   condition_func::F1
   affect_func::F2
-  name::Symbol
   atStart::Bool
 end
 
 struct CEvent{F1,F2} <: AbstractEvent
   condition_func::F1
   affect_func::F2
-  name::Symbol
   atStart::Bool
 end
 
 struct StopEvent{F1} <: AbstractEvent
   condition_func::F1
-  name::Symbol # do we need it?
   atStart::Bool
 end
 

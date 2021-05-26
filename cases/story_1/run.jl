@@ -13,20 +13,20 @@ model = platform.models[:nameless]
 ################################## Single Simulation ######################################
 
 sim(model; tspan = (0., 200.)) |> plot #1
-sim(model; tspan = (0., 200.), constants = [:k1=>0.01]) |> plot #2
+#sim(model; tspan = (0., 200.), constants = [:k1=>0.01]) |> plot #2
 sim(model; saveat = 0:10:100) |> plot
 sim(model; saveat = 0:10:100, tspan = (0., 50.)) |> plot
 sim(model; saveat = 0:10:100, tspan = (0., 500.)) |> plot
-sim(model; tspan = (0., 500.)) |> plot
+sim(model; tspan = (0., 5.), events_on=[:sw1=>false, :ss1 => false], events_save=[:sw1=>(true,true), :ss1=>(true,true)]) |> plot
 
 ################################## "low level" i.e. without Platform  #####################
 
 ### single condition sim()
-cond1 = Cond(model; tspan = (0., 200.),saveat = [0.0, 50., 150., 250.]);
+cond1 = Cond(model; tspan = (0., 200.), events_on=[:ss1 => false], saveat = [0.0, 150., 250.]);
 sim(cond1) |> plot
-cond2 = Cond(model; tspan = (0., 200.), constants = [:k2 => 0.001, :k3 => 0.02]);
+cond2 = Cond(model; tspan = (0., 200.), events_on=[:sw1=>false, :ss1 => false], constants = [:k2 => 0.001, :k3 => 0.02]);
 sim(cond2) |> plot
-cond3 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.01], saveat = [50., 150., 250.]);
+cond3 = Cond(model; tspan = (0., 200.), events_on=[:ss1 => false],constants = [:k1=>0.01]);
 sim(cond3) |> plot # forcely extends simulation to 250.
 
 ### sim sequentially
@@ -36,9 +36,9 @@ sim([cond1, cond2, cond3]) |> plot
 sim([:x => cond1, :y=>cond2, :z=>cond3]) |> plot
 
 ### load measurements from CSV
-measurements_csv = read_measurements("./cases/story_1/measurements.csv")
-measurements_xlsx = read_measurements("./cases/story_1/measurements.xlsx")
-cond4 = Cond(model; constants = [:k2=>0.001, :k3=>0.04], saveat = [0.0, 50., 150., 250.]);
+measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv")
+measurements_xlsx = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.xlsx")
+cond4 = Cond(model; constants = [:k2=>0.001, :k3=>0.04], events_on=[:ss1 => false], saveat = [0.0, 50., 150., 250.]);
 add_measurements!(cond4, measurements_csv; subset = Dict(:condition => :dataone)) # from CSV
 
 ### load measurements from DataFrame
@@ -70,8 +70,8 @@ sim0 |> plot
 ################################## "high level" i.e. using Platform  #####################
 
 ### load conditions from csv
-conditions_csv = read_conditions("./cases/story_1/conditions.csv")
-conditions_xlsx = read_conditions("./cases/story_1/conditions.xlsx")
+conditions_csv = read_conditions("$HetaSimulatorDir/cases/story_1/conditions.csv")
+conditions_xlsx = read_conditions("$HetaSimulatorDir/cases/story_1/conditions.xlsx")
 add_conditions!(platform, conditions_csv)
 
 ### sim
@@ -82,7 +82,7 @@ sim_all |> plot
 
 ### Measurements
 # load from csv to model
-measurements = read_measurements("./cases/story_1/measurements.csv");
+measurements = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv");
 add_measurements!(platform, measurements)
 
 ### Fitting
@@ -96,9 +96,9 @@ fit_all = fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3])
 
 ################################## Monte-Carlo Simulations  #####################
 
-mccond1 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.01], saveat = [50., 80., 150.]);
-mccond2 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.02], saveat = [50., 100., 200.]);
-mccond3 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.03], saveat = [50., 100., 180.]);
+mccond1 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.01], saveat = [50., 80., 150.], events_on=[:ss1 => false]);
+mccond2 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.02], saveat = [50., 100., 200.], events_on=[:ss1 => false]);
+mccond3 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.03], saveat = [50., 100., 180.], events_on=[:ss1 => false]);
 
 # single MC Simulation
 mcsim1 = mc(mccond1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000)
@@ -116,7 +116,7 @@ mcsim = mc(platform, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000; con
 plot(mcsim)
 
 ################################## Monte-Carlo Statistics  #####################
-
+#= FIXME
 # mean
 timestep_mean(mcsim1,2)
 timepoint_mean(mcsim1,80)
@@ -162,3 +162,4 @@ addprocs(2)
 mccond1 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.01], saveat = [50., 80., 150.]);
 mcsim0 = mc(mccond1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 20)
 mcsim1 = mc(mccond1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 150, parallel_type=EnsembleDistributed())
+=#

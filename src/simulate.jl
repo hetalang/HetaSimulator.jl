@@ -8,106 +8,79 @@ const EMPTY_PROBLEM = ODEProblem(() -> nothing, [0.0], (0.,1.))
 
 function sim(
   cond::Cond; 
-  # the following two kwargs
-  # are currently needed for fitting
-  constants::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[], # to be removed
-  saveat_measurements::Bool = false, # to be removed
-  #
+
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
   kwargs... # other solver arguments
 )
   prob = cond.prob
-
   sol = solve(prob, alg; reltol = reltol, abstol = abstol,
     save_start = false, save_end = false, save_everystep = false, kwargs...)
 
   return build_results(sol, cond)
 end
 
-function build_results(sol::ODESolution, cond)
+function build_results(sol::SciMLBase.AbstractODESolution, cond)
   sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-  return SimResults(Simulation(sv.u, sv.t, sv.scope), sol.retcode, cond)
+  return SimResults(Simulation(sv, sol.retcode), cond)
 end
+
 ### simulate Model
 
 function sim(
   model::Model;
 
   ## arguments for Cond(::Model,...)
-  # constants::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
-  events_on::Vector{Pair{Symbol,Bool}} = Pair{Symbol,Bool}[],
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
-  saveat::Union{Nothing,AbstractVector{T}} = nothing,
-  tspan::Union{Nothing,Tuple{S,S}}=nothing,
+  events_on::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
+  events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}}=(true,true), 
   observables::Union{Nothing,Vector{Symbol}} = nothing,
-
-  ## arguments for sim(::Cond,...)
-  constants::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
-  saveat_measurements::Bool = false,
-  evt_save::Tuple{Bool,Bool}=(true,true), 
-  time_type=Float64,
-  alg=DEFAULT_ALG, 
-  reltol=DEFAULT_SIMULATION_RELTOL,
-  abstol=DEFAULT_SIMULATION_ABSTOL,
-  kwargs...
-) where {T<:Real,S<:Real}
+  saveat::Union{Nothing,AbstractVector} = nothing,
+  tspan::Union{Nothing,Tuple} = nothing,
+  save_scope::Bool=true,
+  time_type::DataType=Float64,
+  kwargs... # sim(c::Cond) kwargs
+)
   condition = Cond(
-    model;
-    events_on = events_on,
-    measurements = measurements,
-    saveat = saveat,
-    tspan = tspan,
-    observables = observables
-  )
+    model; measurements, 
+    events_on, events_save, observables, saveat, tspan, save_scope, time_type)
 
-  res = sim(
-    condition;
-    constants = constants,
-    saveat_measurements = saveat_measurements,
-    evt_save = evt_save, 
-    time_type = time_type,
-    alg = alg, 
-    reltol = reltol,
-    abstol = abstol,
-    kwargs...
-  )
-
-  return res
+  return sim(condition; kwargs...)
 end
 
 ### general interface for EnsembleProblem
 
 function sim(
-  condition_pairs::AbstractVector{Pair{Symbol, C}};
-  constants::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
-  saveat_measurements::Bool = false,
-  evt_save::Tuple{Bool,Bool} = (true, true),
-  time_type = Float64,
+  condition_pairs::Vector{P};
+
   alg = DEFAULT_ALG, 
   reltol = DEFAULT_SIMULATION_RELTOL, 
   abstol = DEFAULT_SIMULATION_ABSTOL,
-  output_func = default_output,
-  reduction = default_reduction,
-  kwargs... # other arguments for OrdinaryDiffEq.solve()
-) where C<:AbstractCond
 
-  if length(condition_pairs) == 0
-    return SimResults[] # BRAKE
-  end
+  parallel_type=EnsembleSerial(),
+  kwargs... # other arguments for OrdinaryDiffEq.solve()
+) where P<:Pair
+
+  isempty(condition_pairs) && return SimResults[] # BRAKE
 
   function prob_func(prob,i,repeat)
-    build_ode_problem(last(condition_pairs[i]), constants, saveat_measurements; time_type = time_type, title = String(first(condition_pairs[i])))
+    last(condition_pairs[i]).prob
   end
+
+  function _output(sol,i)
+    build_results(sol,last(condition_pairs[i])),false
+  end
+  
+  _reduction(u,batch,I) = (append!(u,batch),false)
 
   prob = EnsembleProblem(EMPTY_PROBLEM;
     prob_func = prob_func,
-    output_func = output_func,
-    reduction = reduction
-    )
+    output_func = _output,
+    reduction = _reduction
+  )
 
-  solution = solve(prob, alg;
+  solution = solve(prob, alg, parallel_type;
     trajectories = length(condition_pairs),
     reltol = reltol,
     abstol = abstol,
@@ -125,14 +98,14 @@ function sim(
   conditions::AbstractVector{C};
   kwargs... # other arguments to sim(::Vector{Pair})
 ) where {C<:AbstractCond}
-  condition_pairs = Pair{Symbol,AbstractCond}[Symbol("#$i") => cond for (i, cond) in pairs(conditions)]
+  condition_pairs = [Symbol("Cond_ID$i") => cond for (i, cond) in pairs(conditions)]
   return sim(condition_pairs; kwargs...)
 end
 
-### simulate QPlatform
+### simulate Platform
 
 function sim(
-  platform::QPlatform;
+  platform::Platform;
   conditions::Union{AbstractVector{Symbol}, Nothing} = nothing,
   kwargs... # other arguments to sim(::Vector{Pair})
 ) 

@@ -19,9 +19,9 @@ _param_value(sim, p::Float64, dp) = p
  
 function _param_value(sim, p::Symbol, dp)
   if p ∈ keys(constants(sim))
-    val = sim.constants[p]
+    val = constants(sim)[p]
   elseif p ∈ observables(sim)
-    val = sim(p, dp.t, dp.scope)
+    val = sim(dp.t, p, dp.scope)
   else 
     error("$p not found in simulated results.")
   end

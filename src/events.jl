@@ -1,42 +1,47 @@
-active_events(events, events_on, events_save::Tuple) =
-  active_events(events, events_on, fill(events_save, length(events)))
+active_events(events::NamedTuple, events_on::NamedTuple, events_save::Tuple) =
+  active_events(events, events_on, NamedTuple{keys(events)}(fill(events_save,length(events))))
 
-active_events(events, events_on, events_save::Vector{Tuple}) =
-  Tuple(add_event(evt; events_save) for evt in events if events_on)
+active_events(events::NamedTuple, events_on::NamedTuple, events_save::Vector{Pair{Symbol, Tuple{Bool, Bool}}}) =
+  active_events(events, events_on, NamedTuple(events_save))
 
-function add_event(evt::TimeEvent; events_save::Tuple{Bool, Bool}=(true,true))
+function active_events(events::NamedTuple, events_on::NamedTuple, events_save::NamedTuple)
+  @assert length(events)==length(events_on)==length(events_save) "Check events set up. `events`, `events_on` and `events_save` should have the same length."
+  return Tuple(add_event(events[ev], events_save[ev], ev) for ev in keys(events) if events_on[ev])
+end
+
+function add_event(evt::TimeEvent, events_save::Tuple{Bool, Bool}=(true,true), evt_name=nothing)
   tstops = Float64[]
   #cond_func(u, t, integrator) = t in tstops
 
   function init_time_event(cb,u,t,integrator)
       append!(tstops, evt.condition_func(integrator.sol.prob.p.constants, integrator.sol.prob.tspan))
-      #tf = integrator.sol.prob.tspan[2]
-      #[add_tstop!(integrator, tstop) for tstop in tstops if tstop <= tf]
-      [add_tstop!(integrator, tstop) for tstop in tstops]
+      tf = integrator.sol.prob.tspan[2]
+      [add_tstop!(integrator, tstop) for tstop in tstops if tstop <= tf]
+      #[add_tstop!(integrator, tstop) for tstop in tstops]
       cb.condition(u,t,integrator) ? cb.affect!(integrator) : nothing
   end
 
   DiscreteCallback(
         (u,t,integrator) -> t in tstops,
-        (integrator) -> evt_func_wrapper(integrator, evt.affect_func, events_save, evt.name),
+        (integrator) -> evt_func_wrapper(integrator, evt.affect_func, events_save, evt_name),
         initialize = init_time_event,
         save_positions=(false,false)
   )
 end
 
-function add_event(evt::CEvent; events_save::Tuple{Bool, Bool}=(true,true))
+function add_event(evt::CEvent, events_save::Tuple{Bool, Bool}=(true,true), evt_name=nothing)
   ContinuousCallback(
       evt.condition_func,
-      (integrator) -> evt_func_wrapper(integrator, evt.affect_func, events_save, evt.name),
+      (integrator) -> evt_func_wrapper(integrator, evt.affect_func, events_save, evt_name),
       (integrator) -> nothing,
       save_positions=(false,false)
   )
 end
 
-function add_event(evt::StopEvent; kwargs...)
+function add_event(evt::StopEvent, events_save::Tuple{Bool, Bool}=(true,false), evt_name=nothing)
   DiscreteCallback(
     evt.condition_func,
-    terminate!,
+    (integrator) -> evt_func_wrapper(integrator, terminate!, events_save, evt_name),
     save_positions=(false,false)
   )
 end
@@ -66,5 +71,5 @@ function save_position(integrator::DiffEqBase.AbstractODEIntegrator, scope=:ode_
   affect!.saveiter += 1
   copyat_or_push!(affect!.saved_values.t, affect!.saveiter, integrator.t)
   copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope, Val{false})
-  copyat_or_push!(affect!.saved_values.vals, affect!.saveiter, affect!.save_func(integrator.u, integrator.t, integrator),Val{false})
+  copyat_or_push!(affect!.saved_values.u, affect!.saveiter, affect!.save_func(integrator.u, integrator.t, integrator),Val{false})
 end

@@ -17,7 +17,7 @@ function add_measurements!(
 end
 
 function add_measurements!(
-  platform::QPlatform,
+  platform::Platform,
   vector::AbstractVector;
   subset::Union{Dict{Symbol}, Nothing} = nothing
 )
@@ -55,7 +55,7 @@ function add_measurements!(
 end
 
 function add_measurements!(
-  platform::QPlatform,
+  platform::Platform,
   df::DataFrame;
   kwargs...
 )

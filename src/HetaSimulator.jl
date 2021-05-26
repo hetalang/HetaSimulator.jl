@@ -42,7 +42,7 @@ module HetaSimulator
   include("import_platform.jl")
 
   export heta_update, heta_update_dev, heta_build, load_platform, load_jlplatform, load_jlmodel
-  export QPlatform, Model, Cond, Params
+  export Platform, Model, Cond, Params
   export TimeEvent, CEvent, StopEvent
   export read_conditions, add_conditions!
   export read_measurements, add_measurements!
