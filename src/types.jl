@@ -101,7 +101,7 @@ struct Simulation{V,scopeType}
   status::Symbol
 end
 
-Simulation(sv::SavedValues,status::Symbol) = Simulation(DiffEqArray(sv.u,sv.t),sv.scope,status)
+Simulation(sv::SavedValues,status::Symbol) = Simulation(DiffEqBase.SciMLBase.DiffEqArray(sv.u,sv.t),sv.scope,status)
 
 struct SimResults{S, C<:Cond} <: AbstractResults
   sim::S

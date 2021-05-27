@@ -17,7 +17,6 @@ module HetaSimulator
   @reexport using DataFrames
   @reexport using Distributions
   using Distributed
-  using RecursiveArrayTools
   # measurements 
   using CSV
   using XLSX
