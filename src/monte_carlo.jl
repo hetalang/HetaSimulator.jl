@@ -107,7 +107,7 @@ function mc(
     mcsol[i] = mc(last(cond),params,num_iter;
       kwargs...)
   end
-  return mcsol
+  return [first(k)=> v for (k,v) in zip(cond_pairs,mcsol)]
 end
 
 function mc(

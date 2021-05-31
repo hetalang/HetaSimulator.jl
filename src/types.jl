@@ -142,6 +142,10 @@ function Base.show(io::IO, m::MIME"text/plain", VMC::Vector{MC}) where MC<:MCRes
   println(io, "You can index simulated Monte-Carlo conditions with `sol[i]` or plot all conditions with `plot(sol::Vector{MCResults})`")
 end
 
+function Base.show(io::IO, m::MIME"text/plain", V::Vector{P}) where P<:Pair
+  Base.show(io::IO, m::MIME"text/plain", last.(V))
+end
+
 ################################## Events ##############################################
 abstract type AbstractEvent end
 

@@ -13,7 +13,7 @@ model = platform.models[:nameless]
 ################################## Single Simulation ######################################
 
 sim(model; tspan = (0., 200.)) |> plot #1
-#sim(model; tspan = (0., 200.), constants = [:k1=>0.01]) |> plot #2
+sim(model; tspan = (0., 200.), constants = [:k1=>0.01]) |> plot #2
 sim(model; saveat = 0:10:100) |> plot
 sim(model; saveat = 0:10:100, tspan = (0., 50.)) |> plot
 sim(model; saveat = 0:10:100, tspan = (0., 500.)) |> plot

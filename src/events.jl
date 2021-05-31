@@ -5,8 +5,16 @@ active_events(events::NamedTuple, events_on::NamedTuple, events_save::Vector{Pai
   active_events(events, events_on, NamedTuple(events_save))
 
 function active_events(events::NamedTuple, events_on::NamedTuple, events_save::NamedTuple)
-  @assert length(events)==length(events_on)==length(events_save) "Check events set up. `events`, `events_on` and `events_save` should have the same length."
-  return Tuple(add_event(events[ev], events_save[ev], ev) for ev in keys(events) if events_on[ev])
+  ev_names = keys((events))
+  for k in keys(events_on)
+    @assert k in ev_names "Event $k not found."
+  end
+  for k in keys(events_save)
+    @assert k in ev_names "Event $k not found."
+  end
+  _events_save = merge(NamedTuple{ev_names}(fill((true,true), length(events))), events_save)
+
+  return Tuple(add_event(events[ev], _events_save[ev], ev) for ev in keys(events) if events_on[ev])
 end
 
 function add_event(evt::TimeEvent, events_save::Tuple{Bool, Bool}=(true,true), evt_name=nothing)

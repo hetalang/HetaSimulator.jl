@@ -32,6 +32,7 @@ function sim(
   model::Model;
 
   ## arguments for Cond(::Model,...)
+  constants::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
   events_on::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
   events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}}=(true,true), 
@@ -43,7 +44,7 @@ function sim(
   kwargs... # sim(c::Cond) kwargs
 )
   condition = Cond(
-    model; measurements, 
+    model; constants, measurements,
     events_on, events_save, observables, saveat, tspan, save_scope, time_type)
 
   return sim(condition; kwargs...)
@@ -89,7 +90,7 @@ function sim(
     save_everystep = false,
     kwargs...
     )
-  return solution.u
+  return [first(cp)=>u for (cp,u) in zip(condition_pairs, solution.u)]
 end
 
 ### simulate many conditions

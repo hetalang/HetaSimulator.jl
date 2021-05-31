@@ -87,16 +87,17 @@ end
   nothing
 end
 
-@recipe function plot(sim::Vector{S}) where S <: SimResults
+@recipe function plot(sim::Vector{S}) where S <:AbstractResults
+  [Symbol("Cond_ID$i")=>s for (i,s) in enumerate(sim)]
+end
+
+@recipe function plot(sim::Vector{P}) where P <: Pair 
   layout := good_layout(length(sim))
   for (i, s) in enumerate(sim)
-    if isempty(s.sim.vals) 
-      @warn "Results don't contain output. You should probably add output observables to your model"
-      break
-    end
     @series begin
+      title := "$(first(s))"
       subplot := i
-      s
+      last(s)
     end
   end
 end
@@ -107,20 +108,6 @@ end
     @series begin
       legend := false
       sol[i]
-    end
-  end
-end
-
-@recipe function plot(sol::Vector{S}) where S <: MCResults
-  layout := good_layout(length(sol))
-  for (i, s) in enumerate(sol)
-    if isempty(s.sim[1].sim.vals) 
-      @warn "Results don't contain output. You should probably add output observables to your model"
-      break
-    end
-    @series begin
-      subplot := i
-      s
     end
   end
 end
