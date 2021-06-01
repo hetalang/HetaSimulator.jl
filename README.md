@@ -1,3 +1,7 @@
+# HetaSimulator
+
+[![Documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://hetalang.github.io/HetaSimulator.jl/dev/)
+
 ## Overview
 
 **HetaSimulator** is a simulation and parameters estimation (fitting) platform for [Heta modeling language](https://hetalang.github.io/#/). The main purpose of the platform is to establish the linkage between emerging [QSP frameworks](https://en.wikipedia.org/wiki/Quantitative_systems_pharmacology) and fast computational methods (parallel simulations, automatic differentiation, etc.). **HetaSimulator** is inspired by the user experience of the software packages like [SBMLToolbox](http://sbml.org/Software/SBMLToolbox), [mrgsolve](https://mrgsolve.github.io/), [DBSolve](http://insysbio.com/en/software/db-solve-optimum), [dMod](https://github.com/dkaschek/dMod). From the computational point of view, it utilizes the unique features of [Julia](https://julialang.org/) and [SciML ecosystem](https://sciml.ai/).
