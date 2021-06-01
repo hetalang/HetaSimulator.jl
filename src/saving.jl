@@ -100,22 +100,6 @@ function saving_initialize(cb, u, t, integrator)
   cb.affect!.save_start && cb.affect!(integrator, scope=:start_)
 end
 
-
-"""
-  SavingCallback(save_func, saved_values::SubSolution;
-                  saveat=Vector{eltype(saved_values.t)}(),
-                  save_everystep=isempty(saveat),
-                  save_start = save_everystep || isempty(saveat) || saveat isa Number,
-                  save_end = save_everystep || isempty(saveat) || saveat isa Number,
-                  tdir=1)
-A `DiscreteCallback` applied after every step, saving the time `t` and the value
-of `save_func(u, t, integrator)` in `saved_values`.
-If `save_everystep`, every step of the integrator is saved.
-If `saveat` is specified, the values are saved at the given times, using
-interpolation if necessary.
-If the time `tdir` direction is not positive, i.e. `tspan[1] > tspan[2]`,
-`tdir = -1` has to be specified.
-"""
 function saving_wrapper(save_func, saved_values::SavedValues;
                       saveat=Vector{eltype(saved_values.t)}(),
                       save_everystep=isempty(saveat),

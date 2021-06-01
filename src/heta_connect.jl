@@ -94,7 +94,7 @@ end
       kwargs...
     )
 
-Converts heta model to Julia and outputs model struct and task draft
+Converts heta model to Julia and outputs platform type
 """
 function load_platform(
   heta_index::AbstractString;
@@ -124,7 +124,7 @@ end
       rm_out::Bool = false
     )
 
-Loads prebuild julia model file and task draft
+Loads prebuild julia model as part of platform
 """
 function load_jlplatform(
   model_jl::AbstractString; 
