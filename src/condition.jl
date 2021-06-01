@@ -20,8 +20,8 @@ end
 function add_conditions!(
   platform::Platform,
   vector::AbstractVector;
-  subset::Union{Dict{Symbol}, Nothing} = nothing
-)
+  subset::AbstractVector{P} = Pair{Symbol, Symbol}[]
+) where P <: Pair{Symbol, Symbol}
   selected_rows = _subset(vector, subset)
 
   for row in selected_rows

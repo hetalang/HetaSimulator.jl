@@ -7,8 +7,8 @@ const MEAN = :mean
 function add_measurements!(
   condition::Cond,
   vector::AbstractVector;
-  subset::Union{Dict{Symbol}, Nothing} = nothing
-)
+  subset::AbstractVector{P} = Pair{Symbol, Symbol}[]
+) where P <: Pair{Symbol, Symbol}
   selected_rows = _subset(vector, subset)
 
   for row in selected_rows
@@ -19,8 +19,8 @@ end
 function add_measurements!(
   platform::Platform,
   vector::AbstractVector;
-  subset::Union{Dict{Symbol}, Nothing} = nothing
-)
+  subset::AbstractVector{P} =  Pair{Symbol, Symbol}[]
+) where P <: Pair{Symbol, Symbol}
   selected_rows = _subset(vector, subset)
 
   # we will store here lost condition names

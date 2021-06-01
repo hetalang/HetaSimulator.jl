@@ -14,8 +14,11 @@ end
 
 typed(v::Symbol) = v
 
-function _subset(vector::AbstractVector, subset::Union{Dict{Symbol}, Nothing} = nothing)
-  if subset === nothing
+function _subset(
+  vector::AbstractVector,
+  subset::AbstractVector{P} = Pair{Symbol, Symbol}[]
+) where P <: Pair{Symbol, Symbol}
+  if length(subset) === 0
     # use the whole vector
     return vector
   else

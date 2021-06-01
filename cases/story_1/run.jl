@@ -1,3 +1,6 @@
+#=
+    "low level" i.e. without Platform
+=#
 using HetaSimulator, Plots
 using DataFrames, CSV
 
@@ -12,22 +15,50 @@ model = platform.models[:nameless]
 
 ################################## Single Simulation ######################################
 
-sim(model; tspan = (0., 200.)) |> plot #1
-sim(model; tspan = (0., 200.), constants = [:k1=>0.01]) |> plot #2
+sim(model; tspan = (0., 200.)) |> plot
+sim(model; tspan = (0., 200.), constants = [:k1=>0.01]) |> plot
 sim(model; saveat = 0:10:100) |> plot
 sim(model; saveat = 0:10:100, tspan = (0., 50.)) |> plot
 sim(model; saveat = 0:10:100, tspan = (0., 500.)) |> plot
-sim(model; tspan = (0., 5.), events_on=[:sw1=>false, :ss1 => false], events_save=[:sw1=>(true,true), :ss1=>(true,true)]) |> plot
+sim(
+    model; 
+    tspan = (0., 500.),
+    events_on=[:sw1=>false, :ss1 => false],
+    events_save=[:sw1=>(true,true), :ss1=>(true,true)]
+    ) |> plot
+sim(
+    model;
+    tspan = (0., 500.),
+    events_on=[:sw1=>false],
+    events_save=[:sw1=>(true,true)]
+    ) |> plot
+sim(
+    model;
+    tspan = (0., 500.),
+    events_on=[:sw1=>true],
+    events_save=[:sw1=>(false,false)]
+    ) |> plot
 
-################################## "low level" i.e. without Platform  #####################
 
 ### single condition sim()
-cond1 = Cond(model; tspan = (0., 200.), events_on=[:ss1 => false], saveat = [0.0, 150., 250.]);
+cond1 = Cond(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]);
 sim(cond1) |> plot
-cond2 = Cond(model; tspan = (0., 200.), events_on=[:sw1=>false, :ss1 => false], constants = [:k2 => 0.001, :k3 => 0.02]);
+
+cond2 = Cond(
+    model;
+    tspan = (0., 200.),
+    events_on=[:sw1=>false],
+    constants = [:k2 => 0.001, :k3 => 0.02]
+    );
 sim(cond2) |> plot
-cond3 = Cond(model; tspan = (0., 200.), events_on=[:ss1 => false],constants = [:k1=>0.01]);
-sim(cond3) |> plot # forcely extends simulation to 250.
+
+cond3 = Cond(
+    model;
+    tspan = (0., 250.),
+    events_on=[:sw1=>false],
+    constants = [:k2 => 0.1]
+    );
+sim(cond3) |> plot
 
 ### sim sequentially
 sim.([cond1, cond2, cond3]) |> plot
@@ -38,82 +69,55 @@ sim([:x => cond1, :y=>cond2, :z=>cond3]) |> plot
 ### load measurements from CSV
 measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv")
 measurements_xlsx = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.xlsx")
-cond4 = Cond(model; constants = [:k2=>0.001, :k3=>0.04], events_on=[:ss1 => false], saveat = [0.0, 50., 150., 250.]);
-add_measurements!(cond4, measurements_csv; subset = Dict(:condition => :dataone)) # from CSV
-
-### load measurements from DataFrame
-measurements_df = measurements_csv |> DataFrame
-add_measurements!(cond1, measurements_df; subset = Dict(:condition => :withdata2)) # from DataFrame
-# cond1.measurements
+cond4 = Cond(model; constants = [:k2=>0.001, :k3=>0.04], saveat = [0.0, 50., 150., 250.]);
+add_measurements!(cond4, measurements_csv; subset = [:condition => :dataone])
 
 ### fit many conditions
 res1 = fit([:x=>cond2, :y=>cond3, :z=>cond4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])
 res2 = fit([cond2, cond3, cond4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])
 
-# sim whole platform
-push!(platform.conditions, :one => cond1)
-push!(platform.conditions, :two => cond2)
-sol = sim(platform);
-sol |> plot
+# sim all conditions
+sol = sim([:c1 => cond1, :c2=>cond2, :c3=>cond3, :c4=>cond4])
+plot(sol)
+
 # plot selected observables
 plot(sol; vars=[:a,:c])
 # plot selected observables without data
 plot(sol; vars=[:a,:c], measurements=false)
-# sim conditions by name
-sim2 = sim(platform, conditions = [:two])
-sim2 |> plot
-sim1 = sim(platform, conditions = [:one])
-sim1 |> plot
-sim0 = sim(platform, conditions = Symbol[]) # should return empty results
-sim0 |> plot
-
-################################## "high level" i.e. using Platform  #####################
-
-### load conditions from csv
-conditions_csv = read_conditions("$HetaSimulatorDir/cases/story_1/conditions.csv")
-conditions_xlsx = read_conditions("$HetaSimulatorDir/cases/story_1/conditions.xlsx")
-add_conditions!(platform, conditions_csv)
-
-### sim
-sim1 = sim(platform, conditions = [:three]);
-sim1 |> plot
-sim_all = sim(platform);
-sim_all |> plot
-
-### Measurements
-# load from csv to model
-measurements = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv");
-add_measurements!(platform, measurements)
-
-### Fitting
-
-# loss(sim1, measurements.dataone) # why?
-
-fit1 = fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3], conditions = [:dataone])
-fit2 = fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3], conditions = [:withdata2])
-fit3 = fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3], conditions = [:dataone,:withdata2])
-fit_all = fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3])
 
 ################################## Monte-Carlo Simulations  #####################
 
-mccond1 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.01], saveat = [50., 80., 150.], events_on=[:ss1 => false]);
-mccond2 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.02], saveat = [50., 100., 200.], events_on=[:ss1 => false]);
-mccond3 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.03], saveat = [50., 100., 180.], events_on=[:ss1 => false]);
+mccond1 = Cond(
+    model;
+    tspan = (0., 200.),
+    constants = [:k1=>0.01],
+    saveat = [50., 80., 150.]
+    );
+mccond2 = Cond(
+    model;
+    tspan = (0., 200.),
+    constants = [:k1=>0.02],
+    saveat = [50., 100., 200.]
+    );
+mccond3 = Cond(
+    model; 
+    tspan = (0., 200.),
+    constants = [:k1=>0.03],
+    saveat = [50., 100., 180.],
+    events_on=[:sw1 => false]
+    );
 
 # single MC Simulation
 mcsim1 = mc(mccond1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000)
 plot(mcsim1)
 
 # multi MC Simulation
-mcsim2 = mc([:mc1=>mccond1,:mc2=>mccond2,:mc3=>mccond3], [:k1=>0.01, :k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)
+mcsim2 = mc(
+    [:mc1=>mccond1,:mc2=>mccond2,:mc3=>mccond3],
+    [:k1=>0.01, :k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)],
+    1000
+    )
 plot(mcsim2)
-
-# QPlatform MC Simulation
-conditions_csv = read_conditions("$HetaSimulatorDir/cases/story_1/conditions.csv")
-add_conditions!(platform, conditions_csv)
-
-mcsim = mc(platform, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000; conditions=[:dataone, :withdata2])
-plot(mcsim)
 
 ################################## Monte-Carlo Statistics  #####################
 #= FIXME
