@@ -1,74 +1,55 @@
-**HetaSimulator** is a QSP simulation engine based on Julia.
+## Overview
 
+**HetaSimulator** is a simulation and parameters estimation (fitting) platform for [Heta modeling language](https://hetalang.github.io/#/). The main purpose of the platform is to establish the linkage between emerging [QSP frameworks](https://en.wikipedia.org/wiki/Quantitative_systems_pharmacology) and fast computational methods (parallel simulations, automatic differentiation, etc.). **HetaSimulator** is inspired by the user experience of the software packages like [SBMLToolbox](http://sbml.org/Software/SBMLToolbox), [mrgsolve](https://mrgsolve.github.io/), [DBSolve](http://insysbio.com/en/software/db-solve-optimum), [dMod](https://github.com/dkaschek/dMod). From the computational point of view, it utilizes the unique features of [Julia](https://julialang.org/) and [SciML ecosystem](https://sciml.ai/).
 
 ## Installation
 
-It is assumed that you have **Julia** v1.x installed. Latest Julia release can be downloaded from [julialang.org](https://julialang.org/downloads/)
+It is assumed that you have **Julia** v1.6 installed. Latest Julia release can be downloaded from [julialang.org](https://julialang.org/downloads/)
 
 To install or update HetaSimulator and Heta compiler run:
 
 ```julia
 julia> ]
-(@v1.5) pkg> add https://github.com/hetalang/HetaSimulator.jl.git
+(@v1.6) pkg> add https://github.com/hetalang/HetaSimulator.jl.git
 julia> using HetaSimulator
 julia> heta_update() # installs "Heta compiler" in NodeJS
 ```
 
-## HetaSimulator: basic usage
+## Introduction
 
-HetaSimulator introduces three main functions: `sim`, `mc` and `fit`. 
+The user of HetaSimulator typically deals with the following three types:
+- `Model` - an ODE model, containing rhs, rules, initial parameters and vector of events.
+- `Cond` - condition representing a special model's setup for simulations or fitting. This setup can include initial parameters and events settings, output variables etc. In case of fitting `Cond` should also include experimental data. A common usage of `Cond` can be model's simulation with different drugs (parameters and events setup). Different `Cond`'s can be united to run multi-conditional simulations and fitting.
+- `Platform` - container for different `Model`s and `Cond`s.
 
-```julia
-sim(
-  m::QModel, ## QModel type 
-  condition;
-  constants::NamedTuple=NamedTuple(), ## additional set of constants
-  saveat::Union{Nothing,AbstractVector{T}}=nothing, 
-  tspan::Union{Nothing,Tuple{T,T}}=nothing,
-  evt_save::Tuple{Bool,Bool}=(true,true), 
-  time_type=Float64,
-  alg=DEFAULT_ALG, 
-  reltol=DEFAULT_SIMULATION_RELTOL, 
-  abstol=DEFAULT_SIMULATION_ABSTOL, 
-  kwargs...
-)
-```
-- `m` - `QModel` type
-- `condition` - either `Cond` type or `Symbol` name of the condition added to the `QModel`. In case user provides vector value `HetaSimulator` will run multiple simulations. The argument also supports `Val(:all)` value to simulate all conditions added to the `QModel`
-- `constants` - additional set of `constants` which will overwrite both default and condition values
-- `saveat` - a collection of time points to save at. Supports `Vector` (ex. [1,2,5,10]) and `Range` (ex. `1:2:100`) values. If not provided the solution is either saved at all time points reached by the solver or at condition data points
-- `tspan` - the timespan for the problem. If not provided `tspan` is set on the bases of `saveat` or condition data points
-- `evt_save` - events' saving control. Default is `(true,true)`
-- `alg` - ODE solver alg. Default is `AutoTsit5(Rosenbrock23())`
-- `reltol` - relative tolerance. Default is `1e-3`
-- `abstol` - absolute tolerance. Default is `1e-6`
-- `kwargs` - other keyword arguments supported by `DiffEqBase.solve`
+The user can perform the following three operations with both `Model`, `Cond` and `Platform`
+- `sim` - run a single simulation or multi-conditional simulations. 
+- `fit` - fit a model to experimental data. 
+- `mc` - run Monte-Carlo or virtual patients simulations.
 
+See documentation for detailed overview of **HetaSimulator** types and functions' arguments.
+
+## Basic usage
+
+A basic use-case example is provided in /cases/story_1 folder
 
 ```julia
-fit(
-  m::QModel,
-  condition,
-  param::NamedTuple;
-  ftol_abs = 0.0,
-  ftol_rel = 1e-4, 
-  xtol_rel = 0.0,
-  xtol_abs = 0.0, 
-  fit_alg = :LN_NELDERMEAD,
-  maxeval = 10000,
-  maxtime = 0.0,
-  lbounds = fill(0.0,length(param)),
-  ubounds = fill(Inf,length(param)),
-  kwargs...
-)
+using HetaSimulator, Plots
+
+platform = load_platform("$HetaSimulatorDir/cases/story_1", rm_out=false);
+model = platform.models[:nameless]
+
+## single simulation
+sim(model; tspan = (0., 200.)) |> plot #1
+
+## condition simulation
+cond1 = Cond(model; tspan = (0., 200.), events_on=[:ss1 => false], saveat = [0.0, 150., 250.]);
+sim(cond1) |> plot
+
+## fitting
+measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv")
+cond4 = Cond(model; constants = [:k2=>0.001, :k3=>0.04], events_on=[:ss1 => false], saveat = [0.0, 50., 150., 250.]);
+add_measurements!(cond4, measurements_csv; subset = Dict(:condition => :dataone))
+
+
 ```
-- `m` - `QModel` type
-- `condition` - either `Cond` type or `Symbol` name of the condition added to the `QModel`. In case user provides vector value `HetaSimulator` will run multiconditional fitting. The argument also supports `Val(:all)` value to fit all conditions added to the `QModel`
-- `param` - additional set of `constants` which will overwrite both default and condition values
-- `ftol_abs`, `ftol_rel`, `xtol_abs`, `xtol_rel` - Fitting tolerance setup proposed in NLopt. See [NLopt README](https://github.com/JuliaOpt/NLopt.jl) for details. By default `ftol_rel = 1e-4`
-- `fit_alg` - optimization algorithm supported by NLopt. Default is `:LN_NELDERMEAD`
-- `maxeval` - maximum objective function evaluation before optimizer terminates. Defailt is `10000`
-- `maxtime` - maximum elapsed time before optimizer terminates. By default this option is not set
-- `kwargs` - other key word arguments supported by `HetaSimulator.simulate` 
- 
-For further usage detail see `/cases` 
