@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Home · HetaSimulator Docs</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit">HetaSimulator Docs</span></div><form class="docs-search" action="search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>Home</a><ul class="internal"><li><a class="tocitem" href="#Overview"><span>Overview</span></a></li><li><a class="tocitem" href="#Installation"><span>Installation</span></a></li><li><a class="tocitem" href="#Introduction"><span>Introduction</span></a></li><li><a class="tocitem" href="#Basic-usage"><span>Basic usage</span></a></li></ul></li><li><a class="tocitem" href="api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Home</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Home</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/hetalang/HetaSimulator.jl/blob/master/docs/src/index.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h2 id="Overview"><a class="docs-heading-anchor" href="#Overview">Overview</a><a id="Overview-1"></a><a class="docs-heading-anchor-permalink" href="#Overview" title="Permalink"></a></h2><p><strong>HetaSimulator</strong> is a simulation and parameters estimation (fitting) platform for <a href="https://hetalang.github.io/#/">Heta modeling language</a>. The main purpose of the platform is to establish the linkage between emerging <a href="https://en.wikipedia.org/wiki/Quantitative_systems_pharmacology">QSP frameworks</a> and fast computational methods (parallel simulations, automatic differentiation, etc.). <strong>HetaSimulator</strong> is inspired by the user experience of the software packages like <a href="http://sbml.org/Software/SBMLToolbox">SBMLToolbox</a>, <a href="https://mrgsolve.github.io/">mrgsolve</a>, <a href="http://insysbio.com/en/software/db-solve-optimum">DBSolve</a>, <a href="https://github.com/dkaschek/dMod">dMod</a>. From the computational point of view, it utilizes the unique features of <a href="https://julialang.org/">Julia</a> and <a href="https://sciml.ai/">SciML ecosystem</a>.</p><h2 id="Installation"><a class="docs-heading-anchor" href="#Installation">Installation</a><a id="Installation-1"></a><a class="docs-heading-anchor-permalink" href="#Installation" title="Permalink"></a></h2><p>It is assumed that you have <strong>Julia</strong> v1.6 installed. Latest Julia release can be downloaded from <a href="https://julialang.org/downloads/">julialang.org</a></p><p>To install or update HetaSimulator and Heta compiler run:</p><pre><code class="language-julia">julia&gt; ]
+(@v1.6) pkg&gt; add https://github.com/hetalang/HetaSimulator.jl.git
+julia&gt; using HetaSimulator
+julia&gt; heta_update() # installs &quot;Heta compiler&quot; in NodeJS</code></pre><h2 id="Introduction"><a class="docs-heading-anchor" href="#Introduction">Introduction</a><a id="Introduction-1"></a><a class="docs-heading-anchor-permalink" href="#Introduction" title="Permalink"></a></h2><p>The user of HetaSimulator typically deals with the following three types:</p><ul><li><code>Model</code> - an ODE model, containing rhs, rules, initial parameters and vector of events.</li><li><code>Cond</code> - condition representing a special model&#39;s setup for simulations or fitting. This setup can include initial parameters and events settings, output variables etc. In case of fitting <code>Cond</code> should also include experimental data. A common usage of <code>Cond</code> can be model&#39;s simulation with different drugs (parameters and events setup). Different <code>Cond</code>&#39;s can be united to run multi-conditional simulations and fitting.</li><li><code>Platform</code> - container for different <code>Model</code>s and <code>Cond</code>s.</li></ul><p>The user can perform the following three operations with both <code>Model</code>, <code>Cond</code> and <code>Platform</code></p><ul><li><code>sim</code> - run a single simulation or multi-conditional simulations. </li><li><code>fit</code> - fit a model to experimental data. </li><li><code>mc</code> - run Monte-Carlo or virtual patients simulations.</li></ul><p>See documentation for detailed overview of <strong>HetaSimulator</strong> types and functions&#39; arguments.</p><h2 id="Basic-usage"><a class="docs-heading-anchor" href="#Basic-usage">Basic usage</a><a id="Basic-usage-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-usage" title="Permalink"></a></h2><p>A basic use-case example is provided in /cases/story_1 folder</p><pre><code class="language-julia">using HetaSimulator, Plots
+
+platform = load_platform(&quot;$HetaSimulatorDir/cases/story_1&quot;, rm_out=false);
+model = platform.models[:nameless]
+
+## single simulation
+
+sim(model; tspan = (0., 200.)) |&gt; plot #1
+
+## condition simulation
+
+cond1 = Cond(model; tspan = (0., 200.), events_on=[:ss1 =&gt; false], saveat = [0.0, 150., 250.]);
+sim(cond1) |&gt; plot
+cond2 = Cond(model; tspan = (0., 200.), events_on=[:sw1=&gt;false, :ss1 =&gt; false], constants = [:k2 =&gt; 0.001, :k3 =&gt; 0.02]);
+sim(cond2) |&gt; plot
+cond3 = Cond(model; tspan = (0., 200.), events_on=[:ss1 =&gt; false],constants = [:k1=&gt;0.01]);
+sim(cond3) |&gt; plot 
+
+sim([:x =&gt; cond1, :y=&gt;cond2, :z=&gt;cond3]) |&gt; plot
+
+## fitting
+
+measurements_csv = read_measurements(&quot;$HetaSimulatorDir/cases/story_1/measurements.csv&quot;)
+cond4 = Cond(model; constants = [:k2=&gt;0.001, :k3=&gt;0.04], events_on=[:ss1 =&gt; false], saveat = [0.0, 50., 150., 250.]);
+add_measurements!(cond4, measurements_csv; subset = Dict(:condition =&gt; :dataone))
+res2 = fit([cond2, cond3, cond4], [:k1=&gt;0.1,:k2=&gt;0.2,:k3=&gt;0.3])
+
+## Monte-Carlo simulations
+
+mccond1 = Cond(model; tspan = (0., 200.), constants = [:k1=&gt;0.01], saveat = [50., 80., 150.], events_on=[:ss1 =&gt; false]);
+mccond2 = Cond(model; tspan = (0., 200.), constants = [:k1=&gt;0.02], saveat = [50., 100., 200.], events_on=[:ss1 =&gt; false]);
+mccond3 = Cond(model; tspan = (0., 200.), constants = [:k1=&gt;0.03], saveat = [50., 100., 180.], events_on=[:ss1 =&gt; false]);
+
+mc(mccond1, [:k2=&gt;Normal(1e-3,1e-4), :k3=&gt;Normal(1e-4,1e-5)], 1000) |&gt; plot
+mc([:mc1=&gt;mccond1,:mc2=&gt;mccond2,:mc3=&gt;mccond3], [:k1=&gt;0.01, :k2=&gt;Normal(1e-3,1e-4), :k3=&gt;Uniform(1e-4,1e-2)], 1000) |&gt; plot
+
+## Simulations and fitting with Platform interface
+
+# load conditions
+conditions_csv = read_conditions(&quot;$HetaSimulatorDir/cases/story_1/conditions.csv&quot;)
+add_conditions!(platform, conditions_csv)
+
+# load measurements
+measurements = read_measurements(&quot;$HetaSimulatorDir/cases/story_1/measurements.csv&quot;);
+add_measurements!(platform, measurements)
+
+sim(platform, conditions = [:three]) |&gt; plot
+fit1 = fit(platform, [:k1=&gt;0.1,:k2=&gt;0.2,:k3=&gt;0.3], conditions = [:dataone,:withdata2])</code></pre></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 1 June 2021 12:46">Tuesday 1 June 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
