@@ -1,5 +1,5 @@
-const DEFAULT_ESTIMATION_RELTOL = 1e-8
-const DEFAULT_ESTIMATION_ABSTOL = 1e-12
+const DEFAULT_FITTING_RELTOL = 1e-6
+const DEFAULT_FITTING_ABSTOL = 1e-8
 
 ### general interface
 
@@ -7,8 +7,8 @@ function fit(
   condition_pairs::AbstractVector{Pair{Symbol, C}},
   params::Vector{Pair{Symbol,Float64}};
   alg=DEFAULT_ALG,
-  reltol=DEFAULT_ESTIMATION_RELTOL,
-  abstol=DEFAULT_ESTIMATION_ABSTOL,
+  reltol=DEFAULT_FITTING_RELTOL,
+  abstol=DEFAULT_FITTING_ABSTOL,
   parallel_type=EnsembleSerial(),
   ftol_abs = 0.0,
   ftol_rel = 1e-4, 

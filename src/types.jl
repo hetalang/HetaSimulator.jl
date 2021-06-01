@@ -105,7 +105,7 @@ Simulation(sv::SavedValues,status::Symbol) = Simulation(DiffEqBase.SciMLBase.Dif
 
 struct SimResults{S, C<:Cond} <: AbstractResults
   sim::S
-  cond::C # do we need it?
+  cond::C 
 end
 
 @inline Base.length(S::SimResults) = length(S.sim.u)

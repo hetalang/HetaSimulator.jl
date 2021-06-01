@@ -6,6 +6,23 @@ const EMPTY_PROBLEM = ODEProblem(() -> nothing, [0.0], (0.,1.))
 
 ### simulate condition
 
+"""
+    sim(cond::Cond; 
+      alg=DEFAULT_ALG, 
+      reltol=DEFAULT_SIMULATION_RELTOL, 
+      abstol=DEFAULT_SIMULATION_ABSTOL,
+      kwargs...)
+
+Simulate single condition `cond`. Returns [`SimResults`](@ref) type.
+
+Arguments:
+
+- `cond` : simulation condition of type [`Cond`](@ref)
+- `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
+- `reltol` : relative tolerance. Default is 1e-3
+- `abstol` : relative tolerance. Default is 1e-6
+- kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
+"""
 function sim(
   cond::Cond; 
 
@@ -27,7 +44,23 @@ function build_results(sol::SciMLBase.AbstractODESolution, cond)
 end
 
 ### simulate Model
+"""
+    sim(cond::Cond; 
+      alg=DEFAULT_ALG, 
+      reltol=DEFAULT_SIMULATION_RELTOL, 
+      abstol=DEFAULT_SIMULATION_ABSTOL,
+      kwargs...)
 
+Simulate single condition `cond`. Returns [`SimResults`](@ref) type.
+
+Arguments:
+
+- `cond` : simulation condition of type [`Cond`](@ref)
+- `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
+- `reltol` : relative tolerance. Default is 1e-3
+- `abstol` : relative tolerance. Default is 1e-6
+- kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
+"""
 function sim(
   model::Model;
 
@@ -52,6 +85,25 @@ end
 
 ### general interface for EnsembleProblem
 
+"""
+    sim(condition_pairs::Vector{P}; 
+      alg=DEFAULT_ALG, 
+      reltol=DEFAULT_SIMULATION_RELTOL, 
+      abstol=DEFAULT_SIMULATION_ABSTOL,
+      parallel_type=EnsembleSerial(),
+      kwargs...) where P<:Pair
+
+Simulate multiple conditions. Returns `Vector{Pair}`.
+
+Arguments:
+
+- `condition_pairs` : vector of pairs containing names and conditions of type [`Cond`](@ref)
+- `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
+- `reltol` : relative tolerance. Default is 1e-3
+- `abstol` : relative tolerance. Default is 1e-6
+- `parallel_type` : type of multiple simulations parallelism. Default is no parallelism. See SciML docs for details
+- kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
+"""
 function sim(
   condition_pairs::Vector{P};
 

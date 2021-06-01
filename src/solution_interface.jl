@@ -26,7 +26,7 @@ end
 
 ############################ Plots ########################################
 
-function good_layout(n)
+function layout_choice(n)
   n == 1 && return (1,1)
   n == 2 && return (2,1)
   n == 3 && return (3,1)
@@ -92,7 +92,7 @@ end
 end
 
 @recipe function plot(sim::Vector{P}) where P <: Pair 
-  layout := good_layout(length(sim))
+  layout := layout_choice(length(sim))
   for (i, s) in enumerate(sim)
     @series begin
       title := "$(first(s))"
