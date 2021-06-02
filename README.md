@@ -3,16 +3,24 @@
 [![GitHub issues](https://img.shields.io/github/issues/hetalang/HetaSimulator.jl.svg)](https://GitHub.com/hetalang/HetaSimulator.jl/issues/)
 [![Documentation](https://github.com/hetalang/HetaSimulator.jl/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/hetalang/HetaSimulator.jl/actions/workflows/gh-pages.yml)
 [![Coverage Status](https://coveralls.io/repos/github/hetalang/HetaSimulator.jl/badge.svg?branch=master)](https://coveralls.io/github/hetalang/HetaSimulator.jl?branch=master)
+[![GitHub license](https://img.shields.io/github/license/hetalang/HetaSimulator.jl.svg)](https://github.com/hetalang/HetaSimulator.jl/blob/master/LICENSE)
 
 # HetaSimulator
 
-## Overview
+**HetaSimulator** is an OpenSource simulation and parameters estimation (fitting) platform for the [Heta modeling language](https://hetalang.github.io/#/). 
+The main purpose of the package is to establish the linkage between emerging [QSP frameworks](https://en.wikipedia.org/wiki/Quantitative_systems_pharmacology) and fast computational methods (parallel simulations, automatic differentiation, etc.).
 
-**HetaSimulator** is a simulation and parameters estimation (fitting) platform for [Heta modeling language](https://hetalang.github.io/#/). The main purpose of the platform is to establish the linkage between emerging [QSP frameworks](https://en.wikipedia.org/wiki/Quantitative_systems_pharmacology) and fast computational methods (parallel simulations, automatic differentiation, etc.). **HetaSimulator** is inspired by the user experience of the software packages like [SBMLToolbox](http://sbml.org/Software/SBMLToolbox), [mrgsolve](https://mrgsolve.github.io/), [DBSolve](http://insysbio.com/en/software/db-solve-optimum), [dMod](https://github.com/dkaschek/dMod). From the computational point of view, it utilizes the unique features of [Julia](https://julialang.org/) and [SciML ecosystem](https://sciml.ai/).
+## Introduction
+
+Heta language is a domain-specific modeling language (DSL) for dynamic quantitative models used in quantitative systems pharmacology (QSP) and systems biology (SB). Heta code and tabular formats can be translated into [variety of formats](https://hetalang.github.io/#/heta-compiler/?id=supported-tools) like Simbiology, Matlab, mrgsolve, DBSolve and many others.
+
+This package provides the simulation engines for the Heta-based models and modeling platforms. The model can be directly run using the HetaSimulator without additional tools. The ODE system in general form can also be run with HetaSimulator.
+
+Internally HetaSimulator utilizes the facilities of OpenSource projects like [Julia](https://julialang.org/) and [SciML ecosystem](https://sciml.ai/).
 
 ## Installation
 
-It is assumed that you have **Julia** v1.6 installed. Latest Julia release can be downloaded from [julialang.org](https://julialang.org/downloads/)
+It is assumed that you have **Julia** v1.6 installed. The latest Julia release can be downloaded from [julialang.org](https://julialang.org/downloads/)
 
 To install or update HetaSimulator and Heta compiler run:
 
@@ -23,71 +31,55 @@ julia> using HetaSimulator
 julia> heta_update() # installs "Heta compiler" in NodeJS
 ```
 
-## Introduction
-
-The user of HetaSimulator typically deals with the following three types:
-- `Model` - an ODE model, containing rhs, rules, initial parameters and vector of events.
-- `Cond` - condition representing a special model's setup for simulations or fitting. This setup can include initial parameters and events settings, output variables etc. In case of fitting `Cond` should also include experimental data. A common usage of `Cond` can be model's simulation with different drugs (parameters and events setup). Different `Cond`'s can be united to run multi-conditional simulations and fitting.
-- `Platform` - container for different `Model`s and `Cond`s.
-
-The user can perform the following three operations with both `Model`, `Cond` and `Platform`
-- `sim` - run a single simulation or multi-conditional simulations. 
-- `fit` - fit a model to experimental data. 
-- `mc` - run Monte-Carlo or virtual patients simulations.
-
-See documentation for detailed overview of **HetaSimulator** types and functions' arguments.
+Internally HetaSimulator uses Heta compiler which is installed inside the package. If you want to update it to the last version just run.
+```julia
+julia> heta_update() # updates to the latest stable version
+```
 
 ## Basic usage
 
-A basic use-case example is provided in /cases/story_1 folder
+Create a model in Heta format or use you Heta based platform.
+Here we will use the example with a simple model with two species and one reaction.
+
+```heta
+// index.heta file in directory "my_project"
+comp1 @Compartment .= 1.5;
+
+s1 @Species {compartment: comp1, output: true} .= 12;
+s2 @Species {compartment: comp1, output: true} .= 0;
+
+r1 @Reaction {actors: s1 => s2, output: true} := k1 * s1 * comp1;
+
+k1 @Const = 1e-3;
+```
+
+*To read more about Heta code read [Heta specifications](https://hetalang.github.io/#/specifications/)*
 
 ```julia
 using HetaSimulator, Plots
 
-platform = load_platform("$HetaSimulatorDir/cases/story_1", rm_out=false);
+# set the absolute or relative path to the project directory
+platform = load_platform("./my_project") # wait for the model compilation...
+
+# get the base Heta model
 model = platform.models[:nameless]
 
-## single simulation
+# single simulation and plot
+results = sim(model; tspan = (0., 1200.))
+plot(results)
 
-sim(model; tspan = (0., 200.)) |> plot #1
-
-## condition simulation
-
-cond1 = Cond(model; tspan = (0., 200.), events_on=[:ss1 => false], saveat = [0.0, 150., 250.]);
-sim(cond1) |> plot
-cond2 = Cond(model; tspan = (0., 200.), events_on=[:sw1=>false, :ss1 => false], constants = [:k2 => 0.001, :k3 => 0.02]);
-sim(cond2) |> plot
-cond3 = Cond(model; tspan = (0., 200.), events_on=[:ss1 => false],constants = [:k1=>0.01]);
-sim(cond3) |> plot 
-
-sim([:x => cond1, :y=>cond2, :z=>cond3]) |> plot
-
-## fitting
-
-measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv")
-cond4 = Cond(model; constants = [:k2=>0.001, :k3=>0.04], events_on=[:ss1 => false], saveat = [0.0, 50., 150., 250.]);
-add_measurements!(cond4, measurements_csv; subset = Dict(:condition => :dataone))
-res2 = fit([cond2, cond3, cond4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])
-
-## Monte-Carlo simulations
-
-mccond1 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.01], saveat = [50., 80., 150.], events_on=[:ss1 => false]);
-mccond2 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.02], saveat = [50., 100., 200.], events_on=[:ss1 => false]);
-mccond3 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.03], saveat = [50., 100., 180.], events_on=[:ss1 => false]);
-
-mc(mccond1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000) |> plot
-mc([:mc1=>mccond1,:mc2=>mccond2,:mc3=>mccond3], [:k1=>0.01, :k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000) |> plot
-
-## Simulations and fitting with Platform interface
-
-# load conditions
-conditions_csv = read_conditions("$HetaSimulatorDir/cases/story_1/conditions.csv")
-add_conditions!(platform, conditions_csv)
-
-# load measurements
-measurements = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv");
-add_measurements!(platform, measurements)
-
-sim(platform, conditions = [:three]) |> plot
-fit1 = fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3], conditions = [:dataone,:withdata2])
+# transform to data frame
+df = DataFrame(results)
 ```
+
+## Known issues and limitations
+
+## Getting help
+
+## Contributing
+
+## License
+
+This package is distributed under the terms of the [MIT License](./LICENSE).
+
+Copyright 2020-2021, InSysBio LLC
