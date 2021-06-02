@@ -43,6 +43,7 @@ sim(
 ### single condition sim()
 cond1 = Cond(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]);
 sim(cond1) |> plot
+sim(cond1; input_cons=[:k1=>0.01]) |> plot
 
 cond2 = Cond(
     model;
@@ -65,6 +66,7 @@ sim.([cond1, cond2, cond3]) |> plot
 ### sim together
 sim([cond1, cond2, cond3]) |> plot
 sim([:x => cond1, :y=>cond2, :z=>cond3]) |> plot
+sim([:x => cond1, :y=>cond2, :z=>cond3]; input_cons=[:k1=>0.01]) |> plot
 
 ### load measurements from CSV
 measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv")

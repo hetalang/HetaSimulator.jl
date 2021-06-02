@@ -8,6 +8,7 @@ const EMPTY_PROBLEM = ODEProblem(() -> nothing, [0.0], (0.,1.))
 
 """
     sim(cond::Cond; 
+      input_cons::Union{Nothing, Vector{P}}=nothing,
       alg=DEFAULT_ALG, 
       reltol=DEFAULT_SIMULATION_RELTOL, 
       abstol=DEFAULT_SIMULATION_ABSTOL,
@@ -18,6 +19,7 @@ Simulate single condition `cond`. Returns [`SimResults`](@ref) type.
 Arguments:
 
 - `cond` : simulation condition of type [`Cond`](@ref)
+- `input_cons` : constants, which overwrite both `Model` and `Cond` constants. Default is `nothing`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -25,13 +27,14 @@ Arguments:
 """
 function sim(
   cond::Cond; 
-
+  input_cons::Union{Nothing, Vector{P}}=nothing,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
   kwargs... # other solver arguments
-)
-  prob = cond.prob
+) where P<:Pair
+
+  prob = !isnothing(input_cons) ? update_init_values(cond.prob, cond.init_func, NamedTuple(input_cons)) : cond.prob
   sol = solve(prob, alg; reltol = reltol, abstol = abstol,
     save_start = false, save_end = false, save_everystep = false, kwargs...)
 
@@ -45,21 +48,32 @@ end
 
 ### simulate Model
 """
-    sim(cond::Cond; 
-      alg=DEFAULT_ALG, 
-      reltol=DEFAULT_SIMULATION_RELTOL, 
-      abstol=DEFAULT_SIMULATION_ABSTOL,
+    sim(model::Model; 
+      constants::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
+      measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
+      events_on::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
+      events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}}=(true,true), 
+      observables::Union{Nothing,Vector{Symbol}} = nothing,
+      saveat::Union{Nothing,AbstractVector} = nothing,
+      tspan::Union{Nothing,Tuple} = nothing,
+      save_scope::Bool=true,
+      time_type::DataType=Float64,
       kwargs...)
 
-Simulate single condition `cond`. Returns [`SimResults`](@ref) type.
+Simulate model of type [`Model`](@ref). Returns [`SimResults`](@ref) type.
 
 Arguments:
 
-- `cond` : simulation condition of type [`Cond`](@ref)
-- `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
-- `reltol` : relative tolerance. Default is 1e-3
-- `abstol` : relative tolerance. Default is 1e-6
-- kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
+- `model` : model of type [`Model`](@ref)
+- `constants` : `Vector` of `Pair`s containing constants' names and values. Overwrites default model's values. Default is empty vector 
+- `measurements` : `Vector` of measurements. Default is empty vector 
+- `events_on` : `Vector` of `Pair`s containing events' names and true/false values. Overwrites default model's values. Default is empty vector 
+- `events_save` : `Tuple` or `Vector{Tuple}` marking whether to save solution before and after event. Default is `(true,true)` for all events
+- `observables` : names of output observables. Overwrites default model's values. Default is empty vector
+- `saveat` : time points, where solution should be saved. Default `nothing` values stands for saving solution at timepoints reached by the solver 
+- `tspan` : time span for the ODE problem
+- `save_scope` : should scope be saved together with solution. Default is `true`
+- kwargs : other solver related arguments supported by `sim(cond::Cond)`
 """
 function sim(
   model::Model;
@@ -87,6 +101,7 @@ end
 
 """
     sim(condition_pairs::Vector{P}; 
+      input_cons::Union{Nothing, Vector}=nothing,
       alg=DEFAULT_ALG, 
       reltol=DEFAULT_SIMULATION_RELTOL, 
       abstol=DEFAULT_SIMULATION_ABSTOL,
@@ -98,6 +113,7 @@ Simulate multiple conditions. Returns `Vector{Pair}`.
 Arguments:
 
 - `condition_pairs` : vector of pairs containing names and conditions of type [`Cond`](@ref)
+- `input_cons` : constants, which overwrite both `Model` and `Cond` constants. Default is `nothing`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -106,7 +122,7 @@ Arguments:
 """
 function sim(
   condition_pairs::Vector{P};
-
+  input_cons::Union{Nothing, Vector}=nothing,
   alg = DEFAULT_ALG, 
   reltol = DEFAULT_SIMULATION_RELTOL, 
   abstol = DEFAULT_SIMULATION_ABSTOL,
@@ -118,7 +134,10 @@ function sim(
   isempty(condition_pairs) && return SimResults[] # BRAKE
 
   function prob_func(prob,i,repeat)
-    last(condition_pairs[i]).prob
+    prob_i = last(condition_pairs[i]).prob
+    init_func_i = last(condition_pairs[i]).init_func
+    !isnothing(input_cons) ? 
+      update_init_values(prob_i, init_func_i, NamedTuple(input_cons)) : prob_i
   end
 
   function _output(sol,i)
@@ -147,6 +166,16 @@ end
 
 ### simulate many conditions
 
+"""
+    sim(conditions::AbstractVector{C}; kwargs...) where {C<:AbstractCond}
+
+Simulate multiple conditions. Returns `Vector{Pair}`.
+
+Arguments:
+
+- `conditions` : `Vector` containing names and conditions of type [`Cond`](@ref)
+- kwargs : other kwargs supported by `sim(condition_pairs::Vector{Pair})`
+"""
 function sim(
   conditions::AbstractVector{C};
   kwargs... # other arguments to sim(::Vector{Pair})
@@ -157,6 +186,19 @@ end
 
 ### simulate Platform
 
+"""
+    sim(platform::Platform; 
+      conditions::Union{AbstractVector{Symbol}, Nothing} = nothing,
+      kwargs...) where {C<:AbstractCond}
+
+Simulate conditions included in platform. Returns `Vector{Pair}`.
+
+Arguments:
+
+- `platform` : platform of [`Platform`](@ref) type
+- `conditions` : `Vector` containing names of conditions included in platform. Default value `nothing` stands for all conditions in the platform 
+- kwargs : other kwargs supported by `sim(condition_pairs::Vector{Pair})`
+"""
 function sim(
   platform::Platform;
   conditions::Union{AbstractVector{Symbol}, Nothing} = nothing,
@@ -164,7 +206,7 @@ function sim(
 ) 
   @assert length(platform.conditions) != 0 "Platform should contain at least one condition."
 
-  if conditions === nothing
+  if isnothing(conditions)
     condition_pairs = [platform.conditions...]
   else
     condition_pairs = Pair{Symbol,AbstractCond}[]

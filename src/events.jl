@@ -6,10 +6,7 @@ active_events(events::NamedTuple, events_on::NamedTuple, events_save::Vector{Pai
 
 function active_events(events::NamedTuple, events_on::NamedTuple, events_save::NamedTuple)
   ev_names = keys((events))
-  for k in keys(events_on)
-    @assert k in ev_names "Event $k not found."
-  end
-  for k in keys(events_save)
+  for k in (keys(events_on)..., keys(events_save)...)
     @assert k in ev_names "Event $k not found."
   end
   _events_save = merge(NamedTuple{ev_names}(fill((true,true), length(events))), events_save)

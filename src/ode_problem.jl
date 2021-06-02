@@ -72,9 +72,9 @@ function  update_init_values(prob, init_func, x)
   constants = merge(NamedTuple(prob.p.constants),x)
   u0,p0 = init_values(init_func, constants)
 
-  prob_upd = remake(prob;u0=u0)
-  prob_upd.p.constants .= p0.constants
-  prob_upd.p.static .= p0.static
+  prob_upd = remake(prob;u0=u0, p=p0)
+  #prob_upd.p.constants .= p0.constants
+  #prob_upd.p.static .= p0.static
   
   return prob_upd
 end
