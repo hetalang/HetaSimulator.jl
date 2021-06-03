@@ -14,7 +14,7 @@ The main purpose of the package is to establish the linkage between emerging [QS
 
 Heta language is a domain-specific modeling language (DSL) for dynamic quantitative models used in quantitative systems pharmacology (QSP) and systems biology (SB). Heta code and tabular formats can be translated into [variety of formats](https://hetalang.github.io/#/heta-compiler/?id=supported-tools) like Simbiology, Matlab, mrgsolve, DBSolve and many others.
 
-This package provides the simulation engines for the Heta-based models and modeling platforms. The model can be directly run using the HetaSimulator without additional tools. The ODE system in general form can also be run with HetaSimulator.
+This package provides the simulation engines for the Heta-based models and modeling platforms to be run in Julia. A QSP model can be directly run using the HetaSimulator without additional tools. The ODE system in general form can also be run with HetaSimulator.
 
 Internally HetaSimulator utilizes the facilities of OpenSource projects like [Julia](https://julialang.org/) and [SciML ecosystem](https://sciml.ai/).
 
@@ -22,7 +22,7 @@ Internally HetaSimulator utilizes the facilities of OpenSource projects like [Ju
 
 It is assumed that you have **Julia** v1.6 installed. The latest Julia release can be downloaded from [julialang.org](https://julialang.org/downloads/)
 
-To install or update HetaSimulator and Heta compiler run:
+To install or update HetaSimulator and Heta compiler run the code below in Julia environment:
 
 ```julia
 julia> ]
@@ -38,7 +38,7 @@ julia> heta_update() # updates to the latest stable version
 
 ## Basic usage
 
-Create a model in Heta format or use you Heta based platform.
+Create a model in Heta format or use your Heta-based platform.
 Here we will use the example with a simple model with two species and one reaction.
 
 ```heta
@@ -59,7 +59,8 @@ k1 @Const = 1e-3;
 using HetaSimulator, Plots
 
 # set the absolute or relative path to the project directory
-platform = load_platform("./my_project") # wait for the model compilation...
+platform = load_platform("./my_project")
+# wait for the platform compilation...
 
 # get the base Heta model
 model = platform.models[:nameless]
@@ -67,16 +68,42 @@ model = platform.models[:nameless]
 # single simulation and plot
 results = sim(model; tspan = (0., 1200.))
 plot(results)
-
-# transform to data frame
-df = DataFrame(results)
 ```
+
+![Plot](./plot0.png)
+
+```julia
+# transform results to data frame
+df = DataFrame(results)
+...
+9×4 DataFrame
+ Row │ t             s1        s2           scope  
+     │ Float64       Float64   Float64      Symbol 
+─────┼─────────────────────────────────────────────
+   1 │    0.0555525  11.9993   0.000666611  ode_
+   2 │    0.611077   11.9927   0.00733069   ode_
+```
+
+*To read more about available functions, see the [documentation](https://hetalang.github.io/HetaSimulator.jl/dev/)*
 
 ## Known issues and limitations
 
+- Currently the HetaSimulator package is not published on Julia repository, use the direct link to install 
+   ```julia
+   ] add https://github.com/hetalang/HetaSimulator.jl
+   ```
+
 ## Getting help
 
+- Read the [docs](https://hetalang.github.io/HetaSimulator.jl/dev/)
+- Use [Gitter Chatroom](https://gitter.im/hetalang/community?utm_source=readme).
+- Use [Issue Tracker](https://github.com/hetalang/HetaSimulator.jl/issues)
+
 ## Contributing
+
+- [Source Code](https://github.com/hetalang/HetaSimulator.jl)
+- [Issue Tracker](https://github.com/hetalang/HetaSimulator.jl/issues)
+- See also contributing in [Heta project](https://hetalang.github.io/#/CONTRIBUTING)
 
 ## License
 
