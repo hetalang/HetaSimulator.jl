@@ -1,8 +1,8 @@
 [![Heta project](https://img.shields.io/badge/%CD%B1-Heta_project-blue)](https://hetalang.github.io/)
-[![Documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://hetalang.github.io/HetaSimulator.jl/dev/)
+
 [![GitHub issues](https://img.shields.io/github/issues/hetalang/HetaSimulator.jl.svg)](https://GitHub.com/hetalang/HetaSimulator.jl/issues/)
-[![Documentation](https://github.com/hetalang/HetaSimulator.jl/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/hetalang/HetaSimulator.jl/actions/workflows/gh-pages.yml)
 [![Coverage Status](https://coveralls.io/repos/github/hetalang/HetaSimulator.jl/badge.svg?branch=master)](https://coveralls.io/github/hetalang/HetaSimulator.jl?branch=master)
+[![api-docs](https://img.shields.io/website?down_color=yellow&label=api-docs&up_color=green&url=https%3A%2F%2Fhetalang.github.io%2FHetaSimulator.jl%2Fdev%2F)](https://hetalang.github.io/HetaSimulator.jl/dev)
 [![GitHub license](https://img.shields.io/github/license/hetalang/HetaSimulator.jl.svg)](https://github.com/hetalang/HetaSimulator.jl/blob/master/LICENSE)
 
 # HetaSimulator
