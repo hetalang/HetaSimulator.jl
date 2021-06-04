@@ -1,5 +1,4 @@
 [![Heta project](https://img.shields.io/badge/%CD%B1-Heta_project-blue)](https://hetalang.github.io/)
-
 [![GitHub issues](https://img.shields.io/github/issues/hetalang/HetaSimulator.jl.svg)](https://GitHub.com/hetalang/HetaSimulator.jl/issues/)
 [![Coverage Status](https://coveralls.io/repos/github/hetalang/HetaSimulator.jl/badge.svg?branch=master)](https://coveralls.io/github/hetalang/HetaSimulator.jl?branch=master)
 [![api-docs](https://img.shields.io/website?down_color=yellow&label=api-docs&up_color=green&url=https%3A%2F%2Fhetalang.github.io%2FHetaSimulator.jl%2Fdev%2F)](https://hetalang.github.io/HetaSimulator.jl/dev)
@@ -70,7 +69,7 @@ results = sim(model; tspan = (0., 1200.))
 plot(results)
 ```
 
-![Plot](./plot0.png)
+![Plot](https://raw.githubusercontent.com/hetalang/HetaSimulator.jl/master/plot0.png)
 
 ```julia
 # transform results to data frame
