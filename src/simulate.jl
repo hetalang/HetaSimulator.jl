@@ -51,7 +51,7 @@ end
     sim(model::Model; 
       constants::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
       measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
-      events_on::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
+      events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
       events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}}=(true,true), 
       observables::Union{Nothing,Vector{Symbol}} = nothing,
       saveat::Union{Nothing,AbstractVector} = nothing,
@@ -67,7 +67,7 @@ Arguments:
 - `model` : model of type [`Model`](@ref)
 - `constants` : `Vector` of `Pair`s containing constants' names and values. Overwrites default model's values. Default is empty vector 
 - `measurements` : `Vector` of measurements. Default is empty vector 
-- `events_on` : `Vector` of `Pair`s containing events' names and true/false values. Overwrites default model's values. Default is empty vector 
+- `events_active` : `Vector` of `Pair`s containing events' names and true/false values. Overwrites default model's values. Default is empty vector 
 - `events_save` : `Tuple` or `Vector{Tuple}` marking whether to save solution before and after event. Default is `(true,true)` for all events
 - `observables` : names of output observables. Overwrites default model's values. Default is empty vector
 - `saveat` : time points, where solution should be saved. Default `nothing` values stands for saving solution at timepoints reached by the solver 
@@ -81,7 +81,7 @@ function sim(
   ## arguments for Cond(::Model,...)
   constants::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
-  events_on::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
+  events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
   events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}}=(true,true), 
   observables::Union{Nothing,Vector{Symbol}} = nothing,
   saveat::Union{Nothing,AbstractVector} = nothing,
@@ -92,7 +92,7 @@ function sim(
 )
   condition = Cond(
     model; constants, measurements,
-    events_on, events_save, observables, saveat, tspan, save_scope, time_type)
+    events_active, events_save, observables, saveat, tspan, save_scope, time_type)
 
   return sim(condition; kwargs...)
 end

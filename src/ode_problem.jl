@@ -1,7 +1,7 @@
 function build_ode_problem(
   model::Model;
   constants::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
-  events_on::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
+  events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
   events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}}=(true,true), 
   observables::Union{Nothing,Vector{Symbol}} = nothing,
   saveat::Union{Nothing,AbstractVector} = nothing,
@@ -29,13 +29,13 @@ function build_ode_problem(
   scb = saving_wrapper(saving_func, saved_values; saveat=_saveat, save_scope)
 
   # events
-  ev_on_nt = !isnothing(events_on) ? NamedTuple(events_on) : NamedTuple()
-  events = active_events(model.events, merge(model.events_on, ev_on_nt), events_save)
+  ev_on_nt = !isnothing(events_active) ? NamedTuple(events_active) : NamedTuple()
+  events = active_events(model.events, merge(model.events_active, ev_on_nt), events_save)
   cbs = CallbackSet(scb, events...)
 
   # problem setup
   return ODEProblem(
-    model.ode, # ODE function
+    model.ode_func, # ODE function
     u0, # u0
     _tspan, # tspan
     params; # constants and static

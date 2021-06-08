@@ -9,34 +9,39 @@ models(p::Platform) = p.models
 conditions(p::Platform) = p.conditions
 
 function Base.show(io::IO, ::MIME"text/plain", p::Platform)
-  println(io, "Platform contains:")
-  println(io, "  $(length(models(p))) model(s). Use `models(p::Platform)` for details.")
-  println(io, "  $(length(conditions(p))) condition(s). Use `conditions(p::Platform)` for details.")
+  models_names = join(keys(p.models), ", ")
+  conditions_names = join(keys(p.conditions), ", ")
+
+  println(io, "+---------------------------------------------------------------------------")
+  println(io, "| Platform contains:")
+  println(io, "|   $(length(models(p))) model(s): $models_names. Use `models(p::Platform)` for details.")
+  println(io, "|   $(length(conditions(p))) condition(s): $conditions_names. Use `conditions(p::Platform)` for details.")
+  println(io, "+---------------------------------------------------------------------------")
 end
 
 ################################## Model ###########################################
 
 abstract type AbstractModel end
 
-struct Model{IF,O,EV,SF,C,EO} <: AbstractModel
+struct Model{IF,OF,EV,SG,C,EA} <: AbstractModel
   init_func::IF
-  ode::O
-  events::EV # Should it be inside of prob or not?
-  saving_generator::SF
-  observables::Vector{Symbol}
+  ode_func::OF
+  events::EV # split to time, c, stop
+  saving_generator::SG
+  observables::Vector{Symbol} # rename to output, store as pairs
   constants::C # LArray{Float64,1,Array{Float64,1},(:a, :b)}
-  events_on::EO
+  events_active::EA
 end
 
 constants(m::Model) = m.constants
-events_on(m::Model) = m.events_on
+events_active(m::Model) = m.events_active
 observables(m::Model) = m.observables
 
 function Base.show(io::IO, ::MIME"text/plain", m::Model)
   println(io, "Model contains:")
   println(io, "  $(length(constants(m))) constant(s). Use `constants(m::Model)` for details.")
   println(io, "  $(length(observables(m))) observable(s). Use `observables(m::Model)` for details.")
-  println(io, "  $(length(events_on(m))) event(s). Use `events_on(m::Model)` for details.")
+  println(io, "  $(length(events_active(m))) event(s). Use `events_active(m::Model)` for details.")
 end
 
 ################################## Params ###########################################

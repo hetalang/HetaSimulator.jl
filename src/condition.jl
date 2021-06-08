@@ -10,7 +10,7 @@ function Cond(
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
   kwargs...
 )
-  # ode problem
+  # ODE problem
   prob = build_ode_problem(model; kwargs...)
 
   return Cond(model.init_func, prob, measurements)
@@ -55,14 +55,14 @@ function _add_condition!(platform::Platform, row::Any) # maybe not any
 
   # iterate through constants
   _constants = Pair{Symbol,Float64}[]
-  _events_on = Pair{Symbol,Bool}[]
+  _events_active = Pair{Symbol,Bool}[]
   for key in keys(row)
     if !ismissing(row[key])
       splitted_key = split(string(key), ".")
       if splitted_key[1] == CONSTANT_PREFIX
         push!(_constants, Symbol(splitted_key[2]) => row[key])
       elseif splitted_key[1] == SWITCHER_PREFIX
-        push!(_events_on, Symbol(splitted_key[2]) => row[key])
+        push!(_events_active, Symbol(splitted_key[2]) => row[key])
       end
     end
   end
@@ -90,7 +90,7 @@ function _add_condition!(platform::Platform, row::Any) # maybe not any
   condition = Cond(
     model;
     constants = _constants,
-    events_on = _events_on,
+    events_active = _events_active,
     saveat = _saveat,
     tspan = _tspan,
     observables = _observables

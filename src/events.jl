@@ -1,17 +1,17 @@
-active_events(events::NamedTuple, events_on::NamedTuple, events_save::Tuple) =
-  active_events(events, events_on, NamedTuple{keys(events)}(fill(events_save,length(events))))
+active_events(events::NamedTuple, events_active::NamedTuple, events_save::Tuple) =
+  active_events(events, events_active, NamedTuple{keys(events)}(fill(events_save,length(events))))
 
-active_events(events::NamedTuple, events_on::NamedTuple, events_save::Vector{Pair{Symbol, Tuple{Bool, Bool}}}) =
-  active_events(events, events_on, NamedTuple(events_save))
+active_events(events::NamedTuple, events_active::NamedTuple, events_save::Vector{Pair{Symbol, Tuple{Bool, Bool}}}) =
+  active_events(events, events_active, NamedTuple(events_save))
 
-function active_events(events::NamedTuple, events_on::NamedTuple, events_save::NamedTuple)
+function active_events(events::NamedTuple, events_active::NamedTuple, events_save::NamedTuple)
   ev_names = keys((events))
-  for k in (keys(events_on)..., keys(events_save)...)
+  for k in (keys(events_active)..., keys(events_save)...)
     @assert k in ev_names "Event $k not found."
   end
   _events_save = merge(NamedTuple{ev_names}(fill((true,true), length(events))), events_save)
 
-  return Tuple(add_event(events[ev], _events_save[ev], ev) for ev in keys(events) if events_on[ev])
+  return Tuple(add_event(events[ev], _events_save[ev], ev) for ev in keys(events) if events_active[ev])
 end
 
 function add_event(evt::TimeEvent, events_save::Tuple{Bool, Bool}=(true,true), evt_name=nothing)

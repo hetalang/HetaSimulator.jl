@@ -2,12 +2,11 @@
     "low level" i.e. without Platform
 =#
 using HetaSimulator, Plots
-using DataFrames, CSV
 
 ################################## Model Upload ###########################################
 # heta_update_dev()
 
-platform = load_platform("$HetaSimulatorDir/cases/story_1", rm_out=false);
+platform = load_platform("$HetaSimulatorDir/cases/story_1", rm_out = false);
 model = platform.models[:nameless]
 # model.constants
 # platform.models
@@ -23,19 +22,19 @@ sim(model; saveat = 0:10:100, tspan = (0., 500.)) |> plot
 sim(
     model; 
     tspan = (0., 500.),
-    events_on=[:sw1=>false, :ss1 => false],
+    events_active=[:sw1=>false, :ss1 => false],
     events_save=[:sw1=>(true,true), :ss1=>(true,true)]
     ) |> plot
 sim(
     model;
     tspan = (0., 500.),
-    events_on=[:sw1=>false],
+    events_active=[:sw1=>false],
     events_save=[:sw1=>(true,true)]
     ) |> plot
 sim(
     model;
     tspan = (0., 500.),
-    events_on=[:sw1=>true],
+    events_active=[:sw1=>true],
     events_save=[:sw1=>(false,false)]
     ) |> plot
 
@@ -48,7 +47,7 @@ sim(cond1; input_cons=[:k1=>0.01]) |> plot
 cond2 = Cond(
     model;
     tspan = (0., 200.),
-    events_on=[:sw1=>false],
+    events_active=[:sw1=>false],
     constants = [:k2 => 0.001, :k3 => 0.02]
     );
 sim(cond2) |> plot
@@ -56,7 +55,7 @@ sim(cond2) |> plot
 cond3 = Cond(
     model;
     tspan = (0., 250.),
-    events_on=[:sw1=>false],
+    events_active=[:sw1=>false],
     constants = [:k2 => 0.1]
     );
 sim(cond3) |> plot
@@ -106,7 +105,7 @@ mccond3 = Cond(
     tspan = (0., 200.),
     constants = [:k1=>0.03],
     saveat = [50., 100., 180.],
-    events_on=[:sw1 => false]
+    events_active=[:sw1 => false]
     );
 
 # single MC Simulation

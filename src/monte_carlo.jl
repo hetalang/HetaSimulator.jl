@@ -73,7 +73,7 @@ function mc(
   num_iter::Int;
 
   # Cond kwargs
-  events_on::Vector{Pair{Symbol,Bool}} = Pair{Symbol,Bool}[],
+  events_active::Vector{Pair{Symbol,Bool}} = Pair{Symbol,Bool}[],
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
   saveat::Union{Nothing,AbstractVector{T}} = nothing,
   tspan::Union{Nothing,Tuple{S,S}}=nothing,
@@ -85,7 +85,7 @@ function mc(
 
   cond = Cond(
     model;
-    events_on = events_on,
+    events_active = events_active,
     measurements = measurements,
     saveat = saveat,
     tspan = tspan,

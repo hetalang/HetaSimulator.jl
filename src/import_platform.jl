@@ -54,7 +54,7 @@ function Model(
 
     observable_pairs = filter((p) -> p[2], pairs(records_output)) # from records_output
     observables = Symbol[p[1] for p in observable_pairs]
-    events_on = collect(Pair{Symbol,Bool}, pairs(event_active))
+    events_active = collect(Pair{Symbol,Bool}, pairs(event_active))
 
     # Should we (1) store prob in Model, (2) store in Cond (3) nowhere
     ### fake run
@@ -72,12 +72,12 @@ function Model(
     
     model = Model(
         init_func,            # init_func
-        ode_func,             # ode
+        ode_func,             # ode_func
         NamedTuple(events),   # events :: Changed to NamedTuple
         saving_generator,     # saving_generator
         observables,          # observables :: Vector{Symbol}
         constants_num,        # constants :: Changed to NamedTuple
-        NamedTuple(events_on) # events_on :: Changed to NamedTuple
+        NamedTuple(events_active) # events_active :: Changed to NamedTuple
     )
 
     return model

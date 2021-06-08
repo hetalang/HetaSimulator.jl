@@ -4,7 +4,7 @@
 - models::Dict{Symbol,QModel}
 - conditions::Dict{Symbol,Cond}
 - version :: Symbol
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>231</x><y>149</y><w>450</w><h>180</h></coordinates><panel_attributes>QModel
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>231</x><y>149</y><w>450</w><h>180</h></coordinates><panel_attributes>Model
 --
 - init_func :: Function (const :: Float64[]) -&gt; Tuple{Float64[],Float64[]}
 - ode_func :: Function(du :: Float64[], u :: Float64[], p :: Params, t :: Float64)
@@ -20,7 +20,7 @@ model::QModel
 --
 constants::Vector{Pair{Symbol,Float64}}
 --
-events_on::Vector{Pair{Symbol,Bool}}
+events_active::Vector{Pair{Symbol,Bool}}
 --
 measurements::Vector{AbstractMeasurementPoint}
 --
@@ -66,8 +66,10 @@ scope::Symbol
 - ode_func :: Function(du :: Float64[], u :: Float64[], p :: Params, t :: Float64)
 - time_events :: NamedTuple
 - c_events :: NamedTuple
+- stop_events :: NamedTuple
 - saving_generator :: Function(output_ids :: Symbol[]) -&gt; Function(u, t, integrator)
-- constants_num :: NamedTuple    # default task
-- events_active :: NamedTuple           # default task
-- records_output:: NamedTuple       # default task
+- constants_num :: NamedTuple   # default task
+- events_active :: NamedTuple      # default task
+- records_output :: NamedTuple     # default task
+? events_out :: NamedTuple   # to save output at event piont
 </panel_attributes><additional_attributes></additional_attributes></element></diagram>

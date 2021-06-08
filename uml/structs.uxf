@@ -8,7 +8,7 @@ conditions::Dict{Symbol,Cond}
 --
 init_func::Function
 --
-ode::Function
+ode_func::Function
 --
 events::Vector{Any} # Should it be inside of prob or not?
 --
@@ -18,14 +18,14 @@ observables::Vector{Symbol}
 --
 constants::LArray{Float64}
 --
-events_on::LArray{Bool}
+events_active::LArray{Bool}
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>300</x><y>100</y><w>290</w><h>180</h></coordinates><panel_attributes>Cond
 --
 model::QModel
 --
 constants::Vector{Pair{Symbol,Float64}}
 --
-events_on::Vector{Pair{Symbol,Bool}}
+events_active::Vector{Pair{Symbol,Bool}}
 --
 measurements::Vector{AbstractMeasurementPoint}
 --
