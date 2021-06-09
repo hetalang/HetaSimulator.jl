@@ -44,7 +44,7 @@ module HetaSimulator
   export Platform, Model, Cond, Params
   export read_conditions, add_conditions!
   export read_measurements, add_measurements!
-  export constants, events, records, observables, conditions, models # parameters, variables, dynamic, static
+  export models, conditions, constants, records, events, parameters, events_active, events_save, obs  # parameters, variables, dynamic, static
   export CVODE_BDF, CVODE_Adams
   export optim, obj
   export sim, mc

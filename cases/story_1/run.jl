@@ -8,9 +8,10 @@ using HetaSimulator, Plots
 
 platform = load_platform("$HetaSimulatorDir/cases/story_1", rm_out = false);
 model = platform.models[:nameless];
-# model.constants
-# platform.models
-# platform.conditions
+# parameters(model)
+# events_active(model)
+# events_save(model)
+# get_observables(model)
 
 ################################## Single Simulation ######################################
 

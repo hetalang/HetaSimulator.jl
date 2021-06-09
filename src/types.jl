@@ -14,8 +14,8 @@ function Base.show(io::IO, ::MIME"text/plain", p::Platform)
 
   println(io, "+---------------------------------------------------------------------------")
   println(io, "| Platform contains:")
-  println(io, "|   $(length(models(p))) model(s): $models_names. Use `models(p::Platform)` for details.")
-  println(io, "|   $(length(conditions(p))) condition(s): $conditions_names. Use `conditions(p::Platform)` for details.")
+  println(io, "|   $(length(models(p))) model(s): $models_names. Use `models(platform)` for details.")
+  println(io, "|   $(length(conditions(p))) condition(s): $conditions_names. Use `conditions(platform)` for details.")
   println(io, "+---------------------------------------------------------------------------")
 end
 
@@ -33,30 +33,31 @@ struct Model{IF,OF,EV,SG,C,EA} <: AbstractModel
   events_active::EA
 end
 
-# events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}}
-# observables::Union{Nothing,Vector{Symbol}}
-constants(m::Model) = collect(Pair{Symbol, Bool}, pairs(m.constants))
+constants(m::Model) = [keys(m.constants)...]
+records(m::Model) = first.(m.records_output)
+events(m::Model) = [keys(m.events)...]
+
+parameters(m::Model) = collect(Pair{Symbol, Real}, pairs(m.constants))
 events_active(m::Model) = collect(Pair{Symbol, Bool}, pairs(m.events_active))
-records(m::Model) = keys(m.records_output)
-observables(m::Model) = begin # calculate from records_output
+events_save(m::Model) = [first(x) => (true,true) for x in pairs(m.events)]
+obs(m::Model) = begin # calculate from records_output
   only_true = filter((p) -> last(p), m.records_output)
   first.(only_true)
 end
 
 function Base.show(io::IO, ::MIME"text/plain", m::Model)
-  observables_names = join(observables(m), ", ")
+  observables_names = join(obs(m), ", ")
 
   println(io, "+---------------------------------------------------------------------------")
   println(io, "| Model contains:")
-  println(io, "|   $(length(m.constants)) constant(s).")
-  println(io, "|   $(length(m.records_output)) static, dynamic and rule record(s). Use `records(m::Model)` for details.")
-  println(io, "|   $(length(m.events)) event(s).")
-  println(io, "|   Default observables: $observables_names")
+  println(io, "|   $(length(m.constants)) constant(s). Use constants(model) to get the list.")
+  println(io, "|   $(length(m.records_output)) static, dynamic and rule record(s). Use `records(model)` to get the list.")
+  println(io, "|   $(length(m.events)) event(s). Use `events(model)` to get the list.")
   println(io, "| Use the following methods to get the default options:")
-  println(io, "|   - constants(model)")
+  println(io, "|   - parameters(model)")
   println(io, "|   - events_active(model)")
   println(io, "|   - events_save(model)")
-  println(io, "|   - observables(model)")
+  println(io, "|   - obs(model) : $observables_names")
   println(io, "+---------------------------------------------------------------------------")
 end
 

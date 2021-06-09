@@ -19,7 +19,7 @@ function build_ode_problem(
 
   # saving setup
   utype = eltype(u0)
-  _observables = isnothing(observables) ? model.observables : observables # use default if not set
+  _observables = isnothing(observables) ? obs(model) : observables # use default if not set
   saved_values = SavedValues(
     LArray{utype,1,Array{utype,1},Tuple(_observables)}[],
     time_type[],

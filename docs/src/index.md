@@ -47,9 +47,9 @@ sim(model; tspan = (0., 200.)) |> plot #1
 
 cond1 = Cond(model; tspan = (0., 200.), events_active=[:ss1 => false], saveat = [0.0, 150., 250.]);
 sim(cond1) |> plot
-cond2 = Cond(model; tspan = (0., 200.), events_active=[:sw1=>false, :ss1 => false], constants = [:k2 => 0.001, :k3 => 0.02]);
+cond2 = Cond(model; tspan = (0., 200.), events_active=[:sw1=>false, :ss1 => false], parameters = [:k2 => 0.001, :k3 => 0.02]);
 sim(cond2) |> plot
-cond3 = Cond(model; tspan = (0., 200.), events_active=[:ss1 => false],constants = [:k1=>0.01]);
+cond3 = Cond(model; tspan = (0., 200.), events_active=[:ss1 => false], parameters = [:k1=>0.01]);
 sim(cond3) |> plot 
 
 sim([:x => cond1, :y=>cond2, :z=>cond3]) |> plot
@@ -57,15 +57,15 @@ sim([:x => cond1, :y=>cond2, :z=>cond3]) |> plot
 ## fitting
 
 measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv")
-cond4 = Cond(model; constants = [:k2=>0.001, :k3=>0.04], events_active=[:ss1 => false], saveat = [0.0, 50., 150., 250.]);
+cond4 = Cond(model; parameters = [:k2=>0.001, :k3=>0.04], events_active=[:ss1 => false], saveat = [0.0, 50., 150., 250.]);
 add_measurements!(cond4, measurements_csv; subset = Dict(:condition => :dataone))
 res2 = fit([cond2, cond3, cond4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])
 
 ## Monte-Carlo simulations
 
-mccond1 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.01], saveat = [50., 80., 150.], events_active=[:ss1 => false]);
-mccond2 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.02], saveat = [50., 100., 200.], events_active=[:ss1 => false]);
-mccond3 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.03], saveat = [50., 100., 180.], events_active=[:ss1 => false]);
+mccond1 = Cond(model; tspan = (0., 200.), parameters = [:k1=>0.01], saveat = [50., 80., 150.], events_active=[:ss1 => false]);
+mccond2 = Cond(model; tspan = (0., 200.), parameters = [:k1=>0.02], saveat = [50., 100., 200.], events_active=[:ss1 => false]);
+mccond3 = Cond(model; tspan = (0., 200.), parameters = [:k1=>0.03], saveat = [50., 100., 180.], events_active=[:ss1 => false]);
 
 mc(mccond1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000) |> plot
 mc([:mc1=>mccond1,:mc2=>mccond2,:mc3=>mccond3], [:k1=>0.01, :k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000) |> plot
@@ -81,5 +81,5 @@ measurements = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.c
 add_measurements!(platform, measurements)
 
 sim(platform, conditions = [:three]) |> plot
-fit1 = fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3], conditions = [:dataone,:withdata2])
+fit1 = fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3], conditions = [:dataone, :withdata2])
 ```
