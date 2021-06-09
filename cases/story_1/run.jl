@@ -7,7 +7,7 @@ using HetaSimulator, Plots
 # heta_update_dev()
 
 platform = load_platform("$HetaSimulatorDir/cases/story_1", rm_out = false);
-model = platform.models[:nameless]
+model = platform.models[:nameless];
 # model.constants
 # platform.models
 # platform.conditions

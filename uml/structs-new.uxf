@@ -8,8 +8,7 @@
 --
 - init_func :: Function (const :: Float64[]) -&gt; Tuple{Float64[],Float64[]}
 - ode_func :: Function(du :: Float64[], u :: Float64[], p :: Params, t :: Float64)
-- time_events :: Pair{Symbol,AbstractEvent}[]
-- c_events :: Pair{Symbol,AbstractEvent}[]
+- events :: Pair{Symbol,AbstractEvent}[]
 - saving_generator :: Function(output_ids :: Symbol[]) -&gt; Function(u, t, integrator)
 - records_output:: LArray{Bool}          # default task
 - constants_num :: LArray{Float64}    # default task

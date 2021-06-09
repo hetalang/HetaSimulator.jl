@@ -2,11 +2,11 @@ function build_ode_problem(
   model::Model;
   constants::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
   events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
-  events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}}=(true,true), 
+  events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}} = (true,true), 
   observables::Union{Nothing,Vector{Symbol}} = nothing,
   saveat::Union{Nothing,AbstractVector} = nothing,
   tspan::Union{Nothing,Tuple} = nothing,
-  save_scope::Bool=true,
+  save_scope::Bool = true,
   time_type::DataType=Float64
 )
   # saveat and tspan

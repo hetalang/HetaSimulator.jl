@@ -26,22 +26,38 @@ abstract type AbstractModel end
 struct Model{IF,OF,EV,SG,C,EA} <: AbstractModel
   init_func::IF
   ode_func::OF
-  events::EV # split to time, c, stop
+  events::EV # IDEA: use (:TimeEvent, ...) instead of TimeEvent(...)
   saving_generator::SG
-  observables::Vector{Symbol} # rename to output, store as pairs
+  records_output::AbstractVector{Pair{Symbol,Bool}}
   constants::C # LArray{Float64,1,Array{Float64,1},(:a, :b)}
   events_active::EA
 end
 
-constants(m::Model) = m.constants
-events_active(m::Model) = m.events_active
-observables(m::Model) = m.observables
+# events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}}
+# observables::Union{Nothing,Vector{Symbol}}
+constants(m::Model) = collect(Pair{Symbol, Bool}, pairs(m.constants))
+events_active(m::Model) = collect(Pair{Symbol, Bool}, pairs(m.events_active))
+records(m::Model) = keys(m.records_output)
+observables(m::Model) = begin # calculate from records_output
+  only_true = filter((p) -> last(p), m.records_output)
+  first.(only_true)
+end
 
 function Base.show(io::IO, ::MIME"text/plain", m::Model)
-  println(io, "Model contains:")
-  println(io, "  $(length(constants(m))) constant(s). Use `constants(m::Model)` for details.")
-  println(io, "  $(length(observables(m))) observable(s). Use `observables(m::Model)` for details.")
-  println(io, "  $(length(events_active(m))) event(s). Use `events_active(m::Model)` for details.")
+  observables_names = join(observables(m), ", ")
+
+  println(io, "+---------------------------------------------------------------------------")
+  println(io, "| Model contains:")
+  println(io, "|   $(length(m.constants)) constant(s).")
+  println(io, "|   $(length(m.records_output)) static, dynamic and rule record(s). Use `records(m::Model)` for details.")
+  println(io, "|   $(length(m.events)) event(s).")
+  println(io, "|   Default observables: $observables_names")
+  println(io, "| Use the following methods to get the default options:")
+  println(io, "|   - constants(model)")
+  println(io, "|   - events_active(model)")
+  println(io, "|   - events_save(model)")
+  println(io, "|   - observables(model)")
+  println(io, "+---------------------------------------------------------------------------")
 end
 
 ################################## Params ###########################################
@@ -145,10 +161,6 @@ end
 function Base.show(io::IO, m::MIME"text/plain", VMC::Vector{MC}) where MC<:MCResults
   println(io, "Monte-Carlo results for $(length(VMC)) condition(s).") 
   println(io, "You can index simulated Monte-Carlo conditions with `sol[i]` or plot all conditions with `plot(sol::Vector{MCResults})`")
-end
-
-function Base.show(io::IO, m::MIME"text/plain", V::Vector{P}) where P<:Pair
-  Base.show(io::IO, m::MIME"text/plain", last.(V))
 end
 
 ################################## Events ##############################################

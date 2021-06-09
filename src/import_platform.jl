@@ -34,7 +34,7 @@ function Model(
     stop_events::NamedTuple,
     saving_generator::Function,
     constants_num::NamedTuple,
-    event_active::NamedTuple,
+    events_active::NamedTuple,
     records_output::NamedTuple
 )
     events = Pair[]
@@ -52,9 +52,10 @@ function Model(
         push!(events, evt)
     end
 
-    observable_pairs = filter((p) -> p[2], pairs(records_output)) # from records_output
-    observables = Symbol[p[1] for p in observable_pairs]
-    events_active = collect(Pair{Symbol,Bool}, pairs(event_active))
+    #observable_pairs = filter((p) -> p[2], pairs(records_output)) # from records_output
+    #observables = Symbol[p[1] for p in observable_pairs]
+    records_output_ = collect(Pair{Symbol,Bool}, pairs(records_output))
+    events_active_ = collect(Pair{Symbol,Bool}, pairs(events_active))
 
     # Should we (1) store prob in Model, (2) store in Cond (3) nowhere
     ### fake run
@@ -75,9 +76,9 @@ function Model(
         ode_func,             # ode_func
         NamedTuple(events),   # events :: Changed to NamedTuple
         saving_generator,     # saving_generator
-        observables,          # observables :: Vector{Symbol}
+        records_output_,       
         constants_num,        # constants :: Changed to NamedTuple
-        NamedTuple(events_active) # events_active :: Changed to NamedTuple
+        NamedTuple(events_active_) # events_active :: Changed to NamedTuple
     )
 
     return model
