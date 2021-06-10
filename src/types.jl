@@ -40,7 +40,7 @@ events(m::Model) = [keys(m.events)...]
 parameters(m::Model) = collect(Pair{Symbol, Real}, pairs(m.constants))
 events_active(m::Model) = collect(Pair{Symbol, Bool}, pairs(m.events_active))
 events_save(m::Model) = [first(x) => (true,true) for x in pairs(m.events)]
-obs(m::Model) = begin # calculate from records_output
+obs(m::Model) = begin # observables
   only_true = filter((p) -> last(p), m.records_output)
   first.(only_true)
 end

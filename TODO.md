@@ -1,3 +1,7 @@
+## bugs
+
+- wrong plot for simulations
+
 ## features
 
 - create monte_carlo([cond1, cond2]) method
