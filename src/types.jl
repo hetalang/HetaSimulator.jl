@@ -35,29 +35,29 @@ end
 
 constants(m::Model) = [keys(m.constants)...]
 records(m::Model) = first.(m.records_output)
-events(m::Model) = [keys(m.events)...]
+switchers(m::Model) = [keys(m.events)...]
 
 parameters(m::Model) = collect(Pair{Symbol, Real}, pairs(m.constants))
 events_active(m::Model) = collect(Pair{Symbol, Bool}, pairs(m.events_active))
 events_save(m::Model) = [first(x) => (true,true) for x in pairs(m.events)]
-obs(m::Model) = begin # observables
+observables(m::Model) = begin # observables
   only_true = filter((p) -> last(p), m.records_output)
   first.(only_true)
 end
 
 function Base.show(io::IO, ::MIME"text/plain", m::Model)
-  observables_names = join(obs(m), ", ")
+  # observables_names = join(obs(m), ", ")
 
   println(io, "+---------------------------------------------------------------------------")
   println(io, "| Model contains:")
   println(io, "|   $(length(m.constants)) constant(s). Use constants(model) to get the list.")
   println(io, "|   $(length(m.records_output)) static, dynamic and rule record(s). Use `records(model)` to get the list.")
-  println(io, "|   $(length(m.events)) event(s). Use `events(model)` to get the list.")
+  println(io, "|   $(length(m.events)) switchers(s). Use `switchers(model)` to get the list.")
   println(io, "| Use the following methods to get the default options:")
   println(io, "|   - parameters(model)")
   println(io, "|   - events_active(model)")
   println(io, "|   - events_save(model)")
-  println(io, "|   - obs(model) : $observables_names")
+  println(io, "|   - observables(model) : $(observables(m))")
   println(io, "+---------------------------------------------------------------------------")
 end
 
@@ -92,20 +92,22 @@ struct Cond{F,P,M} <: AbstractCond
   measurements::M
 end 
 
-measurements(c::Cond) = c.measurements
-tspan(c::Cond) = c.prob.tspan
 saveat(c::Cond) = c.prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat.valtree
-constants(c::Cond) = c.prob.p.constants
+tspan(c::Cond) = c.prob.tspan
+parameters(c::Cond) = c.prob.p.constants
+measurements(c::Cond) = c.measurements
 
 function Base.show(io::IO, ::MIME"text/plain", c::Cond)
-  println(io, "Condition contains:")
-  println(io, "  saveat values: $(saveat(c))")
-  println(io, "  tspan: $(tspan(c))")
-  #println(io)
-  #println(io, "  $(length(constants(c))) constant(s). Use `constants(c::Cond)` for details.")
-  #println(io, "  $(length(observables(c))) observable(s). Use `observables(c::Cond)` for details.")
-  #println(io, "  $(length(events(c))) event(s). Use `events(c::Cond)` for details.")
-  println(io, "  $(length(measurements(c))) data measurement(s). Use `measurements(c::Cond)` for details.")
+  println(io, "+---------------------------------------------------------------------------")
+  println(io, "| Cond contains:")
+  println(io, "|   saveat values: $(saveat(c)). Use `saveat(cond)` for details.")
+  println(io, "|   tspan: $(tspan(c)). Use `tspan(cond)` for details.")
+  println(io, "|   $(length(parameters(c))) parameters(s). Use `parameters(cond)` for details.")
+  println(io, "|   $(length(measurements(c))) measurement(s). Use `measurements(cond)` for details.")
+  #println(io, "|   $(length(events_active(c))) event(s). Use `events_active(c::Cond)` for details.")
+  #println(io, "|   $(length(events_save(c))) event(s). Use `events_save(c::Cond)` for details.")
+  #println(io, "|   $(length(observables(c))) observable(s). Use `observables(c::Cond)` for details.")
+  println(io, "+---------------------------------------------------------------------------")
 end
 
 ################################## SimResults ###########################################

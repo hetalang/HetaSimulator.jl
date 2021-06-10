@@ -1,4 +1,4 @@
-id,constants.k1,constants.k2,constants.k3,saveat[],tspan,observables[]
+id,parameters.k1,parameters.k2,parameters.k3,saveat[],tspan,observables[]
 dataone,,0.001,0.02,0;12;24;48;72;120,150,
 withdata2,0.001,,,0;12;24;48;72;120,,
 three,1.00E-03,0.1,,,250,

@@ -53,7 +53,7 @@ function mc(
   num_iter::Int= size(params)[1],
   kwargs...
 ) 
-  cons = keys(constants(cond))
+  cons = keys(parameters(cond))
   params_pairs = Pair[]
   
 

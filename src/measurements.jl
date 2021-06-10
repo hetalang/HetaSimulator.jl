@@ -70,8 +70,8 @@ function _add_measurement!(condition::Cond, row::Any) # maybe not any
   _scope = row[:scope]
 
   if row[:distribution] == NORMAL    
-    _mean = typed(row[Symbol("parameters.$MEAN")])
-    _sigma = typed(row[Symbol("parameters.$SIGMA")])
+    _mean = typed(row[Symbol("prob.$MEAN")])
+    _sigma = typed(row[Symbol("prob.$SIGMA")])
 
     point = NormalMeasurementPoint(_t, _val, _scope, _mean, _sigma)
   else 

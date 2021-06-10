@@ -11,12 +11,12 @@ model = platform.models[:nameless];
 # parameters(model) # def_parameters
 # events_active(model) # def_events_active
 # events_save(model) # def_events_save
-# obs(model) # def_observations
+# observables(model) # def_observations
 
 ################################## Single Simulation ######################################
 
 sim(model; tspan = (0., 200.)) |> plot
-sim(model; tspan = (0., 200.), constants = [:k1=>0.01]) |> plot
+sim(model; tspan = (0., 200.), parameters = [:k1=>0.01]) |> plot
 sim(model; saveat = 0:10:100) |> plot
 sim(model; saveat = 0:10:100, tspan = (0., 50.)) |> plot
 sim(model; saveat = 0:10:100, tspan = (0., 500.)) |> plot
@@ -43,13 +43,13 @@ sim(
 ### single condition sim()
 cond1 = Cond(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]);
 sim(cond1) |> plot
-sim(cond1; input_cons=[:k1=>0.01]) |> plot
+sim(cond1; parameters_upd=[:k1=>0.01]) |> plot
 
 cond2 = Cond(
     model;
     tspan = (0., 200.),
     events_active=[:sw1=>false],
-    constants = [:k2 => 0.001, :k3 => 0.02]
+    parameters = [:k2 => 0.001, :k3 => 0.02]
     );
 sim(cond2) |> plot
 
@@ -57,7 +57,7 @@ cond3 = Cond(
     model;
     tspan = (0., 250.),
     events_active=[:sw1=>false],
-    constants = [:k2 => 0.1]
+    parameters = [:k2 => 0.1]
     );
 sim(cond3) |> plot
 
@@ -66,12 +66,12 @@ sim.([cond1, cond2, cond3]) |> plot
 ### sim together
 sim([cond1, cond2, cond3]) |> plot
 sim([:x => cond1, :y=>cond2, :z=>cond3]) |> plot
-sim([:x => cond1, :y=>cond2, :z=>cond3]; input_cons=[:k1=>0.01]) |> plot
+sim([:x => cond1, :y=>cond2, :z=>cond3]; parameters_upd=[:k1=>0.01]) |> plot
 
 ### load measurements from CSV
 measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv")
 measurements_xlsx = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.xlsx")
-cond4 = Cond(model; constants = [:k2=>0.001, :k3=>0.04], saveat = [0.0, 50., 150., 250.]);
+cond4 = Cond(model; parameters = [:k2=>0.001, :k3=>0.04], saveat = [0.0, 50., 150., 250.]);
 add_measurements!(cond4, measurements_csv; subset = [:condition => :dataone])
 
 ### fit many conditions
@@ -92,19 +92,19 @@ plot(sol; vars=[:a,:c], measurements=false)
 mccond1 = Cond(
     model;
     tspan = (0., 200.),
-    constants = [:k1=>0.01],
+    parameters = [:k1=>0.01],
     saveat = [50., 80., 150.]
     );
 mccond2 = Cond(
     model;
     tspan = (0., 200.),
-    constants = [:k1=>0.02],
+    parameters = [:k1=>0.02],
     saveat = [50., 100., 200.]
     );
 mccond3 = Cond(
     model; 
     tspan = (0., 200.),
-    constants = [:k1=>0.03],
+    parameters = [:k1=>0.03],
     saveat = [50., 100., 180.],
     events_active=[:sw1 => false]
     );
@@ -165,7 +165,7 @@ using Distributed
 addprocs(2)
 @everywhere using HetaSimulator
 
-mccond1 = Cond(model; tspan = (0., 200.), constants = [:k1=>0.01], saveat = [50., 80., 150.]);
+mccond1 = Cond(model; tspan = (0., 200.), parameters = [:k1=>0.01], saveat = [50., 80., 150.]);
 mcsim0 = mc(mccond1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 20)
 mcsim1 = mc(mccond1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 150, parallel_type=EnsembleDistributed())
 =#

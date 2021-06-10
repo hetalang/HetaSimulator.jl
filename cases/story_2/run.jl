@@ -14,7 +14,7 @@ platform = load_platform("$HetaSimulatorDir/cases/story_2", rm_out=false);
 ################################## Single Simulation ######################################
 
 model = platform.models[:nameless]
-# model.constants
+
 sim(model; tspan = (0., 200.)) |> plot
 
 ################################## load and simulate conditions  #####################

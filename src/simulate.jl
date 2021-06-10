@@ -8,7 +8,7 @@ const EMPTY_PROBLEM = ODEProblem(() -> nothing, [0.0], (0.,1.))
 
 """
     sim(cond::Cond; 
-      input_cons::Union{Nothing, Vector{P}}=nothing,
+      parameters_upd::Union{Nothing, Vector{P}}=nothing,
       alg=DEFAULT_ALG, 
       reltol=DEFAULT_SIMULATION_RELTOL, 
       abstol=DEFAULT_SIMULATION_ABSTOL,
@@ -19,7 +19,7 @@ Simulate single condition `cond`. Returns [`SimResults`](@ref) type.
 Arguments:
 
 - `cond` : simulation condition of type [`Cond`](@ref)
-- `input_cons` : constants, which overwrite both `Model` and `Cond` constants. Default is `nothing`
+- `parameters_upd` : constants, which overwrite both `Model` and `Cond` constants. Default is `nothing`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -27,14 +27,14 @@ Arguments:
 """
 function sim(
   cond::Cond; 
-  input_cons::Union{Nothing, Vector{P}}=nothing,
+  parameters_upd::Union{Nothing, Vector{P}}=nothing,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
   kwargs... # other solver arguments
 ) where P<:Pair
 
-  prob = !isnothing(input_cons) ? update_init_values(cond.prob, cond.init_func, NamedTuple(input_cons)) : cond.prob
+  prob = !isnothing(parameters_upd) ? update_init_values(cond.prob, cond.init_func, NamedTuple(parameters_upd)) : cond.prob
   sol = solve(prob, alg; reltol = reltol, abstol = abstol,
     save_start = false, save_end = false, save_everystep = false, kwargs...)
 
@@ -49,7 +49,7 @@ end
 ### simulate Model
 """
     sim(model::Model; 
-      constants::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
+      parameters::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
       measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
       events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
       events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}}=(true,true), 
@@ -65,7 +65,7 @@ Simulate model of type [`Model`](@ref). Returns [`SimResults`](@ref) type.
 Arguments:
 
 - `model` : model of type [`Model`](@ref)
-- `constants` : `Vector` of `Pair`s containing constants' names and values. Overwrites default model's values. Default is empty vector 
+- `parameters` : `Vector` of `Pair`s containing constants' names and values. Overwrites default model's values. Default is empty vector 
 - `measurements` : `Vector` of measurements. Default is empty vector 
 - `events_active` : `Vector` of `Pair`s containing events' names and true/false values. Overwrites default model's values. Default is empty vector 
 - `events_save` : `Tuple` or `Vector{Tuple}` marking whether to save solution before and after event. Default is `(true,true)` for all events
@@ -79,7 +79,7 @@ function sim(
   model::Model;
 
   ## arguments for Cond(::Model,...)
-  constants::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
+  parameters::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
   events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
   events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}}=(true,true), 
@@ -91,7 +91,7 @@ function sim(
   kwargs... # sim(c::Cond) kwargs
 )
   condition = Cond(
-    model; constants, measurements,
+    model; parameters, measurements,
     events_active, events_save, observables, saveat, tspan, save_scope, time_type)
 
   return sim(condition; kwargs...)
@@ -101,7 +101,7 @@ end
 
 """
     sim(condition_pairs::Vector{P}; 
-      input_cons::Union{Nothing, Vector}=nothing,
+      parameters_upd::Union{Nothing, Vector}=nothing,
       alg=DEFAULT_ALG, 
       reltol=DEFAULT_SIMULATION_RELTOL, 
       abstol=DEFAULT_SIMULATION_ABSTOL,
@@ -113,7 +113,7 @@ Simulate multiple conditions. Returns `Vector{Pair}`.
 Arguments:
 
 - `condition_pairs` : vector of pairs containing names and conditions of type [`Cond`](@ref)
-- `input_cons` : constants, which overwrite both `Model` and `Cond` constants. Default is `nothing`
+- `parameters_upd` : constants, which overwrite both `Model` and `Cond` constants. Default is `nothing`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -122,7 +122,7 @@ Arguments:
 """
 function sim(
   condition_pairs::Vector{P};
-  input_cons::Union{Nothing, Vector}=nothing,
+  parameters_upd::Union{Nothing, Vector}=nothing,
   alg = DEFAULT_ALG, 
   reltol = DEFAULT_SIMULATION_RELTOL, 
   abstol = DEFAULT_SIMULATION_ABSTOL,
@@ -136,8 +136,8 @@ function sim(
   function prob_func(prob,i,repeat)
     prob_i = last(condition_pairs[i]).prob
     init_func_i = last(condition_pairs[i]).init_func
-    !isnothing(input_cons) ? 
-      update_init_values(prob_i, init_func_i, NamedTuple(input_cons)) : prob_i
+    !isnothing(parameters_upd) ? 
+      update_init_values(prob_i, init_func_i, NamedTuple(parameters_upd)) : prob_i
   end
 
   function _output(sol,i)

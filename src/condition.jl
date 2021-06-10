@@ -1,5 +1,5 @@
-const CONSTANT_PREFIX = "constants"
-const SWITCHER_PREFIX = "switchers"
+const CONSTANT_PREFIX = "parameters"
+const SWITCHER_PREFIX = "events_active"
 const SAVEAT_HEADER = Symbol("saveat[]")
 const TSPAN_HEADER = Symbol("tspan")
 const OBSERVABLES_HEADER = Symbol("observables[]")
@@ -8,10 +8,15 @@ const OBSERVABLES_HEADER = Symbol("observables[]")
 function Cond(
   model::Model;
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
-  kwargs...
+  observables::Union{Nothing,Vector{Symbol}} = nothing,
+  kwargs... # all arguments of build_ode_problem()
 )
   # ODE problem
-  prob = build_ode_problem(model; kwargs...)
+  prob = build_ode_problem(
+    model;
+    observables_ = observables,
+    kwargs...
+  )
 
   return Cond(model.init_func, prob, measurements)
 end
@@ -53,14 +58,14 @@ function _add_condition!(platform::Platform, row::Any) # maybe not any
     model = platform.models[model_name]
   end
 
-  # iterate through constants
-  _constants = Pair{Symbol,Float64}[]
+  # iterate through parameters
+  _parameters = Pair{Symbol,Float64}[]
   _events_active = Pair{Symbol,Bool}[]
   for key in keys(row)
     if !ismissing(row[key])
       splitted_key = split(string(key), ".")
       if splitted_key[1] == CONSTANT_PREFIX
-        push!(_constants, Symbol(splitted_key[2]) => row[key])
+        push!(_parameters, Symbol(splitted_key[2]) => row[key])
       elseif splitted_key[1] == SWITCHER_PREFIX
         push!(_events_active, Symbol(splitted_key[2]) => row[key])
       end
@@ -89,7 +94,7 @@ function _add_condition!(platform::Platform, row::Any) # maybe not any
 
   condition = Cond(
     model;
-    constants = _constants,
+    parameters = _parameters,
     events_active = _events_active,
     saveat = _saveat,
     tspan = _tspan,

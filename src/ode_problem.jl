@@ -1,31 +1,31 @@
 function build_ode_problem(
   model::Model;
-  constants::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
+  parameters::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
   events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
   events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}} = (true,true), 
-  observables::Union{Nothing,Vector{Symbol}} = nothing,
+  observables_::Union{Nothing,Vector{Symbol}} = nothing,
   saveat::Union{Nothing,AbstractVector} = nothing,
   tspan::Union{Nothing,Tuple} = nothing,
   save_scope::Bool = true,
-  time_type::DataType=Float64
+  time_type::DataType = Float64
 )
   # saveat and tspan
   _saveat, _tspan = saveat_tspan(saveat, tspan, time_type)
 
   # initial values and params
   init_func = model.init_func
-  cons_nt = NamedTuple(constants)
-  u0, params = init_values(init_func, merge(model.constants, cons_nt))
+  parameters_nt = NamedTuple(parameters)
+  u0, params = init_values(init_func, merge(model.constants, parameters_nt))
 
   # saving setup
   utype = eltype(u0)
-  _observables = isnothing(observables) ? obs(model) : observables # use default if not set
+  merged_observables = isnothing(observables_) ? observables(model) : observables_ # use default if not set
   saved_values = SavedValues(
-    LArray{utype,1,Array{utype,1},Tuple(_observables)}[],
+    LArray{utype,1,Array{utype,1},Tuple(merged_observables)}[],
     time_type[],
     save_scope ? Symbol[] : nothing
     )
-  saving_func = model.saving_generator(_observables)
+  saving_func = model.saving_generator(merged_observables)
   scb = saving_wrapper(saving_func, saved_values; saveat=_saveat, save_scope)
 
   # events
@@ -70,9 +70,9 @@ end
 
 function  update_init_values(prob, init_func, x)
   constants = merge(NamedTuple(prob.p.constants),x)
-  u0,p0 = init_values(init_func, constants)
+  u0, p0 = init_values(init_func, constants)
 
-  prob_upd = remake(prob;u0=u0, p=p0)
+  prob_upd = remake(prob; u0=u0, p=p0)
   #prob_upd.p.constants .= p0.constants
   #prob_upd.p.static .= p0.static
   
