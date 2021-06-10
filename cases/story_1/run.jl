@@ -8,10 +8,10 @@ using HetaSimulator, Plots
 
 platform = load_platform("$HetaSimulatorDir/cases/story_1", rm_out = false);
 model = platform.models[:nameless];
-# parameters(model)
-# events_active(model)
-# events_save(model)
-# get_observables(model)
+# parameters(model) # def_parameters
+# events_active(model) # def_events_active
+# events_save(model) # def_events_save
+# obs(model) # def_observations
 
 ################################## Single Simulation ######################################
 
@@ -79,8 +79,8 @@ res1 = fit([:x=>cond2, :y=>cond3, :z=>cond4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])
 res2 = fit([cond2, cond3, cond4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])
 
 # sim all conditions
-sol = sim([:c1 => cond1, :c2=>cond2, :c3=>cond3, :c4=>cond4])
-plot(sol)
+sol = sim([:c1 => cond1, :c2=>cond2, :c3=>cond3, :c4=>cond4]);
+plot(sol) # wrong plot
 
 # plot selected observables
 plot(sol; vars=[:a,:c])
