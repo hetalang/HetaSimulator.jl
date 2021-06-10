@@ -17,6 +17,14 @@ function build_ode_problem(
   parameters_nt = NamedTuple(parameters)
   u0, params = init_values(init_func, merge(model.constants, parameters_nt))
 
+  # check observables
+  records_ind = indexin(observables_, records(model))
+  if any((x)-> x === nothing, records_ind)
+    lost_observables_ind = findall((x)-> x===nothing, records_ind)
+    lost_observables = observables_[lost_observables_ind]
+    throw("Lost observables: $lost_observables")
+  end
+
   # saving setup
   utype = eltype(u0)
   merged_observables = isnothing(observables_) ? observables(model) : observables_ # use default if not set
