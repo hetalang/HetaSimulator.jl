@@ -100,7 +100,7 @@ measurements(c::Cond) = c.measurements
 function Base.show(io::IO, ::MIME"text/plain", c::Cond)
   println(io, "+---------------------------------------------------------------------------")
   println(io, "| Cond contains:")
-  println(io, "|   saveat values: $(saveat(c)). Use `saveat(cond)` for details.")
+  println(io, "|   $(length(saveat(c))) saveat values: $(saveat(c)). Use `saveat(cond)` for details.")
   println(io, "|   tspan: $(tspan(c)). Use `tspan(cond)` for details.")
   println(io, "|   $(length(parameters(c))) parameters(s). Use `parameters(cond)` for details.")
   println(io, "|   $(length(measurements(c))) measurement(s). Use `measurements(cond)` for details.")
@@ -135,13 +135,18 @@ end
 @inline Base.length(S::SimResults) = length(S.sim.u)
 
 function Base.show(io::IO, m::MIME"text/plain", S::SimResults)
-  println(io, "Simulation status is $(S.sim.status).")
-  println(io, "You can plot simulation results with `plot(sim::SimResults)` or convert them to DataFrame with `DataFrame(sim::SimResults)`")
+  println(io, "+---------------------------------------------------------------------------")
+  println(io, "| Status :$(S.sim.status).")
+  println(io, "| Use `DataFrame(sim)` to convert.")
+  # show(io, m, DataFrame(S))
+  println(io, "+---------------------------------------------------------------------------")
 end
 
 function Base.show(io::IO, m::MIME"text/plain", V::Vector{S}) where S<:SimResults
-  println(io, "Simulation results for $(length(V)) condition(s).") 
-  println(io, "You can index simulated conditions with `sol[i]` or plot all conditions with `plot(sol::Vector{SimResults})`")
+  println(io, "+---------------------------------------------------------------------------")
+  println(io, "| Simulation results for $(length(V)) condition(s).") 
+  println(io, "| To get th i-th component use `sol[i]`")
+  println(io, "+---------------------------------------------------------------------------")
 end
 
 ################################## Monte-Carlo Simulation ##############################
@@ -196,11 +201,13 @@ struct FitResults{L<:Real, I}
 end
 
 function Base.show(io::IO, m::MIME"text/plain", F::FitResults)
-  println(io, "Fitting results:")
-  println(io, "  status: $(F.status)")
-  println(io, "  optim: $(F.optim). Access optim estimate with `optim(f::FitResults)`")
-  println(io, "  objective function value: $(F.obj). Access objective value with `obj(f::FitResults)`")
-  println(io, "  number of objective function evaluations: $(F.numevals)")
+  println(io, "+---------------------------------------------------------------------------")
+  println(io, "| Fitting results:")
+  println(io, "|   status: $(F.status)")
+  println(io, "|   optim: $(F.optim). Access optim estimate with `optim(f::FitResults)`")
+  println(io, "|   objective function value: $(F.obj). Access objective value with `obj(f::FitResults)`")
+  println(io, "|   number of objective function evaluations: $(F.numevals)")
+  println(io, "+---------------------------------------------------------------------------")
 end
 
 optim(f::FitResults) = f.optim

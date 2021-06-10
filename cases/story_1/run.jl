@@ -77,6 +77,7 @@ add_measurements!(cond4, measurements_csv; subset = [:condition => :dataone])
 ### fit many conditions
 res1 = fit([:x=>cond2, :y=>cond3, :z=>cond4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])
 res2 = fit([cond2, cond3, cond4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])
+sim(cond3, parameters_upd = optim(res2))
 
 # sim all conditions
 sol = sim([:c1 => cond1, :c2=>cond2, :c3=>cond3, :c4=>cond4]);
