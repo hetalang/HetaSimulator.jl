@@ -2,7 +2,6 @@
     "high level" i.e. using Platform
 =#
 using HetaSimulator, Plots
-using DataFrames, CSV
 
 ################################## Model Upload ###########################################
 # heta_update_dev()

@@ -18,11 +18,13 @@ function build_ode_problem(
   u0, params = init_values(init_func, merge(model.constants, parameters_nt))
 
   # check observables
-  records_ind = indexin(observables_, records(model))
-  if any((x)-> x === nothing, records_ind)
-    lost_observables_ind = findall((x)-> x===nothing, records_ind)
-    lost_observables = observables_[lost_observables_ind]
-    throw("Lost observables: $lost_observables")
+  if !isnothing(observables_)
+    records_ind = indexin(observables_, records(model))
+    if any((x)-> x === nothing, records_ind)
+      lost_observables_ind = findall((x)-> x===nothing, records_ind)
+      lost_observables = observables_[lost_observables_ind]
+      throw("Lost observables: $lost_observables")
+    end
   end
 
   # saving setup

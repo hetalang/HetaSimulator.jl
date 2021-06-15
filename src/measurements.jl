@@ -69,13 +69,14 @@ function _add_measurement!(condition::Cond, row::Any) # maybe not any
   _val = row[:measurement]
   _scope = row[:scope]
 
-  if row[:distribution] == NORMAL    
+  _type = row[Symbol("prob.type")]
+  if _type == NORMAL    
     _mean = typed(row[Symbol("prob.$MEAN")])
     _sigma = typed(row[Symbol("prob.$SIGMA")])
 
     point = NormalMeasurementPoint(_t, _val, _scope, _mean, _sigma)
   else 
-    error("Distribution value $(row[:distribution]) is wrong or not supported. Supported distributions are: $Normal")
+    error("Distribution value $_type is wrong or not supported. Supported distributions are: $Normal")
   end
 
   push!(condition.measurements, point)
@@ -87,7 +88,7 @@ function read_measurements_csv(filepath::String; kwargs...)
   df = DataFrame(CSV.File(
     filepath;
     typemap = Dict(Int64=>Float64, Int32=>Float64),
-    types = Dict(:t=>Float64, :measurement=>Float64, :scope=>Symbol, :condition=>Symbol, :distribution=>Symbol),
+    types = Dict(:t=>Float64, :measurement=>Float64, :scope=>Symbol, :condition=>Symbol, Symbol("prob.type")=>Symbol),
     kwargs...)
   )
   assert_measurements(df)
@@ -103,7 +104,7 @@ function read_measurements_xlsx(filepath::String, sheet=1; kwargs...)
   df[!,:measurement] .= Float64.(df[!,:measurement])
   df[!,:scope] .= Symbol.(df[!,:scope])
   df[!,:condition] .= Symbol.(df[!,:condition])
-  df[!,:distribution] .= Symbol.(df[!,:distribution])
+  df[!,Symbol("prob.type")] .= Symbol.(df[!,Symbol("prob.type")])
 
   return df
 end
@@ -123,7 +124,7 @@ end
 
 function assert_measurements(df)
   names_df = names(df)
-  for f in ["t", "measurement", "scope", "condition", "distribution"]
+  for f in ["t", "measurement", "scope", "condition", "prob.type"]
     @assert f ∈ names_df "Required column name $f is not found in measurements table."
   end
   return nothing

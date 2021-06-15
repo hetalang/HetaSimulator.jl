@@ -88,7 +88,7 @@ end
 end
 
 @recipe function plot(sim::Vector{S}) where S <:AbstractResults
-  [Symbol("Cond_ID$i")=>s for (i,s) in enumerate(sim)]
+  [Symbol("#$i")=>s for (i,s) in enumerate(sim)]
 end
 
 @recipe function plot(sim::Vector{P}) where P <: Pair 

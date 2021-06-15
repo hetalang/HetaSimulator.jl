@@ -226,4 +226,3 @@ function default_output(sol,i)
 end
 
 default_reduction(u,batch,I) = (append!(u,batch),false)
-
