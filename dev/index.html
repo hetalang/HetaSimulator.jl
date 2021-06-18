@@ -13,11 +13,11 @@ sim(model; tspan = (0., 200.)) |&gt; plot #1
 
 ## condition simulation
 
-cond1 = Cond(model; tspan = (0., 200.), events_on=[:ss1 =&gt; false], saveat = [0.0, 150., 250.]);
+cond1 = Cond(model; tspan = (0., 200.), events_active=[:ss1 =&gt; false], saveat = [0.0, 150., 250.]);
 sim(cond1) |&gt; plot
-cond2 = Cond(model; tspan = (0., 200.), events_on=[:sw1=&gt;false, :ss1 =&gt; false], constants = [:k2 =&gt; 0.001, :k3 =&gt; 0.02]);
+cond2 = Cond(model; tspan = (0., 200.), events_active=[:sw1=&gt;false, :ss1 =&gt; false], parameters = [:k2 =&gt; 0.001, :k3 =&gt; 0.02]);
 sim(cond2) |&gt; plot
-cond3 = Cond(model; tspan = (0., 200.), events_on=[:ss1 =&gt; false],constants = [:k1=&gt;0.01]);
+cond3 = Cond(model; tspan = (0., 200.), events_active=[:ss1 =&gt; false], parameters = [:k1=&gt;0.01]);
 sim(cond3) |&gt; plot 
 
 sim([:x =&gt; cond1, :y=&gt;cond2, :z=&gt;cond3]) |&gt; plot
@@ -25,15 +25,15 @@ sim([:x =&gt; cond1, :y=&gt;cond2, :z=&gt;cond3]) |&gt; plot
 ## fitting
 
 measurements_csv = read_measurements(&quot;$HetaSimulatorDir/cases/story_1/measurements.csv&quot;)
-cond4 = Cond(model; constants = [:k2=&gt;0.001, :k3=&gt;0.04], events_on=[:ss1 =&gt; false], saveat = [0.0, 50., 150., 250.]);
+cond4 = Cond(model; parameters = [:k2=&gt;0.001, :k3=&gt;0.04], events_active=[:ss1 =&gt; false], saveat = [0.0, 50., 150., 250.]);
 add_measurements!(cond4, measurements_csv; subset = Dict(:condition =&gt; :dataone))
 res2 = fit([cond2, cond3, cond4], [:k1=&gt;0.1,:k2=&gt;0.2,:k3=&gt;0.3])
 
 ## Monte-Carlo simulations
 
-mccond1 = Cond(model; tspan = (0., 200.), constants = [:k1=&gt;0.01], saveat = [50., 80., 150.], events_on=[:ss1 =&gt; false]);
-mccond2 = Cond(model; tspan = (0., 200.), constants = [:k1=&gt;0.02], saveat = [50., 100., 200.], events_on=[:ss1 =&gt; false]);
-mccond3 = Cond(model; tspan = (0., 200.), constants = [:k1=&gt;0.03], saveat = [50., 100., 180.], events_on=[:ss1 =&gt; false]);
+mccond1 = Cond(model; tspan = (0., 200.), parameters = [:k1=&gt;0.01], saveat = [50., 80., 150.], events_active=[:ss1 =&gt; false]);
+mccond2 = Cond(model; tspan = (0., 200.), parameters = [:k1=&gt;0.02], saveat = [50., 100., 200.], events_active=[:ss1 =&gt; false]);
+mccond3 = Cond(model; tspan = (0., 200.), parameters = [:k1=&gt;0.03], saveat = [50., 100., 180.], events_active=[:ss1 =&gt; false]);
 
 mc(mccond1, [:k2=&gt;Normal(1e-3,1e-4), :k3=&gt;Normal(1e-4,1e-5)], 1000) |&gt; plot
 mc([:mc1=&gt;mccond1,:mc2=&gt;mccond2,:mc3=&gt;mccond3], [:k1=&gt;0.01, :k2=&gt;Normal(1e-3,1e-4), :k3=&gt;Uniform(1e-4,1e-2)], 1000) |&gt; plot
@@ -49,4 +49,4 @@ measurements = read_measurements(&quot;$HetaSimulatorDir/cases/story_1/measureme
 add_measurements!(platform, measurements)
 
 sim(platform, conditions = [:three]) |&gt; plot
-fit1 = fit(platform, [:k1=&gt;0.1,:k2=&gt;0.2,:k3=&gt;0.3], conditions = [:dataone,:withdata2])</code></pre></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Friday 4 June 2021 13:27">Friday 4 June 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+fit1 = fit(platform, [:k1=&gt;0.1,:k2=&gt;0.2,:k3=&gt;0.3], conditions = [:dataone, :withdata2])</code></pre></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Friday 18 June 2021 10:58">Friday 18 June 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
