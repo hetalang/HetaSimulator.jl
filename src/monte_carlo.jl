@@ -42,8 +42,6 @@ function mc(
     kwargs...
   )
 
-  #t = take!(r)
-
   return MCResults(solution.u, !has_saveat(cond), cond)
 end
 
@@ -99,6 +97,56 @@ function mc(
   cond_pairs::AbstractVector{Pair{Symbol, C}},
   params::Vector{P},
   num_iter::Int;
+  verbose=true,
+  alg=DEFAULT_ALG,
+  reltol=DEFAULT_SIMULATION_RELTOL,
+  abstol=DEFAULT_SIMULATION_ABSTOL,
+  parallel_type=EnsembleSerial(),
+  kwargs...
+) where {C<:AbstractCond, P<:Pair}
+  
+  params_nt = NamedTuple(params)
+  params_pregenerated = [generate_cons(params_nt,i) for i in 1:num_iter]
+  lp = length(params_pregenerated)
+  lc = length(cond_pairs)
+  iter = collect(Iterators.product(1:lp,1:lc))
+
+  function prob_func(prob,i,repeat)
+    iter_i = iter[i]
+    verbose && println("Processing condition $(iter_i[2]) iteration $(iter_i[1])")
+    prob_i = last(cond_pairs[iter_i[2]]).prob
+    init_i = last(cond_pairs[iter_i[2]]).init_func
+    update_init_values(prob_i, init_i, params_pregenerated[iter_i[1]])
+  end
+
+  function output_func(sol, i)
+    sim = build_results(sol,last(cond_pairs[iter[i][2]]))
+    (sim, false)
+  end
+
+  prob = EnsembleProblem(last(cond_pairs[1]).prob;
+    prob_func = prob_func,
+    output_func = output_func,
+    #reduction = reduction_func
+  )
+
+  solution = solve(prob, alg, parallel_type;
+    trajectories = lp*lc,
+    reltol = reltol,
+    abstol = abstol,
+    save_start = false,
+    save_end = false,
+    save_everystep = false,
+    kwargs...
+  )
+
+  return MCResults(solution.u, false, nothing)
+end
+#=
+function mc(
+  cond_pairs::AbstractVector{Pair{Symbol, C}},
+  params::Vector{P},
+  num_iter::Int;
   kwargs...
 ) where {C<:AbstractCond, P<:Pair}
 
@@ -109,7 +157,7 @@ function mc(
   end
   return [first(k)=> v for (k,v) in zip(cond_pairs,mcsol)]
 end
-
+=#
 function mc(
   platform::Platform,
   params::Vector{P},

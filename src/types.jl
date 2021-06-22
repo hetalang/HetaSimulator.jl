@@ -153,7 +153,7 @@ end
 
 ################################## Monte-Carlo Simulation ##############################
 
-struct MCResults{S,C<:Cond} <: AbstractResults
+struct MCResults{S,C} <: AbstractResults
   sim::S
   saveat::Bool
   cond::C
