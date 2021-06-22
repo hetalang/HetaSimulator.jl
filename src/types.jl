@@ -81,6 +81,8 @@ struct NormalMeasurementPoint{M,SD} <: AbstractMeasurementPoint
   σ::SD
 end
 
+NormalMeasurementPoint(t,val,scope::Missing,μ,σ) = NormalMeasurementPoint(t,val,:ode_,μ,σ)
+
 const MeasurementVector{P} = AbstractVector{P} where P<:AbstractMeasurementPoint
 
 ################################## Condition ###########################################

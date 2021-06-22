@@ -69,7 +69,8 @@ sim([:x => cond1, :y=>cond2, :z=>cond3]) |> plot
 sim([:x => cond1, :y=>cond2, :z=>cond3]; parameters_upd=[:k1=>0.01]) |> plot
 
 ### load measurements from CSV
-measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv")
+#measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv")
+measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements_w_miss.csv")
 measurements_xlsx = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.xlsx")
 cond4 = Cond(model; parameters = [:k2=>0.001, :k3=>0.04], saveat = [0.0, 50., 150., 250.]);
 add_measurements!(cond4, measurements_csv; subset = [:condition => :dataone])

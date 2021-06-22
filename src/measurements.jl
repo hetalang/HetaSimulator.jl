@@ -70,7 +70,8 @@ function _add_measurement!(condition::Cond, row::Any) # maybe not any
   _scope = row[:scope]
 
   _type = row[Symbol("prob.type")]
-  if _type == NORMAL    
+
+  if ismissing(_type) || _type == NORMAL
     _mean = typed(row[Symbol("prob.$MEAN")])
     _sigma = typed(row[Symbol("prob.$SIGMA")])
 
