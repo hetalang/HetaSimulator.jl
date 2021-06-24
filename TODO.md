@@ -4,8 +4,10 @@
 
 ## features
 
-- in measurements use default scope=ode_, prob.type=normal
-- create monte_carlo([cond1, cond2]) method
+- in measurements default values when no scope type columns
+- MC without cond ids
+- Verbose for MC
+- show base obj
 
 ## postponed changes
 
