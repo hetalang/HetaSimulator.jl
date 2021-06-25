@@ -3,7 +3,7 @@ function mc(
   cond::Cond,
   params::Vector{P},
   num_iter::Int;
-  verbose=true,
+  verbose=false,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
@@ -97,7 +97,7 @@ function mc(
   cond_pairs::AbstractVector{Pair{Symbol, C}},
   params::Vector{P},
   num_iter::Int;
-  verbose=true,
+  verbose=false,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
