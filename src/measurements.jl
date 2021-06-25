@@ -67,9 +67,9 @@ end
 function _add_measurement!(condition::Cond, row::Any) # maybe not any
   _t = row[:t]
   _val = row[:measurement]
-  _scope = row[:scope]
+  _scope = haskey(row, :scope) ? row[:scope] : missing
 
-  _type = row[Symbol("prob.type")]
+  _type = haskey(row, Symbol("prob.type")) ? row[Symbol("prob.type")] : missing
 
   if ismissing(_type) || _type == NORMAL
     _mean = typed(row[Symbol("prob.$MEAN")])
@@ -103,9 +103,9 @@ function read_measurements_xlsx(filepath::String, sheet=1; kwargs...)
 
   df[!,:t] .= Float64.(df[!,:t])
   df[!,:measurement] .= Float64.(df[!,:measurement])
-  df[!,:scope] .= Symbol.(df[!,:scope])
+  haspropery(df, :scope) && (df[!,:scope] .= Symbol.(df[!,:scope]))
   df[!,:condition] .= Symbol.(df[!,:condition])
-  df[!,Symbol("prob.type")] .= Symbol.(df[!,Symbol("prob.type")])
+  haspropery(df, Symbol("prob.type")) && (df[!,Symbol("prob.type")] .= Symbol.(df[!,Symbol("prob.type")]))
 
   return df
 end
@@ -125,7 +125,7 @@ end
 
 function assert_measurements(df)
   names_df = names(df)
-  for f in ["t", "measurement", "scope", "condition", "prob.type"]
+  for f in ["t", "measurement", "condition"]
     @assert f ∈ names_df "Required column name $f is not found in measurements table."
   end
   return nothing
