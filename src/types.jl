@@ -139,15 +139,22 @@ end
 function Base.show(io::IO, m::MIME"text/plain", S::SimResults)
   println(io, "+---------------------------------------------------------------------------")
   println(io, "| Status :$(S.sim.status).")
-  println(io, "| Use `DataFrame(sim)` to convert.")
-  # show(io, m, DataFrame(S))
+  println(io, "| Use `DataFrame(sim)` to convert results to DataFrame.")
+  println(io, "| Use `plot(sim)` to plot results.")
   println(io, "+---------------------------------------------------------------------------")
 end
 
 function Base.show(io::IO, m::MIME"text/plain", V::Vector{S}) where S<:SimResults
   println(io, "+---------------------------------------------------------------------------")
   println(io, "| Simulation results for $(length(V)) condition(s).") 
-  println(io, "| To get th i-th component use `sol[i]`")
+  println(io, "| Use `sol[i]` to get th i-th component.")
+  println(io, "+---------------------------------------------------------------------------")
+end
+
+function Base.show(io::IO, m::MIME"text/plain", V::Vector{Pair{Symbol, S}}) where S<:SimResults ## ugly
+  println(io, "+---------------------------------------------------------------------------")
+  println(io, "| Simulation results for $(length(V)) condition(s).") 
+  println(io, "| Use `sol[i]` to get th i-th component.")
   println(io, "+---------------------------------------------------------------------------")
 end
 
@@ -165,12 +172,24 @@ end
 status_summary(MC::MCResults) = counter([sim.status for sim in MC])
 
 function Base.show(io::IO, m::MIME"text/plain", MC::MCResults)
-  println(io, "Monte-Carlo results for $(length(MC)) iterations. You can plot results with `plot(sol::MCResults)`")
+  println(io, "+---------------------------------------------------------------------------")
+  println(io, "| Monte-Carlo results for $(length(MC)) iterations." )
+  println(io, "| Use `plot(sol::MCResults)` to plot results.")
+  println(io, "+---------------------------------------------------------------------------")
 end
 
 function Base.show(io::IO, m::MIME"text/plain", VMC::Vector{MC}) where MC<:MCResults
-  println(io, "Monte-Carlo results for $(length(VMC)) condition(s).") 
-  println(io, "You can index simulated Monte-Carlo conditions with `sol[i]` or plot all conditions with `plot(sol::Vector{MCResults})`")
+  println(io, "+---------------------------------------------------------------------------")
+  println(io, "| Monte-Carlo results for $(length(VMC)) condition(s).") 
+  println(io, "| Use `sol[i]` to index Monte-Carlo results.")
+  println(io, "+---------------------------------------------------------------------------")
+end
+
+function Base.show(io::IO, m::MIME"text/plain", VMC::Vector{Pair{Symbol, S}}) where S<:MCResults
+  println(io, "+---------------------------------------------------------------------------")
+  println(io, "| Monte-Carlo results for $(length(VMC)) condition(s).") 
+  println(io, "| Use `sol[i]` to index Monte-Carlo results.")
+  println(io, "+---------------------------------------------------------------------------")
 end
 
 ################################## Events ##############################################

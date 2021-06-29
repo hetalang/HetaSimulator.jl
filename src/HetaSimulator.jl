@@ -1,6 +1,7 @@
 module HetaSimulator
 
-  using Reexport
+  using Base: func_for_method_checked
+using Reexport
   # heta compiler support
   using NodeJS
   # diffeq-related pkgs
@@ -17,6 +18,7 @@ module HetaSimulator
   @reexport using DataFrames
   @reexport using Distributions
   using Distributed
+  using ProgressMeter
   # measurements 
   using CSV
   using XLSX

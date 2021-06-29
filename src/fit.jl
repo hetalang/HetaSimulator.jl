@@ -3,6 +3,47 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
 
 ### general interface
 
+"""
+    fit(condition_pairs::AbstractVector{Pair{Symbol, C}},
+      params::Vector{Pair{Symbol,Float64}};
+      alg=DEFAULT_ALG,
+      reltol=DEFAULT_FITTING_RELTOL,
+      abstol=DEFAULT_FITTING_ABSTOL,
+      parallel_type=EnsembleSerial(),
+      ftol_abs = 0.0,
+      ftol_rel = 1e-4, 
+      xtol_rel = 0.0,
+      xtol_abs = 0.0, 
+      fit_alg = :LN_NELDERMEAD,
+      maxeval = 10000,
+      maxtime = 0.0,
+      lbounds = fill(0.0, length(params)),
+      ubounds = fill(Inf, length(params)),
+      kwargs... 
+    ) where C<:AbstractCond
+
+Fit parameters to experimental measurements. Returns `FitResults` type.
+Example: `fit([:x=>cond2, :y=>cond3, :z=>cond4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
+
+Arguments:
+
+- `condition_pairs` : vector of pairs containing names and conditions of type [`Cond`](@ref)
+- `params` : optimization parameters and their initial values
+- `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
+- `reltol` : relative tolerance. Default is 1e-6
+- `abstol` : relative tolerance. Default is 1e-8
+- `parallel_type` : parallel setup. See SciML docs for details. Default is no parallelism: EnsembleSerial()
+- `ftol_abs` : absolute tolerance on function value. See `NLopt.jl` docs for details. Default is `0.0`
+- `ftol_rel` : relative tolerance on function value. See `NLopt.jl` docs for details. Default is `1e-4`
+- `xtol_rel` : relative tolerance on optimization parameters. See `NLopt.jl` docs for details. Default is `0.0`
+- `xtol_rel` : absolute tolerance on optimization parameters. See `NLopt.jl` docs for details. Default is `0.0`
+- `fit_alg` : fitting algorithm. See `NLopt.jl` docs for details. Default is `:LN_NELDERMEAD`
+- `maxeval` : maximum number of function evaluations. See `NLopt.jl` docs for details. Default is `1e4`
+- `maxtime` : maximum optimization time (in seconds). See `NLopt.jl` docs for details. Default is `0`
+- `lbounds` : lower parameters bounds. See `NLopt.jl` docs for details. Default is `fill(0.0, length(params))`
+- `ubounds` : upper parameters bounds. See `NLopt.jl` docs for details. Default is `fill(Inf, length(params))`
+- kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
+"""
 function fit(
   condition_pairs::AbstractVector{Pair{Symbol, C}},
   params::Vector{Pair{Symbol,Float64}};
@@ -43,7 +84,7 @@ function fit(
   end
 
   function _output(sol, i)
-    sol.retcode != :Success && error("Cond_ID $i returned $(sol.retcode) status")
+    sol.retcode != :Success && error("Simulated condition $i returned $(sol.retcode) status")
     sim = build_results(sol,last(selected_condition_pairs[i]))
     loss_val = loss(sim, sim.cond.measurements) 
     (loss_val, false)
@@ -106,18 +147,48 @@ function fit(
 end
 
 ### fit many conditions
+"""
+    fit(conditions::AbstractVector{C},
+      params::Vector{Pair{Symbol,Float64}};
+      kwargs...
+    ) where C<:AbstractCond
 
+Fit parameters to experimental measurements. Returns `FitResults` type.
+Example: `fit([cond2, cond3, cond4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
+
+Arguments:
+
+- `conditions` : vector of conditions of type [`Cond`](@ref)
+- `params` : optimization parameters and their initial values
+- kwargs : other solver related arguments supported by `fit(condition_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
+"""
 function fit(
   conditions::AbstractVector{C},
   params::Vector{Pair{Symbol,Float64}};
   kwargs... # other arguments to sim(::Vector{Pair})
 ) where {C<:AbstractCond}
-  condition_pairs = Pair{Symbol,AbstractCond}[Symbol("Cond_ID$i") => cond for (i, cond) in pairs(conditions)]
+  condition_pairs = Pair{Symbol,AbstractCond}[Symbol("_$i") => cond for (i, cond) in pairs(conditions)]
   return fit(condition_pairs, params; kwargs...)
 end
 
 ### fit platform
+"""
+    fit(platform::Platform,
+      params::Vector{Pair{Symbol,Float64}};
+      conditions::Union{AbstractVector{Symbol}, Nothing} = nothing,
+      kwargs...
+    ) where C<:AbstractCond
 
+Fit parameters to experimental measurements. Returns `FitResults` type.
+Example: `fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3];conditions=[:cond2,:cond3])`
+
+Arguments:
+
+- `platform` : platform of [`Platform`](@ref) type
+- `params` : optimization parameters and their initial values
+- `conditions` : vector of conditions of type [`Cond`](@ref) or `nothing` to fit all conditions. Default is `nothing`
+- kwargs : other solver related arguments supported by `fit(condition_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
+"""
 function fit(
   platform::Platform,
   params::Vector{Pair{Symbol,Float64}};

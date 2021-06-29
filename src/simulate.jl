@@ -15,6 +15,7 @@ const EMPTY_PROBLEM = ODEProblem(() -> nothing, [0.0], (0.,1.))
       kwargs...)
 
 Simulate single condition `cond`. Returns [`SimResults`](@ref) type.
+Example: `Cond(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]) |> sim`
 
 Arguments:
 
@@ -41,10 +42,12 @@ function sim(
   return build_results(sol, cond)
 end
 
-function build_results(sol::SciMLBase.AbstractODESolution, cond)
+function build_results(sol::SciMLBase.AbstractODESolution)
   sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-  return SimResults(Simulation(sv, sol.retcode), cond)
+  return Simulation(sv, sol.retcode)
 end
+
+build_results(sol::SciMLBase.AbstractODESolution, cond) = SimResults(build_results(sol), cond)
 
 ### simulate Model
 """
@@ -61,6 +64,7 @@ end
       kwargs...)
 
 Simulate model of type [`Model`](@ref). Returns [`SimResults`](@ref) type.
+Example: `sim(model; tspan = (0., 200.), parameters_upd = [:k1=>0.01])`
 
 Arguments:
 
@@ -109,6 +113,7 @@ end
       kwargs...) where P<:Pair
 
 Simulate multiple conditions. Returns `Vector{Pair}`.
+Example: `sim([:x => cond1, :y=>cond2, :z=>cond3])`
 
 Arguments:
 
@@ -161,7 +166,7 @@ function sim(
     save_everystep = false,
     kwargs...
     )
-  return [first(cp)=>u for (cp,u) in zip(condition_pairs, solution.u)]
+  return [Pair{Symbol,SimResults}(first(cp), u) for (cp,u) in zip(condition_pairs, solution.u)]
 end
 
 ### simulate many conditions
@@ -170,6 +175,7 @@ end
     sim(conditions::AbstractVector{C}; kwargs...) where {C<:AbstractCond}
 
 Simulate multiple conditions. Returns `Vector{Pair}`.
+Example: `sim([cond1, cond2, cond3])`
 
 Arguments:
 
@@ -180,7 +186,7 @@ function sim(
   conditions::AbstractVector{C};
   kwargs... # other arguments to sim(::Vector{Pair})
 ) where {C<:AbstractCond}
-  condition_pairs = [Symbol("Cond_ID$i") => cond for (i, cond) in pairs(conditions)]
+  condition_pairs = [Symbol("_$i") => cond for (i, cond) in pairs(conditions)]
   return sim(condition_pairs; kwargs...)
 end
 
@@ -192,6 +198,7 @@ end
       kwargs...) where {C<:AbstractCond}
 
 Simulate conditions included in platform. Returns `Vector{Pair}`.
+Example: `sim(platform)`
 
 Arguments:
 

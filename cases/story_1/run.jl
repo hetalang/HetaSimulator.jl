@@ -16,7 +16,7 @@ model = platform.models[:nameless];
 ################################## Single Simulation ######################################
 
 sim(model; tspan = (0., 200.)) |> plot
-sim(model; tspan = (0., 200.), parameters = [:k1=>0.01]) |> plot
+sim(model; tspan = (0., 200.), parameters_upd = [:k1=>0.01]) |> plot
 sim(model; saveat = 0:10:100) |> plot
 sim(model; saveat = 0:10:100, tspan = (0., 50.)) |> plot
 sim(model; saveat = 0:10:100, tspan = (0., 500.)) |> plot
@@ -120,8 +120,15 @@ mcsim2 = mc(
     [:mc1=>mccond1,:mc2=>mccond2,:mc3=>mccond3],
     [:k1=>0.01, :k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)],
     1000
-    )
+  )
 plot(mcsim2)
+
+mcsim3 = mc(
+    [mccond1, mccond2, mccond3],
+    [:k1=>0.01, :k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)],
+    1000
+  )
+plot(mcsim3)
 
 ################################## Monte-Carlo Statistics  #####################
 #= FIXME

@@ -4,9 +4,10 @@
 
 ## features
 
-- MC without cond ids
-- Verbose for MC
-- show base obj
+- add fit methods for model, cond, vector{cond} 
+- Docs
+- Tests
+- Progress bar
 
 ## postponed changes
 
