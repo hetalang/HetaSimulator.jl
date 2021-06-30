@@ -113,22 +113,37 @@ end
 end
 
 ############################ DataFrames ########################################
+function DataFrame(s::Simulation)
+  df = DataFrame(t=s.vals.t)
 
-function DataFrames.DataFrame(sr::SimResults)
-  # df performance
-  df = DataFrame(t=sr.sim.vals.t)
-
-  labels = observables(sr)
+  labels = observables(s)
   for (i,v) in enumerate(labels)
-      df[!, v] = sr[i,:]
+      df[!, v] = s[i,:]
   end
 
-  !isnothing(sr.sim.scope) && (df[!,:scope]=sr.sim.scope)
+  !isnothing(s.scope) && (df[!,:scope]=s.scope)
   
   return df
 end
 
+DataFrame(sr::SimResults) = DataFrame(sr.sim)
 
+DataFrame(sr::Pair{Symbol,S}) where S<:SimResults = DataFrame(last(sr))
+
+function DataFrame(mcr::MCResults)
+  # df performance
+  df = DataFrame()
+
+  for (i,s) in enumerate(mcr.sim)
+      dfs = DataFrame(s)
+      insertcols!(dfs, 1, :iter => fill(i, length(s)))
+      df = vcat(df,dfs)
+  end
+  
+  return df
+end
+
+DataFrame(mcr::Pair{Symbol,S}) where S<:MCResults = DataFrame(last(mcr))
 ############################ Save Results ########################################
 
 function save_results(filepath::String, sim::SimResults) 

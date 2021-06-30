@@ -127,6 +127,8 @@ struct Simulation{V,scopeType}
   status::Symbol
 end
 
+@inline Base.length(S::Simulation) = length(S.vals.t)
+
 Simulation(sv::SavedValues,status::Symbol) = Simulation(DiffEqBase.SciMLBase.DiffEqArray(sv.u,sv.t),sv.scope,status)
 
 struct SimResults{S, C<:Cond} <: AbstractResults
@@ -134,7 +136,7 @@ struct SimResults{S, C<:Cond} <: AbstractResults
   cond::C 
 end
 
-@inline Base.length(S::SimResults) = length(S.sim.u)
+@inline Base.length(S::SimResults) = length(S.sim)
 
 function Base.show(io::IO, m::MIME"text/plain", S::SimResults)
   println(io, "+---------------------------------------------------------------------------")
@@ -143,6 +145,7 @@ function Base.show(io::IO, m::MIME"text/plain", S::SimResults)
   println(io, "| Use `plot(sim)` to plot results.")
   println(io, "+---------------------------------------------------------------------------")
 end
+Base.show(io::IO, m::MIME"text/plain", PS::Pair{Symbol, S}) where S<:SimResults = Base.show(io, m, last(PS))
 
 function Base.show(io::IO, m::MIME"text/plain", V::Vector{S}) where S<:SimResults
   println(io, "+---------------------------------------------------------------------------")
@@ -177,6 +180,8 @@ function Base.show(io::IO, m::MIME"text/plain", MC::MCResults)
   println(io, "| Use `plot(sol::MCResults)` to plot results.")
   println(io, "+---------------------------------------------------------------------------")
 end
+
+Base.show(io::IO, m::MIME"text/plain", PS::Pair{Symbol, S}) where S<:MCResults = Base.show(io, m, last(PS))
 
 function Base.show(io::IO, m::MIME"text/plain", VMC::Vector{MC}) where MC<:MCResults
   println(io, "+---------------------------------------------------------------------------")

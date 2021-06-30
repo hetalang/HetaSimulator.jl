@@ -227,7 +227,7 @@ function mc(
   end
 
   function output_func(sol, i)
-    sim = build_results(sol,last(cond_pairs[iter[i][2]]))
+    sim = build_results(sol)
     (sim, false)
   end
 
