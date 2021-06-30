@@ -5,6 +5,33 @@ const TSPAN_HEADER = Symbol("tspan")
 const OBSERVABLES_HEADER = Symbol("observables[]")
 
 # general interface
+"""
+    Cond(model::Model;
+      measurements::Vector{AbstractMeasurementPoint}=AbstractMeasurementPoint[],
+      observables::Union{Nothing,Vector{Symbol}}=nothing,
+      parameters::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
+      events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
+      events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}} = (true,true), 
+      saveat::Union{Nothing,AbstractVector} = nothing,
+      tspan::Union{Nothing,Tuple} = nothing,
+      save_scope::Bool = true,
+    )
+
+Builds simulation condition of type [`Cond`](@ref)
+Example: `Cond(model; tspan = (0., 200.), saveat = [0.0, 150., 250.])`
+
+Arguments:
+
+- `model` : model of type [`Model`](@ref)
+- `measurements` : `Vector` of measurements. Default is empty `Vector{AbstractMeasurementPoint}`
+- `observables` : names of output observables. Overwrites default model's values. Default is `nothing`
+- `parameters` : parameters variation setup. Default is empty `Vector{Pair}`
+- `events_active` : `Vector` of `Pair`s containing events' names and true/false values. Overwrites default model's values. Default is empty `Vector{Pair}`
+- `events_save` : `Tuple` or `Vector{Tuple}` marking whether to save solution before and after event. Default is `(true,true)` for all events
+- `saveat` : time points, where solution should be saved. Default `nothing` values stands for saving solution at timepoints reached by the solver 
+- `tspan` : time span for the ODE problem
+- `save_scope` : should scope be saved together with solution. Default is `true`
+"""
 function Cond(
   model::Model;
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
