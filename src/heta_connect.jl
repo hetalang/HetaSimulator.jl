@@ -46,8 +46,7 @@ function heta_build(
   type::String = "heta"
 )   
   # check if heta is installed
-  println(readdir("$NODE_PATH/node_modules"))
-  println(readdir("$NODE_PATH/node"))
+  println(readdir("$NODE_PATH/node_modules/node_modules"))
   !isfile("$NODE_PATH/node_modules/heta") && throw("Heta compiler is not installed. Run `heta_update()` to install it.")
 
   # convert to absolute path
