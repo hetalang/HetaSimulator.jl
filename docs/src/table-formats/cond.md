@@ -1,6 +1,6 @@
-# Condition tables
+# Conditions tables
 
-The condition tables are CSV or XLSX files which store `Cond` objects in tabular formats.
+Conditions tables are CSV or XLSX files which store `Cond` objects in tabular format.
 The content of the table can be loaded into Julia environment as a `DataFrame` to be included into `Platform` object.
 
 ## Format
@@ -73,7 +73,7 @@ conditions = read_conditions("./conditions.csv")
 Add all conditions to Platform
 
 ```julia
-add_conditions!(platform, conditions_csv)
+add_conditions!(platform, conditions)
 ```
 
 As a result the Platform will contain three conditions: cond1, cond2, cond3.

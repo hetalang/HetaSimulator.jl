@@ -1,5 +1,6 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+HetaSimulator = "630b40c4-2f38-41ff-bcb3-b2c7232fed0d"
 
 [compat]
 Documenter = "0.26"
