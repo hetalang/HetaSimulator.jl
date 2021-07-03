@@ -89,6 +89,11 @@ plot(sol; vars=[:a,:c])
 # plot selected observables without data
 plot(sol; vars=[:a,:c], measurements=false)
 
+################################## Conditions ###################################
+
+conditions_csv = read_conditions("$HetaSimulatorDir/cases/story_2/conditions_w_events.csv")
+add_conditions!(platform, conditions_csv)
+
 ################################## Monte-Carlo Simulations  #####################
 
 mccond1 = Cond(

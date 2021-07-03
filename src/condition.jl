@@ -1,5 +1,6 @@
 const CONSTANT_PREFIX = "parameters"
 const SWITCHER_PREFIX = "events_active"
+const SWITCHER_SAVE_PREFIX = "events_save"
 const SAVEAT_HEADER = Symbol("saveat[]")
 const TSPAN_HEADER = Symbol("tspan")
 const OBSERVABLES_HEADER = Symbol("observables[]")
@@ -88,6 +89,7 @@ function _add_condition!(platform::Platform, row::Any) # maybe not any
   # iterate through parameters
   _parameters = Pair{Symbol,Float64}[]
   _events_active = Pair{Symbol,Bool}[]
+  _events_save = Pair{Symbol, Tuple{Bool, Bool}}[]
   for key in keys(row)
     if !ismissing(row[key])
       splitted_key = split(string(key), ".")
@@ -95,6 +97,8 @@ function _add_condition!(platform::Platform, row::Any) # maybe not any
         push!(_parameters, Symbol(splitted_key[2]) => row[key])
       elseif splitted_key[1] == SWITCHER_PREFIX
         push!(_events_active, Symbol(splitted_key[2]) => row[key])
+      elseif splitted_key[1] == SWITCHER_SAVE_PREFIX
+        push!(_events_save, Symbol(splitted_key[2]) => eval(Meta.parse(row[key]))) ## ugly
       end
     end
   end
@@ -123,6 +127,7 @@ function _add_condition!(platform::Platform, row::Any) # maybe not any
     model;
     parameters = _parameters,
     events_active = _events_active,
+    events_save = _events_save,
     saveat = _saveat,
     tspan = _tspan,
     observables = _observables
