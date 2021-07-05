@@ -58,11 +58,11 @@ Dict{Symbol, Cond} with 4 entries:
 
 Loading file __conditions.csv__ with the following content.
 
-id | model | parameters.k1 | parameters.k2 | parameters.k3 | saveat[] | tspan | observables[] | events_active.sw1 | events_active.sw2
---- | --- | --- | --- | --- | --- | --- | --- | --- | ---
-cond1 | |  | 0.001 | 0.02 | 0;12;24;48;72;120;150 | | | true | false
-cond2 | nameless | 0.001 |  |  | |  1000 | | | true
-cond3 | another_model | | 0.001  |  | 0;12;24;48;72;120 |  | | false
+id | model | parameters.k1 | parameters.k2 | parameters.k3 | saveat[] | tspan | observables[] | events_active.sw1 | events_active.sw2 | events_save.sw1
+--- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+cond1 | |  | 0.001 | 0.02 | 0;12;24;48;72;120;150 | | | true | false | true;false
+cond2 | nameless | 0.001 |  |  | |  1000 | | | true |
+cond3 | another_model | | 0.001  |  | 0;12;24;48;72;120 |  | | false |
 
 Read as `DataFrame` object.
 
@@ -85,7 +85,8 @@ cond1 = Cond(
   platform.models[:nameless];
   parameters = [:k2=>0.001, :k3=>0.02],
   saveat = [0, 12, 24, 48, 72, 120, 150],
-  events_active = [:sw1=>true, :sw2=>false]
+  events_active = [:sw1=>true, :sw2=>false],
+  events_save = [:sw1=>(true,false)]
 )
 push!(platform.conditions, :cond1=>cond1)
 
@@ -106,4 +107,3 @@ cond3 = Cond(
 push!(platform.conditions, :cond3=>cond3)
 
 ```
-
