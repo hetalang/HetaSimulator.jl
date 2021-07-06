@@ -1,6 +1,6 @@
 # paths to npm.cmd and nodejs.exe
 const NPM_PATH = npm_cmd()
-const NODE_PATH = dirname(nodejs_cmd().exec[1])
+const NODE_DIR = dirname(nodejs_cmd().exec[1])
 
 # default path and model file name
 const MODEL_DIR = "_julia"
@@ -11,14 +11,14 @@ const MODEL_NAME = "model.jl"
 
 Installs heta-compiler from NPM.
 """
-heta_update() = run(`$NPM_PATH i heta-compiler --prefix $NODE_PATH/node_modules`)
+heta_update() = run(`$NPM_PATH i -g heta-compiler --prefix $NODE_DIR`)
 # install particular version
-heta_update(version::String) = run(`$NPM_PATH i heta-compiler@$version --prefix $NODE_PATH/node_modules`)
+heta_update(version::String) = run(`$NPM_PATH i -g heta-compiler@$version --prefix $NODE_DIR`)
 # install from GitHub's repository
-heta_update_dev(branch::String = "master") = run(`$NPM_PATH i https://github.com/hetalang/heta-compiler.git\#$branch --prefix $NODE_PATH/node_modules`)
+heta_update_dev(branch::String = "master") = run(`$NPM_PATH i -g https://github.com/hetalang/heta-compiler.git\#$branch --prefix $NODE_DIR`)
 
 """
-    heta_build(  
+    heta_build(
       heta_index::AbstractString;
       declaration::String = "platform",
       skip_export::Bool = false,
@@ -46,7 +46,9 @@ function heta_build(
   type::String = "heta"
 )   
   # check if heta is installed
-  !isdir("$NODE_PATH/node_modules/node_modules/heta-compiler") && throw("Heta compiler is not installed. Run `heta_update()` to install it.")
+  heta_build_path = Sys.iswindows() ? "$NODE_DIR/node_modules/heta-compiler" : "$NODE_DIR/lib/node_modules/heta-compiler"
+
+  !isdir(heta_build_path) && throw("Heta compiler is not installed. Run `heta_update()` to install it.")
 
   # convert to absolute path
   _heta_index = abspath(heta_index)
@@ -77,8 +79,8 @@ function heta_build(
     heta_cmd = "heta" # not tested on unix
   end
   =#
-    
-  run_build = run(ignorestatus(`$NODE_PATH/node $NODE_PATH/node_modules/node_modules/heta-compiler/bin/heta-build.js $options_array $_heta_index`))
+
+  run_build = run(ignorestatus(`$NODE_DIR/node $heta_build_path/bin/heta-build.js $options_array $_heta_index`))
   return run_build.exitcode
 end
 
