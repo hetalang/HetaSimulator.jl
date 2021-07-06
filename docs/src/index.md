@@ -1,5 +1,3 @@
-## Overview
-
 **HetaSimulator** is an OpenSource simulation and parameters estimation (fitting) platform for the [Heta modeling language](https://hetalang.github.io/#/). 
 The main purpose of the package is to establish the linkage between emerging [QSP frameworks](https://en.wikipedia.org/wiki/Quantitative_systems_pharmacology) and fast computational methods (parallel simulations, automatic differentiation, etc.).
 
@@ -103,12 +101,6 @@ See documentation for detailed overview of **HetaSimulator** types and functions
 - Read the [docs](https://hetalang.github.io/HetaSimulator.jl/dev/)
 - Use [Gitter Chatroom](https://gitter.im/hetalang/community?utm_source=readme).
 - Use [Issue Tracker](https://github.com/hetalang/HetaSimulator.jl/issues)
-
-## Contributing
-
-- [Source Code](https://github.com/hetalang/HetaSimulator.jl)
-- [Issue Tracker](https://github.com/hetalang/HetaSimulator.jl/issues)
-- See also contributing in [Heta project](https://hetalang.github.io/#/CONTRIBUTING)
 
 ## License
 
