@@ -7,7 +7,16 @@ Heta language is a domain-specific modeling language (DSL) for dynamic quantitat
 
 This package provides the simulation engines for the Heta-based models and modeling platforms to be run in Julia. A QSP model can be directly run using the HetaSimulator without additional tools. The ODE system in general form can also be run with HetaSimulator.
 
-Internally HetaSimulator utilizes the facilities of OpenSource projects like [Julia](https://julialang.org/) and [SciML ecosystem](https://sciml.ai/).
+__The main features__ of the package are
+
+- reach capabilities for finding parameters based on experimental datasets
+- support for working with multiple models including simultaneous fitting
+- parallel simulations
+- storage of components in unified format
+- import of datasets and conditions from CSV/Excell tables 
+- full Heta standard support
+- storing models, conditions and data in the `Platform` object for easy management of platform components
+- utilizing the facilities of OpenSource projects like [Julia](https://julialang.org/) and [SciML ecosystem](https://sciml.ai/).
 
 ## Installation
 
@@ -22,7 +31,7 @@ julia> using HetaSimulator
 julia> heta_update() # installs "Heta compiler" in NodeJS
 ```
 
-Internally HetaSimulator uses Heta compiler which is installed inside the package. If you want to update it to the last version just run.
+Internally HetaSimulator uses Heta compiler which must be installed inside the package. If you want to update it to the last version just run.
 ```julia
 julia> heta_update() # updates to the latest stable version
 ```

@@ -1,0 +1,38 @@
+// Compartments
+Vol0 @Compartment .= 1;
+Vol1 @Compartment .= 6.3;
+Vol2 @Compartment .= 10.6;
+
+// Species
+A0 @Species {compartment: Vol0, isAmount: true} .= 0;
+C1 @Species {compartment: Vol1} .= 0;
+C2 @Species {compartment: Vol2} .= 0;
+
+// Reactions
+v_abs @Reaction {actors: A0 = C1} := kabs * A0;
+v_el @Reaction {actors: C1 =} := Vol1 * (kel * C1); // Vol1 * (kmax * C1 / (Km + C1));
+v_distr @Reaction {actors: C1 = C2} := Q * (C1 - C2);
+
+// Parameters
+dose @Const = 20;
+kabs @Const = 10;
+kel @Const = 0.2;
+Q @Const = 3.2;
+// kmax @Const = 3e3;
+// Km @Const = 9e3;
+
+/*
+// linear saturable elimination, F0 = -49.6482
+kabs = 8.038059e+00;
+Q = 3.964096e+00;
+Vol1 = 6.000642e+00;
+kel = 2.221851e-01;
+
+// saturable elimination, F0 = -49.634
+kabs=8.036715e+00;
+Q = 3.964810e+00;
+Vol1 = 6.000102e+00;
+kmax = 2.221855e+03;
+Km = 9.997290e+03;
+*/
+#export {format: Julia, filepath: julia_platform};
