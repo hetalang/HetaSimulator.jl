@@ -4,9 +4,9 @@ Vol1 @Compartment .= 6.3;
 Vol2 @Compartment .= 10.6;
 
 // Species
-A0 @Species {compartment: Vol0, isAmount: true} .= 0;
-C1 @Species {compartment: Vol1} .= 0;
-C2 @Species {compartment: Vol2} .= 0;
+A0 @Species {compartment: Vol0, isAmount: true, output: true} .= 0;
+C1 @Species {compartment: Vol1, output: true} .= 0;
+C2 @Species {compartment: Vol2, output: true} .= 0;
 
 // Reactions
 v_abs @Reaction {actors: A0 = C1} := kabs * A0;
@@ -20,6 +20,14 @@ kel @Const = 0.2;
 Q @Const = 3.2;
 // kmax @Const = 3e3;
 // Km @Const = 9e3;
+
+// single dose event
+sw1 @TimeSwitcher {start: 0};
+A0 [sw1]= dose;
+
+// multiple dose event, default off
+sw2 @TimeSwitcher {start: 0, period: 24, active: false};
+A0 [sw2]= dose;
 
 /*
 // linear saturable elimination, F0 = -49.6482

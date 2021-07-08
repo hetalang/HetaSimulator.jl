@@ -30,9 +30,9 @@ Vol1 @Compartment .= 6.3;
 Vol2 @Compartment .= 10.6;
 
 // Species
-A0 @Species {compartment: Vol0, isAmount: true} .= 0;
-C1 @Species {compartment: Vol1} .= 0;
-C2 @Species {compartment: Vol2} .= 0;
+A0 @Species {compartment: Vol0, isAmount: true, output: true} .= 0;
+C1 @Species {compartment: Vol1, output: true} .= 0;
+C2 @Species {compartment: Vol2, output: true} .= 0;
 
 // Reactions
 v_abs @Reaction {actors: A0 = C1} := kabs * A0;
@@ -168,9 +168,199 @@ Loading platform... OK!
 
 ## Creating conditions
 
+`Cond` (condition) in HetaSimulator is an object which stores a model together with additional settings and options.
+It sets the time point, ranges, updates parameter values, activate or inactivate events, etc.
+
+The condition-based approach is used to store pre-defined model's options: dose values, experimental conditions, data saving options, initial values and others which can be applied for one or multiple models. The `Cond` also stores `Measurement` points which is used for parameters identification and visualization.
+
+`Cond` is created from default options passed from its model and user defined options from table row or set manually.
 
 ### Import from CSV tables
 
-### Import from excell tables
+The most simple way to populate a platform by conditions is to create a separate file with `Cond` in [tabular CSV format](../table-formats/cond.md).
+
+Create file __conditions.csv__ file inside __my_example__ with the following content.
+
+id|parameters.dose|events_active.sw1|events_active.sw2
+--|--|--|--
+dose_1|1|true|false
+dose_10|10|true|false
+dose_100|100|true|false
+multiple_15|15|false|true
+
+The table can be loaded with the [`read_conditions`](@ref) function.
+
+```julia
+cond_df = read_conditions("./my_example/conditions.csv")
+```
+```julia
+4×4 DataFrame
+ Row │ id           parameters.dose  events_active.sw1  events_active.sw2 
+     │ Symbol       Int64            Bool               Bool
+─────┼────────────────────────────────────────────────────────────────────
+   1 │ dose_1                     1               true              false
+   2 │ dose_10                   10               true              false
+   3 │ dose_100                 100               true              false
+   4 │ multiple_15               15              false               true
+```
+
+The function reads the content of CSV file, checks components and stores in `cond_df` variable of `DataFrame` format.
+
+This should be loaded into `Platform` object.
+
+```julia
+add_conditions!(p, cond_df)
+```
+
+As we can see all 4 conditions from the table were added.
+
+```julia
+p
++---------------------------------------------------------------------------
+| Platform contains:
+|   1 model(s): nameless. Use `models(platform)` for details.
+|   4 condition(s): multiple_15, dose_1, dose_10, dose_100. Use `conditions(platform)` for details.
++---------------------------------------------------------------------------
+```
+
+To get the particular condition you can use the following syntax.
+
+```julia
+condition1 = conditions(p)[:dose_1]
++---------------------------------------------------------------------------
+| Cond contains:
+|   0 saveat values: Float64[]. Use `saveat(cond)` for details.
+|   tspan: (0.0, 48.0). Use `tspan(cond)` for details.
+|   4 parameters(s). Use `parameters(cond)` for details.
+|   0 measurement(s). Use `measurements(cond)` for details.
++---------------------------------------------------------------------------
+```
+
+See more about condition tables in [tabular CSV format](../table-formats/cond.md).
+
+### Import from Excel tables
+
+Instead of using CSV tables one can fill the XSLT file and load condition table in the same manner.
+
+```julia
+cond_df = read_conditions("./my_example/conditions.xlsx")
+```
+```julia
+4×4 DataFrame
+ Row │ id           parameters.dose  events_active.sw1  events_active.sw2 
+     │ Symbol       Int64            Bool               Bool
+─────┼────────────────────────────────────────────────────────────────────
+   1 │ dose_1                     1               true              false
+   2 │ dose_10                   10               true              false
+   3 │ dose_100                 100               true              false
+   4 │ multiple_15               15              false               true
+```
 
 ### Manual creation
+
+`Cond` objects can be created and loaded without any tables.
+
+For example we need to create simulations with the default model 
+- `dose = 100`
+- event `sw2` is active 
+- simulation time is from `0` to `1000`
+- we need to observe all species: `A0`, `C1`, `C2`, and all reactions: `v_abs`, `v_el`, `v_distr`
+
+Condition can be created with the following code
+
+```julia
+# to get the default model
+model = models(p)[:nameless] 
+# creating condition
+new_condition = Cond(
+    model,
+    parameters = [:dose=>100.],
+    events_active = [:sw1=>false, :sw1=>true],
+    tspan = (0.,1000.),
+    observables = [:A0, :C1, :C2, :v_abs, :v_el, :v_distr]
+    ) 
+
++---------------------------------------------------------------------------
+| Cond contains:
+|   0 saveat values: Float64[]. Use `saveat(cond)` for details.
+|   tspan: (0.0, 1000.0). Use `tspan(cond)` for details.
+|   4 parameters(s). Use `parameters(cond)` for details.
+|   0 measurement(s). Use `measurements(cond)` for details.
++---------------------------------------------------------------------------
+```
+
+See more options in API docs for [`Cond`](@ref) function.
+
+To load it into `Platform` container use the following syntax.
+
+```julia
+push!(conditions(p), :multiple_100=>new_condition)
+```
+
+where `multiple_100` is an identifier for the condition in the dictionary.
+
+## Creating measurements
+
+`Measurement` in HetaSimulator is representation of experimentally measured value for parameter identification.
+Each `Measurement` is associated with some particular condition, observable value and fixed time point.
+
+All measurements in the platform are used to calculate the log-likelihood function when required. Measurements are stored inside `Cond` objects.
+
+### Import from CSV tables
+
+User can load measurement points from one or several tables which follow [table format](./table-formats/measurement).
+
+Create file __measurements.csv__ file inside __my_example__ with the following structure.
+
+_Full file can be downloaded from here: [measurements.csv](https://raw.githubusercontent.com/hetalang/hetasimulator/master/case/story_3/measurements.csv)_
+
+t|measurement|prob.mean|prob.sigma|condition
+--|--|--|--|--
+0.08333|0.0686283|C1|sigma1|dose_1
+0.08333|0.0684679|C1|sigma1|dose_1
+0.08333|0.0726338|C1|sigma1|dose_1
+0.25|0.119397|C1|sigma1|dose_1
+0.25|0.137662|C1|sigma1|dose_1
+0.25|0.120412|C1|sigma1|dose_1
+0.5|0.131784|C1|sigma1|dose_1
+...|...|...|...|...
+
+The table can be loaded with the [`read_measurements`](@ref) function.
+
+```julia
+measurements_df = read_measurements("./cases/story_3/measurements.csv")
+90×5 DataFrame
+ Row │ t         measurement  prob.mean  prob.sigma  condition 
+     │ Float64   Float64      String     String      Symbol    
+─────┼─────────────────────────────────────────────────────────
+   1 │  0.08333    0.0686283  C1         sigma1      dose_1
+   2 │  0.08333    0.0684679  C1         sigma1      dose_1
+   3 │  0.08333    0.0726338  C1         sigma1      dose_1
+   4 │  0.25       0.119397   C1         sigma1      dose_1
+   5 │  0.25       0.137662   C1         sigma1      dose_1
+  ⋮  │    ⋮           ⋮           ⋮          ⋮           ⋮
+  87 │ 12.0        2.189      C1         sigma3      dose_100
+  88 │ 24.0        0.877502   C1         sigma3      dose_100
+  89 │ 24.0        1.036      C1         sigma3      dose_100
+  90 │ 24.0        0.724612   C1         sigma3      dose_100
+                                                81 rows omitted
+```
+
+The function reads the content of CSV file, checks components and stores in `measurements_df` variable of `DataFrame` format.
+
+To load measurements into `Platform` function [`add_measurements`](@ref) can be used. The function converts all rows into a series of `Measurements` and associate them with condition declared in `condition` value.
+
+```julia
+add_measurements!(p, measurements_df)
+```
+
+### Import from Excel tables
+
+Instead of using CSV tables one can fill the XSLT file and load measurements table in the same manner.
+
+```julia
+measurements_df = read_measurements("./my_example/measurements.xlsx")
+```
+
+## Solving problems
+
