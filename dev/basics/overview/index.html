@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Overview of HetaSimulator.jl · HetaSimulator Docs</title><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-149749027-1', 'auto');
+ga('send', 'pageview', {'page': location.pathname + location.search + location.hash});
+</script><link rel="canonical" href="https://hetalang.github.io/HetaSimulator.jl/dev/basics/overview/"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit">HetaSimulator Docs</span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Basics</span><ul><li class="is-active"><a class="tocitem" href>Overview of HetaSimulator.jl</a><ul class="internal"><li><a class="tocitem" href="#Writing-model-in-the-Heta-format"><span>Writing model in the Heta format</span></a></li><li><a class="tocitem" href="#Loading-platform-from-the-Heta-format"><span>Loading platform from the Heta format</span></a></li><li><a class="tocitem" href="#Creating-conditions"><span>Creating conditions</span></a></li><li><a class="tocitem" href="#Creating-measurements"><span>Creating measurements</span></a></li><li><a class="tocitem" href="#Solving-problems"><span>Solving problems</span></a></li></ul></li><li><a class="tocitem" href="../../table-formats/cond/">Conditions tables</a></li><li><a class="tocitem" href="../../table-formats/measurement/">Measurements tables</a></li></ul></li><li><a class="tocitem" href="../../api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Basics</a></li><li class="is-active"><a href>Overview of HetaSimulator.jl</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Overview of HetaSimulator.jl</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/hetalang/HetaSimulator.jl/blob/master/docs/src/basics/overview.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Overview-of-HetaSimulator.jl"><a class="docs-heading-anchor" href="#Overview-of-HetaSimulator.jl">Overview of HetaSimulator.jl</a><a id="Overview-of-HetaSimulator.jl-1"></a><a class="docs-heading-anchor-permalink" href="#Overview-of-HetaSimulator.jl" title="Permalink"></a></h1><p>The general workflow for HetaSimulator is</p><ul><li>Writing a modeling platform in the Heta format</li><li>Loading platform into Julia environment</li><li>Creating model&#39;s settings and data adding conditions and measurements</li><li>Solve problems using the methods: sim, mc, fit</li><li>Analyze the results</li></ul><p>The particular workflow may be iterative, i.e. include updates to the model and re-simulation based on estimated parameters or model structure updates. It depend on the user&#39;s needs.</p><h2 id="Writing-model-in-the-Heta-format"><a class="docs-heading-anchor" href="#Writing-model-in-the-Heta-format">Writing model in the Heta format</a><a id="Writing-model-in-the-Heta-format-1"></a><a class="docs-heading-anchor-permalink" href="#Writing-model-in-the-Heta-format" title="Permalink"></a></h2><p>Heta is a modeling language for quantitative systems pharmacology and systems biology. It is a DSL (domain-specific language) describing dynamic model or models in process-description format. Heta compiler converts it into variety of files including &quot;Julia&quot; format which can be loaded to Julia/HetaSimulator environment.</p><p>HetaSimulator supports all features of the <a href="https://hetalang.github.io/#/specifications/">Heta language</a>. So one can organize modeling project as re-used modules (files), include any number of models into single platform with the namespaces mechanism. The platform can use the declaration file <strong>platform.json</strong> or can be loaded from single file.  All Heta modules: Heta code, tables, SBML and JSON can be loaded as a modeling platform and compiled into ODE-based mathematical representation.</p><p>To read more about Heta-based modeling platforms and Heta compiler visit the homepage <a href="https://hetalang.github.io/#/">https://hetalang.github.io/#/</a>.</p><p>As an example we will use a model describing a simple pharmacokinetic model stored in single <strong>.heta</strong> file. It is expected that the model code will be placed into &quot;index.heta&quot; file located in a directory <strong>my_example</strong> or something like that.</p><pre><code class="language-julia">// Compartments
+Vol0 @Compartment .= 1;
+Vol1 @Compartment .= 6.3;
+Vol2 @Compartment .= 10.6;
+
+// Species
+A0 @Species {compartment: Vol0, isAmount: true, output: true} .= 0;
+C1 @Species {compartment: Vol1, output: true} .= 0;
+C2 @Species {compartment: Vol2, output: true} .= 0;
+
+// Reactions
+v_abs @Reaction {actors: A0 = C1} := kabs * A0;
+v_el @Reaction {actors: C1 =} := Vol1 * (kel * C1); // Vol1 * (kmax * C1 / (Km + C1));
+v_distr @Reaction {actors: C1 = C2} := Q * (C1 - C2);
+
+// Parameters
+dose @Const = 20;
+kabs @Const = 10;
+kel @Const = 0.2;
+Q @Const = 3.2;
+
+// single dose event
+sw1 @TimeSwitcher {start: 0};
+A0 [sw1]= dose;
+
+// multiple dose event, default off
+sw2 @TimeSwitcher {start: 0, period: 24, active: false};
+A0 [sw2]= dose;</code></pre><p>The model describes a typical two-compartment model with single or multiple dose depending on which event is active. Take a note that the component of the model is create without any <code>namespace</code> statement. This means they have the default namespace attribute <code>nameless</code>. This code is equivalent to the following system of ODE.</p><p class="math-container">\[\begin{aligned}
+&amp;\frac{d}{dt}A_0 = - v_{abs}\\
+&amp;\frac{d}{dt}(C_1 \cdot Vol_1) = v_{abs} - v_{el} - v_{distr}\\
+&amp;\frac{d}{dt}(C_2 \cdot Vol_2) = v_{distr}\\
+\\
+&amp;A_0(0) = 0\\
+&amp;C_1(0) = 0\\
+&amp;C_2(0) = 0\\
+&amp;v_{abs}(t) = kabs \cdot A_0\\
+&amp;v_{el}(t) = Vol_1 \cdot (kel \cdot C_1)\\
+&amp;v_{distr}(t) = Q \cdot (C_1 - C_2)\\
+\end{aligned}\\
+\\
+\text{event at } t = 0\\
+\\
+A_0 = dose\]</p><p>Where parameters are</p><p class="math-container">\[\begin{aligned}
+&amp;dose = 20\\
+&amp;kabs = 10\\
+&amp;kel = 0.2\\
+&amp;Q  = 3.2\\
+&amp;Vol_1 = 6.3\\
+&amp;Vol_2 = 10.6\\
+\end{aligned}\\\]</p><h2 id="Loading-platform-from-the-Heta-format"><a class="docs-heading-anchor" href="#Loading-platform-from-the-Heta-format">Loading platform from the Heta format</a><a id="Loading-platform-from-the-Heta-format-1"></a><a class="docs-heading-anchor-permalink" href="#Loading-platform-from-the-Heta-format" title="Permalink"></a></h2><p>HetaSimulator loads modeling platform into <code>Platform</code> type object that is a container for all models simulation settings and experimental data. When you load a platform from Heta it includes only models converted from <code>concrete namespaces</code>. The condition storage is empty and will be populated manually or imported from tables.</p><h3 id="Loading-with-internal-compiler"><a class="docs-heading-anchor" href="#Loading-with-internal-compiler">Loading with internal compiler</a><a id="Loading-with-internal-compiler-1"></a><a class="docs-heading-anchor-permalink" href="#Loading-with-internal-compiler" title="Permalink"></a></h3><p>When <strong>HetaSimulator</strong> is installed and internal <strong>Heta compiler</strong> is installed the platform can be loaded with the method <a href="../../api/#HetaSimulator.load_platform-Tuple{AbstractString}"><code>load_platform</code></a>.</p><pre><code class="language-julia">using HetaSimulator
+
+p = load_platform(&quot;./my_example&quot;)</code></pre><pre><code class="language-julia">No declaration file, running with defaults...
+[info] Builder initialized in directory &quot;Y:\HetaSimulator.jl\cases\story_3&quot;.
+[info] Compilation of module &quot;index.heta&quot; of type &quot;heta&quot;...
+[info] Reading module of type &quot;heta&quot; from file &quot;Y:\HetaSimulator.jl\cases\story_3\index.heta&quot;...
+[info] Setting references in elements, total length 50
+[info] Checking for circular references in Records.
+[warn] Units checking skipped. To turn it on set &quot;unitsCheck: true&quot; in declaration.
+[info] Checking unit&#39;s terms.
+[warn] &quot;Julia only&quot; mode
+[info] Exporting to &quot;Y:\HetaSimulator.jl\cases\story_3\_julia&quot; of format &quot;Julia&quot;...
+Compilation OK!
+Loading platform... OK!
++---------------------------------------------------------------------------
+| Platform contains:
+|   1 model(s): nameless. Use `models(platform)` for details.
+|   0 condition(s): . Use `conditions(platform)` for details.
++---------------------------------------------------------------------------</code></pre><p>The first argument of <code>load_platform</code> declares the absolute or relative path to the platform directory. If you use another file name (not <strong>index.heta</strong>) you can declare it with <code>source</code> argument.</p><pre><code class="language-julia">p = load_platform(&quot;./my_example&quot;, source = &quot;another_name.heta&quot;)</code></pre><p>You can also load the model from another formats like SBML.</p><pre><code class="language-julia">p = load_platform(&quot;./another_project&quot;, source = &quot;model.xml&quot;, type = &quot;SBML&quot;)</code></pre><p>The list of additional arguments is approximately the same as <a href="https://hetalang.github.io/#/heta-compiler/cli-references?id=quotheta-buildquot-command">CLI options</a> of <code>heta build</code> command of Heta compilers. For the full list see <a href="../../api/#HetaSimulator.load_platform-Tuple{AbstractString}"><code>load_platform</code></a> references.</p><h3 id="Loading-pre-compiled-platform"><a class="docs-heading-anchor" href="#Loading-pre-compiled-platform">Loading pre-compiled platform</a><a id="Loading-pre-compiled-platform-1"></a><a class="docs-heading-anchor-permalink" href="#Loading-pre-compiled-platform" title="Permalink"></a></h3><p>Alternatively you can use files generated with stand-alone <a href="https://hetalang.github.io/#/heta-compiler/">Heta compiler</a>.</p><p>To do so the model code should be updated with the following statement.</p><pre><code class="language-heta">...
+sw2 @TimeSwitcher {start: 0, period: 24, active: false};
+A0 [sw2]= dose;
+
+#export {format: Julia, filepath: julia_platform};</code></pre><p>Running the code with the console command <code>heta build my_project</code> produces the file <strong>my<em>project/dist/julia</em>platform/model.jl</strong> which can be loaded with <a href="../../api/#HetaSimulator.load_jlplatform-Tuple{AbstractString}"><code>load_jlplatform</code></a> method.</p><pre><code class="language-julia">p = load_jlplatform(&quot;./my_example/dist/julia_platform/model.jl&quot;)</code></pre><pre><code class="language-julia">Loading platform... OK!
++---------------------------------------------------------------------------
+| Platform contains:
+|   1 model(s): nameless. Use `models(platform)` for details.
+|   0 condition(s): . Use `conditions(platform)` for details.
++---------------------------------------------------------------------------</code></pre><h2 id="Creating-conditions"><a class="docs-heading-anchor" href="#Creating-conditions">Creating conditions</a><a id="Creating-conditions-1"></a><a class="docs-heading-anchor-permalink" href="#Creating-conditions" title="Permalink"></a></h2><p><code>Cond</code> (condition) in HetaSimulator is an object which stores a model together with additional settings and options. It sets the time point, ranges, updates parameter values, activate or inactivate events, etc.</p><p>The condition-based approach is used to store pre-defined model&#39;s options: dose values, experimental conditions, data saving options, initial values and others which can be applied for one or multiple models. The <code>Cond</code> also stores <code>Measurement</code> points which is used for parameters identification and visualization.</p><p><code>Cond</code> is created from default options passed from its model and user defined options from table row or set manually.</p><h3 id="Import-from-CSV-tables"><a class="docs-heading-anchor" href="#Import-from-CSV-tables">Import from CSV tables</a><a id="Import-from-CSV-tables-1"></a><a class="docs-heading-anchor-permalink" href="#Import-from-CSV-tables" title="Permalink"></a></h3><p>The most simple way to populate a platform by conditions is to create a separate file with <code>Cond</code> in <a href="../../table-formats/cond/">tabular CSV format</a>.</p><p>Create file <strong>conditions.csv</strong> file inside <strong>my_example</strong> with the following content.</p><p>id|parameters.dose|events<em>active.sw1|events</em>active.sw2 –|–|–|– dose<em>1|1|true|false dose</em>10|10|true|false dose<em>100|100|true|false multiple</em>15|15|false|true</p><p>The table can be loaded with the <a href="basics/@ref"><code>read_conditions</code></a> function.</p><pre><code class="language-julia">cond_df = read_conditions(&quot;./my_example/conditions.csv&quot;)</code></pre><pre><code class="language-julia">4×4 DataFrame
+ Row │ id           parameters.dose  events_active.sw1  events_active.sw2 
+     │ Symbol       Int64            Bool               Bool
+─────┼────────────────────────────────────────────────────────────────────
+   1 │ dose_1                     1               true              false
+   2 │ dose_10                   10               true              false
+   3 │ dose_100                 100               true              false
+   4 │ multiple_15               15              false               true</code></pre><p>The function reads the content of CSV file, checks components and stores in <code>cond_df</code> variable of <code>DataFrame</code> format.</p><p>This should be loaded into <code>Platform</code> object.</p><pre><code class="language-julia">add_conditions!(p, cond_df)</code></pre><p>As we can see all 4 conditions from the table were added.</p><pre><code class="language-julia">p
++---------------------------------------------------------------------------
+| Platform contains:
+|   1 model(s): nameless. Use `models(platform)` for details.
+|   4 condition(s): multiple_15, dose_1, dose_10, dose_100. Use `conditions(platform)` for details.
++---------------------------------------------------------------------------</code></pre><p>To get the particular condition you can use the following syntax.</p><pre><code class="language-julia">condition1 = conditions(p)[:dose_1]
++---------------------------------------------------------------------------
+| Cond contains:
+|   0 saveat values: Float64[]. Use `saveat(cond)` for details.
+|   tspan: (0.0, 48.0). Use `tspan(cond)` for details.
+|   4 parameters(s). Use `parameters(cond)` for details.
+|   0 measurement(s). Use `measurements(cond)` for details.
++---------------------------------------------------------------------------</code></pre><p>See more about condition tables in <a href="../../table-formats/cond/">tabular CSV format</a>.</p><h3 id="Import-from-Excel-tables"><a class="docs-heading-anchor" href="#Import-from-Excel-tables">Import from Excel tables</a><a id="Import-from-Excel-tables-1"></a><a class="docs-heading-anchor-permalink" href="#Import-from-Excel-tables" title="Permalink"></a></h3><p>Instead of using CSV tables one can fill the XSLT file and load condition table in the same manner.</p><pre><code class="language-julia">cond_df = read_conditions(&quot;./my_example/conditions.xlsx&quot;)</code></pre><pre><code class="language-julia">4×4 DataFrame
+ Row │ id           parameters.dose  events_active.sw1  events_active.sw2 
+     │ Symbol       Int64            Bool               Bool
+─────┼────────────────────────────────────────────────────────────────────
+   1 │ dose_1                     1               true              false
+   2 │ dose_10                   10               true              false
+   3 │ dose_100                 100               true              false
+   4 │ multiple_15               15              false               true</code></pre><h3 id="Manual-creation"><a class="docs-heading-anchor" href="#Manual-creation">Manual creation</a><a id="Manual-creation-1"></a><a class="docs-heading-anchor-permalink" href="#Manual-creation" title="Permalink"></a></h3><p><code>Cond</code> objects can be created and loaded without any tables.</p><p>For example we need to create simulations with the default model </p><ul><li><code>dose = 100</code></li><li>event <code>sw2</code> is active </li><li>simulation time is from <code>0</code> to <code>1000</code></li><li>we need to observe all species: <code>A0</code>, <code>C1</code>, <code>C2</code>, and all reactions: <code>v_abs</code>, <code>v_el</code>, <code>v_distr</code></li></ul><p>Condition can be created with the following code</p><pre><code class="language-julia"># to get the default model
+model = models(p)[:nameless] 
+# creating condition
+new_condition = Cond(
+    model,
+    parameters = [:dose=&gt;100.],
+    events_active = [:sw1=&gt;false, :sw1=&gt;true],
+    tspan = (0.,1000.),
+    observables = [:A0, :C1, :C2, :v_abs, :v_el, :v_distr]
+    ) 
+
++---------------------------------------------------------------------------
+| Cond contains:
+|   0 saveat values: Float64[]. Use `saveat(cond)` for details.
+|   tspan: (0.0, 1000.0). Use `tspan(cond)` for details.
+|   4 parameters(s). Use `parameters(cond)` for details.
+|   0 measurement(s). Use `measurements(cond)` for details.
++---------------------------------------------------------------------------</code></pre><p>See more options in API docs for <a href="../../api/#HetaSimulator.Cond-Tuple{Model}"><code>Cond</code></a> function.</p><p>To load it into <code>Platform</code> container use the following syntax.</p><pre><code class="language-julia">push!(conditions(p), :multiple_100=&gt;new_condition)</code></pre><p>where <code>multiple_100</code> is an identifier for the condition in the dictionary.</p><h2 id="Creating-measurements"><a class="docs-heading-anchor" href="#Creating-measurements">Creating measurements</a><a id="Creating-measurements-1"></a><a class="docs-heading-anchor-permalink" href="#Creating-measurements" title="Permalink"></a></h2><p><code>Measurement</code> in HetaSimulator is representation of experimentally measured value for parameter identification. Each <code>Measurement</code> is associated with some particular condition, observable value and fixed time point.</p><p>All measurements in the platform are used to calculate the log-likelihood function when required. Measurements are stored inside <code>Cond</code> objects.</p><h3 id="Import-from-CSV-tables-2"><a class="docs-heading-anchor" href="#Import-from-CSV-tables-2">Import from CSV tables</a><a class="docs-heading-anchor-permalink" href="#Import-from-CSV-tables-2" title="Permalink"></a></h3><p>User can load measurement points from one or several tables which follow <a href="basics/table-formats/measurement">table format</a>.</p><p>Create file <strong>measurements.csv</strong> file inside <strong>my_example</strong> with the following structure.</p><p><em>Full file can be downloaded from here: [measurements.csv](https://raw.githubusercontent.com/hetalang/hetasimulator/master/case/story</em>3/measurements.csv)_</p><p>t|measurement|prob.mean|prob.sigma|condition –|–|–|–|– 0.08333|0.0686283|C1|sigma1|dose<em>1 0.08333|0.0684679|C1|sigma1|dose</em>1 0.08333|0.0726338|C1|sigma1|dose<em>1 0.25|0.119397|C1|sigma1|dose</em>1 0.25|0.137662|C1|sigma1|dose<em>1 0.25|0.120412|C1|sigma1|dose</em>1 0.5|0.131784|C1|sigma1|dose_1 ...|...|...|...|...</p><p>The table can be loaded with the <a href="basics/@ref"><code>read_measurements</code></a> function.</p><pre><code class="language-julia">measurements_df = read_measurements(&quot;./cases/story_3/measurements.csv&quot;)
+90×5 DataFrame
+ Row │ t         measurement  prob.mean  prob.sigma  condition 
+     │ Float64   Float64      String     String      Symbol    
+─────┼─────────────────────────────────────────────────────────
+   1 │  0.08333    0.0686283  C1         sigma1      dose_1
+   2 │  0.08333    0.0684679  C1         sigma1      dose_1
+   3 │  0.08333    0.0726338  C1         sigma1      dose_1
+   4 │  0.25       0.119397   C1         sigma1      dose_1
+   5 │  0.25       0.137662   C1         sigma1      dose_1
+  ⋮  │    ⋮           ⋮           ⋮          ⋮           ⋮
+  87 │ 12.0        2.189      C1         sigma3      dose_100
+  88 │ 24.0        0.877502   C1         sigma3      dose_100
+  89 │ 24.0        1.036      C1         sigma3      dose_100
+  90 │ 24.0        0.724612   C1         sigma3      dose_100
+                                                81 rows omitted</code></pre><p>The function reads the content of CSV file, checks components and stores in <code>measurements_df</code> variable of <code>DataFrame</code> format.</p><p>To load measurements into <code>Platform</code> function <a href="basics/@ref"><code>add_measurements</code></a> can be used. The function converts all rows into a series of <code>Measurements</code> and associate them with condition declared in <code>condition</code> value.</p><pre><code class="language-julia">add_measurements!(p, measurements_df)</code></pre><h3 id="Import-from-Excel-tables-2"><a class="docs-heading-anchor" href="#Import-from-Excel-tables-2">Import from Excel tables</a><a class="docs-heading-anchor-permalink" href="#Import-from-Excel-tables-2" title="Permalink"></a></h3><p>Instead of using CSV tables one can fill the XSLT file and load measurements table in the same manner.</p><pre><code class="language-julia">measurements_df = read_measurements(&quot;./my_example/measurements.xlsx&quot;)</code></pre><h2 id="Solving-problems"><a class="docs-heading-anchor" href="#Solving-problems">Solving problems</a><a id="Solving-problems-1"></a><a class="docs-heading-anchor-permalink" href="#Solving-problems" title="Permalink"></a></h2></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../">« Home</a><a class="docs-footer-nextpage" href="../../table-formats/cond/">Conditions tables »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Friday 9 July 2021 10:47">Friday 9 July 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
