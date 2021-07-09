@@ -1,20 +1,19 @@
 using HetaSimulator, Plots
 
-p = load_platform("./cases/story_3")
+p = load_platform("$HetaSimulatorDir/cases/story_3")
 
 # p1 = load_jlplatform("./cases/story_3/dist/julia_platform/model.jl")
 
 
 ### load conditions
 
-cond_df = read_conditions("./cases/story_3/conditions.csv")
+cond_df = read_conditions("$HetaSimulatorDir/cases/story_3/conditions.csv")
 add_conditions!(p, cond_df)
 
-p
 
 condition1 = conditions(p)[:dose_1]
 
-cond_df = read_conditions("./cases/story_3/conditions.xlsx")
+cond_df = read_conditions("$HetaSimulatorDir/cases/story_3/conditions.xlsx")
 
 ### create conditions
 
@@ -30,5 +29,7 @@ push!(conditions(p), :multiple_100=>new_condition)
 
 ### create measurements
 
-measurements_df = read_measurements("./cases/story_3/measurements.csv")
+measurements_df = read_measurements("$HetaSimulatorDir/cases/story_3/measurements.csv")
 add_measurements!(p, measurements_df)
+
+s = sim(new_condition, tsapn=(0,120))
