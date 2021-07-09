@@ -29,6 +29,11 @@ A0 [sw1]= dose;
 sw2 @TimeSwitcher {start: 0, period: 24, active: false};
 A0 [sw2]= dose;
 
+// parameters for fitting
+sigma1 @Const = 0.1;
+sigma2 @Const = 0.1;
+sigma3 @Const = 0.1;
+
 /*
 // linear saturable elimination, F0 = -49.6482
 kabs = 8.038059e+00;

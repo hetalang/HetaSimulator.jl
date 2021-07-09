@@ -364,3 +364,44 @@ measurements_df = read_measurements("./my_example/measurements.xlsx")
 
 ## Solving problems
 
+There are three main problem types that can currently be solved with HetaSimulator:
+
+- [__Simulation__](#simulation) of time-dependence for selected observables for one or several conditions using [`sim`](@ref) method.
+- [__Monte-Carlo__](#montecarlo) type simulations that performs repeated simulations based on pre-set parameters distributions with [`mc`](@ref) method.
+- [__Fitting__](#fitting) or parameter identification problem that optimizes values of selected model constants to reach the minimal discrepancy between simulations and experimental values which is solved by [`fit`](@ref) method.
+
+Each method returns the solution of its specific type: `SimResults`, `MCResults` and `FitResults` or other types that include them.
+
+The methods can be applied on different levels: `Platform`, `Cond` or `Model` to allow applying all conditions in the platform, some of them or the default one.
+Some important "target vs method" variants are shown in the next table.
+
+Target | Method | Results | Comments
+-- | -- | -- | --
+`Platform` | `sim` | `Vector{Pair{Symbol,SimResults}}` | All or selected list of conditions in model will run
+`Cond` | `sim` | `SimResults` | Only target condition will run
+`Model` | `sim` | `SimResults` | The condition created from default model's options will run
+`Platform` | `mc` | `Vector{Pair{Symbol,MCResults}}` | All or selected list of conditions in model will run multiple times.
+`Cond` | `mc` | `MCResults` | Target condition will run multiple times
+`Model` | `mc` | `SimResults` | The default condition will run multiple times
+`Platform` | `fit` | `FitResults` | All or selected list of conditions together their measurements will be used to optimize parameters.
+
+*This page provides the example of applying methods on the `Platform` level only*
+
+See more information for each method in extended description: [sim explanations](./sim.md), [mc explanations](./mc.md), [fit explanations](./fit.md).
+
+### Simulation
+
+On the previous steps we created the platform `p` and populated it with 4 conditions and measurement points.
+
+Without additional preparations we can simulate the platform which means running all 4 conditions and combining all results into one object.
+
+```julia
+res = sim(p)
+```
+```julia
++---------------------------------------------------------------------------
+| Simulation results for 4 condition(s).
+| Use `sol[i]` to get th i-th component.
++---------------------------------------------------------------------------
+```
+

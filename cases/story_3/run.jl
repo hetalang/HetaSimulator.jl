@@ -32,4 +32,9 @@ push!(conditions(p), :multiple_100=>new_condition)
 measurements_df = read_measurements("$HetaSimulatorDir/cases/story_3/measurements.csv")
 add_measurements!(p, measurements_df)
 
-s = sim(new_condition, tsapn=(0,120))
+### Simulation
+
+res = sim(p)
+# plotd = plot(res)
+# savefig(plotd, "sim1.png")
+res |> plot
