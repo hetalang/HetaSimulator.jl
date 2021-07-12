@@ -147,18 +147,33 @@ function Base.show(io::IO, m::MIME"text/plain", S::SimResults)
 end
 Base.show(io::IO, m::MIME"text/plain", PS::Pair{Symbol, S}) where S<:SimResults = Base.show(io, m, last(PS))
 
+#= XXX: do we need it?
 function Base.show(io::IO, m::MIME"text/plain", V::Vector{S}) where S<:SimResults
   println(io, "+---------------------------------------------------------------------------")
   println(io, "| Simulation results for $(length(V)) condition(s).") 
   println(io, "| Use `sol[i]` to get th i-th component.")
   println(io, "+---------------------------------------------------------------------------")
 end
-
-function Base.show(io::IO, m::MIME"text/plain", V::Vector{Pair{Symbol, S}}) where S<:SimResults ## ugly
+=#
+function Base.show(io::IO, m::MIME"text/plain", V::Vector{Pair{Symbol, S}}) where S<:HetaSimulator.SimResults
+  show_string = [*(":", String(x), " => ...") for x in first.(V)]
   println(io, "+---------------------------------------------------------------------------")
   println(io, "| Simulation results for $(length(V)) condition(s).") 
-  println(io, "| Use `sol[i]` to get th i-th component.")
+  println(io, "| [$(join(show_string, ", "))]")
+  println(io, "| Use `sol[id]` to get component by id.")
+  println(io, "| Use `sol[i]` to get component by number.")
+  println(io, "| Use `DataFrame(sol)` to transform.")
+  println(io, "| Use `plot(sol)` to plot results.")
   println(io, "+---------------------------------------------------------------------------")
+end
+
+function Base.getindex(V::Vector{Pair{Symbol, S}}, id::Symbol) where S<:HetaSimulator.SimResults
+  ind = findfirst((x) -> first(x)===id, V)
+  if ind === nothing
+    throw("Index :$id is not found.")
+  else
+    return V[ind]
+  end
 end
 
 ################################## Monte-Carlo Simulation ##############################
@@ -182,19 +197,32 @@ function Base.show(io::IO, m::MIME"text/plain", MC::MCResults)
 end
 
 Base.show(io::IO, m::MIME"text/plain", PS::Pair{Symbol, S}) where S<:MCResults = Base.show(io, m, last(PS))
-
+#= XXX: do we need it?
 function Base.show(io::IO, m::MIME"text/plain", VMC::Vector{MC}) where MC<:MCResults
   println(io, "+---------------------------------------------------------------------------")
   println(io, "| Monte-Carlo results for $(length(VMC)) condition(s).") 
   println(io, "| Use `sol[i]` to index Monte-Carlo results.")
   println(io, "+---------------------------------------------------------------------------")
 end
-
-function Base.show(io::IO, m::MIME"text/plain", VMC::Vector{Pair{Symbol, S}}) where S<:MCResults
+=#
+function Base.show(io::IO, m::MIME"text/plain", VMC::Vector{Pair{Symbol, S}}) where S<:HetaSimulator.MCResults
+  show_string = [*(":", String(x), " => ...") for x in first.(VMC)]
   println(io, "+---------------------------------------------------------------------------")
   println(io, "| Monte-Carlo results for $(length(VMC)) condition(s).") 
-  println(io, "| Use `sol[i]` to index Monte-Carlo results.")
+  println(io, "| [$(join(show_string, ", "))]")
+  println(io, "| Use `sol[id]` to get component by id.")
+  println(io, "| Use `sol[i]` to get component by number.")
+  println(io, "| Use `DataFrame(sol)` to transform.")
+  println(io, "| Use `plot(sol)` to plot results.")
   println(io, "+---------------------------------------------------------------------------")
+end
+function Base.getindex(V::Vector{Pair{Symbol, S}}, id::Symbol) where S<:HetaSimulator.MCResults
+  ind = findfirst((x) -> first(x)===id, V)
+  if ind === nothing
+    throw("Index :$id is not found.")
+  else
+    return V[ind]
+  end
 end
 
 ################################## Events ##############################################

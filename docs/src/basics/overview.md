@@ -99,7 +99,7 @@ HetaSimulator loads modeling platform into `Platform` type object that is a cont
 When __HetaSimulator__ is installed and internal __Heta compiler__ is installed the platform can be loaded with the method [`load_platform`](@ref).
 
 ```julia
-using HetaSimulator
+using HetaSimulator, Plots
 
 p = load_platform("./my_example")
 ```
@@ -401,7 +401,105 @@ res = sim(p)
 ```julia
 +---------------------------------------------------------------------------
 | Simulation results for 4 condition(s).
-| Use `sol[i]` to get th i-th component.
+| [:multiple_15 => ..., :dose_1 => ..., :dose_10 => ..., :dose_100 => ...]
+| Use `sol[id]` to get component by id.
+| Use `sol[i]` to get component by number.
+| Use `DataFrame(sol)` to transform.
+| Use `plot(sol)` to plot results.
 +---------------------------------------------------------------------------
 ```
 
+The whole solution consists of parts which corresponds to number of conditions in Platform.
+
+The results can be plotted using default `plot` method.
+
+```julia
+plot(res)
+```
+![sim1](./sim1.png)
+
+
+The whole solution can also be translated into `DataFrame`.
+
+```julia
+res_df = DataFrame(res)
+```
+```julia
+964×6 DataFrame
+ Row │ t             A0           C1           C2           scope   condition   
+     │ Float64       Float64      Float64      Float64      Symbol  Symbol      
+─────┼──────────────────────────────────────────────────────────────────────────
+   1 │  0.0           0.0         0.0          0.0          ode_    multiple_15
+   2 │  0.0          15.0         0.0          0.0          sw2     multiple_15
+  ⋮  │      ⋮             ⋮            ⋮            ⋮         ⋮          ⋮
+ 963 │ 47.9581        4.55058e-7  0.201956     0.2561       ode_    dose_100
+ 964 │ 48.0           2.99302e-7  0.201417     0.255416     ode_    dose_100
+                                                                960 rows omitted
+```
+
+User can work with the solution component by using indexing by component number, like here `res[1]` or by condition id `res[:dose_1]`.
+
+Any component can also be transformed into `DataFrame`.
+
+```julia
+res_df1 = DataFrame(res[1])
+```
+```julia
+626×5 DataFrame
+ Row │ t              A0           C1           C2           scope  
+     │ Float64        Float64      Float64      Float64      Symbol 
+─────┼──────────────────────────────────────────────────────────────
+   1 │   0.0           0.0         0.0          0.0          ode_
+   2 │   0.0          15.0         0.0          0.0          sw2
+   3 │   6.66622e-6   14.999       0.000158714  1.59703e-10  ode_
+   4 │   7.33284e-5   14.989       0.00174523   1.93194e-8   ode_
+   5 │   0.000739951  14.8894      0.0175482    1.96242e-6   ode_
+   6 │   0.00527893   14.2287      0.122199     9.82366e-5   ode_
+   7 │   0.0141793    13.017       0.313149     0.000686265  ode_
+   8 │   0.027481     11.3957      0.566335     0.00245837   ode_
+  ⋮  │       ⋮             ⋮            ⋮            ⋮         ⋮
+ 620 │ 166.734         4.55058e-7  0.193317     0.245144     ode_
+ 621 │ 167.085         4.55058e-7  0.189038     0.239719     ode_
+ 622 │ 167.436         4.55058e-7  0.184854     0.234413     ode_
+ 623 │ 167.786         4.55058e-7  0.180762     0.229224     ode_
+ 624 │ 168.0           7.00046e-8  0.178314     0.22612      ode_
+ 625 │ 168.0           7.00046e-8  0.178314     0.22612      ode_
+ 626 │ 168.0          15.0         0.178314     0.22612      sw2
+                                                    611 rows omitted
+```
+
+The component can also be plotted.
+
+```julia
+plot(res[1])
+```
+![sim2](./sim2.png)
+
+### Monte-Carlo
+
+Monte-Carlo method runs simulation many times combining all simulations into single object `MCResults`.
+You should clarify here the distribution of random parameters and number of iterations.
+
+```julia
+mc_res = mc(p, [:kabs=>Normal(10.,1e-1), :kel=>Normal(0.2,1e-3)], 1000)
+```
+```julia
++---------------------------------------------------------------------------
+| Monte-Carlo results for 4 condition(s).
+| [:multiple_15 => ..., :dose_1 => ..., :dose_10 => ..., :dose_100 => ...]
+| Use `sol[id]` to get component by id.
+| Use `sol[i]` to get component by number.
+| Use `DataFrame(sol)` to transform.
+| Use `plot(sol)` to plot results.
++---------------------------------------------------------------------------
+```
+
+To transform everything into `DataFrame`
+```julia
+mc_df = DataFrame(mc_res)
+```
+
+To plot everything use `plot`
+```julia
+plot(mc_res)
+```

@@ -86,18 +86,23 @@ end
   end
   nothing
 end
-
+#= XXX: do we need it?
 @recipe function plot(sim::Vector{S}) where S <:AbstractResults
   [Symbol("_$i")=>s for (i,s) in enumerate(sim)]
 end
-
-@recipe function plot(sim::Vector{P}) where P <: Pair 
+=#
+@recipe function plot(s::Pair{Symbol,S}) where S<:HetaSimulator.AbstractResults
+  @series begin
+    title := "$(first(s))"
+    last(s)
+  end
+end
+@recipe function plot(sim::Vector{Pair{Symbol,S}}) where S<:AbstractResults
   layout := layout_choice(length(sim))
   for (i, s) in enumerate(sim)
     @series begin
-      title := "$(first(s))"
       subplot := i
-      last(s)
+      s
     end
   end
 end
@@ -128,7 +133,18 @@ end
 
 DataFrame(sr::SimResults) = DataFrame(sr.sim)
 
-DataFrame(sr::Pair{Symbol,S}) where S<:SimResults = DataFrame(last(sr))
+function DataFrame(sr::Pair{Symbol,S}) where S<:SimResults
+  df = DataFrame(last(sr))
+  df.condition = fill(first(sr), size(df, 1))
+
+  return df
+end
+
+function DataFrame(res::Vector{Pair{Symbol,S}}) where S<:SimResults
+  df_vectors = DataFrame.(res)
+
+  return vcat(df_vectors...)
+end
 
 function DataFrame(mcr::MCResults)
   # df performance
