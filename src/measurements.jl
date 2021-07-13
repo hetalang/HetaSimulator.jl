@@ -5,7 +5,7 @@ const MEAN = :mean
 # CSV methods
 
 function add_measurements!(
-  condition::Cond,
+  condition::Condition,
   vector::AbstractVector;
   subset::AbstractVector{P} = Pair{Symbol, Symbol}[]
 ) where P <: Pair{Symbol, Symbol}
@@ -47,7 +47,7 @@ end
 # DataFrame methods
 
 function add_measurements!(
-  condition::Cond,
+  condition::Condition,
   df::DataFrame;
   kwargs...
 )
@@ -64,7 +64,7 @@ end
 
 # private function to add one measurement row into condition 
 
-function _add_measurement!(condition::Cond, row::Any) # maybe not any
+function _add_measurement!(condition::Condition, row::Any) # maybe not any
   _t = row[:t]
   _val = row[:measurement]
   _scope = haskey(row, :scope) ? row[:scope] : missing

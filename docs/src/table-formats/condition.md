@@ -1,14 +1,14 @@
 # Conditions tables
 
-Conditions tables are CSV or XLSX files which store `Cond` objects in tabular format.
+Conditions tables are CSV or XLSX files which store `Condition` objects in tabular format.
 The content of the table can be loaded into Julia environment as a `DataFrame` to be included into `Platform` object.
 
 ## Format
 
-The structure of the tables corresponds to `Cond` properties.
+The structure of the tables corresponds to `Condition` properties.
 The first row is intended for headers which clarify the columns meaning. The sequence of columns is not important.
 
-- `id` : a `String` representing unique identifier of `Cond` if you load into `Platform` object. The string should be unique within the condition set and must follow the common identifier rules: no blank spaces, no digit at the first symbol, etc.
+- `id` : a `String` representing unique identifier of `Condition` if you load into `Platform` object. The string should be unique within the condition set and must follow the common identifier rules: no blank spaces, no digit at the first symbol, etc.
 
 - `model` : a `String` identifier of model which will be used for simulations. The default value is `nameless`.
 
@@ -24,7 +24,7 @@ The first row is intended for headers which clarify the columns meaning. The seq
 
 - `events_save.<id>` (optional, experimental) : a pair of `Bool` values divided by semicolon. This value set if it is required to save the output value before and after the event. If not set both: before and after values will be saved.
 
-_* `saveat[]` or `tspan` must be set for the particular `Cond`. If you set both only `saveat[]` will be used._
+_* `saveat[]` or `tspan` must be set for the particular `Condition`. If you set both only `saveat[]` will be used._
 
 ## Loading to Platform
 
@@ -48,10 +48,10 @@ The data frame can be loaded into platform using the `HetaSimulator.add_conditio
 add_conditions!(platform, conditions_csv)
 
 conditions(platform)
-Dict{Symbol, Cond} with 4 entries:
-  :three     => Cond{...}
-  :withdata2 => Cond{...} 
-  :dataone   => Cond{...}
+Dict{Symbol, Condition} with 4 entries:
+  :three     => Condition{...}
+  :withdata2 => Condition{...} 
+  :dataone   => Condition{...}
 ```
 
 ## Example
@@ -78,10 +78,10 @@ add_conditions!(platform, conditions)
 
 As a result the Platform will contain three conditions: cond1, cond2, cond3.
 
-These operations are equivalent of manually created `Cond` objects.
+These operations are equivalent of manually created `Condition` objects.
 
 ```julia
-cond1 = Cond(
+cond1 = Condition(
   platform.models[:nameless];
   parameters = [:k2=>0.001, :k3=>0.02],
   saveat = [0, 12, 24, 48, 72, 120, 150],
@@ -90,7 +90,7 @@ cond1 = Cond(
 )
 push!(platform.conditions, :cond1=>cond1)
 
-cond2 = Cond(
+cond2 = Condition(
   platform.models[:nameless];
   parameters = [:k1=>0.001],
   tspan = (0., 1000.),
@@ -98,7 +98,7 @@ cond2 = Cond(
 )
 push!(platform.conditions, :cond2=>cond2)
 
-cond3 = Cond(
+cond3 = Condition(
   platform.models[:another_model];
   parameters = [:k2=>0.001],
   saveat = [0, 12, 24, 48, 72, 120],

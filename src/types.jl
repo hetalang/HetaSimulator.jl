@@ -88,27 +88,27 @@ const MeasurementVector{P} = AbstractVector{P} where P<:AbstractMeasurementPoint
 ################################## Condition ###########################################
 abstract type AbstractCond end
 
-struct Cond{F,P,M} <: AbstractCond
+struct Condition{F,P,M} <: AbstractCond
   init_func::F
   prob::P
   measurements::M
 end 
 
-saveat(c::Cond) = c.prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat.valtree
-tspan(c::Cond) = c.prob.tspan
-parameters(c::Cond) = c.prob.p.constants
-measurements(c::Cond) = c.measurements
+saveat(c::Condition) = c.prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat.valtree
+tspan(c::Condition) = c.prob.tspan
+parameters(c::Condition) = c.prob.p.constants
+measurements(c::Condition) = c.measurements
 
-function Base.show(io::IO, ::MIME"text/plain", c::Cond)
+function Base.show(io::IO, ::MIME"text/plain", c::Condition)
   println(io, "+---------------------------------------------------------------------------")
-  println(io, "| Cond contains:")
+  println(io, "| Condition contains:")
   println(io, "|   $(length(saveat(c))) saveat values: $(saveat(c)). Use `saveat(cond)` for details.")
   println(io, "|   tspan: $(tspan(c)). Use `tspan(cond)` for details.")
   println(io, "|   $(length(parameters(c))) parameters(s). Use `parameters(cond)` for details.")
   println(io, "|   $(length(measurements(c))) measurement(s). Use `measurements(cond)` for details.")
-  #println(io, "|   $(length(events_active(c))) event(s). Use `events_active(c::Cond)` for details.")
-  #println(io, "|   $(length(events_save(c))) event(s). Use `events_save(c::Cond)` for details.")
-  #println(io, "|   $(length(observables(c))) observable(s). Use `observables(c::Cond)` for details.")
+  #println(io, "|   $(length(events_active(c))) event(s). Use `events_active(c::Condition)` for details.")
+  #println(io, "|   $(length(events_save(c))) event(s). Use `events_save(c::Condition)` for details.")
+  #println(io, "|   $(length(observables(c))) observable(s). Use `observables(c::Condition)` for details.")
   println(io, "+---------------------------------------------------------------------------")
 end
 
@@ -131,7 +131,7 @@ end
 
 Simulation(sv::SavedValues,status::Symbol) = Simulation(DiffEqBase.SciMLBase.DiffEqArray(sv.u,sv.t),sv.scope,status)
 
-struct SimResults{S, C<:Cond} <: AbstractResults
+struct SimResults{S, C<:Condition} <: AbstractResults
   sim::S
   cond::C 
 end
@@ -155,7 +155,7 @@ function Base.show(io::IO, m::MIME"text/plain", V::Vector{S}) where S<:SimResult
   println(io, "+---------------------------------------------------------------------------")
 end
 =#
-function Base.show(io::IO, m::MIME"text/plain", V::Vector{Pair{Symbol, S}}) where S<:HetaSimulator.SimResults
+function Base.show(io::IO, m::MIME"text/plain", V::Vector{Pair{Symbol, S}}) where S<:SimResults
   show_string = [*(":", String(x), " => ...") for x in first.(V)]
   println(io, "+---------------------------------------------------------------------------")
   println(io, "| Simulation results for $(length(V)) condition(s).") 
@@ -167,7 +167,7 @@ function Base.show(io::IO, m::MIME"text/plain", V::Vector{Pair{Symbol, S}}) wher
   println(io, "+---------------------------------------------------------------------------")
 end
 
-function Base.getindex(V::Vector{Pair{Symbol, S}}, id::Symbol) where S<:HetaSimulator.SimResults
+function Base.getindex(V::Vector{Pair{Symbol, S}}, id::Symbol) where S<:SimResults
   ind = findfirst((x) -> first(x)===id, V)
   if ind === nothing
     throw("Index :$id is not found.")
@@ -205,7 +205,7 @@ function Base.show(io::IO, m::MIME"text/plain", VMC::Vector{MC}) where MC<:MCRes
   println(io, "+---------------------------------------------------------------------------")
 end
 =#
-function Base.show(io::IO, m::MIME"text/plain", VMC::Vector{Pair{Symbol, S}}) where S<:HetaSimulator.MCResults
+function Base.show(io::IO, m::MIME"text/plain", VMC::Vector{Pair{Symbol, S}}) where S<:MCResults
   show_string = [*(":", String(x), " => ...") for x in first.(VMC)]
   println(io, "+---------------------------------------------------------------------------")
   println(io, "| Monte-Carlo results for $(length(VMC)) condition(s).") 
@@ -216,7 +216,7 @@ function Base.show(io::IO, m::MIME"text/plain", VMC::Vector{Pair{Symbol, S}}) wh
   println(io, "| Use `plot(sol)` to plot results.")
   println(io, "+---------------------------------------------------------------------------")
 end
-function Base.getindex(V::Vector{Pair{Symbol, S}}, id::Symbol) where S<:HetaSimulator.MCResults
+function Base.getindex(V::Vector{Pair{Symbol, S}}, id::Symbol) where S<:MCResults
   ind = findfirst((x) -> first(x)===id, V)
   if ind === nothing
     throw("Index :$id is not found.")

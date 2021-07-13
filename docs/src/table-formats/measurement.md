@@ -8,7 +8,7 @@ The content of the table can be loaded into Julia environment as a `DataFrame` t
 The structure of tables corresponds to `Measurements` properties.
 The first row is intended for headers which clarify the columns meaning. The sequence of columns is not important.
 
-- `condition` : a `String` value representing identifier of `Cond`.
+- `condition` : a `String` value representing identifier of `Condition`.
 - `t` : a `Float64` value equal to time point of measured value
 - `measurement` : a `Float64` measured value
 - `scope` (optional): a `String` value which states a scope of simulation to be compared with measurements. Default value is `ode_`
@@ -72,7 +72,7 @@ As a result the Platform will contain three measurements.
 These operations are equivalent of manually created `Measurement` objects.
 
 ```julia
-# dataone = Cond(...)
+# dataone = Condition(...)
 
 m1 = NormalMeasurementPoint(2, 8.461539334, :ode, :a, 1)
 m2 = NormalMeasurementPoint(4, 7.333333812, :ode, :a, 1.2)

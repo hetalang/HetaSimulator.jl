@@ -27,7 +27,7 @@ Example: `fit([:x=>cond2, :y=>cond3, :z=>cond4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
 
 Arguments:
 
-- `condition_pairs` : vector of pairs containing names and conditions of type [`Cond`](@ref)
+- `condition_pairs` : vector of pairs containing names and conditions of type [`Condition`](@ref)
 - `params` : optimization parameters and their initial values
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-6
@@ -63,10 +63,10 @@ function fit(
   kwargs... # other arguments to sim()
 ) where C<:AbstractCond
 
-  selected_condition_pairs = Pair{Symbol,Cond}[]
+  selected_condition_pairs = Pair{Symbol,Condition}[]
   for cond_pair in condition_pairs # iterate through condition names
     if isempty(last(cond_pair).measurements)
-      @warn "Cond \":$(first(cond_pair))\" has no measurements. It will be excluded from fitting."
+      @warn "Condition \":$(first(cond_pair))\" has no measurements. It will be excluded from fitting."
     else
       push!(selected_condition_pairs, cond_pair)
     end
@@ -158,7 +158,7 @@ Example: `fit([cond2, cond3, cond4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
 
 Arguments:
 
-- `conditions` : vector of conditions of type [`Cond`](@ref)
+- `conditions` : vector of conditions of type [`Condition`](@ref)
 - `params` : optimization parameters and their initial values
 - kwargs : other solver related arguments supported by `fit(condition_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
 """
@@ -186,7 +186,7 @@ Arguments:
 
 - `platform` : platform of [`Platform`](@ref) type
 - `params` : optimization parameters and their initial values
-- `conditions` : vector of conditions of type [`Cond`](@ref) or `nothing` to fit all conditions. Default is `nothing`
+- `conditions` : vector of conditions of type [`Condition`](@ref) or `nothing` to fit all conditions. Default is `nothing`
 - kwargs : other solver related arguments supported by `fit(condition_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
 """
 function fit(

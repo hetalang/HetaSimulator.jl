@@ -7,7 +7,7 @@ const EMPTY_PROBLEM = ODEProblem(() -> nothing, [0.0], (0.,1.))
 ### simulate condition
 
 """
-    sim(cond::Cond; 
+    sim(cond::Condition; 
       parameters_upd::Union{Nothing, Vector{P}}=nothing,
       alg=DEFAULT_ALG, 
       reltol=DEFAULT_SIMULATION_RELTOL, 
@@ -15,19 +15,19 @@ const EMPTY_PROBLEM = ODEProblem(() -> nothing, [0.0], (0.,1.))
       kwargs...)
 
 Simulate single condition `cond`. Returns [`SimResults`](@ref) type.
-Example: `Cond(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]) |> sim`
+Example: `Condition(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]) |> sim`
 
 Arguments:
 
-- `cond` : simulation condition of type [`Cond`](@ref)
-- `parameters_upd` : constants, which overwrite both `Model` and `Cond` constants. Default is `nothing`
+- `cond` : simulation condition of type [`Condition`](@ref)
+- `parameters_upd` : constants, which overwrite both `Model` and `Condition` constants. Default is `nothing`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
 - kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
 function sim(
-  cond::Cond; 
+  cond::Condition; 
   parameters_upd::Union{Nothing, Vector{P}}=nothing,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
@@ -77,12 +77,12 @@ Arguments:
 - `saveat` : time points, where solution should be saved. Default `nothing` values stands for saving solution at timepoints reached by the solver 
 - `tspan` : time span for the ODE problem
 - `save_scope` : should scope be saved together with solution. Default is `true`
-- kwargs : other solver related arguments supported by `sim(cond::Cond)`
+- kwargs : other solver related arguments supported by `sim(cond::Condition)`
 """
 function sim(
   model::Model;
 
-  ## arguments for Cond(::Model,...)
+  ## arguments for Condition(::Model,...)
   parameters::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
   events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
@@ -92,9 +92,9 @@ function sim(
   tspan::Union{Nothing,Tuple} = nothing,
   save_scope::Bool=true,
   time_type::DataType=Float64,
-  kwargs... # sim(c::Cond) kwargs
+  kwargs... # sim(c::Condition) kwargs
 )
-  condition = Cond(
+  condition = Condition(
     model; parameters, measurements,
     events_active, events_save, observables, saveat, tspan, save_scope, time_type)
 
@@ -117,8 +117,8 @@ Example: `sim([:x => cond1, :y=>cond2, :z=>cond3])`
 
 Arguments:
 
-- `condition_pairs` : vector of pairs containing names and conditions of type [`Cond`](@ref)
-- `parameters_upd` : constants, which overwrite both `Model` and `Cond` constants. Default is `nothing`
+- `condition_pairs` : vector of pairs containing names and conditions of type [`Condition`](@ref)
+- `parameters_upd` : constants, which overwrite both `Model` and `Condition` constants. Default is `nothing`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -179,7 +179,7 @@ Example: `sim([cond1, cond2, cond3])`
 
 Arguments:
 
-- `conditions` : `Vector` containing names and conditions of type [`Cond`](@ref)
+- `conditions` : `Vector` containing names and conditions of type [`Condition`](@ref)
 - kwargs : other kwargs supported by `sim(condition_pairs::Vector{Pair})`
 """
 function sim(

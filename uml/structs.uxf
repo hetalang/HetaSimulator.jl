@@ -3,7 +3,7 @@
 --
 models::Dict{Symbol,QModel}
 --
-conditions::Dict{Symbol,Cond}
+conditions::Dict{Symbol,Condition}
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>30</x><y>120</y><w>210</w><h>160</h></coordinates><panel_attributes>QModel
 --
 init_func::Function
@@ -19,7 +19,7 @@ observables::Vector{Symbol}
 constants::LArray{Float64}
 --
 events_active::LArray{Bool}
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>300</x><y>100</y><w>290</w><h>180</h></coordinates><panel_attributes>Cond
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>300</x><y>100</y><w>290</w><h>180</h></coordinates><panel_attributes>Condition
 --
 model::QModel
 --

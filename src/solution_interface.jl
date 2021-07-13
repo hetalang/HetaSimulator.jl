@@ -91,7 +91,7 @@ end
   [Symbol("_$i")=>s for (i,s) in enumerate(sim)]
 end
 =#
-@recipe function plot(s::Pair{Symbol,S}) where S<:HetaSimulator.AbstractResults
+@recipe function plot(s::Pair{Symbol,S}) where S<:AbstractResults
   @series begin
     title := "$(first(s))"
     last(s)

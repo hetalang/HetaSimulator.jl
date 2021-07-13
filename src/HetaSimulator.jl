@@ -43,7 +43,7 @@ using Reexport
   include("import_platform.jl")
 
   export heta_update, heta_update_dev, heta_build, load_platform, load_jlplatform, load_jlmodel
-  export Platform, Model, Cond, Params
+  export Platform, Model, Condition, Params
   export read_conditions, add_conditions!
   export read_measurements, add_measurements!
   export models, conditions, constants, records, events, parameters, events_active, events_save, observables  # variables, dynamic, static

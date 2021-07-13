@@ -11,7 +11,7 @@ makedocs(
     ),
     pages = [
         "Home" => "index.md",
-        "Basics" => ["basics/overview.md", "table-formats/cond.md", "table-formats/measurement.md"],
+        "Basics" => ["basics/overview.md", "table-formats/condition.md", "table-formats/measurement.md"],
         # "Table formats" => [],
         "API" => "api.md"
     ],

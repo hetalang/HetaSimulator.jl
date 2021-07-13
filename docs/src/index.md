@@ -88,10 +88,10 @@ df = DataFrame(results)
 
 The user of HetaSimulator typically deals with the following three types:
 - `Model` - an ODE model, containing rhs, rules, initial parameters and vector of events.
-- `Cond` - condition representing a special model's setup for simulations or fitting. This setup can include initial parameters and events settings, output variables etc. In case of fitting `Cond` should also include experimental data. A common usage of `Cond` can be model's simulation with different drugs (parameters and events setup). Different `Cond`'s can be united to run multi-conditional simulations and fitting.
-- `Platform` - container for different `Model`s and `Cond`s.
+- `Condition` - condition representing a special model's setup for simulations or fitting. This setup can include initial parameters and events settings, output variables etc. In case of fitting `Condition` should also include experimental data. A common usage of `Condition` can be model's simulation with different drugs (parameters and events setup). Different `Condition`'s can be united to run multi-conditional simulations and fitting.
+- `Platform` - container for different `Model`s and `Condition`s.
 
-The user can perform the following three operations with both `Model`, `Cond` and `Platform`
+The user can perform the following three operations with both `Model`, `Condition` and `Platform`
 - `sim` - run a single or multi-conditional simulations. 
 - `fit` - fit a model to experimental data. 
 - `mc` - run Monte-Carlo or virtual patients simulations.

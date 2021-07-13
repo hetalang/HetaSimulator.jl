@@ -4,7 +4,7 @@
 
 ## features
 
-- add fit methods for model, cond, vector{cond} 
+- add fit methods for Model, Condition, Vector{Condition} 
 - add CI
 
 ## postponed changes

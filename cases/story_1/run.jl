@@ -41,11 +41,11 @@ sim(
 
 
 ### single condition sim()
-cond1 = Cond(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]);
+cond1 = HetaSimulator.Condition(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]);
 sim(cond1) |> plot
 sim(cond1; parameters_upd=[:k1=>0.01]) |> plot
 
-cond2 = Cond(
+cond2 = HetaSimulator.Condition(
     model;
     tspan = (0., 200.),
     events_active=[:sw1=>false],
@@ -53,7 +53,7 @@ cond2 = Cond(
     );
 sim(cond2) |> plot
 
-cond3 = Cond(
+cond3 = HetaSimulator.Condition(
     model;
     tspan = (0., 250.),
     events_active=[:sw1=>false],
@@ -72,7 +72,7 @@ sim([:x => cond1, :y=>cond2, :z=>cond3]; parameters_upd=[:k1=>0.01]) |> plot
 #measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv")
 measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements_no_scope.csv")
 measurements_xlsx = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.xlsx")
-cond4 = Cond(model; parameters = [:k2=>0.001, :k3=>0.04], saveat = [0.0, 50., 150., 250.]);
+cond4 = HetaSimulator.Condition(model; parameters = [:k2=>0.001, :k3=>0.04], saveat = [0.0, 50., 150., 250.]);
 add_measurements!(cond4, measurements_csv; subset = [:condition => :dataone])
 
 ### fit many conditions
@@ -96,19 +96,19 @@ add_conditions!(platform, conditions_csv)
 
 ################################## Monte-Carlo Simulations  #####################
 
-mccond1 = Cond(
+mccond1 = HetaSimulator.Condition(
     model;
     tspan = (0., 200.),
     parameters = [:k1=>0.01],
     saveat = [50., 80., 150.]
     );
-mccond2 = Cond(
+mccond2 = HetaSimulator.Condition(
     model;
     tspan = (0., 200.),
     parameters = [:k1=>0.02],
     saveat = [50., 100., 200.]
     );
-mccond3 = Cond(
+mccond3 = HetaSimulator.Condition(
     model; 
     tspan = (0., 200.),
     parameters = [:k1=>0.03],
@@ -179,7 +179,7 @@ using Distributed
 addprocs(2)
 @everywhere using HetaSimulator
 
-mccond1 = Cond(model; tspan = (0., 200.), parameters = [:k1=>0.01], saveat = [50., 80., 150.]);
+mccond1 = HetaSimulator.Condition(model; tspan = (0., 200.), parameters = [:k1=>0.01], saveat = [50., 80., 150.]);
 mcsim0 = mc(mccond1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 20)
 mcsim1 = mc(mccond1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 150, parallel_type=EnsembleDistributed())
 =#

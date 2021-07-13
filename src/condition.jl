@@ -7,7 +7,7 @@ const OBSERVABLES_HEADER = Symbol("observables[]")
 
 # general interface
 """
-    Cond(model::Model;
+    Condition(model::Model;
       measurements::Vector{AbstractMeasurementPoint}=AbstractMeasurementPoint[],
       observables::Union{Nothing,Vector{Symbol}}=nothing,
       parameters::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
@@ -18,8 +18,8 @@ const OBSERVABLES_HEADER = Symbol("observables[]")
       save_scope::Bool = true,
     )
 
-Builds simulation condition of type [`Cond`](@ref)
-Example: `Cond(model; tspan = (0., 200.), saveat = [0.0, 150., 250.])`
+Builds simulation condition of type [`Condition`](@ref)
+Example: `Condition(model; tspan = (0., 200.), saveat = [0.0, 150., 250.])`
 
 Arguments:
 
@@ -33,7 +33,7 @@ Arguments:
 - `tspan` : time span for the ODE problem
 - `save_scope` : should scope be saved together with solution. Default is `true`
 """
-function Cond(
+function Condition(
   model::Model;
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
   observables::Union{Nothing,Vector{Symbol}} = nothing,
@@ -46,7 +46,7 @@ function Cond(
     kwargs...
   )
 
-  return Cond(model.init_func, prob, measurements)
+  return Condition(model.init_func, prob, measurements)
 end
 
 # CSV methods
@@ -80,7 +80,7 @@ function _add_condition!(platform::Platform, row::Any) # maybe not any
   model_name = get(row, :model, :nameless)
 
   if !haskey(platform.models, model_name)
-    @warn "Lost model $(model_name). Cond $_id has been skipped."
+    @warn "Lost model $(model_name). Condition $_id has been skipped."
     return nothing # BRAKE
   else
     model = platform.models[model_name]
@@ -123,7 +123,7 @@ function _add_condition!(platform::Platform, row::Any) # maybe not any
     _observables = nothing
   end
 
-  condition = Cond(
+  condition = Condition(
     model;
     parameters = _parameters,
     events_active = _events_active,

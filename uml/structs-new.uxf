@@ -2,7 +2,7 @@
 </help_text><element><id>UMLClass</id><coordinates><x>481</x><y>29</y><w>210</w><h>90</h></coordinates><panel_attributes>QPlatform
 --
 - models::Dict{Symbol,QModel}
-- conditions::Dict{Symbol,Cond}
+- conditions::Dict{Symbol,Condition}
 - version :: Symbol
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>231</x><y>149</y><w>450</w><h>180</h></coordinates><panel_attributes>Model
 --
@@ -13,7 +13,7 @@
 - records_output:: LArray{Bool}          # default task
 - constants_num :: LArray{Float64}    # default task
 - events_active :: LArray{Bool}           # default task
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>711</x><y>119</y><w>290</w><h>180</h></coordinates><panel_attributes>Cond
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>711</x><y>119</y><w>290</w><h>180</h></coordinates><panel_attributes>Condition
 --
 model::QModel
 --

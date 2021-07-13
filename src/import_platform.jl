@@ -18,7 +18,7 @@ function Platform(
     
     platform = Platform(
         Dict{Symbol,Model}(model_pairs),
-        Dict{Symbol,Cond}()
+        Dict{Symbol,Condition}()
     )
     println("OK!")
 
@@ -57,7 +57,7 @@ function Model(
     records_output_ = collect(Pair{Symbol,Bool}, pairs(records_output))
     events_active_ = collect(Pair{Symbol,Bool}, pairs(events_active))
 
-    # Should we (1) store prob in Model, (2) store in Cond (3) nowhere
+    # Should we (1) store prob in Model, (2) store in Condition (3) nowhere
     ### fake run
     
     _u0, _p0 = init_func(constants_num)

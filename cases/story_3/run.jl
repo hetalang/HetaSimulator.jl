@@ -16,7 +16,7 @@ condition1 = conditions(p)[:dose_1]
 ### create conditions
 
 model = models(p)[:nameless]
-new_condition = Cond(
+new_condition = HetaSimulator.Condition(
     model,
     parameters = [:dose=>100.],
     events_active = [:sw1=>false, :sw1=>true],

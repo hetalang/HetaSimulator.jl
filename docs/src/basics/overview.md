@@ -168,16 +168,16 @@ Loading platform... OK!
 
 ## Creating conditions
 
-`Cond` (condition) in HetaSimulator is an object which stores a model together with additional settings and options.
+`Condition` (condition) in HetaSimulator is an object which stores a model together with additional settings and options.
 It sets the time point, ranges, updates parameter values, activate or inactivate events, etc.
 
-The condition-based approach is used to store pre-defined model's options: dose values, experimental conditions, data saving options, initial values and others which can be applied for one or multiple models. The `Cond` also stores `Measurement` points which is used for parameters identification and visualization.
+The condition-based approach is used to store pre-defined model's options: dose values, experimental conditions, data saving options, initial values and others which can be applied for one or multiple models. The `Condition` also stores `Measurement` points which is used for parameters identification and visualization.
 
-`Cond` is created from default options passed from its model and user defined options from table row or set manually.
+`Condition` is created from default options passed from its model and user defined options from table row or set manually.
 
 ### Import from CSV tables
 
-The most simple way to populate a platform by conditions is to create a separate file with `Cond` in [tabular CSV format](../table-formats/cond.md).
+The most simple way to populate a platform by conditions is to create a separate file with `Condition` in [tabular CSV format](../table-formats/condition.md).
 
 Create file __conditions.csv__ file inside __my_example__ with the following content.
 
@@ -228,7 +228,7 @@ To get the particular condition you can use the following syntax.
 ```julia
 condition1 = conditions(p)[:dose_1]
 +---------------------------------------------------------------------------
-| Cond contains:
+| Condition contains:
 |   0 saveat values: Float64[]. Use `saveat(cond)` for details.
 |   tspan: (0.0, 48.0). Use `tspan(cond)` for details.
 |   4 parameters(s). Use `parameters(cond)` for details.
@@ -236,7 +236,7 @@ condition1 = conditions(p)[:dose_1]
 +---------------------------------------------------------------------------
 ```
 
-See more about condition tables in [tabular CSV format](../table-formats/cond.md).
+See more about condition tables in [tabular CSV format](../table-formats/condition.md).
 
 ### Import from Excel tables
 
@@ -258,7 +258,7 @@ cond_df = read_conditions("./my_example/conditions.xlsx")
 
 ### Manual creation
 
-`Cond` objects can be created and loaded without any tables.
+`Condition` objects can be created and loaded without any tables.
 
 For example we need to create simulations with the default model 
 - `dose = 100`
@@ -272,7 +272,7 @@ Condition can be created with the following code
 # to get the default model
 model = models(p)[:nameless] 
 # creating condition
-new_condition = Cond(
+new_condition = Condition(
     model,
     parameters = [:dose=>100.],
     events_active = [:sw1=>false, :sw1=>true],
@@ -281,7 +281,7 @@ new_condition = Cond(
     ) 
 
 +---------------------------------------------------------------------------
-| Cond contains:
+| Condition contains:
 |   0 saveat values: Float64[]. Use `saveat(cond)` for details.
 |   tspan: (0.0, 1000.0). Use `tspan(cond)` for details.
 |   4 parameters(s). Use `parameters(cond)` for details.
@@ -289,7 +289,7 @@ new_condition = Cond(
 +---------------------------------------------------------------------------
 ```
 
-See more options in API docs for [`Cond`](@ref) function.
+See more options in API docs for [`Condition`](@ref) function.
 
 To load it into `Platform` container use the following syntax.
 
@@ -304,7 +304,7 @@ where `multiple_100` is an identifier for the condition in the dictionary.
 `Measurement` in HetaSimulator is representation of experimentally measured value for parameter identification.
 Each `Measurement` is associated with some particular condition, observable value and fixed time point.
 
-All measurements in the platform are used to calculate the log-likelihood function when required. Measurements are stored inside `Cond` objects.
+All measurements in the platform are used to calculate the log-likelihood function when required. Measurements are stored inside `Condition` objects.
 
 ### Import from CSV tables
 
@@ -372,16 +372,16 @@ There are three main problem types that can currently be solved with HetaSimulat
 
 Each method returns the solution of its specific type: `SimResults`, `MCResults` and `FitResults` or other types that include them.
 
-The methods can be applied on different levels: `Platform`, `Cond` or `Model` to allow applying all conditions in the platform, some of them or the default one.
+The methods can be applied on different levels: `Platform`, `Condition` or `Model` to allow applying all conditions in the platform, some of them or the default one.
 Some important "target vs method" variants are shown in the next table.
 
 Target | Method | Results | Comments
 -- | -- | -- | --
 `Platform` | `sim` | `Vector{Pair{Symbol,SimResults}}` | All or selected list of conditions in model will run
-`Cond` | `sim` | `SimResults` | Only target condition will run
+`Condition` | `sim` | `SimResults` | Only target condition will run
 `Model` | `sim` | `SimResults` | The condition created from default model's options will run
 `Platform` | `mc` | `Vector{Pair{Symbol,MCResults}}` | All or selected list of conditions in model will run multiple times.
-`Cond` | `mc` | `MCResults` | Target condition will run multiple times
+`Condition` | `mc` | `MCResults` | Target condition will run multiple times
 `Model` | `mc` | `SimResults` | The default condition will run multiple times
 `Platform` | `fit` | `FitResults` | All or selected list of conditions together their measurements will be used to optimize parameters.
 

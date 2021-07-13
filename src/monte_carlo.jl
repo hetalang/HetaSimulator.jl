@@ -1,7 +1,7 @@
 # single condition Monte-Carlo
 
 """
-    mc(cond::Cond,
+    mc(cond::Condition,
       params::Vector{<:Pair},
       num_iter::Int64;
       verbose=false,
@@ -12,12 +12,12 @@
       kwargs...
     )
 
-Run Monte-Carlo simulations with single condition `cond`. Returns [`MCResults`](@ref) type.
+Run Monte-Carlo simulations with single `Condition`. Returns [`MCResults`](@ref) type.
 Example: `mc(cond, [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 
 Arguments:
 
-- `cond` : simulation condition of type [`Cond`](@ref)
+- `cond` : simulation condition of type [`Condition`](@ref)
 - `params` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
 - `verbose` : print iteration progress. Default is `false`
@@ -28,7 +28,7 @@ Arguments:
 - kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
 function mc(
-  cond::Cond,
+  cond::Condition,
   params::Vector{P},
   num_iter::Int;
   verbose=false,
@@ -76,7 +76,7 @@ function mc(
 end
 
 """
-    mc(cond::Cond,
+    mc(cond::Condition,
       params::DataFrame,
       num_iter::Int64;
       kwargs...
@@ -87,13 +87,13 @@ Example: `mc(cond1, DataFrame(k2=rand(3),k3=rand(3)), 1000)`
 
 Arguments:
 
-- `cond` : simulation condition of type [`Cond`](@ref)
+- `cond` : simulation condition of type [`Condition`](@ref)
 - `params` : DataFrame with pre-generated parameters.
 - `num_iter` : number of Monte-Carlo iterations 
-- kwargs : other solver related arguments supported by `mc(cond::Cond, params::Vector, num_iter::Int64)`
+- kwargs : other solver related arguments supported by `mc(cond::Condition, params::Vector, num_iter::Int64)`
 """
 function mc(
-  cond::Cond,
+  cond::Condition,
   params::DataFrame;
   num_iter::Int= size(params)[1],
   kwargs...
@@ -141,14 +141,14 @@ Arguments:
 - `saveat` : time points, where solution should be saved. Default `nothing` values stands for saving solution at timepoints reached by the solver 
 - `tspan` : time span for the ODE problem
 - `save_scope` : should scope be saved together with solution. Default is `false`
-- kwargs : other solver related arguments supported by `mc(cond::Cond, params::Vector, num_iter::Int64)`
+- kwargs : other solver related arguments supported by `mc(cond::Condition, params::Vector, num_iter::Int64)`
 """
 function mc(
   model::Model,
   params::Vector{P},
   num_iter::Int;
 
-  ## arguments for Cond(::Model,...)
+  ## arguments for Condition(::Model,...)
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
   events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
   events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}}=(true,true), 
@@ -161,7 +161,7 @@ function mc(
   kwargs...
 ) where P<:Pair
 
-  cond = Cond(
+  cond = Condition(
     model; measurements,
     events_active, events_save, observables, saveat, tspan, save_scope, time_type)
 
@@ -187,7 +187,7 @@ Example: `mc([:c1=>cond1,:c2=>cond2], [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4
 
 Arguments:
 
-- `cond_pairs` : vector of pairs containing names and conditions of type [`Cond`](@ref)
+- `cond_pairs` : vector of pairs containing names and conditions of type [`Condition`](@ref)
 - `params` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
 - `verbose` : print iteration progress. Default is `false`
@@ -268,7 +268,7 @@ Example: `mc([cond1,cond2], [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1
 
 Arguments:
 
-- `cond_pairs` : vector of conditions of type [`Cond`](@ref)
+- `cond_pairs` : vector of conditions of type [`Condition`](@ref)
 - `params` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
 - kwargs : other solver related arguments supported by `mc(cond_pairs::Vector{<:Pair}, params::Vector, num_iter::Int64)`
