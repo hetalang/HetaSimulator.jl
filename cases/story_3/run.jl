@@ -49,3 +49,8 @@ res_df1 = DataFrame(res[1])
 mc_res = mc(p, [:kabs=>Normal(10.,1e-1), :kel=>Normal(0.2,1e-3)], 1000)
 mc_res |> DataFrame
 mc_res |> plot
+# plotd = plot(mc_res)
+# savefig(plotd, "sim3.png")
+
+# DataFrame(mc_res[:dose_1])
+# plot(mc_res[:dose_1])

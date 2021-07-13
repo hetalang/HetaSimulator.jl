@@ -498,8 +498,26 @@ To transform everything into `DataFrame`
 ```julia
 mc_df = DataFrame(mc_res)
 ```
+```julia
+998000×7 DataFrame
+    Row │ iter   t             A0           C1           C2           scope   condition   
+        │ Int64  Float64       Float64      Float64      Float64      Symbol  Symbol      
+────────┼─────────────────────────────────────────────────────────────────────────────────
+      1 │     1   0.0           0.0         0.0          0.0          ode_    multiple_15
+      2 │     1   0.0          15.0         0.0          0.0          sw2     multiple_15
+      3 │     1   6.66014e-6   14.999       0.000158714  1.59557e-10  ode_    multiple_15
+   ⋮    │   ⋮         ⋮             ⋮            ⋮            ⋮         ⋮          ⋮
+ 997998 │  1000  47.5835        4.55058e-7  0.210559     0.266633     ode_    dose_100
+ 997999 │  1000  47.9215        4.55058e-7  0.206089     0.260971     ode_    dose_100
+ 998000 │  1000  48.0           2.01668e-7  0.205065     0.259675     ode_    dose_100
+                                                                       997994 rows omitted
+```
 
 To plot everything use `plot`
 ```julia
 plot(mc_res)
 ```
+![fig3](./sim3.png)
+
+### Fitting
+

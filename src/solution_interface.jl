@@ -34,7 +34,7 @@ function layout_choice(n)
   n > 4  && return n
 end
 
-@recipe function plot(sim::Simulation; vars=observables(sim))
+@recipe function plot(sim::Simulation; vars = observables(sim))
   @assert !isempty(sim.vals) "Results don't contain output. You should probably add output observables to your model"
 
   time = sim.vals.t
@@ -118,6 +118,7 @@ end
 end
 
 ############################ DataFrames ########################################
+
 function DataFrame(s::Simulation)
   df = DataFrame(t=s.vals.t)
 
@@ -135,7 +136,7 @@ DataFrame(sr::SimResults) = DataFrame(sr.sim)
 
 function DataFrame(sr::Pair{Symbol,S}) where S<:SimResults
   df = DataFrame(last(sr))
-  df.condition = fill(first(sr), size(df, 1))
+  df[!, :condition] .= first(sr) # add new column
 
   return df
 end
@@ -159,7 +160,19 @@ function DataFrame(mcr::MCResults)
   return df
 end
 
-DataFrame(mcr::Pair{Symbol,S}) where S<:MCResults = DataFrame(last(mcr))
+function DataFrame(mcr::Pair{Symbol,S}) where S<:MCResults
+  df = DataFrame(last(mcr))
+  df[!, :condition] .= first(mcr) # add new column
+
+  return df
+end
+
+function DataFrame(res::Vector{Pair{Symbol,S}}) where S<:MCResults
+  df_vectors = DataFrame.(res)
+
+  return vcat(df_vectors...)
+end
+
 ############################ Save Results ########################################
 
 function save_results(filepath::String, sim::SimResults) 
