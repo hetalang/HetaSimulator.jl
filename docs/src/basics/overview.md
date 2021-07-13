@@ -521,3 +521,92 @@ plot(mc_res)
 
 ### Fitting
 
+To run optimization problem you need to do three steps:
+
+- Be sure that you measurement points are loaded in a proper way: referred `Condition`s exists, proper error model is chosen
+- If required add parameters responsible for noise distribution into a model code, like `sigma` etc.
+- select a set of constants which will be fitted and set initial values for them.
+
+For the presented example we uses normal distribution of measurement error with unknown variance parameter `sigma1`, `sigma2`, `sigma3` for doses 1, 10 and 100.
+
+We need to add this unknown parameters into the Heta code updating the initial model:
+
+```heta
+...
+A0 [sw2]= dose;
+
+// parameters for fitting
+sigma1 @Const = 0.1;
+sigma2 @Const = 0.1;
+sigma3 @Const = 0.1;
+```
+
+Take a note that the model compilation and loading `Condition`s  and `Measurement`s should be repeated because `p` object was rebuild.
+
+```julia
+p = load_platform("$HetaSimulatorDir/cases/story_3")
+
+cond_df = read_conditions("$HetaSimulatorDir/cases/story_3/conditions.csv")
+add_conditions!(p, cond_df)
+
+measurements_df = read_measurements("$HetaSimulatorDir/cases/story_3/measurements.csv")
+add_measurements!(p, measurements_df)
+```
+
+To check the initial simulated vs measured results the standard `plot` method can be used.
+
+```julia
+res0 = sim(p)
+plot(res0, yscale=:log, ylims=(1e-3,1e2))
+```
+
+![sim4](./sim4.png)
+
+Now let's run fitting.
+
+```julia
+to_fit = [
+    :kabs => 8.0,
+    :Q => 4.0,
+    :Vol1 => 6.0,
+    :kel => 2.2,
+    :sigma1 => 0.1,
+    :sigma2 => 0.1,
+    :sigma3 => 0.1,
+]
+fit_res = fit(p, to_fit)
+```
+```julia
++---------------------------------------------------------------------------
+| Fitting results:
+|   status: FTOL_REACHED
+|   optim: [:kabs => 9.70386210514378, :Q => 3.1637539835052744, :Vol1 => 3.4105990826839747, :kel => 0.2039430020237252, :sigma1 => 0.08224608344682492, :sigma2 => 0.06737692009766567, :sigma3 => 0.09149685023958987]. Access optim estimate with `optim(f::FitResults)`
+|   objective function value: 4164.535216417519. Access objective value with `obj(f::FitResults)`
+|   number of objective function evaluations: 170
++---------------------------------------------------------------------------
+```
+
+To get the list of optimal parameters values we should use `optim` function.
+
+```julia
+optim(fit_res)
+```
+```julia
+8-element Vector{Pair{Symbol, Float64}}:
+   :kabs => 9.70386210514378
+      :Q => 3.1637539835052744
+   :Vol1 => 3.4105990826839747
+    :kel => 0.2039430020237252
+ :sigma1 => 0.08224608344682492
+ :sigma2 => 0.06737692009766567
+ :sigma3 => 0.09149685023958987
+```
+
+You can simulate and plot results with the following code.
+
+```julia
+res_optim = sim(p, parameters_upd = optim(fit_res))
+plot(res_optim, yscale=:log, ylims=(1e-3,1e2))
+```
+
+![sim5](./sim5.png)

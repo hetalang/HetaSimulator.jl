@@ -54,3 +54,32 @@ mc_res |> plot
 
 # DataFrame(mc_res[:dose_1])
 # plot(mc_res[:dose_1])
+
+### Fitting
+
+res0 = sim(p)
+plot(res0, yscale=:log, ylims=(1e-3,1e2))
+# plotd = plot(res0, yscale=:log, ylims=(1e-3,1e2))
+# savefig(plotd, "sim4.png")
+
+to_fit = [
+    :kabs => 8.0,
+    :Q => 4.0,
+    :Vol1 => 6.0,
+    :kel => 2.2,
+    :sigma1 => 0.1,
+    :sigma2 => 0.1,
+    :sigma3 => 0.1,
+]
+fit_res = fit(p, to_fit)
+
+optim(fit_res)
+
+res_optim = sim(p, parameters_upd = optim(fit_res))
+plot(res_optim, yscale=:log, ylims=(1e-3,1e2))
+# plotd = plot(res_optim, yscale=:log, ylims=(1e-3,1e2))
+# savefig(plotd, "sim5.png")
+
+### to check
+res_x = sim(p, parameters_upd = [:kel => 2.2e-3])
+plot(res_x, yscale=:log, ylims=(1e-3,1e2))
