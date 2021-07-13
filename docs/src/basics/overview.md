@@ -21,7 +21,7 @@ All Heta modules: Heta code, tables, SBML and JSON can be loaded as a modeling p
 
 To read more about Heta-based modeling platforms and Heta compiler visit the homepage <https://hetalang.github.io/#/>.
 
-As an example we will use a model describing a simple pharmacokinetic model stored in single __.heta__ file. It is expected that the model code will be placed into "index.heta" file located in a directory __my_example__ or something like that.
+As an example we will use a model describing a simple pharmacokinetic model stored in single __.heta__ file. It is expected that the model code will be placed into "index.heta" file located in a directory __my\_example__ or something like that.
 
 ```julia
 // Compartments
@@ -152,7 +152,7 @@ A0 [sw2]= dose;
 #export {format: Julia, filepath: julia_platform};
 ```
 
-Running the code with the console command `heta build my_project` produces the file __my_project/dist/julia_platform/model.jl__ which can be loaded with [`load_jlplatform`](@ref) method.
+Running the code with the console command `heta build my_project` produces the file __my\_example/dist/julia\_platform/model.jl__ which can be loaded with [`load_jlplatform`](@ref) method.
 
 ```julia
 p = load_jlplatform("./my_example/dist/julia_platform/model.jl")
@@ -179,14 +179,14 @@ The condition-based approach is used to store pre-defined model's options: dose 
 
 The most simple way to populate a platform by conditions is to create a separate file with `Condition` in [tabular CSV format](../table-formats/condition.md).
 
-Create file __conditions.csv__ file inside __my_example__ with the following content.
+Create file __conditions.csv__ file inside __my\_example__ with the following content.
 
-id|parameters.dose|events_active.sw1|events_active.sw2
---|--|--|--
-dose_1|1|true|false
-dose_10|10|true|false
-dose_100|100|true|false
-multiple_15|15|false|true
+|id|parameters.dose|events_active.sw1|events_active.sw2|
+|---|---|---|---|
+|dose_1|1|true|false|
+|dose_10|10|true|false|
+|dose_100|100|true|false|
+|multiple_15|15|false|true|
 
 The table can be loaded with the [`read_conditions`](@ref) function.
 
@@ -310,12 +310,12 @@ All measurements in the platform are used to calculate the log-likelihood functi
 
 User can load measurement points from one or several tables which follow [table format](./table-formats/measurement).
 
-Create file __measurements.csv__ file inside __my_example__ with the following structure.
+Create file __measurements.csv__ file inside __my\_example__ with the following structure.
 
-_Full file can be downloaded from here: [measurements.csv](https://raw.githubusercontent.com/hetalang/hetasimulator/master/case/story_3/measurements.csv)_
+Full file can be downloaded from here: [measurements.csv](https://raw.githubusercontent.com/hetalang/hetasimulator/master/case/story_3/measurements.csv)
 
 t|measurement|prob.mean|prob.sigma|condition
---|--|--|--|--
+---|---|---|---|---
 0.08333|0.0686283|C1|sigma1|dose_1
 0.08333|0.0684679|C1|sigma1|dose_1
 0.08333|0.0726338|C1|sigma1|dose_1
@@ -376,7 +376,7 @@ The methods can be applied on different levels: `Platform`, `Condition` or `Mode
 Some important "target vs method" variants are shown in the next table.
 
 Target | Method | Results | Comments
--- | -- | -- | --
+--- | --- | --- | ---
 `Platform` | `sim` | `Vector{Pair{Symbol,SimResults}}` | All or selected list of conditions in model will run
 `Condition` | `sim` | `SimResults` | Only target condition will run
 `Model` | `sim` | `SimResults` | The condition created from default model's options will run
