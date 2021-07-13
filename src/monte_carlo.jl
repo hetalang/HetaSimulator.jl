@@ -208,7 +208,7 @@ function mc(
   parallel_type=EnsembleSerial(),
   kwargs...
 ) where {CP<:Pair, PP<:Pair}
-  
+
   params_nt = NamedTuple(params)
   params_pregenerated = [generate_cons(params_nt,i) for i in 1:num_iter]
   lp = length(params_pregenerated)
@@ -248,9 +248,10 @@ function mc(
   )
 
   ret = Vector{Pair{Symbol,MCResults}}(undef, lc)
+
   for i in 1:lc
-    ret[i] = first(cond_pairs[iter[i][2]]) => 
-      MCResults(solution.u[lp*(i-1)+1:i*lp], false, last(cond_pairs[iter[i][2]]))
+    ret[i] = first(cond_pairs[i]) => 
+      MCResults(solution.u[lp*(i-1)+1:i*lp], false, last(cond_pairs[i]))
   end
   return ret
 end
