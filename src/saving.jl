@@ -97,6 +97,7 @@ function saving_initialize(cb, u, t, integrator)
       end
       cb.affect!.saveiter = 0
   end
+  clear_savings(cb.affect!.saved_values)
   cb.affect!.save_start && cb.affect!(integrator, scope=:start_)
 end
 

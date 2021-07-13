@@ -1,6 +1,7 @@
 module HetaSimulator
 
-  using Base: func_for_method_checked
+  using DiffEqBase: isempty
+using Base: func_for_method_checked
 using Reexport
   # heta compiler support
   using NodeJS

@@ -121,6 +121,13 @@ struct SavedValues{uType,tType,scopeType}
   scope::scopeType
 end
 
+function clear_savings(sv::SavedValues)
+  !isempty(sv.u) && deleteat!(sv.u,1:length(sv.u))
+  !isempty(sv.t) && deleteat!(sv.t,1:length(sv.t))
+  !isempty(sv.scope) && deleteat!(sv.scope,1:length(sv.scope))
+  return nothing
+end
+
 struct Simulation{V,scopeType}
   vals::V
   scope::scopeType
