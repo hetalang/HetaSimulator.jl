@@ -41,9 +41,9 @@ v_distr @Reaction {actors: C1 = C2} := Q * (C1 - C2);
 
 // Parameters
 dose @Const = 20;
-kabs @Const = 10;
-kel @Const = 0.2;
-Q @Const = 3.2;
+kabs @Const = 20;
+kel @Const = 0.5;
+Q @Const = 1.0;
 
 // single dose event
 sw1 @TimeSwitcher {start: 0};
@@ -425,16 +425,19 @@ The whole solution can also be translated into `DataFrame`.
 res_df = DataFrame(res)
 ```
 ```julia
-964×6 DataFrame
- Row │ t             A0           C1           C2           scope   condition   
-     │ Float64       Float64      Float64      Float64      Symbol  Symbol      
-─────┼──────────────────────────────────────────────────────────────────────────
-   1 │  0.0           0.0         0.0          0.0          ode_    multiple_15
-   2 │  0.0          15.0         0.0          0.0          sw2     multiple_15
-  ⋮  │      ⋮             ⋮            ⋮            ⋮         ⋮          ⋮
- 963 │ 47.9581        4.55058e-7  0.201956     0.2561       ode_    dose_100
- 964 │ 48.0           2.99302e-7  0.201417     0.255416     ode_    dose_100
-                                                                960 rows omitted
+1031×6 DataFrame
+  Row │ t             A0            C1           C2           scope   condition   
+      │ Float64       Float64       Float64      Float64      Symbol  Symbol      
+──────┼───────────────────────────────────────────────────────────────────────────
+    1 │  0.0           0.0          0.0          0.0          ode_    multiple_15
+    2 │  0.0          15.0          0.0          0.0          sw2     multiple_15
+    3 │  3.33311e-6   14.999        0.000158714  2.49537e-11  ode_    multiple_15
+    4 │  3.66642e-5   14.989        0.00174525   3.0187e-9    ode_    multiple_15
+  ⋮   │      ⋮             ⋮             ⋮            ⋮         ⋮          ⋮
+ 1029 │ 45.1252       -3.9532e-26   0.0292381    0.108637     ode_    dose_100
+ 1030 │ 47.5238        3.29325e-27  0.0247767    0.0920607    ode_    dose_100
+ 1031 │ 48.0          -6.75365e-28  0.0239764    0.089087     ode_    dose_100
+                                                                 1024 rows omitted
 ```
 
 User can work with the solution component by using indexing by component number, like here `res[1]` or by condition id `res[:dose_1]`.
@@ -445,27 +448,19 @@ Any component can also be transformed into `DataFrame`.
 res_df1 = DataFrame(res[1])
 ```
 ```julia
-626×5 DataFrame
- Row │ t              A0           C1           C2           scope  
-     │ Float64        Float64      Float64      Float64      Symbol 
-─────┼──────────────────────────────────────────────────────────────
-   1 │   0.0           0.0         0.0          0.0          ode_
-   2 │   0.0          15.0         0.0          0.0          sw2
-   3 │   6.66622e-6   14.999       0.000158714  1.59703e-10  ode_
-   4 │   7.33284e-5   14.989       0.00174523   1.93194e-8   ode_
-   5 │   0.000739951  14.8894      0.0175482    1.96242e-6   ode_
-   6 │   0.00527893   14.2287      0.122199     9.82366e-5   ode_
-   7 │   0.0141793    13.017       0.313149     0.000686265  ode_
-   8 │   0.027481     11.3957      0.566335     0.00245837   ode_
-  ⋮  │       ⋮             ⋮            ⋮            ⋮         ⋮
- 620 │ 166.734         4.55058e-7  0.193317     0.245144     ode_
- 621 │ 167.085         4.55058e-7  0.189038     0.239719     ode_
- 622 │ 167.436         4.55058e-7  0.184854     0.234413     ode_
- 623 │ 167.786         4.55058e-7  0.180762     0.229224     ode_
- 624 │ 168.0           7.00046e-8  0.178314     0.22612      ode_
- 625 │ 168.0           7.00046e-8  0.178314     0.22612      ode_
- 626 │ 168.0          15.0         0.178314     0.22612      sw2
-                                                    611 rows omitted
+702×6 DataFrame
+ Row │ t              A0            C1           C2           scope   condition   
+     │ Float64        Float64       Float64      Float64      Symbol  Symbol      
+─────┼────────────────────────────────────────────────────────────────────────────
+   1 │   0.0           0.0          0.0          0.0          ode_    multiple_15
+   2 │   0.0          15.0          0.0          0.0          sw2     multiple_15
+   3 │   3.33311e-6   14.999        0.000158714  2.49537e-11  ode_    multiple_15
+   4 │   3.66642e-5   14.989        0.00174525   3.0187e-9    ode_    multiple_15
+  ⋮  │       ⋮             ⋮             ⋮            ⋮         ⋮          ⋮
+ 700 │ 168.0           2.79899e-18  0.0232934    0.0865488    ode_    multiple_15
+ 701 │ 168.0           2.79899e-18  0.0232934    0.0865488    ode_    multiple_15
+ 702 │ 168.0          15.0          0.0232934    0.0865488    sw2     multiple_15
+                                                                  695 rows omitted
 ```
 
 The component can also be plotted.
@@ -499,18 +494,23 @@ To transform everything into `DataFrame`
 mc_df = DataFrame(mc_res)
 ```
 ```julia
-998000×7 DataFrame
+946000×7 DataFrame
     Row │ iter   t             A0           C1           C2           scope   condition   
         │ Int64  Float64       Float64      Float64      Float64      Symbol  Symbol      
 ────────┼─────────────────────────────────────────────────────────────────────────────────
-      1 │     1   0.0           0.0         0.0          0.0          ode_    multiple_15
+      1 │     1   0.0           0.0         0.0          0.0          ode_    multiple_15 
       2 │     1   0.0          15.0         0.0          0.0          sw2     multiple_15
-      3 │     1   6.66014e-6   14.999       0.000158714  1.59557e-10  ode_    multiple_15
+      3 │     1   6.67001e-6   14.999       0.000158714  4.99357e-11  ode_    multiple_15
+      4 │     1   7.33701e-5   14.989       0.00174525   6.04082e-9   ode_    multiple_15
+      5 │     1   0.000740371  14.8894      0.0175505    6.13689e-7   ode_    multiple_15
+      6 │     1   0.00602741   14.1231      0.139042     3.99353e-5   ode_    multiple_15
    ⋮    │   ⋮         ⋮             ⋮            ⋮            ⋮         ⋮          ⋮
- 997998 │  1000  47.5835        4.55058e-7  0.210559     0.266633     ode_    dose_100
- 997999 │  1000  47.9215        4.55058e-7  0.206089     0.260971     ode_    dose_100
- 998000 │  1000  48.0           2.01668e-7  0.205065     0.259675     ode_    dose_100
-                                                                       997994 rows omitted
+ 945996 │  1000  46.6664        4.55058e-7  0.247023     0.484307     ode_    dose_100
+ 945997 │  1000  47.0172        4.55058e-7  0.243049     0.476516     ode_    dose_100
+ 945998 │  1000  47.3681        4.55059e-7  0.239139     0.46885      ode_    dose_100
+ 945999 │  1000  47.719         4.55058e-7  0.235292     0.461307     ode_    dose_100
+ 946000 │  1000  48.0           1.28404e-7  0.232256     0.455355     ode_    dose_100
+                                                                       945989 rows omitted
 ```
 
 To plot everything use `plot`
@@ -568,7 +568,6 @@ Now let's run fitting.
 to_fit = [
     :kabs => 8.0,
     :Q => 4.0,
-    :Vol1 => 6.0,
     :kel => 2.2,
     :sigma1 => 0.1,
     :sigma2 => 0.1,
@@ -580,9 +579,9 @@ fit_res = fit(p, to_fit)
 +---------------------------------------------------------------------------
 | Fitting results:
 |   status: FTOL_REACHED
-|   optim: [:kabs => 9.70386210514378, :Q => 3.1637539835052744, :Vol1 => 3.4105990826839747, :kel => 0.2039430020237252, :sigma1 => 0.08224608344682492, :sigma2 => 0.06737692009766567, :sigma3 => 0.09149685023958987]. Access optim estimate with `optim(f::FitResults)`
-|   objective function value: 4164.535216417519. Access objective value with `obj(f::FitResults)`
-|   number of objective function evaluations: 170
+|   optim: [:kabs => 9.664612290142436, :Q => 3.182280353785782, :kel => 0.20333675237278281, :sigma1 => 0.20073592014870978, :sigma2 => 0.15748031874469834, :sigma3 => 0.11672689231044918]. Access optim estimate with `optim(f::FitResults)`
+|   objective function value: 4164.493819852298. Access objective value with `obj(f::FitResults)`
+|   number of objective function evaluations: 134
 +---------------------------------------------------------------------------
 ```
 
@@ -592,14 +591,13 @@ To get the list of optimal parameters values we should use `optim` function.
 optim(fit_res)
 ```
 ```julia
-8-element Vector{Pair{Symbol, Float64}}:
-   :kabs => 9.70386210514378
-      :Q => 3.1637539835052744
-   :Vol1 => 3.4105990826839747
-    :kel => 0.2039430020237252
- :sigma1 => 0.08224608344682492
- :sigma2 => 0.06737692009766567
- :sigma3 => 0.09149685023958987
+6-element Vector{Pair{Symbol, Float64}}:
+   :kabs => 9.664612290142436
+      :Q => 3.182280353785782
+    :kel => 0.20333675237278281
+ :sigma1 => 0.20073592014870978
+ :sigma2 => 0.15748031874469834
+ :sigma3 => 0.11672689231044918
 ```
 
 You can simulate and plot results with the following code.

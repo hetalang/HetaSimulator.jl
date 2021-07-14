@@ -65,7 +65,6 @@ plot(res0, yscale=:log, ylims=(1e-3,1e2))
 to_fit = [
     :kabs => 8.0,
     :Q => 4.0,
-    :Vol1 => 6.0,
     :kel => 2.2,
     :sigma1 => 0.1,
     :sigma2 => 0.1,
@@ -81,5 +80,5 @@ plot(res_optim, yscale=:log, ylims=(1e-3,1e2))
 # savefig(plotd, "sim5.png")
 
 ### to check
-res_x = sim(p, parameters_upd = [:kel => 2.2e-3])
+res_x = sim(p, parameters_upd = [:kabs => 20.0, :Q => 1.0, :kel => 5.0e-01])
 plot(res_x, yscale=:log, ylims=(1e-3,1e2))
