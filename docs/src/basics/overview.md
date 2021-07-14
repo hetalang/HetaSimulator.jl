@@ -391,6 +391,8 @@ See more information for each method in extended description: [sim explanations]
 
 ### Simulation
 
+See more details about `sim` method in [sim method](./sim.md) chapter.
+
 On the previous steps we created the platform `p` and populated it with 4 conditions and measurement points.
 
 Without additional preparations we can simulate the platform which means running all 4 conditions and combining all results into one object.
