@@ -102,12 +102,14 @@ mccond1 = HetaSimulator.Condition(
     parameters = [:k1=>0.01],
     saveat = [50., 80., 150.]
     );
+
 mccond2 = HetaSimulator.Condition(
     model;
     tspan = (0., 200.),
     parameters = [:k1=>0.02],
     saveat = [50., 100., 200.]
     );
+    
 mccond3 = HetaSimulator.Condition(
     model; 
     tspan = (0., 200.),

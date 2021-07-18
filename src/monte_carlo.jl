@@ -43,7 +43,8 @@ function mc(
   init_func = cond.init_func
   params_nt = NamedTuple(params)
 
-  p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50)
+  progress_on = (parallel_type == EnsembleSerial()) # tmp fix
+  p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled = progress_on)
 
   function prob_func(prob,i,repeat)
     verbose && println("Processing iteration $i")
@@ -215,7 +216,8 @@ function mc(
   lc = length(cond_pairs)
   iter = collect(Iterators.product(1:lp,1:lc))
 
-  p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50)
+  progress_on = (parallel_type == EnsembleSerial()) # tmp fix
+  p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled=progress_on)
 
   function prob_func(prob,i,repeat)
     iter_i = iter[i]

@@ -138,7 +138,11 @@ function sim(
 
   isempty(condition_pairs) && return SimResults[] # BRAKE
 
+  progress_on = (parallel_type == EnsembleSerial()) # tmp fix
+  p = Progress(length(condition_pairs), dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled=progress_on)
+
   function prob_func(prob,i,repeat)
+    next!(p)
     prob_i = last(condition_pairs[i]).prob
     init_func_i = last(condition_pairs[i]).init_func
     !isnothing(parameters_upd) ? 
