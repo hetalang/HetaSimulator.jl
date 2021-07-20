@@ -1,8 +1,7 @@
 module HetaSimulator
 
   using DiffEqBase: isempty
-using Base: func_for_method_checked
-using Reexport
+  using Reexport
   # heta compiler support
   using NodeJS
   # diffeq-related pkgs

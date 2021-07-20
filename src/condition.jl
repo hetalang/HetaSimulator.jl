@@ -96,9 +96,11 @@ function _add_condition!(platform::Platform, row::Any) # maybe not any
       if splitted_key[1] == CONSTANT_PREFIX
         push!(_parameters, Symbol(splitted_key[2]) => row[key])
       elseif splitted_key[1] == SWITCHER_PREFIX
-        push!(_events_active, Symbol(splitted_key[2]) => row[key])
+        push!(_events_active, Symbol(splitted_key[2]) => bool(row[key]))
       elseif splitted_key[1] == SWITCHER_SAVE_PREFIX
-        push!(_events_save, Symbol(splitted_key[2]) => eval(Meta.parse(row[key]))) ## ugly
+        save_evt_vec = split(row[key], ";")
+        @assert length(save_evt_vec) == 2 "Events saving setup accepts two values (e.g. true;false). Check the conditions table."
+        push!(_events_save, Symbol(splitted_key[2]) => (bool(save_evt_vec[1]), bool(save_evt_vec[2])))
       end
     end
   end

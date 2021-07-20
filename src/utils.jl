@@ -66,3 +66,10 @@ end
 
 float64(n::Number) = Float64(n)
 float64(m::Missing) = m
+
+bool(i::Int) = Bool(i)
+function bool(s::AbstractString) 
+  s == "TRUE" && return true
+  s == "FALSE" && return false
+  return parse(Bool, s)
+end
