@@ -1,4 +1,5 @@
-# single condition Monte-Carlo
+# RemoteChannel used for progress monitoring in parallel setup
+const progch = RemoteChannel(()->Channel{Bool}(), 1)
 
 """
     mc(cond::Condition,
@@ -44,12 +45,12 @@ function mc(
   init_func = cond.init_func
   params_nt = NamedTuple(params)
 
-  progress_on = (parallel_type == EnsembleSerial()) # tmp fix
+  progress_on = true #(parallel_type == EnsembleSerial()) # tmp fix
   p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled = progress_on)
 
   function prob_func(prob,i,repeat)
     verbose && println("Processing iteration $i")
-    next!(p)
+    parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true)
     update_init_values(prob, init_func, generate_cons(params_nt,i))
   end
 
@@ -64,15 +65,35 @@ function mc(
     #reduction = reduction_func
   )
 
-  solution = solve(prob, alg, parallel_type;
-    trajectories = num_iter,
-    reltol = reltol,
-    abstol = abstol,
-    save_start = false,
-    save_end = false,
-    save_everystep = false,
-    kwargs...
-  )
+  if parallel_type != EnsembleDistributed()
+    solution = solve(prob, alg, parallel_type;
+      trajectories = num_iter,
+      reltol = reltol,
+      abstol = abstol,
+      save_start = false,
+      save_end = false,
+      save_everystep = false,
+      kwargs...
+    )
+  else
+    @sync begin
+      @async while take!(progch)
+        next!(p)
+      end
+      @async begin
+        solution = solve(prob, alg, parallel_type;
+          trajectories = num_iter,
+          reltol = reltol,
+          abstol = abstol,
+          save_start = false,
+          save_end = false,
+          save_everystep = false,
+          kwargs...
+        )
+        put!(progch, false)
+      end
+    end
+  end
 
   return MCResults(solution.u, !has_saveat(cond), cond)
 end
@@ -220,13 +241,13 @@ function mc(
   lc = length(cond_pairs)
   iter = collect(Iterators.product(1:lp,1:lc))
 
-  progress_on = (parallel_type == EnsembleSerial()) # tmp fix
-  p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled=progress_on)
+
+  p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled=true)
 
   function prob_func(prob,i,repeat)
     iter_i = iter[i]
     verbose && println("Processing condition $(iter_i[2]) iteration $(iter_i[1])")
-    next!(p)
+    parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true)
     prob_i = last(cond_pairs[iter_i[2]]).prob
     init_i = last(cond_pairs[iter_i[2]]).init_func
     update_init_values(prob_i, init_i, params_pregenerated[iter_i[1]])
@@ -243,15 +264,35 @@ function mc(
     #reduction = reduction_func
   )
 
-  solution = solve(prob, alg, parallel_type;
-    trajectories = lp*lc,
-    reltol = reltol,
-    abstol = abstol,
-    save_start = false,
-    save_end = false,
-    save_everystep = false,
-    kwargs...
-  )
+  if parallel_type != EnsembleDistributed()
+    solution = solve(prob, alg, parallel_type;
+      trajectories = lp*lc,
+      reltol = reltol,
+      abstol = abstol,
+      save_start = false,
+      save_end = false,
+      save_everystep = false,
+      kwargs...
+    )
+  else
+    @sync begin
+      @async while take!(progch)
+        next!(p)
+      end
+      @async begin
+        solution = solve(prob, alg, parallel_type;
+          trajectories = lp*lc,
+          reltol = reltol,
+          abstol = abstol,
+          save_start = false,
+          save_end = false,
+          save_everystep = false,
+          kwargs...
+        )
+        put!(progch, false)
+      end
+    end
+  end
 
   ret = Vector{Pair{Symbol,MCResults}}(undef, lc)
 
