@@ -23,6 +23,7 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
     ) where C<:AbstractCond
 
 Fit parameters to experimental measurements. Returns `FitResults` type.
+
 Example: `fit([:x=>cond2, :y=>cond3, :z=>cond4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
 
 Arguments:
@@ -154,6 +155,7 @@ end
     ) where C<:AbstractCond
 
 Fit parameters to experimental measurements. Returns `FitResults` type.
+
 Example: `fit([cond2, cond3, cond4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
 
 Arguments:
@@ -180,6 +182,7 @@ end
     ) where C<:AbstractCond
 
 Fit parameters to experimental measurements. Returns `FitResults` type.
+
 Example: `fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3];conditions=[:cond2,:cond3])`
 
 Arguments:

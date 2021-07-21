@@ -174,8 +174,17 @@ function DataFrame(res::Vector{Pair{Symbol,S}}) where S<:MCResults
 end
 
 ############################ Save Results ########################################
+"""
+    save_results(filepath::String, sim::AbstractResults) 
 
-function save_results(filepath::String, sim::SimResults) 
+Save results as csv file
+
+Arguments:
+
+- `filepath`: path and name of the file to write to
+- `sim`: simulation results of `AbstractResults` type
+"""
+function save_results(filepath::String, sim::AbstractResults) 
   df = DataFrame(sim)
   CSV.write(filepath, df, delim=";")
 end

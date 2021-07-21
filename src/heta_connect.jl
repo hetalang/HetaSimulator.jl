@@ -10,6 +10,10 @@ const MODEL_NAME = "model.jl"
     heta_update(version::String)
 
 Installs heta-compiler from NPM.
+
+Arguments:
+
+- `version` : `heta compiler` version. If the value is not provided, `heta_update` installs the latest version of `heta compiler` 
 """
 heta_update() = run(`$NPM_PATH i -g heta-compiler --prefix $NODE_DIR`)
 # install particular version
@@ -32,6 +36,22 @@ heta_update_dev(branch::String = "master") = run(`$NPM_PATH i -g https://github.
     )
 
 Builds the model from Heta-based reactions
+
+See `heta comiler` docs for details:
+https://hetalang.github.io/#/heta-compiler/cli-references?id=running-build-with-cli-options
+
+Arguments:
+
+- `heta_index` : path to `heta.index` file
+- `declaration` : path to declaration file. Default is `"platform"`
+- `skip_export` : if set to `true` no files will be created. Default is `false`
+- `log_mode` : log mode. Default is `"error"`
+- `debug` : turn on debug mode. Default is `false`
+- `julia_only` : export only julia-based model. Default is `false`
+- `dist_dir` : directory path, where to write distributives to. Default is `"dist"`
+- `meta_dir` : meta directory path. Default is `"meta"`
+- `source` : path to the main heta module. Default is `"index.heta"`
+- `type` : type of the source file. Default is `"heta"`
 """
 function heta_build(
   heta_index::AbstractString;
@@ -96,19 +116,29 @@ end
       kwargs...
     )
 
-Converts heta model to Julia and outputs platform type
+Converts heta model to Julia and outputs `Platform` type.
+
+See `heta comiler` docs for details:
+https://hetalang.github.io/#/heta-compiler/cli-references?id=running-build-with-cli-options
+
+Arguments:
+
+- `heta_index` : path to `heta.index` file
+- `rm_out` : should the file with Julia model be removed after the model is loaded. Default is `true`
+- `julia_only` : export only julia-based model. Default is `true`
+- `dist_dir` : directory path, where to write distributives to. Default is `"."`
+- kwargs : other arguments supported by `heta_build`
+
 """
 function load_platform(
   heta_index::AbstractString;
   rm_out::Bool = true,
   julia_only::Bool = true, 
   dist_dir::String = ".",
-  source::String = "index.heta",
-  type::String = "heta",
   kwargs...
 )
   # convert heta model to julia 
-  build_exitcode = heta_build(heta_index; julia_only, dist_dir, source, type, kwargs...)
+  build_exitcode = heta_build(heta_index; julia_only, dist_dir, kwargs...)
     
   # check the exitcode (0 - success, 1 - failure) 
   build_exitcode == 1 && throw("Compilation errors. Likely there is an error in the code of the model. See logs")
@@ -126,7 +156,12 @@ end
       rm_out::Bool = false
     )
 
-Loads prebuild julia model as part of platform
+Loads prebuild julia model as part of `Platform`
+
+Arguments:
+
+- `model_jl` : path to Julia model file
+- `rm_out` : should the file with Julia model be removed after the model is loaded. Default is `false`
 """
 function load_jlplatform(
   model_jl::AbstractString; 
@@ -147,6 +182,19 @@ function load_jlplatform(
 end
 
 # tmp solution to add model only
+"""
+    load_jlmodel(  
+      model_jl::AbstractString; 
+      rm_out::Bool = false
+    )
+
+Loads prebuild julia model without `Platform`
+
+Arguments:
+
+- `model_jl` : path to Julia model file
+- `rm_out` : should the file with Julia model be removed after the model is loaded. Default is `false`
+"""
 function load_jlmodel(model_jl::AbstractString; rm_out::Bool = false)
   platform = load_jlplatform(model_jl; rm_out = rm_out)
   

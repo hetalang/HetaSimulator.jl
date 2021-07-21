@@ -19,6 +19,7 @@ const OBSERVABLES_HEADER = Symbol("observables[]")
     )
 
 Builds simulation condition of type [`Condition`](@ref)
+
 Example: `Condition(model; tspan = (0., 200.), saveat = [0.0, 150., 250.])`
 
 Arguments:
@@ -65,6 +66,21 @@ function add_conditions!(
 end
 
 # DataFrame methods
+"""
+    add_conditions!(
+      platform::Platform,
+      df::DataFrame;
+      subset::AbstractVector{P} = Pair{Symbol, Symbol}[]
+    ) where P <: Pair{Symbol, Symbol}
+
+Adds a new `Condition` to the `Platform`
+
+Arguments:
+
+- `platform` : platform of [`Platform`](@ref) type
+- `df` : `DataFrame` with conditions setup, typically obtained with [`read_conditions`](@ref) function
+- `subset` : subset of conditions which will be added to the `platform`. Default `Pair{Symbol, Symbol}[]` adds all conditions from the `df`
+"""
 function add_conditions!(
   platform::Platform,
   df::DataFrame;
@@ -161,6 +177,17 @@ function read_conditions_xlsx(filepath::String, sheet=1; kwargs...)
   return df
 end
 
+"""
+    read_conditions(filepath::String, sheet=1; kwargs...)
+
+Reads table file with conditions to `DataFrame`
+
+Arguments:
+
+- `filepath` : path to table file. Supports ".csv" and ".xlsx" files
+- `sheet` : number of sheet in case of ".xlsx" file. Default is `1`
+- kwargs : other arguments supported by `CSV.File`
+"""
 function read_conditions(filepath::String, sheet=1; kwargs...)
   ext = splitext(filepath)[end]
 

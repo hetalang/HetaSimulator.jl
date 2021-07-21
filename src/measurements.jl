@@ -45,7 +45,21 @@ function add_measurements!(
 end
 
 # DataFrame methods
+"""
+    add_measurements!(
+      condition::Condition,
+      df::DataFrame;
+      kwargs...
+    )
 
+Adds measurements to `Condition`
+
+Arguments:
+
+- `condition` : simulation condition of type [`Condition`](@ref)
+- `df` : `DataFrame` with measurements, typically obtained with [`read_measurements`](@ref) function
+- `subset` : subset of measurements which will be added to the `Condition`. Default `Pair{Symbol, Symbol}[]` adds all measurements from the `df`
+"""
 function add_measurements!(
   condition::Condition,
   df::DataFrame;
@@ -54,6 +68,21 @@ function add_measurements!(
   add_measurements!(condition, eachrow(df); kwargs...)
 end
 
+"""
+    add_measurements!(
+      platform::Platform,
+      df::DataFrame;
+      kwargs...
+    )
+
+Adds measurements to `Condition`
+
+Arguments:
+
+- `platform` : platform of [`Platform`](@ref) type
+- `df` : `DataFrame` with measurements, typically obtained with [`read_measurements`](@ref) function
+- `subset` : subset of measurements which will be added to the `Condition`. Default `Pair{Symbol, Symbol}[]` adds all measurements from the `df`
+"""
 function add_measurements!(
   platform::Platform,
   df::DataFrame;
@@ -110,6 +139,17 @@ function read_measurements_xlsx(filepath::String, sheet=1; kwargs...)
   return df
 end
 
+"""
+    read_measurements(filepath::String, sheet=1; kwargs...)
+
+Reads table file with measurements to `DataFrame`
+
+Arguments:
+
+- `filepath` : path to table file. Supports ".csv" and ".xlsx" files
+- `sheet` : number of sheet in case of ".xlsx" file. Default is `1`
+- kwargs : other arguments supported by `CSV.File`
+"""
 function read_measurements(filepath::String, sheet=1; kwargs...)
   ext = splitext(filepath)[end]
 

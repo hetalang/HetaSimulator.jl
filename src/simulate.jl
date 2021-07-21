@@ -15,6 +15,7 @@ const EMPTY_PROBLEM = ODEProblem(() -> nothing, [0.0], (0.,1.))
       kwargs...)
 
 Simulate single condition `cond`. Returns [`SimResults`](@ref) type.
+
 Example: `Condition(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]) |> sim`
 
 Arguments:
@@ -64,6 +65,7 @@ build_results(sol::SciMLBase.AbstractODESolution, cond) = SimResults(build_resul
       kwargs...)
 
 Simulate model of type [`Model`](@ref). Returns [`SimResults`](@ref) type.
+
 Example: `sim(model; tspan = (0., 200.), parameters_upd = [:k1=>0.01])`
 
 Arguments:
@@ -113,6 +115,7 @@ end
       kwargs...) where P<:Pair
 
 Simulate multiple conditions. Returns `Vector{Pair}`.
+
 Example: `sim([:x => cond1, :y=>cond2, :z=>cond3])`
 
 Arguments:
@@ -179,6 +182,7 @@ end
     sim(conditions::AbstractVector{C}; kwargs...) where {C<:AbstractCond}
 
 Simulate multiple conditions. Returns `Vector{Pair}`.
+
 Example: `sim([cond1, cond2, cond3])`
 
 Arguments:
@@ -202,6 +206,7 @@ end
       kwargs...) where {C<:AbstractCond}
 
 Simulate conditions included in platform. Returns `Vector{Pair}`.
+
 Example: `sim(platform)`
 
 Arguments:

@@ -13,6 +13,7 @@
     )
 
 Run Monte-Carlo simulations with single `Condition`. Returns [`MCResults`](@ref) type.
+
 Example: `mc(cond, [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 
 Arguments:
@@ -84,6 +85,7 @@ end
     )
 
 Run Monte-Carlo simulations with single condition `cond`. Returns [`MCResults`](@ref) type.
+
 Example: `mc(cond1, DataFrame(k2=rand(3),k3=rand(3)), 1000)`
 
 Arguments:
@@ -128,6 +130,7 @@ end
     )
 
 Run Monte-Carlo simulations with `Model`. Returns [`MCResults`](@ref) type.
+
 Example: `mc(model, [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 
 Arguments:
@@ -184,6 +187,7 @@ end
     )
 
 Run Monte-Carlo simulations with single condition `cond`. Returns `Vector{MCResults}` type.
+
 Example: `mc([:c1=>cond1,:c2=>cond2], [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 
 Arguments:
@@ -266,6 +270,7 @@ end
     )
 
 Run Monte-Carlo simulations with single condition `cond`. Returns `Vector{MCResults}` type.
+
 Example: `mc([cond1,cond2], [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 
 Arguments:
@@ -294,6 +299,7 @@ end
     )
 
 Run Monte-Carlo simulations with single condition `cond`. Returns `Vector{MCResults}` type.
+
 Example: `mc(platform, [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 
 Arguments:
@@ -346,4 +352,13 @@ generate_cons(v::Distribution,i) = rand(v)
 generate_cons(v::Real,i) = v
 generate_cons(v::Vector{R},i) where R<:Float64 = v[i]
 
+"""
+    read_mcvecs(filepath::String)
+
+Read table with pre-generated parameters for Monte-Carlo simulations. Typically used for virtual patients simulations
+
+Arguments:
+
+- `filepath`: path to the file with pre-generated parameters
+"""
 read_mcvecs(filepath::String) = DataFrame(CSV.File(filepath))
