@@ -20,8 +20,8 @@ Example: `Condition(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]) |> si
 
 Arguments:
 
-- `cond` : simulation condition of type [`Condition`](@ref)
-- `parameters_upd` : constants, which overwrite both `Model` and `Condition` constants. Default is `nothing`
+- `cond` : simulation condition of type [`HetaSimulator.Condition`](@ref)
+- `parameters_upd` : constants, which overwrite both `Model` and `HetaSimulator.Condition` constants. Default is `nothing`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -120,7 +120,7 @@ Example: `sim([:x => cond1, :y=>cond2, :z=>cond3])`
 
 Arguments:
 
-- `condition_pairs` : vector of pairs containing names and conditions of type [`Condition`](@ref)
+- `condition_pairs` : vector of pairs containing names and conditions of type [`HetaSimulator.Condition`](@ref)
 - `parameters_upd` : constants, which overwrite both `Model` and `Condition` constants. Default is `nothing`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
@@ -187,7 +187,7 @@ Example: `sim([cond1, cond2, cond3])`
 
 Arguments:
 
-- `conditions` : `Vector` containing names and conditions of type [`Condition`](@ref)
+- `conditions` : `Vector` containing names and conditions of type [`HetaSimulator.Condition`](@ref)
 - kwargs : other kwargs supported by `sim(condition_pairs::Vector{Pair})`
 """
 function sim(

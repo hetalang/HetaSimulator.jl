@@ -289,7 +289,7 @@ new_condition = Condition(
 +---------------------------------------------------------------------------
 ```
 
-See more options in API docs for [`Condition`](@ref) function.
+See more options in API docs for [`HetaSimulator.Condition`](@ref) function.
 
 To load it into `Platform` container use the following syntax.
 

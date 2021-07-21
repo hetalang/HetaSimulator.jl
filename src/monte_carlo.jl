@@ -19,7 +19,7 @@ Example: `mc(cond, [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 
 Arguments:
 
-- `cond` : simulation condition of type [`Condition`](@ref)
+- `cond` : simulation condition of type [`HetaSimulator.Condition`](@ref)
 - `params` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
 - `verbose` : print iteration progress. Default is `false`
@@ -111,7 +111,7 @@ Example: `mc(cond1, DataFrame(k2=rand(3),k3=rand(3)), 1000)`
 
 Arguments:
 
-- `cond` : simulation condition of type [`Condition`](@ref)
+- `cond` : simulation condition of type [`HetaSimulator.Condition`](@ref)
 - `params` : DataFrame with pre-generated parameters.
 - `num_iter` : number of Monte-Carlo iterations 
 - kwargs : other solver related arguments supported by `mc(cond::Condition, params::Vector, num_iter::Int64)`
@@ -213,7 +213,7 @@ Example: `mc([:c1=>cond1,:c2=>cond2], [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4
 
 Arguments:
 
-- `cond_pairs` : vector of pairs containing names and conditions of type [`Condition`](@ref)
+- `cond_pairs` : vector of pairs containing names and conditions of type [`HetaSimulator.Condition`](@ref)
 - `params` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
 - `verbose` : print iteration progress. Default is `false`
@@ -316,7 +316,7 @@ Example: `mc([cond1,cond2], [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1
 
 Arguments:
 
-- `cond_pairs` : vector of conditions of type [`Condition`](@ref)
+- `cond_pairs` : vector of conditions of type [`HetaSimulator.Condition`](@ref)
 - `params` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
 - kwargs : other solver related arguments supported by `mc(cond_pairs::Vector{<:Pair}, params::Vector, num_iter::Int64)`

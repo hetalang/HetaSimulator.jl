@@ -18,8 +18,7 @@ const OBSERVABLES_HEADER = Symbol("observables[]")
       save_scope::Bool = true,
     )
 
-Builds simulation condition of type [`Condition`](@ref)
-
+Builds simulation condition of type [`HetaSimulator.Condition`](@ref)
 Example: `Condition(model; tspan = (0., 200.), saveat = [0.0, 150., 250.])`
 
 Arguments:
