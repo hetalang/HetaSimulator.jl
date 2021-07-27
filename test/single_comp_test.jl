@@ -24,4 +24,4 @@ cond = HetaSimulator.Condition(model; parameters = [:k1=>0.02], tspan = (0., 200
 @test parameters(cond)[:k1] == 0.02
 
 cs = sim(cond)
-@test typeof(s) <: HetaSimulator.SimResults
+@test typeof(cs) <: HetaSimulator.SimResults
