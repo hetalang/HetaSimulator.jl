@@ -72,7 +72,7 @@ As a result the Platform will contain three measurements.
 These operations are equivalent of manually created `Measurement` objects.
 
 ```julia
-# dataone = Condition(...)
+# dataone = HetaSimulator.Condition(...)
 
 m1 = NormalMeasurementPoint(2, 8.461539334, :ode, :a, 1)
 m2 = NormalMeasurementPoint(4, 7.333333812, :ode, :a, 1.2)

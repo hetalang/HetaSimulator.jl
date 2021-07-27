@@ -12,7 +12,7 @@ The first row is intended for headers which clarify the columns meaning. The seq
 
 - `model` : a `String` identifier of model which will be used for simulations. The default value is `nameless`.
 
-- `parameter.<id>` (optional) : a `Float64` value which updates and fixes the value of model's `Const` with the corresponding id. Missing value does not updates the parameter's value and is ignored.
+- `parameters.<id>` (optional) : a `Float64` value which updates and fixes the value of model's `Const` with the corresponding id. Missing value does not updates the parameter's value and is ignored.
 
 - `saveat[]` (* optional) : a set of `Float64` values separated by semicolons. The values states the time points for simulated output.
 
@@ -81,7 +81,7 @@ As a result the Platform will contain three conditions: cond1, cond2, cond3.
 These operations are equivalent of manually created `Condition` objects.
 
 ```julia
-cond1 = Condition(
+cond1 = HetaSimulator.Condition(
   platform.models[:nameless];
   parameters = [:k2=>0.001, :k3=>0.02],
   saveat = [0, 12, 24, 48, 72, 120, 150],
@@ -90,7 +90,7 @@ cond1 = Condition(
 )
 push!(platform.conditions, :cond1=>cond1)
 
-cond2 = Condition(
+cond2 = HetaSimulator.Condition(
   platform.models[:nameless];
   parameters = [:k1=>0.001],
   tspan = (0., 1000.),
@@ -98,7 +98,7 @@ cond2 = Condition(
 )
 push!(platform.conditions, :cond2=>cond2)
 
-cond3 = Condition(
+cond3 = HetaSimulator.Condition(
   platform.models[:another_model];
   parameters = [:k2=>0.001],
   saveat = [0, 12, 24, 48, 72, 120],

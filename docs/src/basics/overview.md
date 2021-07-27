@@ -272,7 +272,7 @@ Condition can be created with the following code
 # to get the default model
 model = models(p)[:nameless] 
 # creating condition
-new_condition = Condition(
+new_condition = HetaSimulator.Condition(
     model,
     parameters = [:dose=>100.],
     events_active = [:sw1=>false, :sw1=>true],
