@@ -54,6 +54,6 @@ module HetaSimulator
   export fit, loss
   export HetaSimulatorDir
   export update
-  export read_mcvecs, status_summary
-  export save_results
+  export times, vals, status, status_summary
+  export save_results, read_mcvecs
 end

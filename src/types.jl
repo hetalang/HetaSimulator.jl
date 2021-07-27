@@ -134,20 +134,28 @@ struct Simulation{V,scopeType}
   status::Symbol
 end
 
-@inline Base.length(S::Simulation) = length(S.vals.t)
-
 Simulation(sv::SavedValues,status::Symbol) = Simulation(DiffEqBase.SciMLBase.DiffEqArray(sv.u,sv.t),sv.scope,status)
+
+status(s::Simulation) = s.status
+times(s::Simulation) = s.vals.t
+vals(s::Simulation) = s.vals.u
+
+@inline Base.length(S::Simulation) = length(S.vals.t)
 
 struct SimResults{S, C<:Condition} <: AbstractResults
   sim::S
   cond::C 
 end
 
+status(s::SimResults) = status(s.sim)
+times(s::SimResults) = times(s.sim)
+vals(s::SimResults) = vals(s.sim)
+
 @inline Base.length(S::SimResults) = length(S.sim)
 
 function Base.show(io::IO, m::MIME"text/plain", S::SimResults)
   println(io, "+---------------------------------------------------------------------------")
-  println(io, "| Status :$(S.sim.status).")
+  println(io, "| Status :$(status(S)).")
   println(io, "| Use `DataFrame(sim)` to convert results to DataFrame.")
   println(io, "| Use `plot(sim)` to plot results.")
   println(io, "+---------------------------------------------------------------------------")

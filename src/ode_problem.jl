@@ -23,7 +23,7 @@ function build_ode_problem(
     if any((x)-> x === nothing, records_ind)
       lost_observables_ind = findall((x)-> x===nothing, records_ind)
       lost_observables = observables_[lost_observables_ind]
-      throw("Lost observables: $lost_observables")
+      error("The following observables have not been found in the model: $lost_observables")
     end
   end
 

@@ -1,0 +1,10 @@
+comp1 @Compartment;
+A @Species { compartment: comp1 };
+B @Species { compartment: comp1 };
+r1 @Reaction { actors: A -> 2B };
+
+comp1 .= 1;
+A .= 10;
+B .= 0;
+r1 := k1*A*comp1;
+k1 @Const = 0.01;

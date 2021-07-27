@@ -1,9 +1,8 @@
 using HetaSimulator
 using Test
 
-heta_update()
-
 @testset "HetaSimulator" begin
-  @testset "Story 1 tests" begin include("story_1_test.jl") end
+  @testset "Heta build" begin include("heta_test.jl") end
+  @testset "Single-compartment model without events" begin include("single_comp_test.jl") end
 end
 
