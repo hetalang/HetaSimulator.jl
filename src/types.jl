@@ -94,7 +94,7 @@ struct Condition{F,P,M} <: AbstractCond
   measurements::M
 end 
 
-saveat(c::Condition) = c.prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat.valtree
+saveat(c::Condition) = c.prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat_cache
 tspan(c::Condition) = c.prob.tspan
 parameters(c::Condition) = c.prob.p.constants
 measurements(c::Condition) = c.measurements
@@ -124,7 +124,7 @@ end
 function clear_savings(sv::SavedValues)
   !isempty(sv.u) && deleteat!(sv.u,1:length(sv.u))
   !isempty(sv.t) && deleteat!(sv.t,1:length(sv.t))
-  !isempty(sv.scope) && deleteat!(sv.scope,1:length(sv.scope))
+  !isnothing(sv.scope) && !isempty(sv.scope) && deleteat!(sv.scope,1:length(sv.scope))
   return nothing
 end
 

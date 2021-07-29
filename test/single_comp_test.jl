@@ -17,11 +17,28 @@ s = sim(model, tspan = (0., 200.), saveat = [0.0, 150., 250.], observables=[:r1]
 @test vals(s)[1][:r1] == 0.1
 
 # Simulate condition
-cond = HetaSimulator.Condition(model; parameters = [:k1=>0.02], tspan = (0., 200.), saveat = [0.0, 150., 250.])
-@test typeof(cond) <: HetaSimulator.Condition
-@test saveat(cond) == [0.0, 150., 250.]
-@test tspan(cond) == (0., 250.)
-@test parameters(cond)[:k1] == 0.02
+cond1 = HetaSimulator.Condition(model; parameters = [:k1=>0.02], tspan = (0., 200.), saveat = [0.0, 150., 250.], observables=[:r1])
+cond2 = HetaSimulator.Condition(model; parameters = [:k1=>0.015], tspan = (0., 200.), observables=[:r1])
+@test typeof(cond1) <: HetaSimulator.Condition
+@test saveat(cond1) == [0.0, 150., 250.]
+@test saveat(cond2) == Float64[]
+@test tspan(cond1) == (0., 250.)
+@test tspan(cond2) == (0., 200.)
+@test parameters(cond1)[:k1] == 0.02
+@test parameters(cond2)[:k1] == 0.015
 
-cs = sim(cond)
-@test typeof(cs) <: HetaSimulator.SimResults
+cs1 = sim(cond1)
+cs2 = sim([:one=>cond1,:two=>cond2])
+@test typeof(cs1) <: HetaSimulator.SimResults
+@test typeof(cs2) <: Vector{Pair{Symbol, HetaSimulator.SimResults}}
+
+
+# Monte-Carlo simulation tests
+mc1 =  mc(model, [:k1=>Normal(0.02,1e-3)], 100; tspan = (0., 200.), observables=[:r1])
+mc2 = mc([:one=>cond1,:two=>cond2], [:k1=>Normal(0.02,1e-3)], 100)
+@test typeof(mc1) <: HetaSimulator.MCResults
+@test typeof(mc2) <: Vector{Pair{Symbol, HetaSimulator.MCResults}}
+@test typeof(mc1[1]) <: HetaSimulator.Simulation
+@test typeof(mc2[1]) <: Pair{Symbol, HetaSimulator.MCResults}
+@test length(mc1) == 100
+@test times(mc1[1])[end] == 200.
