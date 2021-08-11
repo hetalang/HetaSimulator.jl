@@ -281,3 +281,4 @@ end
 
 optim(f::FitResults) = f.optim
 obj(f::FitResults) = f.obj
+status(f::FitResults) = f.status

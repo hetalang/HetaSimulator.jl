@@ -184,10 +184,9 @@ Arguments:
 - `filepath`: path and name of the file to write to
 - `sim`: simulation results of `AbstractResults` type
 """
-function save_results(filepath::String, sim::AbstractResults) 
-  df = DataFrame(sim)
-  CSV.write(filepath, df, delim=";")
-end
+save_results(filepath::String, sim::AbstractResults) = save_results(filepath, DataFrame(sim))
+
+save_results(filepath::String, df::DataFrame) = CSV.write(filepath, df, delim=";")
 
 #=FIXME
 function save_results(path::String, mcsim::MCResults; groupby::Symbol=:observables) 
