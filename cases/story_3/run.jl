@@ -46,7 +46,7 @@ res_df1 = DataFrame(res[1])
 
 ### Monte-Carlo
 
-mc_res = mc(p, [:kabs=>Normal(10.,1e-1), :kel=>Normal(0.2,1e-3)], 1000)
+mc_res = mc(p, [:kabs=>Normal(10.,5e-1), :kel=>Normal(0.2,5e-3)], 1000)
 mc_res |> DataFrame
 mc_res |> plot
 # plotd = plot(mc_res)

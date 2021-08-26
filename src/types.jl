@@ -134,7 +134,8 @@ struct Simulation{V,scopeType}
   status::Symbol
 end
 
-Simulation(sv::SavedValues,status::Symbol) = Simulation(DiffEqBase.SciMLBase.DiffEqArray(sv.u,sv.t),sv.scope,status)
+# copy fix is tmp needed not to rewrite SavedValues with new simulation
+Simulation(sv::SavedValues,status::Symbol) = Simulation(DiffEqBase.SciMLBase.DiffEqArray(copy(sv.u),copy(sv.t)),sv.scope,status) 
 
 status(s::Simulation) = s.status
 times(s::Simulation) = s.vals.t

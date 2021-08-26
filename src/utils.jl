@@ -73,3 +73,4 @@ function bool(s::AbstractString)
   s == "FALSE" && return false
   return parse(Bool, s)
 end
+bool(b::Bool) = b
