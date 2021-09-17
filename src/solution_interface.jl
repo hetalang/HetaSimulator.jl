@@ -27,11 +27,14 @@ end
 ############################ Plots ########################################
 
 function layout_choice(n)
+  #=
   n == 1 && return (1,1)
   n == 2 && return (2,1)
   n == 3 && return (3,1)
-  n == 4 && return (4,1)
-  n > 4  && return (n,1)
+  n == 4 && return (2,2)
+  n > 4  && return n
+  =#
+  return (n,1)
 end
 
 @recipe function plot(sim::Simulation; vars = observables(sim))
@@ -98,7 +101,9 @@ end
   end
 end
 @recipe function plot(sim::Vector{Pair{Symbol,S}}) where S<:AbstractResults
-  layout := layout_choice(length(sim))
+  (m,n) = layout_choice(length(sim))
+  layout := (m,n)
+  size := (400*n,400*m)
   for (i, s) in enumerate(sim)
     @series begin
       subplot := i
