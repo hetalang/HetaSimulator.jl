@@ -44,6 +44,7 @@ end
   vals = [sim[id,:] for id in vars]
  
   xguide --> "time"
+  yguide --> "output"
   label --> permutedims(string.(vars))
   xlims --> (time[1],time[end])
   linewidth --> 3
@@ -60,6 +61,7 @@ end
  
   @series begin
     xguide --> "time"
+    yguide --> "output"
     label --> permutedims(string.(vars))
     xlims --> (time[1],time[end])
     linewidth --> 3
@@ -81,6 +83,7 @@ end
         @series begin
           seriestype --> :scatter
           xguide --> "time"
+          yguide --> "output"
           label --> "$(v)"
           (t_meas[v], vals_meas[v])
         end
@@ -103,7 +106,7 @@ end
 @recipe function plot(sim::Vector{Pair{Symbol,S}}) where S<:AbstractResults
   (m,n) = layout_choice(length(sim))
   layout := (m,n)
-  size := (400*n,400*m)
+  size := (400*n,300*m)
   for (i, s) in enumerate(sim)
     @series begin
       subplot := i

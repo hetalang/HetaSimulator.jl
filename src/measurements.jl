@@ -1,4 +1,5 @@
 const NORMAL = :normal
+const LOGNORMAL = :lognormal
 const SIGMA = :sigma
 const MEAN = :mean
 
@@ -100,13 +101,13 @@ function _add_measurement!(condition::Condition, row::Any) # maybe not any
 
   _type = haskey(row, Symbol("prob.type")) ? row[Symbol("prob.type")] : missing
 
-  if ismissing(_type) || _type == NORMAL
+  if ismissing(_type) || _type == NORMAL || _type == LOGNORMAL
     _mean = typed(row[Symbol("prob.$MEAN")])
     _sigma = typed(row[Symbol("prob.$SIGMA")])
 
-    point = NormalMeasurementPoint(_t, _val, _scope, _mean, _sigma)
+    point = (_type == LOGNORMAL) ? LogNormalMeasurementPoint(_t, _val, _scope, _mean, _sigma) : NormalMeasurementPoint(_t, _val, _scope, _mean, _sigma)
   else 
-    error("Distribution value $_type is wrong or not supported. Supported distributions are: $Normal")
+    error("Distribution value $_type is wrong or not supported. Supported distributions are: $Normal, $Lognormal")
   end
 
   push!(condition.measurements, point)
