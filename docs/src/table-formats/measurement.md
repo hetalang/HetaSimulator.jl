@@ -12,16 +12,29 @@ The first row is intended for headers which clarify the columns meaning. The seq
 - `t` : a `Float64` value equal to time point of measured value
 - `measurement` : a `Float64` measured value
 - `scope` (optional): a `String` value which states a scope of simulation to be compared with measurements. Default value is `ode_`
-- `prob.<id>` : a set of options to characterize the probability distribution. The supported `id`s depend on distribution type. For `normal` distribution the available headers are following:
+- `prob.<id>` : a set of options to characterize the probability distribution. The supported `id`s depend on distribution type. For `normal` and `lognormal` distributions the available headers are:
     - `prob.type` (optional) : a `String` declaring probability type. `normal` is default.
     - `prob.mean` : `Float64` value or `String` representing `@Const` or `@Record` id in model. The value represents parameter mean in normal distribution.
     - `prob.sigma` : `Float64` value or `String` representing `@Const` or `@Record` id in model. The value represents parameter sigma (standard deviation) in normal distribution.
+
+Currently two base probability types are available: `normal`, `lognormal`. This distributions can be used for creating different types of error models.
+
+### prob.type: normal
 
 Each row in the table will be transformed into a component of log-likelihood function $-2ln(L)$.
 
 ```math
 \Lambda = \sum_i \left( ln(<prob.sigma>_i^2) + \frac{(<prob.mean>_i - <measurement>_i)^2}{<prob.sigma>_i^2}\right)
 ```
+
+### prob.type: lognormal
+
+Each row in the table will be transformed into a component of log-likelihood function $-2ln(L)$.
+
+```math
+\Lambda = \sum_i \left( ln(<prob.sigma>_i^2) + \frac{(ln(<prob.mean>_i) - ln(<measurement>_i))^2}{<prob.sigma>_i^2}\right)
+```
+
 ## Loading to Platform
 
 Measurement table can be loaded into Julia environment as a `DataFrame` using `HetaSimulator.read_measurements` method. This method reads the file, checks the content and formats the data to be used inside Platform object.
