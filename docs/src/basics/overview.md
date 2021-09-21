@@ -348,7 +348,7 @@ measurements_df = read_measurements("./cases/story_3/measurements.csv")
 
 The function reads the content of CSV file, checks components and stores in `measurements_df` variable of `DataFrame` format.
 
-To load measurements into `Platform` function [`add_measurements`](@ref) can be used. The function converts all rows into a series of `Measurements` and associate them with condition declared in `condition` value.
+To load measurements into `Platform` function [`add_measurements!`](@ref) can be used. The function converts all rows into a series of `Measurements` and associate them with condition declared in `condition` value.
 
 ```julia
 add_measurements!(p, measurements_df)

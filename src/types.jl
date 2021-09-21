@@ -1,5 +1,15 @@
 ################################## Platform ###########################################
+"""
+    struct Platform{M,C}
+      models::Dict{Symbol,M}     # dictionary storing Models
+      conditions::Dict{Symbol,C} # dictionary storing Conditions
+    end
 
+The main storage representing a modeling platform.
+Typically HetaSimulator works with one platform object which can include several models and conditions.
+
+Usually a `Platform` is created based on Heta formatted files using [`load_platform`]{@ref}.
+"""
 struct Platform{M,C}
   models::Dict{Symbol,M}
   conditions::Dict{Symbol,C}
@@ -23,6 +33,20 @@ end
 
 abstract type AbstractModel end
 
+"""
+    struct Model{IF,OF,EV,SG,C,EA} <: AbstractModel
+      init_func::IF
+      ode_func::OF
+      events::EV
+      saving_generator::SG
+      records_output::AbstractVector{Pair{Symbol,Bool}}
+      constants::C
+      events_active::EA
+    end
+
+Structure storing core properties of ODE model.
+This represent the content of one namespace from a Heta platform.
+"""
 struct Model{IF,OF,EV,SG,C,EA} <: AbstractModel
   init_func::IF
   ode_func::OF
@@ -153,6 +177,14 @@ vals(s::Simulation) = s.vals.u
 
 @inline Base.length(S::Simulation) = length(S.vals.t)
 
+"""
+    struct SimResults{S, C<:Condition} <: AbstractResults
+      sim::S
+      cond::C 
+    end
+
+Structure storing results from [`sim`]{@ref} method applied for one [`HetaSimulator.Condition`]{@ref}.
+"""
 struct SimResults{S, C<:Condition} <: AbstractResults
   sim::S
   cond::C 
@@ -204,6 +236,15 @@ end
 
 ################################## Monte-Carlo Simulation ##############################
 
+"""
+    struct MCResults{S,C} <: AbstractResults
+      sim::S
+      saveat::Bool
+      cond::C
+    end
+
+Structure storing results of [`mc`]{@ref} method applied for one `Condition`.
+"""
 struct MCResults{S,C} <: AbstractResults
   sim::S
   saveat::Bool

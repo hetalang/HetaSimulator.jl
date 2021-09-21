@@ -12,9 +12,9 @@ cond1 = HetaSimulator.Condition(model; observables = [:C1, :C2], tspan = (0., 48
 res1 = sim(cond1; alg = Rosenbrock23())
 ```
 
-The result of `sim` function execution is solution of ODE with parameters passed from (1) `Model` content and default settings, (2) settings passed from created `Condition` object and (3) additional settings from `sim` function. This function returns an object of type [`SimSolution`](@ref) which stores simulated dataset in `sim` property and the original condition inside `cond` property.
+The result of `sim` function execution is solution of ODE with parameters passed from (1) `Model` content and default settings, (2) settings passed from created `Condition` object and (3) additional settings from `sim` function. This function returns an object of type [`HetaSimulator.SimResults`](@ref) which stores simulated dataset in `sim` property and the original condition inside `cond` property.
 
-There are some specific methods for `SimSolution` objects like `plot` and `DataFrame`.
+There are some specific methods for `SimResults` objects like `plot` and `DataFrame`.
 
 ```julia
 plot(res1)
