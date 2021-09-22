@@ -66,7 +66,7 @@ platform = load_platform("./my_project")
 model = platform.models[:nameless]
 
 # single simulation and plot
-results = sim(model; tspan = (0., 1200.))
+results = HetaSimulator.Condition(model; tspan = (0., 1200.)) |> sim
 plot(results)
 ```
 

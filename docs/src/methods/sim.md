@@ -21,19 +21,6 @@ plot(res1)
 DataFrame(res1)
 ```
 
-`sim` can also be applied for `Model` without explicit creation of `Condition`.
-In that case you can pass all settings into `sim` function.
-`Condition` object will be created in the same manner.
-The next code get the same results as in previous example.
-
-```julia
-res1 = sim(model; observables = [:C1, :C2], tspan = (0., 48.), parameters = [:dose => 12.], alg = Rosenbrock23())
-plot(res1)
-```
-
-The first approach is useful when you need to store different conditions applied for the same model and simulate them when required.
-The second approach is more compact and can be used for some preliminary simulation experiments.
-
 ## Multiple condition simulations
 
 `sim` can be applied for many `Condition`s simultaneously.
