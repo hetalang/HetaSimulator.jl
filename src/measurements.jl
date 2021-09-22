@@ -172,3 +172,36 @@ function assert_measurements(df)
   end
   return nothing
 end
+
+#################################### GET MEASUREMENTS ###########################
+
+# ! Current assumption is that error dist is normal or lognormal
+
+measurements_as_table(sr::SimResults) = measurements_as_table(sr.cond)
+
+function measurements_as_table(cond::Condition)
+  meas = measurements(cond)
+  @assert !isempty(meas) "Condition doesn't contain measurements."
+
+  lm = length(meas)
+  _t = Vector{Float64}(undef,lm)
+  _mea = []
+  _scope = Vector{Symbol}(undef,lm)
+  _mu = []
+  _sigma = []
+  _type = Vector{Symbol}(undef,lm)
+  
+  for (i,m) in enumerate(meas)
+    _t[i] = m.t
+    push!(_mea, m.val)
+    _scope[i] = m.scope
+    push!(_mu, m.μ)
+    push!(_sigma, m.σ)
+    _type[i] = typeof(m) <: NormalMeasurementPoint ? NORMAL : LOGNORMAL
+  end
+  df = DataFrame(t =_t, measurement = _mea, scope = _scope)
+  df[!,"prob.mean"] = _mu
+  df[!,"prob.sigma"] = _sigma 
+  df[!,"prob.type"] = _type
+  return df
+end

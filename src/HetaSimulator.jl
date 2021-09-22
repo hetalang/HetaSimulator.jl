@@ -45,7 +45,7 @@ module HetaSimulator
   export heta_update, heta_update_dev, heta_build, load_platform, load_jlplatform, load_jlmodel
   export Platform, Model, Condition, Params
   export read_conditions, add_conditions!
-  export read_measurements, add_measurements!
+  export read_measurements, add_measurements!, measurements_as_table
   export models, conditions, constants, records, events, parameters, events_active, events_save, observables  # variables, dynamic, static
   export measurements, tspan, saveat
   export CVODE_BDF, CVODE_Adams
@@ -55,5 +55,5 @@ module HetaSimulator
   export HetaSimulatorDir
   export update
   export times, vals, status, status_summary
-  export save_results, read_mcvecs
+  export save_results, save_optim, read_mcvecs
 end
