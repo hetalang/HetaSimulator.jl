@@ -1,4 +1,4 @@
-# Overview of HetaSimulator.jl
+# Quick start
 
 The general workflow for HetaSimulator is
 
