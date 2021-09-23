@@ -61,6 +61,7 @@ function fit(
   maxtime = 0.0,
   lbounds = fill(0.0, length(params)),
   ubounds = fill(Inf, length(params)),
+  scale = fill(:lin, length(params)),
   kwargs... # other arguments to sim()
 ) where C<:AbstractCond
 
@@ -105,7 +106,7 @@ function fit(
 
   function obj_func(x, grad)
     # try - catch is a tmp solution for NLopt 
-    x_nt = NamedTuple{Tuple(params_names)}(x)
+    x_nt = NamedTuple{Tuple(params_names)}(unscale_params.(x, scale))
     prob_i = prob(x_nt)
     sol = try
       solve(prob_i, alg, parallel_type;
@@ -136,9 +137,11 @@ function fit(
   opt.maxeval = maxeval
   opt.maxtime = maxtime
 
-  lower_bounds!(opt, lbounds)
-  upper_bounds!(opt, ubounds)
-  (minf, minx, ret) = NLopt.optimize(opt, last.(params))
+  lower_bounds!(opt, scale_params.(lbounds, scale))
+  upper_bounds!(opt, scale_params.(ubounds, scale))
+
+  params0 = scale_params.(last.(params), scale)
+  (minf, minx, ret) = NLopt.optimize(opt, params0)
 
   # to create pairs from Float64
   minx_pairs = [key=>value for (key, value) in zip(first.(params), minx)]
@@ -209,4 +212,28 @@ function fit(
   end
 
   return fit(condition_pairs, params; kwargs...)
+end
+
+function scale_params(x, scale::Symbol)
+  if scale == :lin 
+    return x
+  elseif scale == :log
+    return log(x)
+  elseif scale == log10
+    return log10(x)
+  else
+    throw("Scale \"$scale\" is not supported.")
+  end
+end
+
+function unscale_params(x, scale::Symbol)
+  if scale == :lin 
+    return x
+  elseif scale == :log
+    return exp(x)
+  elseif scale == log10
+    return exp10(x)
+  else
+    throw("Scale \"$scale\" is not supported.")
+  end
 end
