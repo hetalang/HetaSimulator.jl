@@ -3,17 +3,17 @@ The main purpose of the package is to establish the linkage between emerging [QS
 
 ## Introduction
 
-Heta language is a domain-specific modeling language (DSL) for dynamic quantitative models used in quantitative systems pharmacology (QSP) and systems biology (SB). Heta code and tabular formats can be translated into [variety of formats](https://hetalang.github.io/#/heta-compiler/?id=supported-tools) like Simbiology, Matlab, mrgsolve, DBSolve and many others.
+Heta language is a domain-specific modeling language (DSL) for dynamic quantitative models used in quantitative systems pharmacology (QSP) and systems biology (SB). The Heta code and the tabular formats can be translated into [variety of formats](https://hetalang.github.io/#/heta-compiler/?id=supported-tools) like Simbiology, Matlab, mrgsolve, DBSolve and many others.
 
 This package provides the simulation engines for the Heta-based models and modeling platforms to be run in Julia. A QSP model can be directly run using the HetaSimulator without additional tools. The ODE system in general form can also be run with HetaSimulator.
 
 __The main features__ of the package are
 
-- reach capabilities for finding parameters based on experimental datasets
+- reach capabilities for estimating parameters' values based on experimental datasets
 - support for working with multiple models including simultaneous fitting
 - parallel simulations
-- storage of components in unified format
-- import of datasets and conditions from CSV/Excell tables 
+- storage of data and conditions the unified formats
+- import of datasets and conditions from CSV/Excel tables 
 - full Heta standard support
 - storing models, conditions and data in the `Platform` object for easy management of platform components
 - utilizing the facilities of OpenSource projects like [Julia](https://julialang.org/) and [SciML ecosystem](https://sciml.ai/).
@@ -122,6 +122,4 @@ Copyright 2020-2021, InSysBio LLC
 - Ivan Borisov
 - Evgeny Metelkin
 
-**HetaSimulator** is inspired by the user experience of the software packages like [SBMLToolbox](http://sbml.org/Software/SBMLToolbox), [mrgsolve](https://mrgsolve.github.io/), [DBSolve](http://insysbio.com/en/software/db-solve-optimum), [dMod](https://github.com/dkaschek/dMod).
-
-The package utilizes the unique features of [Julia](https://julialang.org/) and [SciML ecosystem](https://sciml.ai/).
+**HetaSimulator** is inspired by user's experience in QSP projects and the software packages like [SBMLToolbox](http://sbml.org/Software/SBMLToolbox), [mrgsolve](https://mrgsolve.github.io/), [DBSolve](http://insysbio.com/en/software/db-solve-optimum), [dMod](https://github.com/dkaschek/dMod).

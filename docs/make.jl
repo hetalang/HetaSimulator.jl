@@ -15,7 +15,8 @@ makedocs(
             "basics/overview.md",
             "basics/design.md",
             "table-formats/condition.md",
-            "table-formats/measurement.md"
+            "table-formats/measurement.md",
+            "table-formats/parameters.md"
         ],
         "Methods" => ["methods/sim.md"],
         "API" => "api.md"
