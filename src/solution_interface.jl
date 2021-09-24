@@ -198,7 +198,7 @@ save_results(filepath::String, df::DataFrame) = CSV.write(filepath, df, delim=";
 
 function save_optim(filepath::String, fr::FitResults)
   optim_params = optim(fr)
-  open("$filepath.txt","a") do io
+  open(filepath,"a") do io
     for op in optim_params
       println(io,"$(first(op)) = $(last(op));")
     end
