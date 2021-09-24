@@ -82,3 +82,13 @@ plot(res_optim, yscale=:log, ylims=(1e-3,1e2))
 ### to check
 res_x = sim(p, parameters_upd = [:kabs => 20.0, :Q => 1.0, :kel => 5.0e-01])
 plot(res_x, yscale=:log, ylims=(1e-3,1e2))
+
+### fitting with parameters.csv table
+
+# all parameters are estimated (the same as fit_res)
+params_df0 = read_parameters("$HetaSimulatorDir/cases/story_3/parameters0.csv")
+fit_res0 = fit(p, params_df0)
+
+# overwrite dose and estimate other parameters
+params_df1 = read_parameters("$HetaSimulatorDir/cases/story_3/parameters.csv")
+fit_res1 = fit(p, params_df)

@@ -30,6 +30,7 @@ Arguments:
 
 - `condition_pairs` : vector of pairs containing names and conditions of type [`HetaSimulator.Condition`](@ref)
 - `params` : optimization parameters and their initial values
+- `parameters_upd` : constants, which overwrite both `Model` and `HetaSimulator.Condition` constants. Default is `nothing`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-6
 - `abstol` : relative tolerance. Default is 1e-8
@@ -151,16 +152,48 @@ function fit(
   (minf, minx, ret) = NLopt.optimize(opt, params0)
 
   # to create pairs from Float64
-  minx_pairs = [key=>value for (key, value) in zip(first.(params), minx)]
+  minx_pairs = [key=>value for (key, value) in zip(first.(params), unscale_params.(minx, scale))]
   
   return FitResults(minf, minx_pairs, ret, opt.numevals)
 
 end
 
+"""
+    fit(condition_pairs::AbstractVector{Pair{Symbol, C}},
+      params_df::DataFrame;
+      kwargs...
+    ) where C<:AbstractCond
+
+Fit parameters to experimental measurements. Returns `FitResults` type.
+
+Arguments:
+
+- `condition_pairs` : vector of pairs containing names and conditions of type [`HetaSimulator.Condition`](@ref)
+- `params` : DataFrame with optimization parameters setup and their initial values
+- kwargs : other solver related arguments supported by `fit(condition_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
+"""
+function fit(
+  condition_pairs::AbstractVector{Pair{Symbol, C}},
+  params_df::DataFrame;
+  kwargs...
+) where C<:AbstractCond
+  
+  gdf = groupby(params_df, :estimate)
+  @assert haskey(gdf, (true,)) "No parameters to estimate."
+
+  params = gdf[(true,)].parameterId .=> gdf[(true,)].nominalValue
+  lbounds = gdf[(true,)].lowerBound
+  ubounds = gdf[(true,)].upperBound
+  scale = gdf[(true,)].parameterScale
+  parameters_upd = haskey(gdf, (false,)) ? gdf[(false,)].parameterId .=> gdf[(false,)].nominalValue : nothing
+
+  fit(condition_pairs, params; parameters_upd, lbounds, ubounds, scale)
+end
+
 ### fit many conditions
 """
     fit(conditions::AbstractVector{C},
-      params::Vector{Pair{Symbol,Float64}};
+      params;
       kwargs...
     ) where C<:AbstractCond
 
@@ -176,7 +209,7 @@ Arguments:
 """
 function fit(
   conditions::AbstractVector{C},
-  params::Vector{Pair{Symbol,Float64}};
+  params;
   kwargs... # other arguments to sim(::Vector{Pair})
 ) where {C<:AbstractCond}
   condition_pairs = Pair{Symbol,AbstractCond}[Symbol("_$i") => cond for (i, cond) in pairs(conditions)]
@@ -186,7 +219,7 @@ end
 ### fit platform
 """
     fit(platform::Platform,
-      params::Vector{Pair{Symbol,Float64}};
+      params;
       conditions::Union{AbstractVector{Symbol}, Nothing} = nothing,
       kwargs...
     ) where C<:AbstractCond
@@ -204,7 +237,7 @@ Arguments:
 """
 function fit(
   platform::Platform,
-  params::Vector{Pair{Symbol,Float64}};
+  params;
   conditions::Union{AbstractVector{Symbol}, Nothing} = nothing, # all if nothing
   kwargs... # other arguments to fit()
 )
@@ -226,7 +259,7 @@ function scale_params(x, scale::Symbol)
     return x
   elseif scale == :log
     return log(x)
-  elseif scale == log10
+  elseif scale == :log10
     return log10(x)
   else
     throw("Scale \"$scale\" is not supported.")
@@ -238,7 +271,7 @@ function unscale_params(x, scale::Symbol)
     return x
   elseif scale == :log
     return exp(x)
-  elseif scale == log10
+  elseif scale == :log10
     return exp10(x)
   else
     throw("Scale \"$scale\" is not supported.")

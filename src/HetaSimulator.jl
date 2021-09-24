@@ -34,6 +34,7 @@ module HetaSimulator
   include("measurements.jl")
   include("ode_problem.jl")
   include("condition.jl")
+  include("parameters.jl")
   include("simulate.jl")
   include("saving.jl")
   include("solution_interface.jl")
@@ -46,6 +47,7 @@ module HetaSimulator
   export Platform, Model, Condition, Params
   export read_conditions, add_conditions!
   export read_measurements, add_measurements!, measurements_as_table
+  export read_parameters
   export models, conditions, constants, records, events, parameters, events_active, events_save, observables  # variables, dynamic, static
   export measurements, tspan, saveat
   export CVODE_BDF, CVODE_Adams
