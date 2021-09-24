@@ -43,11 +43,13 @@ Arguments:
 - `maxtime` : maximum optimization time (in seconds). See `NLopt.jl` docs for details. Default is `0`
 - `lbounds` : lower parameters bounds. See `NLopt.jl` docs for details. Default is `fill(0.0, length(params))`
 - `ubounds` : upper parameters bounds. See `NLopt.jl` docs for details. Default is `fill(Inf, length(params))`
+- `scale`   : scale of the parameters (supports `:lin, :log, :log10`) to be used during fitting. Default is `fill(:lin, length(params))`
 - kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
 function fit(
   condition_pairs::AbstractVector{Pair{Symbol, C}},
   params::Vector{Pair{Symbol,Float64}};
+  parameters_upd::Union{Nothing, Vector{P}}=nothing,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_FITTING_RELTOL,
   abstol=DEFAULT_FITTING_ABSTOL,
@@ -63,7 +65,7 @@ function fit(
   ubounds = fill(Inf, length(params)),
   scale = fill(:lin, length(params)),
   kwargs... # other arguments to sim()
-) where C<:AbstractCond
+) where {C<:AbstractCond, P<:Pair}
 
   selected_condition_pairs = Pair{Symbol,Condition}[]
   for cond_pair in condition_pairs # iterate through condition names
@@ -76,8 +78,13 @@ function fit(
   
   isempty(selected_condition_pairs) && throw("No measurements points included in conditions.")
   
-  selected_prob = [remake_saveat(last(cond).prob, last(cond).measurements) for cond in selected_condition_pairs]
-
+  # update saveat and initial values
+  selected_prob = []
+  for cond in selected_condition_pairs
+    prob_i = remake_saveat(last(cond).prob, last(cond).measurements)
+    prob_i = !isnothing(parameters_upd) ? update_init_values(prob_i, last(cond).init_func, NamedTuple(parameters_upd)) : prob_i
+    push!(selected_prob, prob_i)
+  end
 
   function prob_func(x)
     function internal_prob_func(prob,i,repeat)
