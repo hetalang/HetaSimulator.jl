@@ -187,7 +187,7 @@ function fit(
   scale = gdf[(true,)].parameterScale
   parameters_upd = haskey(gdf, (false,)) ? gdf[(false,)].parameterId .=> gdf[(false,)].nominalValue : nothing
 
-  fit(condition_pairs, params; parameters_upd, lbounds, ubounds, scale)
+  fit(condition_pairs, params; parameters_upd, lbounds, ubounds, scale, kwargs...)
 end
 
 ### fit many conditions
