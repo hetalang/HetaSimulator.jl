@@ -20,7 +20,7 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
       lbounds = fill(0.0, length(params)),
       ubounds = fill(Inf, length(params)),
       kwargs... 
-    ) where C<:AbstractCond
+    ) where C<:AbstractScenario
 
 Fit parameters to experimental measurements. Returns `FitResults` type.
 
@@ -28,9 +28,9 @@ Example: `fit([:x=>scn2, :y=>scn3, :z=>scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
 
 Arguments:
 
-- `scenario_pairs` : vector of pairs containing names and conditions of type [`HetaSimulator.Condition`](@ref)
+- `scenario_pairs` : vector of pairs containing names and scenarios of type [`HetaSimulator.Scenario`](@ref)
 - `params` : optimization parameters and their initial values
-- `parameters_upd` : constants, which overwrite both `Model` and `HetaSimulator.Condition` constants. Default is `nothing`
+- `parameters_upd` : constants, which overwrite both `Model` and `HetaSimulator.Scenario` constants. Default is `nothing`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-6
 - `abstol` : relative tolerance. Default is 1e-8
@@ -66,18 +66,18 @@ function fit(
   ubounds = fill(Inf, length(params)),
   scale = fill(:lin, length(params)),
   kwargs... # other arguments to sim()
-) where {C<:AbstractCond, P<:Pair}
+) where {C<:AbstractScenario, P<:Pair}
 
-  selected_scenario_pairs = Pair{Symbol,Condition}[]
-  for scenario_pair in scenario_pairs # iterate through condition names
+  selected_scenario_pairs = Pair{Symbol,Scenario}[]
+  for scenario_pair in scenario_pairs # iterate through scenarios names
     if isempty(last(scenario_pair).measurements)
-      @warn "Condition \":$(first(scenario_pair))\" has no measurements. It will be excluded from fitting."
+      @warn "Scenario \":$(first(scenario_pair))\" has no measurements. It will be excluded from fitting."
     else
       push!(selected_scenario_pairs, scenario_pair)
     end
   end
   
-  isempty(selected_scenario_pairs) && throw("No measurements points included in conditions.")
+  isempty(selected_scenario_pairs) && throw("No measurements points included in scenarios.")
   
   # update saveat and initial values
   selected_prob = []
@@ -162,13 +162,13 @@ end
     fit(scenario_pairs::AbstractVector{Pair{Symbol, C}},
       params_df::DataFrame;
       kwargs...
-    ) where C<:AbstractCond
+    ) where C<:AbstractScenario
 
 Fit parameters to experimental measurements. Returns `FitResults` type.
 
 Arguments:
 
-- `scenario_pairs` : vector of pairs containing names and conditions of type [`HetaSimulator.Condition`](@ref)
+- `scenario_pairs` : vector of pairs containing names and scenarios of type [`HetaSimulator.Scenario`](@ref)
 - `params` : DataFrame with optimization parameters setup and their initial values
 - kwargs : other solver related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
 """
@@ -176,7 +176,7 @@ function fit(
   scenario_pairs::AbstractVector{Pair{Symbol, C}},
   params_df::DataFrame;
   kwargs...
-) where C<:AbstractCond
+) where C<:AbstractScenario
   
   gdf = groupby(params_df, :estimate)
   @assert haskey(gdf, (true,)) "No parameters to estimate."
@@ -192,10 +192,10 @@ end
 
 ### fit many scenarios
 """
-    fit(conditions::AbstractVector{C},
+    fit(scenarios::AbstractVector{C},
       params;
       kwargs...
-    ) where C<:AbstractCond
+    ) where C<:AbstractScenario
 
 Fit parameters to experimental measurements. Returns `FitResults` type.
 
@@ -203,16 +203,16 @@ Example: `fit([scn2, scn3, scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
 
 Arguments:
 
-- `conditions` : vector of conditions of type [`HetaSimulator.Condition`](@ref)
+- `scenarios` : vector of scenarios of type [`HetaSimulator.Scenario`](@ref)
 - `params` : optimization parameters and their initial values
 - kwargs : other solver related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
 """
 function fit(
-  conditions::AbstractVector{C},
+  scenarios::AbstractVector{C},
   params;
   kwargs... # other arguments to sim(::Vector{Pair})
-) where {C<:AbstractCond}
-  scenario_pairs = Pair{Symbol,AbstractCond}[Symbol("_$i") => scn for (i, scn) in pairs(conditions)]
+) where {C<:AbstractScenario}
+  scenario_pairs = Pair{Symbol,AbstractScenario}[Symbol("_$i") => scn for (i, scn) in pairs(scenarios)]
   return fit(scenario_pairs, params; kwargs...)
 end
 
@@ -220,34 +220,34 @@ end
 """
     fit(platform::Platform,
       params;
-      conditions::Union{AbstractVector{Symbol}, Nothing} = nothing,
+      scenarios::Union{AbstractVector{Symbol}, Nothing} = nothing,
       kwargs...
-    ) where C<:AbstractCond
+    ) where C<:AbstractScenario
 
 Fit parameters to experimental measurements. Returns `FitResults` type.
 
-Example: `fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3];conditions=[:scn2,:scn3])`
+Example: `fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3];scenarios=[:scn2,:scn3])`
 
 Arguments:
 
 - `platform` : platform of [`Platform`](@ref) type
 - `params` : optimization parameters and their initial values
-- `conditions` : vector of conditions of type [`HetaSimulator.Condition`](@ref) or `nothing` to fit all conditions. Default is `nothing`
+- `scenarios` : vector of scenarios of type [`HetaSimulator.Scenario`](@ref) or `nothing` to fit all scenarios. Default is `nothing`
 - kwargs : other solver related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
 """
 function fit(
   platform::Platform,
   params;
-  conditions::Union{AbstractVector{Symbol}, Nothing} = nothing, # all if nothing
+  scenarios::Union{AbstractVector{Symbol}, Nothing} = nothing, # all if nothing
   kwargs... # other arguments to fit()
 )
-  if isnothing(conditions)
-    scenario_pairs = [platform.conditions...]
+  if isnothing(scenarios)
+    scenario_pairs = [platform.scenarios...]
   else
-    scenario_pairs = Pair{Symbol,AbstractCond}[]
-    for scn_name in conditions
-      @assert haskey(platform.conditions, scn_name) "No condition :$scn_name found in the platform."
-      push!(scenario_pairs, scn_name=>platform.conditions[scn_name])
+    scenario_pairs = Pair{Symbol,AbstractScenario}[]
+    for scn_name in scenarios
+      @assert haskey(platform.scenarios, scn_name) "No scenario :$scn_name found in the platform."
+      push!(scenario_pairs, scn_name=>platform.scenarios[scn_name])
     end
   end
 

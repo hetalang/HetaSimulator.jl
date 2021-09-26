@@ -2,30 +2,30 @@
 """
     struct Platform{M,C}
       models::Dict{Symbol,M}     # dictionary storing Models
-      conditions::Dict{Symbol,C} # dictionary storing Conditions
+      scenarios::Dict{Symbol,C} # dictionary storing Scenarios
     end
 
 The main storage representing a modeling platform.
-Typically HetaSimulator works with one platform object which can include several models and conditions.
+Typically HetaSimulator works with one platform object which can include several models and scenarios.
 
 Usually a `Platform` is created based on Heta formatted files using [`load_platform`]{@ref}.
 """
 struct Platform{M,C}
   models::Dict{Symbol,M}
-  conditions::Dict{Symbol,C}
+  scenarios::Dict{Symbol,C}
 end
 
 models(p::Platform) = p.models
-conditions(p::Platform) = p.conditions
+scenarios(p::Platform) = p.scenarios
 
 function Base.show(io::IO, ::MIME"text/plain", p::Platform)
   models_names = join(keys(p.models), ", ")
-  scn_names = join(keys(p.conditions), ", ")
+  scn_names = join(keys(p.scenarios), ", ")
 
   println(io, "+---------------------------------------------------------------------------")
   println(io, "| Platform contains:")
   println(io, "|   $(length(models(p))) model(s): $models_names. Use `models(platform)` for details.")
-  println(io, "|   $(length(conditions(p))) condition(s): $scn_names. Use `conditions(platform)` for details.")
+  println(io, "|   $(length(scenarios(p))) scenario(s): $scn_names. Use `scenarios(platform)` for details.")
   println(io, "+---------------------------------------------------------------------------")
 end
 
@@ -119,30 +119,30 @@ LogNormalMeasurementPoint(t,val,scope::Missing,μ,σ) = LogNormalMeasurementPoin
 
 const MeasurementVector{P} = AbstractVector{P} where P<:AbstractMeasurementPoint
 
-################################## Condition ###########################################
-abstract type AbstractCond end
+################################## Scenario ###########################################
+abstract type AbstractScenario end
 
-struct Condition{F,P,M} <: AbstractCond
+struct Scenario{F,P,M} <: AbstractScenario
   init_func::F
   prob::P
   measurements::M
 end 
 
-saveat(c::Condition) = c.prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat_cache
-tspan(c::Condition) = c.prob.tspan
-parameters(c::Condition) = c.prob.p.constants
-measurements(c::Condition) = c.measurements
+saveat(c::Scenario) = c.prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat_cache
+tspan(c::Scenario) = c.prob.tspan
+parameters(c::Scenario) = c.prob.p.constants
+measurements(c::Scenario) = c.measurements
 
-function Base.show(io::IO, ::MIME"text/plain", c::Condition)
+function Base.show(io::IO, ::MIME"text/plain", c::Scenario)
   println(io, "+---------------------------------------------------------------------------")
-  println(io, "| Condition contains:")
+  println(io, "| Scenario contains:")
   println(io, "|   $(length(saveat(c))) saveat values: $(saveat(c)). Use `saveat(scenario)` for details.")
   println(io, "|   tspan: $(tspan(c)). Use `tspan(scenario)` for details.")
   println(io, "|   $(length(parameters(c))) parameters(s). Use `parameters(scenario)` for details.")
   println(io, "|   $(length(measurements(c))) measurement(s). Use `measurements(scenario)` for details.")
-  #println(io, "|   $(length(events_active(c))) event(s). Use `events_active(c::Condition)` for details.")
-  #println(io, "|   $(length(events_save(c))) event(s). Use `events_save(c::Condition)` for details.")
-  #println(io, "|   $(length(observables(c))) observable(s). Use `observables(c::Condition)` for details.")
+  #println(io, "|   $(length(events_active(c))) event(s). Use `events_active(c::Scenario)` for details.")
+  #println(io, "|   $(length(events_save(c))) event(s). Use `events_save(c::Scenario)` for details.")
+  #println(io, "|   $(length(observables(c))) observable(s). Use `observables(c::Scenario)` for details.")
   println(io, "+---------------------------------------------------------------------------")
 end
 
@@ -178,14 +178,14 @@ vals(s::Simulation) = s.vals.u
 @inline Base.length(S::Simulation) = length(S.vals.t)
 
 """
-    struct SimResults{S, C<:Condition} <: AbstractResults
+    struct SimResults{S, C<:Scenario} <: AbstractResults
       sim::S
       scenario::C 
     end
 
-Structure storing results from [`sim`]{@ref} method applied for one [`HetaSimulator.Condition`]{@ref}.
+Structure storing results from [`sim`]{@ref} method applied for one [`HetaSimulator.Scenario`]{@ref}.
 """
-struct SimResults{S, C<:Condition} <: AbstractResults
+struct SimResults{S, C<:Scenario} <: AbstractResults
   sim::S
   scenario::C 
 end
@@ -208,7 +208,7 @@ Base.show(io::IO, m::MIME"text/plain", PS::Pair{Symbol, S}) where S<:SimResults 
 #= XXX: do we need it?
 function Base.show(io::IO, m::MIME"text/plain", V::Vector{S}) where S<:SimResults
   println(io, "+---------------------------------------------------------------------------")
-  println(io, "| Simulation results for $(length(V)) condition(s).") 
+  println(io, "| Simulation results for $(length(V)) scenario(s).") 
   println(io, "| Use `sol[i]` to get th i-th component.")
   println(io, "+---------------------------------------------------------------------------")
 end
@@ -216,7 +216,7 @@ end
 function Base.show(io::IO, m::MIME"text/plain", V::Vector{Pair{Symbol, S}}) where S<:SimResults
   show_string = [*(":", String(x), " => ...") for x in first.(V)]
   println(io, "+---------------------------------------------------------------------------")
-  println(io, "| Simulation results for $(length(V)) condition(s).") 
+  println(io, "| Simulation results for $(length(V)) scenario(s).") 
   println(io, "| [$(join(show_string, ", "))]")
   println(io, "| Use `sol[id]` to get component by id.")
   println(io, "| Use `sol[i]` to get component by number.")
@@ -243,7 +243,7 @@ end
       scenario::C
     end
 
-Structure storing results of [`mc`]{@ref} method applied for one `Condition`.
+Structure storing results of [`mc`]{@ref} method applied for one `Scenario`.
 """
 struct MCResults{S,C} <: AbstractResults
   sim::S
@@ -267,7 +267,7 @@ Base.show(io::IO, m::MIME"text/plain", PS::Pair{Symbol, S}) where S<:MCResults =
 #= XXX: do we need it?
 function Base.show(io::IO, m::MIME"text/plain", VMC::Vector{MC}) where MC<:MCResults
   println(io, "+---------------------------------------------------------------------------")
-  println(io, "| Monte-Carlo results for $(length(VMC)) condition(s).") 
+  println(io, "| Monte-Carlo results for $(length(VMC)) scenario(s).") 
   println(io, "| Use `sol[i]` to index Monte-Carlo results.")
   println(io, "+---------------------------------------------------------------------------")
 end
@@ -275,7 +275,7 @@ end
 function Base.show(io::IO, m::MIME"text/plain", VMC::Vector{Pair{Symbol, S}}) where S<:MCResults
   show_string = [*(":", String(x), " => ...") for x in first.(VMC)]
   println(io, "+---------------------------------------------------------------------------")
-  println(io, "| Monte-Carlo results for $(length(VMC)) condition(s).") 
+  println(io, "| Monte-Carlo results for $(length(VMC)) scenario(s).") 
   println(io, "| [$(join(show_string, ", "))]")
   println(io, "| Use `sol[id]` to get component by id.")
   println(io, "| Use `sol[i]` to get component by number.")

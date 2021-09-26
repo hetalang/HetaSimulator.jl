@@ -1,4 +1,4 @@
-t,measurement,prob.mean,prob.sigma,condition
+t,measurement,prob.mean,prob.sigma,scenario
 0.08333,0.0686283,C1,sigma1,dose_1
 0.08333,0.0684679,C1,sigma1,dose_1
 0.08333,0.0726338,C1,sigma1,dose_1

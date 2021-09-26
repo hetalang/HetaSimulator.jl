@@ -7,7 +7,7 @@ const SUPPORTED_VERSIONS = ["0.6.5", "0.6.6"]
 # transformation of tuple to Platform
 function Platform(
     models::NamedTuple,
-    conditions::Tuple,
+    scenarios::Tuple,
     version::String
 )
     # TODO: semver approach might be better
@@ -18,7 +18,7 @@ function Platform(
     
     platform = Platform(
         Dict{Symbol,Model}(model_pairs),
-        Dict{Symbol,Condition}()
+        Dict{Symbol,Scenario}()
     )
     println("OK!")
 
@@ -57,7 +57,7 @@ function Model(
     records_output_ = collect(Pair{Symbol,Bool}, pairs(records_output))
     events_active_ = collect(Pair{Symbol,Bool}, pairs(events_active))
 
-    # Should we (1) store prob in Model, (2) store in Condition (3) nowhere
+    # Should we (1) store prob in Model, (2) store in Scenario (3) nowhere
     ### fake run
     
     _u0, _p0 = init_func(constants_num)

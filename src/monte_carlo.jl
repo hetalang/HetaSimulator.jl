@@ -2,7 +2,7 @@
 const progch = RemoteChannel(()->Channel{Bool}(), 1)
 
 """
-    mc(scenario::Condition,
+    mc(scenario::Scenario,
       params::Vector{<:Pair},
       num_iter::Int64;
       verbose=false,
@@ -13,13 +13,13 @@ const progch = RemoteChannel(()->Channel{Bool}(), 1)
       kwargs...
     )
 
-Run Monte-Carlo simulations with single `Condition`. Returns [`MCResults`](@ref) type.
+Run Monte-Carlo simulations with single `Scenario`. Returns [`MCResults`](@ref) type.
 
 Example: `mc(scenario, [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 
 Arguments:
 
-- `scenario` : simulation condition of type [`HetaSimulator.Condition`](@ref)
+- `scenario` : simulation scenario of type [`HetaSimulator.Scenario`](@ref)
 - `params` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
 - `verbose` : print iteration progress. Default is `false`
@@ -30,7 +30,7 @@ Arguments:
 - kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
 function mc(
-  scenario::Condition,
+  scenario::Scenario,
   params::Vector{P},
   num_iter::Int;
   verbose=false,
@@ -99,25 +99,25 @@ function mc(
 end
 
 """
-    mc(scenario::Condition,
+    mc(scenario::Scenario,
       params::DataFrame,
       num_iter::Int64;
       kwargs...
     )
 
-Run Monte-Carlo simulations with single condition `scenario`. Returns [`MCResults`](@ref) type.
+Run Monte-Carlo simulations with single scenario `Scenario`. Returns [`MCResults`](@ref) type.
 
 Example: `mc(scn1, DataFrame(k2=rand(3),k3=rand(3)), 1000)`
 
 Arguments:
 
-- `scenario` : simulation scenario of type [`HetaSimulator.Condition`](@ref)
+- `scenario` : simulation scenario of type [`HetaSimulator.Scenario`](@ref)
 - `params` : DataFrame with pre-generated parameters.
 - `num_iter` : number of Monte-Carlo iterations 
-- kwargs : other solver related arguments supported by `mc(scenario::Condition, params::Vector, num_iter::Int64)`
+- kwargs : other solver related arguments supported by `mc(scenario::Scenario, params::Vector, num_iter::Int64)`
 """
 function mc(
-  scenario::Condition,
+  scenario::Scenario,
   params::DataFrame;
   num_iter::Int= size(params)[1],
   kwargs...
@@ -166,14 +166,14 @@ Arguments:
 - `saveat` : time points, where solution should be saved. Default `nothing` values stands for saving solution at timepoints reached by the solver 
 - `tspan` : time span for the ODE problem
 - `save_scope` : should scope be saved together with solution. Default is `false`
-- kwargs : other solver related arguments supported by `mc(scenario::Condition, params::Vector, num_iter::Int64)`
+- kwargs : other solver related arguments supported by `mc(scenario::Scenario, params::Vector, num_iter::Int64)`
 """
 function mc(
   model::Model,
   params::Vector{P},
   num_iter::Int;
 
-  ## arguments for Condition(::Model,...)
+  ## arguments for Scenario(::Model,...)
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
   events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
   events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}}=(true,true), 
@@ -186,14 +186,14 @@ function mc(
   kwargs...
 ) where P<:Pair
 
-  scenario = Condition(
+  scenario = Scenario(
     model; measurements,
     events_active, events_save, observables, saveat, tspan, save_scope, time_type)
 
   return mc(scenario, params, num_iter; kwargs...)
 end
 
-# multi condition Monte-Carlo
+# multi scenario Monte-Carlo
 
 """
     mc(scenario_pairs::Vector{<:Pair},
@@ -207,13 +207,13 @@ end
       kwargs...
     )
 
-Run Monte-Carlo simulations with single condition `scenario`. Returns `Vector{MCResults}` type.
+Run Monte-Carlo simulations with single `Scenario`. Returns `Vector{MCResults}` type.
 
 Example: `mc([:c1=>scn1,:c2=>scn2], [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 
 Arguments:
 
-- `scenario_pairs` : vector of pairs containing names and conditions of type [`HetaSimulator.Condition`](@ref)
+- `scenario_pairs` : vector of pairs containing names and scenarios of type [`HetaSimulator.Scenario`](@ref)
 - `params` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
 - `verbose` : print iteration progress. Default is `false`
@@ -246,7 +246,7 @@ function mc(
 
   function prob_func(prob,i,repeat)
     iter_i = iter[i]
-    verbose && println("Processing condition $(iter_i[2]) iteration $(iter_i[1])")
+    verbose && println("Processing scenario $(iter_i[2]) iteration $(iter_i[1])")
     parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true)
     prob_i = last(scenario_pairs[iter_i[2]]).prob
     init_i = last(scenario_pairs[iter_i[2]]).init_func
@@ -304,19 +304,19 @@ function mc(
 end
 
 """
-    mc(scenario_pairs::Vector{<:AbstractCond},
+    mc(scenario_pairs::Vector{<:AbstractScenario},
       params::Vector{<:Pair},
       num_iter::Int64;
       kwargs...
     )
 
-Run Monte-Carlo simulations with single condition `scenario`. Returns `Vector{MCResults}` type.
+Run Monte-Carlo simulations with single scenario. Returns `Vector{MCResults}` type.
 
 Example: `mc([scn1,scn2], [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 
 Arguments:
 
-- `scenario_pairs` : vector of scenarios of type [`HetaSimulator.Condition`](@ref)
+- `scenario_pairs` : vector of scenarios of type [`HetaSimulator.Scenario`](@ref)
 - `params` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
 - kwargs : other solver related arguments supported by `mc(scenario_pairs::Vector{<:Pair}, params::Vector, num_iter::Int64)`
@@ -326,7 +326,7 @@ function mc(
   params::Vector{P},
   num_iter::Int;
   kwargs...
-) where {C<:AbstractCond, P<:Pair}
+) where {C<:AbstractScenario, P<:Pair}
 
   scenario_pairs = [(Symbol("_$i") => scn) for (i, scn) in pairs(scenario_pairs)]
   return mc(scenario_pairs, params, num_iter; kwargs...)
@@ -339,7 +339,7 @@ end
       kwargs...
     )
 
-Run Monte-Carlo simulations with single condition `scenario`. Returns `Vector{MCResults}` type.
+Run Monte-Carlo simulations with single `Scenario`. Returns `Vector{MCResults}` type.
 
 Example: `mc(platform, [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 
@@ -354,16 +354,16 @@ function mc(
   platform::Platform,
   params::Vector{P},
   num_iter::Int;
-  conditions::Union{AbstractVector{Symbol}, Nothing} = nothing,
+  scenarios::Union{AbstractVector{Symbol}, Nothing} = nothing,
   kwargs...) where P<:Pair
 
-  if isnothing(conditions)
-    scenario_pairs = [platform.conditions...]
+  if isnothing(scenarios)
+    scenario_pairs = [platform.scenarios...]
   else
-    scenario_pairs = Pair{Symbol,AbstractCond}[]
-    for scn_name in conditions
-      @assert haskey(platform.conditions, scn_name) "No condition :$scn_name found in the platform."
-      push!(scenario_pairs, scn_name=>platform.conditions[scn_name])
+    scenario_pairs = Pair{Symbol,AbstractScenario}[]
+    for scn_name in scenarios
+      @assert haskey(platform.scenarios, scn_name) "No scenario :$scn_name found in the platform."
+      push!(scenario_pairs, scn_name=>platform.scenarios[scn_name])
     end
   end
 

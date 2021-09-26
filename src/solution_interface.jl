@@ -144,7 +144,7 @@ DataFrame(sr::SimResults) = DataFrame(sr.sim)
 
 function DataFrame(sr::Pair{Symbol,S}) where S<:SimResults
   df = DataFrame(last(sr))
-  df[!, :condition] .= first(sr) # add new column
+  df[!, :scenario] .= first(sr) # add new column
 
   return df
 end
@@ -170,7 +170,7 @@ end
 
 function DataFrame(mcr::Pair{Symbol,S}) where S<:MCResults
   df = DataFrame(last(mcr))
-  df[!, :condition] .= first(mcr) # add new column
+  df[!, :scenario] .= first(mcr) # add new column
 
   return df
 end

@@ -8,7 +8,7 @@ The content of the table can be loaded into Julia environment as a `DataFrame` t
 The structure of tables corresponds to `Measurements` properties.
 The first row is intended for headers which clarify the columns meaning. The sequence of columns is not important.
 
-- `condition` : a `String` value representing identifier of `Condition`.
+- `scenario` : a `String` value representing identifier of `Scenario`.
 - `t` : a `Float64` value equal to time point of measured value
 - `measurement` : a `Float64` measured value
 - `scope` (optional): a `String` value which states a scope of simulation to be compared with measurements. Default value is `ode_`
@@ -43,7 +43,7 @@ Measurement table can be loaded into Julia environment as a `DataFrame` using `H
 measurements = read_measurements("measurements.csv")
 
 32×7 DataFrame
- Row │ t        measurement  scope   prob.mean  prob.sigma  condition  prob.type 
+ Row │ t        measurement  scope   prob.mean  prob.sigma  scenario  prob.type 
      │ Float64  Float64      Symbol  String     Float64     Symbol     Symbol    
 ─────┼───────────────────────────────────────────────────────────────────────────
    1 │     2.0     8.46154   ode_    a                1.0   dataone    normal
@@ -62,7 +62,7 @@ add_measurements!(platform, measurements)
 
 Loading file measurements.csv with the following content.
 
-t | measurement | scope | prob.mean | prob.sigma | condition
+t | measurement | scope | prob.mean | prob.sigma | scenario
 ---|---|---|---|---|---
 2 | 8.461539334 | ode_ | a | 1 | dataone
 4 | 7.333333812 | ode_ | a | 1.2 | dataone
@@ -85,7 +85,7 @@ As a result the Platform will contain three measurements.
 These operations are equivalent of manually created `Measurement` objects.
 
 ```julia
-# dataone = HetaSimulator.Condition(...)
+# dataone = Scenario(...)
 
 m1 = NormalMeasurementPoint(2, 8.461539334, :ode, :a, 1)
 m2 = NormalMeasurementPoint(4, 7.333333812, :ode, :a, 1.2)

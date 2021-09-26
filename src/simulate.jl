@@ -7,28 +7,28 @@ const EMPTY_PROBLEM = ODEProblem(() -> nothing, [0.0], (0.,1.))
 ### simulate scenarios
 
 """
-    sim(scenario::Condition; 
+    sim(scenario::Scenario; 
       parameters_upd::Union{Nothing, Vector{P}}=nothing,
       alg=DEFAULT_ALG, 
       reltol=DEFAULT_SIMULATION_RELTOL, 
       abstol=DEFAULT_SIMULATION_ABSTOL,
       kwargs...)
 
-Simulate single condition `scenario`. Returns [`SimResults`](@ref) type.
+Simulate single `Scenario`. Returns [`SimResults`](@ref) type.
 
-Example: `Condition(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]) |> sim`
+Example: `Scenario(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]) |> sim`
 
 Arguments:
 
-- `scenario` : simulation condition of type [`HetaSimulator.Condition`](@ref)
-- `parameters_upd` : constants, which overwrite both `Model` and `HetaSimulator.Condition` constants. Default is `nothing`
+- `scenario` : simulation scenario of type [`HetaSimulator.Scenario`](@ref)
+- `parameters_upd` : constants, which overwrite both `Model` and `HetaSimulator.Scenario` constants. Default is `nothing`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
 - kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
 function sim(
-  scenario::Condition; 
+  scenario::Scenario; 
   parameters_upd::Union{Nothing, Vector{P}}=nothing,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
@@ -79,12 +79,12 @@ Arguments:
 - `saveat` : time points, where solution should be saved. Default `nothing` values stands for saving solution at timepoints reached by the solver 
 - `tspan` : time span for the ODE problem
 - `save_scope` : should scope be saved together with solution. Default is `true`
-- kwargs : other solver related arguments supported by `sim(scenario::Condition)`
+- kwargs : other solver related arguments supported by `sim(scenario::Scenario)`
 """
 function sim(
   model::Model;
 
-  ## arguments for Condition(::Model,...)
+  ## arguments for Scenario(::Model,...)
   parameters::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
   events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
@@ -94,13 +94,13 @@ function sim(
   tspan::Union{Nothing,Tuple} = nothing,
   save_scope::Bool=true,
   time_type::DataType=Float64,
-  kwargs... # sim(c::Condition) kwargs
+  kwargs... # sim(c::Scenario) kwargs
 )
-  condition = Condition(
+  scenario = Scenario(
     model; parameters, measurements,
     events_active, events_save, observables, saveat, tspan, save_scope, time_type)
 
-  return sim(condition; kwargs...)
+  return sim(scenario; kwargs...)
 end
 
 ### general interface for EnsembleProblem
@@ -114,14 +114,14 @@ end
       parallel_type=EnsembleSerial(),
       kwargs...) where P<:Pair
 
-Simulate multiple conditions. Returns `Vector{Pair}`.
+Simulate multiple scenarios. Returns `Vector{Pair}`.
 
 Example: `sim([:x => scn1, :y=>scn2, :z=>scn3])`
 
 Arguments:
 
-- `scenario_pairs` : vector of pairs containing names and conditions of type [`HetaSimulator.Condition`](@ref)
-- `parameters_upd` : constants, which overwrite both `Model` and `Condition` constants. Default is `nothing`
+- `scenario_pairs` : vector of pairs containing names and scenarios of type [`HetaSimulator.Scenario`](@ref)
+- `parameters_upd` : constants, which overwrite both `Model` and `Scenario` constants. Default is `nothing`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -176,25 +176,25 @@ function sim(
   return [Pair{Symbol,SimResults}(first(cp), u) for (cp,u) in zip(scenario_pairs, solution.u)]
 end
 
-### simulate many conditions
+### simulate many scenarios
 
 """
-    sim(conditions::AbstractVector{C}; kwargs...) where {C<:AbstractCond}
+    sim(scenarios::AbstractVector{C}; kwargs...) where {C<:AbstractScenario}
 
-Simulate multiple conditions. Returns `Vector{Pair}`.
+Simulate multiple scenarios. Returns `Vector{Pair}`.
 
 Example: `sim([scn1, scn2, scn3])`
 
 Arguments:
 
-- `conditions` : `Vector` containing names and conditions of type [`HetaSimulator.Condition`](@ref)
+- `scenarios` : `Vector` containing names and scenarios of type [`HetaSimulator.Scenario`](@ref)
 - kwargs : other kwargs supported by `sim(scenario_pairs::Vector{Pair})`
 """
 function sim(
-  conditions::AbstractVector{C};
+  scenarios::AbstractVector{C};
   kwargs... # other arguments to sim(::Vector{Pair})
-) where {C<:AbstractCond}
-  scenario_pairs = [Symbol("_$i") => scn for (i, scn) in pairs(conditions)]
+) where {C<:AbstractScenario}
+  scenario_pairs = [Symbol("_$i") => scn for (i, scn) in pairs(scenarios)]
   return sim(scenario_pairs; kwargs...)
 end
 
@@ -202,33 +202,33 @@ end
 
 """
     sim(platform::Platform; 
-      conditions::Union{AbstractVector{Symbol}, Nothing} = nothing,
-      kwargs...) where {C<:AbstractCond}
+      scenarios::Union{AbstractVector{Symbol}, Nothing} = nothing,
+      kwargs...) where {C<:AbstractScenario}
 
-Simulate conditions included in platform. Returns `Vector{Pair}`.
+Simulate scenarios included in platform. Returns `Vector{Pair}`.
 
 Example: `sim(platform)`
 
 Arguments:
 
 - `platform` : platform of [`Platform`](@ref) type
-- `conditions` : `Vector` containing names of conditions included in platform. Default value `nothing` stands for all conditions in the platform 
+- `scenarios` : `Vector` containing names of scenarios included in platform. Default value `nothing` stands for all scenarios in the platform 
 - kwargs : other kwargs supported by `sim(scenario_pairs::Vector{Pair})`
 """
 function sim(
   platform::Platform;
-  conditions::Union{AbstractVector{Symbol}, Nothing} = nothing,
+  scenarios::Union{AbstractVector{Symbol}, Nothing} = nothing,
   kwargs... # other arguments to sim(::Vector{Pair})
 ) 
-  @assert length(platform.conditions) != 0 "Platform should contain at least one condition."
+  @assert length(platform.scenarios) != 0 "Platform should contain at least one scenario."
 
-  if isnothing(conditions)
-    scenario_pairs = [platform.conditions...]
+  if isnothing(scenarios)
+    scenario_pairs = [platform.scenarios...]
   else
-    scenario_pairs = Pair{Symbol,AbstractCond}[]
-    for scn_name in conditions
-      @assert haskey(platform.conditions, scn_name) "No condition :$scn_name found in the platform."
-      push!(scenario_pairs, scn_name=>platform.conditions[scn_name])
+    scenario_pairs = Pair{Symbol,AbstractScenario}[]
+    for scn_name in scenarios
+      @assert haskey(platform.scenarios, scn_name) "No scenario :$scn_name found in the platform."
+      push!(scenario_pairs, scn_name=>platform.scenarios[scn_name])
     end
   end
 

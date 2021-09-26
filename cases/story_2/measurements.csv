@@ -1,4 +1,4 @@
-t,measurement,scope,prob.mean,prob.sigma,condition,prob.type
+t,measurement,scope,prob.mean,prob.sigma,scenario,prob.type
 2,8.461539334,ode_,a,1,dataone,normal
 4,7.333333812,ode_,a,1.2,dataone,lognormal
 6,6.470591567,ode_,a,2.2,dataone,normal

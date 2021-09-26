@@ -1,4 +1,4 @@
-t,measurement,prob.mean,prob.sigma,condition
+t,measurement,prob.mean,prob.sigma,scenario
 2,8.461539334,a,1,dataone
 4,7.333333812,a,1.2,dataone
 6,6.470591567,a,2.2,dataone

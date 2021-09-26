@@ -1,4 +1,4 @@
-t,measurement,prob.mean,prob.sigma,condition
+t,measurement,prob.mean,prob.sigma,scenario
 0,11.6525197,A,1,one
 10,12.46579443,A,1,one
 20,8.053498198,A,1,one

@@ -7,23 +7,23 @@ p = load_platform("$HetaSimulatorDir/cases/story_3")
 
 ### load scenarios
 
-scn_df = read_conditions("$HetaSimulatorDir/cases/story_3/conditions.csv")
-# scn_df = read_conditions("$HetaSimulatorDir/cases/story_3/conditions.xlsx")
-add_conditions!(p, scn_df)
+scn_df = read_scenarios("$HetaSimulatorDir/cases/story_3/scenarios.csv")
+# scn_df = read_scenarios("$HetaSimulatorDir/cases/story_3/scenarios.xlsx")
+add_scenarios!(p, scn_df)
 
-scenario1 = conditions(p)[:dose_1]
+scenario1 = scenarios(p)[:dose_1]
 
 ### create scenarios
 
 model = models(p)[:nameless]
-new_scenario = HetaSimulator.Condition(
+new_scenario = Scenario(
     model,
     parameters = [:dose=>100.],
     events_active = [:sw1=>false, :sw1=>true],
     tspan = (0.,1000.),
     observables = [:A0, :C1, :C2, :v_abs, :v_el, :v_distr]
     ) 
-push!(conditions(p), :multiple_100=>new_scenario)
+push!(scenarios(p), :multiple_100=>new_scenario)
 
 ### create measurements
 

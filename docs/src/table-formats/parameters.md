@@ -47,7 +47,7 @@ Kp\_R\_D|5.562383e+01|1e-6|1e3|log|0
 Read as `DataFrame` object.
 
 ```julia
-params = read_conditions("./parameters.csv")
+params = read_scenarios("./parameters.csv")
 res = fit(p, params)
 ```
 

@@ -5,9 +5,9 @@ model = platform.models[:nameless];
 
 # Wrong input tests
 ## no saveat or tspan
-@test_throws ErrorException("Please, provide either `saveat` or `tspan` value.") HetaSimulator.Condition(model)
+@test_throws ErrorException("Please, provide either `saveat` or `tspan` value.") Scenario(model)
 ## wrong observables
-@test_throws ErrorException("The following observables have not been found in the model: [:GG]") HetaSimulator.Condition(model; observables=[:r1, :GG], tspan=(0,120))
+@test_throws ErrorException("The following observables have not been found in the model: [:GG]") Scenario(model; observables=[:r1, :GG], tspan=(0,120))
 
 # Simulate model
 s = sim(model, tspan = (0., 200.), saveat = [0.0, 150., 250.], observables=[:r1])
@@ -17,9 +17,9 @@ s = sim(model, tspan = (0., 200.), saveat = [0.0, 150., 250.], observables=[:r1]
 @test vals(s)[1][:r1] == 0.1
 
 # Simulate scenario
-scn1 = HetaSimulator.Condition(model; parameters = [:k1=>0.02], tspan = (0., 200.), saveat = [0.0, 150., 250.], observables=[:r1])
-scn2 = HetaSimulator.Condition(model; parameters = [:k1=>0.015], tspan = (0., 200.), observables=[:r1])
-@test typeof(scn1) <: HetaSimulator.Condition
+scn1 = Scenario(model; parameters = [:k1=>0.02], tspan = (0., 200.), saveat = [0.0, 150., 250.], observables=[:r1])
+scn2 = Scenario(model; parameters = [:k1=>0.015], tspan = (0., 200.), observables=[:r1])
+@test typeof(scn1) <: Scenario
 @test saveat(scn1) == [0.0, 150., 250.]
 @test saveat(scn2) == Float64[]
 @test tspan(scn1) == (0., 250.)
@@ -44,11 +44,11 @@ mc2 = mc([:one=>scn1,:two=>scn2], [:k1=>Normal(0.02,1e-3)], 100)
 @test times(mc1[1])[end] == 200.
 
 # Fitting tests
-fscn1 = HetaSimulator.Condition(model; parameters = [:k1=>0.02], tspan = (0., 200.), observables=[:A, :B, :r1])
-fscn2 = HetaSimulator.Condition(model; parameters = [:k1=>0.015], tspan = (0., 200.), observables=[:A, :B, :r1])
+fscn1 = Scenario(model; parameters = [:k1=>0.02], tspan = (0., 200.), observables=[:A, :B, :r1])
+fscn2 = Scenario(model; parameters = [:k1=>0.015], tspan = (0., 200.), observables=[:A, :B, :r1])
 data = read_measurements("$HetaSimulatorDir/test/examples/single_comp/single_comp_data.csv")
-add_measurements!(fscn1, data; subset = [:condition => :one])
-add_measurements!(fscn2, data; subset = [:condition => :two])
+add_measurements!(fscn1, data; subset = [:scenario => :one])
+add_measurements!(fscn2, data; subset = [:scenario => :two])
 fres = fit([:one=>fscn1, :two=>fscn2], [:k1=>0.01])
 
 @test length(measurements(fscn1)) == 24

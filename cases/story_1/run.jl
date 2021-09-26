@@ -41,11 +41,11 @@ sim(
 
 
 ### single scenario sim()
-scn1 = HetaSimulator.Condition(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]);
+scn1 = Scenario(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]);
 sim(scn1) |> plot
 sim(scn1; parameters_upd=[:k1=>0.01]) |> plot
 
-scn2 = HetaSimulator.Condition(
+scn2 = Scenario(
     model;
     tspan = (0., 200.),
     events_active=[:sw1=>false],
@@ -53,7 +53,7 @@ scn2 = HetaSimulator.Condition(
     );
 sim(scn2) |> plot
 
-scn3 = HetaSimulator.Condition(
+scn3 = Scenario(
     model;
     tspan = (0., 250.),
     events_active=[:sw1=>false],
@@ -72,8 +72,8 @@ sim([:x => scn1, :y=>scn2, :z=>scn3]; parameters_upd=[:k1=>0.01]) |> plot
 #measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv")
 measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements_no_scope.csv")
 measurements_xlsx = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.xlsx")
-scn4 = HetaSimulator.Condition(model; parameters = [:k2=>0.001, :k3=>0.04], saveat = [0.0, 50., 150., 250.]);
-add_measurements!(scn4, measurements_csv; subset = [:condition => :dataone])
+scn4 = Scenario(model; parameters = [:k2=>0.001, :k3=>0.04], saveat = [0.0, 50., 150., 250.]);
+add_measurements!(scn4, measurements_csv; subset = [:scenario => :dataone])
 
 ### fit many scenarios
 res1 = fit([:x=>scn2, :y=>scn3, :z=>scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])
@@ -89,28 +89,28 @@ plot(sol; vars=[:a,:c])
 # plot selected observables without data
 plot(sol; vars=[:a,:c], measurements=false)
 
-################################## Conditions ###################################
+################################## Scenarios ###################################
 
-scn_csv = read_conditions("$HetaSimulatorDir/cases/story_2/conditions_w_events.csv")
-add_conditions!(platform, scn_csv)
+scn_csv = read_scenarios("$HetaSimulatorDir/cases/story_2/scenarios_w_events.csv")
+add_scenarios!(platform, scn_csv)
 
 ################################## Monte-Carlo Simulations  #####################
 
-mcscn1 = HetaSimulator.Condition(
+mcscn1 = Scenario(
     model;
     tspan = (0., 200.),
     parameters = [:k1=>0.01],
     saveat = [50., 80., 150.]
     );
 
-mcscn2 = HetaSimulator.Condition(
+mcscn2 = Scenario(
     model;
     tspan = (0., 200.),
     parameters = [:k1=>0.02],
     saveat = [50., 100., 200.]
     );
     
-mcscn3 = HetaSimulator.Condition(
+mcscn3 = Scenario(
     model; 
     tspan = (0., 200.),
     parameters = [:k1=>0.03],
@@ -181,7 +181,7 @@ using Distributed
 addprocs(2)
 @everywhere using HetaSimulator
 
-mcscn1 = HetaSimulator.Condition(model; tspan = (0., 200.), parameters = [:k1=>0.01], saveat = [50., 80., 150.]);
+mcscn1 = Scenario(model; tspan = (0., 200.), parameters = [:k1=>0.01], saveat = [50., 80., 150.]);
 mcsim0 = mc(mcscn1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 20)
 mcsim1 = mc(mcscn1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 150, parallel_type=EnsembleDistributed())
 =#

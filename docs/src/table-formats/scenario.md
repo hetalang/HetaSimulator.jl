@@ -1,14 +1,14 @@
-# Conditions tables
+# Scenarios tables
 
-Conditions tables are CSV or XLSX files which store `Condition` objects in tabular format.
+Scenarios tables are CSV or XLSX files which store `Scenario` objects in tabular format.
 The content of the table can be loaded into Julia environment as a `DataFrame` to be included into `Platform` object.
 
 ## Format
 
-The structure of the tables corresponds to `Condition` properties.
+The structure of the tables corresponds to `Scenario` properties.
 The first row is intended for headers which clarify the columns meaning. The sequence of columns is not important.
 
-- `id` : a `String` representing unique identifier of `Condition` if you load into `Platform` object. The string should be unique within the condition set and must follow the common identifier rules: no blank spaces, no digit at the first symbol, etc.
+- `id` : a `String` representing unique identifier of `Scenario` if you load into `Platform` object. The string should be unique within the scenario set and must follow the common identifier rules: no blank spaces, no digit at the first symbol, etc.
 
 - `model` : a `String` identifier of model which will be used for simulations. The default value is `nameless`.
 
@@ -24,14 +24,14 @@ The first row is intended for headers which clarify the columns meaning. The seq
 
 - `events_save.<id>` (optional, experimental) : a pair of `Bool` values divided by semicolon. This value set if it is required to save the output value before and after the event. If not set both: before and after values will be saved.
 
-_* `saveat[]` or `tspan` must be set for the particular `Condition`. If you set both only `saveat[]` will be used._
+_* `saveat[]` or `tspan` must be set for the particular `Scenario`. If you set both only `saveat[]` will be used._
 
 ## Loading to Platform
 
-Condition table can be loaded into Julia environment as a `DataFrame` using `HetaSimulator.read_conditions` method. This method reads the file, checks the content and formats the data to be used inside Platform object.
+Scenario table can be loaded into Julia environment as a `DataFrame` using `HetaSimulator.read_scenarios` method. This method reads the file, checks the content and formats the data to be used inside Platform object.
 
 ```julia
-scn_csv = read_conditions("./conditions.csv")
+scn_csv = read_scenarios("./scenarios.csv")
 
 4×7 DataFrame
  Row │ id         parameters.k1  parameters.k2  parameters.k3  saveat[]           tspan      observables[] 
@@ -42,21 +42,21 @@ scn_csv = read_conditions("./conditions.csv")
    3 │ three             0.001           0.1       missing     missing                250.0  missing       
 ```
 
-The data frame can be loaded into platform using the `HetaSimulator.add_conditions!` method.
+The data frame can be loaded into platform using the `HetaSimulator.add_scenarios!` method.
 
 ```julia
-add_conditions!(platform, scn_csv)
+add_scenarios!(platform, scn_csv)
 
-conditions(platform)
-Dict{Symbol, Condition} with 4 entries:
-  :three     => Condition{...}
-  :withdata2 => Condition{...} 
-  :dataone   => Condition{...}
+scenarios(platform)
+Dict{Symbol, Scenario} with 4 entries:
+  :three     => Scenario{...}
+  :withdata2 => Scenario{...} 
+  :dataone   => Scenario{...}
 ```
 
 ## Example
 
-Loading file __conditions.csv__ with the following content.
+Loading file __scenarios.csv__ with the following content.
 
 id | model | parameters.k1 | parameters.k2 | parameters.k3 | saveat[] | tspan | observables[] | events_active.sw1 | events_active.sw2 | events_save.sw1
 --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
@@ -67,43 +67,43 @@ scn3 | another_model | | 0.001  |  | 0;12;24;48;72;120 |  | | false |
 Read as `DataFrame` object.
 
 ```julia
-conditions = read_conditions("./conditions.csv")
+scenarios = read_scenarios("./scenarios.csv")
 ```
 
-Add all conditions to Platform
+Add all scenarios to Platform
 
 ```julia
-add_conditions!(platform, conditions)
+add_scenarios!(platform, scenarios)
 ```
 
-As a result the Platform will contain three conditions: scn1, scn2, scn3.
+As a result the Platform will contain three scenarios: scn1, scn2, scn3.
 
-These operations are equivalent of manually created `Condition` objects.
+These operations are equivalent of manually created `Scenario` objects.
 
 ```julia
-scn1 = HetaSimulator.Condition(
+scn1 = Scenario(
   platform.models[:nameless];
   parameters = [:k2=>0.001, :k3=>0.02],
   saveat = [0, 12, 24, 48, 72, 120, 150],
   events_active = [:sw1=>true, :sw2=>false],
   events_save = [:sw1=>(true,false)]
 )
-push!(platform.conditions, :scn1=>scn1)
+push!(platform.scenarios, :scn1=>scn1)
 
-scn2 = HetaSimulator.Condition(
+scn2 = Scenario(
   platform.models[:nameless];
   parameters = [:k1=>0.001],
   tspan = (0., 1000.),
   events_active = [:sw2=>true]
 )
-push!(platform.conditions, :scn2=>scn2)
+push!(platform.scenarios, :scn2=>scn2)
 
-scn3 = HetaSimulator.Condition(
+scn3 = Scenario(
   platform.models[:another_model];
   parameters = [:k2=>0.001],
   saveat = [0, 12, 24, 48, 72, 120],
   events_active = [:sw1=>false]
 )
-push!(platform.conditions, :scn3=>scn3)
+push!(platform.scenarios, :scn3=>scn3)
 
 ```

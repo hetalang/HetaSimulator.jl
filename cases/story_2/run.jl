@@ -19,12 +19,12 @@ sim(model; tspan = (0., 200.)) |> plot
 ################################## load and simulate scenarios  #####################
 
 ### load scenarios from csv
-scn_csv = read_conditions("./cases/story_2/conditions.csv")
-# scn_xlsx = read_conditions("./cases/story_2/conditions.xlsx")
-add_conditions!(platform, scn_csv)
+scn_csv = read_scenarios("./cases/story_2/scenarios.csv")
+# scn_xlsx = read_scenarios("./cases/story_2/scenarios.xlsx")
+add_scenarios!(platform, scn_csv)
 
 ### sim
-sim1 = sim(platform, conditions = [:three]);
+sim1 = sim(platform, scenario = [:three]);
 sim1 |> plot
 sim_all = sim(platform);
 sim_all |> plot
@@ -38,9 +38,9 @@ add_measurements!(platform, measurements)
 
 # loss(sim1, measurements.dataone) # why?
 
-fit1 = fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3], conditions = [:dataone])
-fit2 = fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3], conditions = [:withdata2])
-fit3 = fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3], conditions = [:dataone,:withdata2])
+fit1 = fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3], scenarios = [:dataone])
+fit2 = fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3], scenarios = [:withdata2])
+fit3 = fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3], scenarios = [:dataone,:withdata2])
 fit_all = fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3])
 
 ### Monte-Carlo Simulations

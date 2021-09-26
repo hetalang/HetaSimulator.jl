@@ -14,7 +14,7 @@ makedocs(
         "Basics" => [
             "basics/overview.md",
             "basics/design.md",
-            "table-formats/condition.md",
+            "table-formats/scenario.md",
             "table-formats/measurement.md",
             "table-formats/parameters.md"
         ],

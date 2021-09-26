@@ -120,7 +120,7 @@ Loading platform... OK!
 +---------------------------------------------------------------------------
 | Platform contains:
 |   1 model(s): nameless. Use `models(platform)` for details.
-|   0 condition(s): . Use `conditions(platform)` for details.
+|   0 scenario(s): . Use `scenarios(platform)` for details.
 +---------------------------------------------------------------------------
 ```
 
@@ -162,24 +162,24 @@ Loading platform... OK!
 +---------------------------------------------------------------------------
 | Platform contains:
 |   1 model(s): nameless. Use `models(platform)` for details.
-|   0 condition(s): . Use `conditions(platform)` for details.
+|   0 scenario(s): . Use `scenarios(platform)` for details.
 +---------------------------------------------------------------------------
 ```
 
-## Creating conditions
+## Creating scenarios
 
-`Condition` (condition) in HetaSimulator is an object which stores a model together with additional settings and options.
+`Scenario` in HetaSimulator is an object which stores a model together with additional settings and options.
 It sets the time point, ranges, updates parameter values, activate or inactivate events, etc.
 
-The condition-based approach is used to store pre-defined model's options: dose values, experimental conditions, data saving options, initial values and others which can be applied for one or multiple models. The `Condition` also stores `Measurement` points which is used for parameters identification and visualization.
+The scenario-based approach is used to store pre-defined model's options: dose values, experimental scenarios, data saving options, initial values and others which can be applied for one or multiple models. The `Scenario` also stores `Measurement` points which is used for parameters identification and visualization.
 
-`Condition` is created from default options passed from its model and user defined options from table row or set manually.
+`Scenario` is created from default options passed from its model and user defined options from table row or set manually.
 
 ### Import from CSV tables
 
-The most simple way to populate a platform by conditions is to create a separate file with `Condition` in [tabular CSV format](../table-formats/condition.md).
+The most simple way to populate a platform by scenarios is to create a separate file with `Scenario` in [tabular CSV format](../table-formats/scenario.md).
 
-Create file __conditions.csv__ file inside __my\_example__ with the following content.
+Create file __scenarios.csv__ file inside __my\_example__ with the following content.
 
 |id|parameters.dose|events_active.sw1|events_active.sw2|
 |---|---|---|---|
@@ -188,10 +188,10 @@ Create file __conditions.csv__ file inside __my\_example__ with the following co
 |dose_100|100|true|false|
 |multiple_15|15|false|true|
 
-The table can be loaded with the [`read_conditions`](@ref) function.
+The table can be loaded with the [`read_scenarios`](@ref) function.
 
 ```julia
-scn_df = read_conditions("./my_example/conditions.csv")
+scn_df = read_scenarios("./my_example/scenarios.csv")
 ```
 ```julia
 4×4 DataFrame
@@ -209,26 +209,26 @@ The function reads the content of CSV file, checks components and stores in `scn
 This should be loaded into `Platform` object.
 
 ```julia
-add_conditions!(p, scn_df)
+add_scenarios!(p, scn_df)
 ```
 
-As we can see all 4 conditions from the table were added.
+As we can see all 4 scenarios from the table were added.
 
 ```julia
 p
 +---------------------------------------------------------------------------
 | Platform contains:
 |   1 model(s): nameless. Use `models(platform)` for details.
-|   4 condition(s): multiple_15, dose_1, dose_10, dose_100. Use `conditions(platform)` for details.
+|   4 scenario(s): multiple_15, dose_1, dose_10, dose_100. Use `scenarios(platform)` for details.
 +---------------------------------------------------------------------------
 ```
 
-To get the particular condition you can use the following syntax.
+To get the particular scenario you can use the following syntax.
 
 ```julia
-condition1 = conditions(p)[:dose_1]
+scenario1 = scenarios(p)[:dose_1]
 +---------------------------------------------------------------------------
-| Condition contains:
+| Scenario contains:
 |   0 saveat values: Float64[]. Use `saveat(scenario)` for details.
 |   tspan: (0.0, 48.0). Use `tspan(scenario)` for details.
 |   4 parameters(s). Use `parameters(scenario)` for details.
@@ -236,14 +236,14 @@ condition1 = conditions(p)[:dose_1]
 +---------------------------------------------------------------------------
 ```
 
-See more about condition tables in [tabular CSV format](../table-formats/condition.md).
+See more about scenario tables in [tabular CSV format](../table-formats/scenario.md).
 
 ### Import from Excel tables
 
-Instead of using CSV tables one can fill the XSLT file and load condition table in the same manner.
+Instead of using CSV tables one can fill the XSLT file and load scenario table in the same manner.
 
 ```julia
-scn_df = read_conditions("./my_example/conditions.xlsx")
+scn_df = read_scenarios("./my_example/scenarios.xlsx")
 ```
 ```julia
 4×4 DataFrame
@@ -258,7 +258,7 @@ scn_df = read_conditions("./my_example/conditions.xlsx")
 
 ### Manual creation
 
-`Condition` objects can be created and loaded without any tables.
+`Scenario` objects can be created and loaded without any tables.
 
 For example we need to create simulations with the default model 
 - `dose = 100`
@@ -266,13 +266,13 @@ For example we need to create simulations with the default model
 - simulation time is from `0` to `1000`
 - we need to observe all species: `A0`, `C1`, `C2`, and all reactions: `v_abs`, `v_el`, `v_distr`
 
-Condition can be created with the following code
+Scenario can be created with the following code
 
 ```julia
 # to get the default model
 model = models(p)[:nameless] 
-# creating condition
-new_condition = HetaSimulator.Condition(
+# creating scenario
+new_scenario = Scenario(
     model,
     parameters = [:dose=>100.],
     events_active = [:sw1=>false, :sw1=>true],
@@ -281,7 +281,7 @@ new_condition = HetaSimulator.Condition(
     ) 
 
 +---------------------------------------------------------------------------
-| Condition contains:
+| Scenario contains:
 |   0 saveat values: Float64[]. Use `saveat(scenario)` for details.
 |   tspan: (0.0, 1000.0). Use `tspan(scenario)` for details.
 |   4 parameters(s). Use `parameters(scenario)` for details.
@@ -289,22 +289,22 @@ new_condition = HetaSimulator.Condition(
 +---------------------------------------------------------------------------
 ```
 
-See more options in API docs for [`HetaSimulator.Condition`](@ref) function.
+See more options in API docs for [`Scenario`](@ref) function.
 
 To load it into `Platform` container use the following syntax.
 
 ```julia
-push!(conditions(p), :multiple_100=>new_condition)
+push!(scenarios(p), :multiple_100=>new_scenario)
 ```
 
-where `multiple_100` is an identifier for the condition in the dictionary.
+where `multiple_100` is an identifier for the scenario in the dictionary.
 
 ## Creating measurements
 
 `Measurement` in HetaSimulator is representation of experimentally measured value for parameter identification.
-Each `Measurement` is associated with some particular condition, observable value and fixed time point.
+Each `Measurement` is associated with some particular scenario, observable value and fixed time point.
 
-All measurements in the platform are used to calculate the log-likelihood function when required. Measurements are stored inside `Condition` objects.
+All measurements in the platform are used to calculate the log-likelihood function when required. Measurements are stored inside `Scenario` objects.
 
 ### Import from CSV tables
 
@@ -314,7 +314,7 @@ Create file __measurements.csv__ file inside __my\_example__ with the following 
 
 Full file can be downloaded from here: [measurements.csv](https://raw.githubusercontent.com/hetalang/hetasimulator/master/case/story_3/measurements.csv)
 
-t|measurement|prob.mean|prob.sigma|condition
+t|measurement|prob.mean|prob.sigma|scenario
 ---|---|---|---|---
 0.08333|0.0686283|C1|sigma1|dose_1
 0.08333|0.0684679|C1|sigma1|dose_1
@@ -330,7 +330,7 @@ The table can be loaded with the [`read_measurements`](@ref) function.
 ```julia
 measurements_df = read_measurements("./cases/story_3/measurements.csv")
 90×5 DataFrame
- Row │ t         measurement  prob.mean  prob.sigma  condition 
+ Row │ t         measurement  prob.mean  prob.sigma  scenario 
      │ Float64   Float64      String     String      Symbol    
 ─────┼─────────────────────────────────────────────────────────
    1 │  0.08333    0.0686283  C1         sigma1      dose_1
@@ -348,7 +348,7 @@ measurements_df = read_measurements("./cases/story_3/measurements.csv")
 
 The function reads the content of CSV file, checks components and stores in `measurements_df` variable of `DataFrame` format.
 
-To load measurements into `Platform` function [`add_measurements!`](@ref) can be used. The function converts all rows into a series of `Measurements` and associate them with condition declared in `condition` value.
+To load measurements into `Platform` function [`add_measurements!`](@ref) can be used. The function converts all rows into a series of `Measurements` and associate them with scenario declared in `scenario` value.
 
 ```julia
 add_measurements!(p, measurements_df)
@@ -366,24 +366,24 @@ measurements_df = read_measurements("./my_example/measurements.xlsx")
 
 There are three main problem types that can currently be solved with HetaSimulator:
 
-- [__Simulation__](#simulation) of time-dependence for selected observables for one or several conditions using [`sim`](@ref) method.
+- [__Simulation__](#simulation) of time-dependence for selected observables for one or several scenarios using [`sim`](@ref) method.
 - [__Monte-Carlo__](#montecarlo) type simulations that performs repeated simulations based on pre-set parameters distributions with [`mc`](@ref) method.
 - [__Fitting__](#fitting) or parameter identification problem that optimizes values of selected model constants to reach the minimal discrepancy between simulations and experimental values which is solved by [`fit`](@ref) method.
 
 Each method returns the solution of its specific type: `SimResults`, `MCResults` and `FitResults` or other types that include them.
 
-The methods can be applied on different levels: `Platform`, `Condition` or `Model` to allow applying all conditions in the platform, some of them or the default one.
+The methods can be applied on different levels: `Platform`, `Scenario` or `Model` to allow applying all scenarios in the platform, some of them or the default one.
 Some important "target vs method" variants are shown in the next table.
 
 Target | Method | Results | Comments
 --- | --- | --- | ---
-`Platform` | `sim` | `Vector{Pair{Symbol,SimResults}}` | All or selected list of conditions in model will run
-`Condition` | `sim` | `SimResults` | Only target condition will run
-`Model` | `sim` | `SimResults` | The condition created from default model's options will run
-`Platform` | `mc` | `Vector{Pair{Symbol,MCResults}}` | All or selected list of conditions in model will run multiple times.
-`Condition` | `mc` | `MCResults` | Target condition will run multiple times
-`Model` | `mc` | `SimResults` | The default condition will run multiple times
-`Platform` | `fit` | `FitResults` | All or selected list of conditions together their measurements will be used to optimize parameters.
+`Platform` | `sim` | `Vector{Pair{Symbol,SimResults}}` | All or selected list of scenarios in model will run
+`Scenario` | `sim` | `SimResults` | Only target scenario will run
+`Model` | `sim` | `SimResults` | The scenario created from default model's options will run
+`Platform` | `mc` | `Vector{Pair{Symbol,MCResults}}` | All or selected list of scenarios in model will run multiple times.
+`Scenario` | `mc` | `MCResults` | Target scenario will run multiple times
+`Model` | `mc` | `SimResults` | The default scenario will run multiple times
+`Platform` | `fit` | `FitResults` | All or selected list of scenarios together their measurements will be used to optimize parameters.
 
 *This page provides the example of applying methods on the `Platform` level only*
 
@@ -393,16 +393,16 @@ See more information for each method in extended description: [sim explanations]
 
 See more details about `sim` method in [sim method](./sim.md) chapter.
 
-On the previous steps we created the platform `p` and populated it with 4 conditions and measurement points.
+On the previous steps we created the platform `p` and populated it with 4 scenarios and measurement points.
 
-Without additional preparations we can simulate the platform which means running all 4 conditions and combining all results into one object.
+Without additional preparations we can simulate the platform which means running all 4 scenarios and combining all results into one object.
 
 ```julia
 res = sim(p)
 ```
 ```julia
 +---------------------------------------------------------------------------
-| Simulation results for 4 condition(s).
+| Simulation results for 4 scenario(s).
 | [:multiple_15 => ..., :dose_1 => ..., :dose_10 => ..., :dose_100 => ...]
 | Use `sol[id]` to get component by id.
 | Use `sol[i]` to get component by number.
@@ -411,7 +411,7 @@ res = sim(p)
 +---------------------------------------------------------------------------
 ```
 
-The whole solution consists of parts which corresponds to number of conditions in Platform.
+The whole solution consists of parts which corresponds to number of scenarios in Platform.
 
 The results can be plotted using default `plot` method.
 
@@ -428,7 +428,7 @@ res_df = DataFrame(res)
 ```
 ```julia
 1031×6 DataFrame
-  Row │ t             A0            C1           C2           scope   condition   
+  Row │ t             A0            C1           C2           scope   scenario   
       │ Float64       Float64       Float64      Float64      Symbol  Symbol      
 ──────┼───────────────────────────────────────────────────────────────────────────
     1 │  0.0           0.0          0.0          0.0          ode_    multiple_15
@@ -442,7 +442,7 @@ res_df = DataFrame(res)
                                                                  1024 rows omitted
 ```
 
-User can work with the solution component by using indexing by component number, like here `res[1]` or by condition id `res[:dose_1]`.
+User can work with the solution component by using indexing by component number, like here `res[1]` or by scenario id `res[:dose_1]`.
 
 Any component can also be transformed into `DataFrame`.
 
@@ -451,7 +451,7 @@ res_df1 = DataFrame(res[1])
 ```
 ```julia
 702×6 DataFrame
- Row │ t              A0            C1           C2           scope   condition   
+ Row │ t              A0            C1           C2           scope   scenario   
      │ Float64        Float64       Float64      Float64      Symbol  Symbol      
 ─────┼────────────────────────────────────────────────────────────────────────────
    1 │   0.0           0.0          0.0          0.0          ode_    multiple_15
@@ -482,7 +482,7 @@ mc_res = mc(p, [:kabs=>Normal(10.,1e-1), :kel=>Normal(0.2,1e-3)], 1000)
 ```
 ```julia
 +---------------------------------------------------------------------------
-| Monte-Carlo results for 4 condition(s).
+| Monte-Carlo results for 4 scenario(s).
 | [:multiple_15 => ..., :dose_1 => ..., :dose_10 => ..., :dose_100 => ...]
 | Use `sol[id]` to get component by id.
 | Use `sol[i]` to get component by number.
@@ -497,7 +497,7 @@ mc_df = DataFrame(mc_res)
 ```
 ```julia
 946000×7 DataFrame
-    Row │ iter   t             A0           C1           C2           scope   condition   
+    Row │ iter   t             A0           C1           C2           scope   scenario   
         │ Int64  Float64       Float64      Float64      Float64      Symbol  Symbol      
 ────────┼─────────────────────────────────────────────────────────────────────────────────
       1 │     1   0.0           0.0         0.0          0.0          ode_    multiple_15 
@@ -525,7 +525,7 @@ plot(mc_res)
 
 To run optimization problem you need to do three steps:
 
-- Be sure that you measurement points are loaded in a proper way: referred `Condition`s exists, proper error model is chosen
+- Be sure that you measurement points are loaded in a proper way: referred `Scenario`s exists, proper error model is chosen
 - If required add parameters responsible for noise distribution into a model code, like `sigma` etc.
 - select a set of constants which will be fitted and set initial values for them.
 
@@ -543,13 +543,13 @@ sigma2 @Const = 0.1;
 sigma3 @Const = 0.1;
 ```
 
-Take a note that the model compilation and loading `Condition`s  and `Measurement`s should be repeated because `p` object was rebuild.
+Take a note that the model compilation and loading `Scenario`s  and `Measurement`s should be repeated because `p` object was rebuild.
 
 ```julia
 p = load_platform("$HetaSimulatorDir/cases/story_3")
 
-scn_df = read_conditions("$HetaSimulatorDir/cases/story_3/conditions.csv")
-add_conditions!(p, scn_df)
+scn_df = read_scenarios("$HetaSimulatorDir/cases/story_3/scenarios.csv")
+add_scenarios!(p, scn_df)
 
 measurements_df = read_measurements("$HetaSimulatorDir/cases/story_3/measurements.csv")
 add_measurements!(p, measurements_df)

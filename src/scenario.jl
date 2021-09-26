@@ -7,7 +7,7 @@ const OBSERVABLES_HEADER = Symbol("observables[]")
 
 # general interface
 """
-    Condition(model::Model;
+    Scenario(model::Model;
       measurements::Vector{AbstractMeasurementPoint}=AbstractMeasurementPoint[],
       observables::Union{Nothing,Vector{Symbol}}=nothing,
       parameters::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
@@ -18,8 +18,8 @@ const OBSERVABLES_HEADER = Symbol("observables[]")
       save_scope::Bool = true,
     )
 
-Builds simulation condition of type [`HetaSimulator.Condition`](@ref)
-Example: `Condition(model; tspan = (0., 200.), saveat = [0.0, 150., 250.])`
+Builds simulation scenario of type [`HetaSimulator.Scenario`](@ref)
+Example: `Scenario(model; tspan = (0., 200.), saveat = [0.0, 150., 250.])`
 
 Arguments:
 
@@ -33,7 +33,7 @@ Arguments:
 - `tspan` : time span for the ODE problem
 - `save_scope` : should scope be saved together with solution. Default is `true`
 """
-function Condition(
+function Scenario(
   model::Model;
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
   observables::Union{Nothing,Vector{Symbol}} = nothing,
@@ -46,11 +46,11 @@ function Condition(
     kwargs...
   )
 
-  return Condition(model.init_func, prob, measurements)
+  return Scenario(model.init_func, prob, measurements)
 end
 
 # CSV methods
-function add_conditions!(
+function add_scenarios!(
   platform::Platform,
   vector::AbstractVector;
   subset::AbstractVector{P} = Pair{Symbol, Symbol}[]
@@ -58,7 +58,7 @@ function add_conditions!(
   selected_rows = _subset(vector, subset)
 
   for row in selected_rows
-    _add_condition!(platform, row)
+    _add_scenario!(platform, row)
   end
 
   return nothing
@@ -66,36 +66,36 @@ end
 
 # DataFrame methods
 """
-    add_conditions!(
+    add_scenarios!(
       platform::Platform,
       df::DataFrame;
       subset::AbstractVector{P} = Pair{Symbol, Symbol}[]
     ) where P <: Pair{Symbol, Symbol}
 
-Adds a new `Condition` to the `Platform`
+Adds a new `Scenario` to the `Platform`
 
 Arguments:
 
 - `platform` : platform of [`Platform`](@ref) type
-- `df` : `DataFrame` with conditions setup, typically obtained with [`read_conditions`](@ref) function
-- `subset` : subset of conditions which will be added to the `platform`. Default `Pair{Symbol, Symbol}[]` adds all conditions from the `df`
+- `df` : `DataFrame` with scenarios setup, typically obtained with [`read_scenarios`](@ref) function
+- `subset` : subset of scenarios which will be added to the `platform`. Default `Pair{Symbol, Symbol}[]` adds all scenarios from the `df`
 """
-function add_conditions!(
+function add_scenarios!(
   platform::Platform,
   df::DataFrame;
   kwargs...
 )
-  add_conditions!(platform, eachrow(df); kwargs...)
+  add_scenarios!(platform, eachrow(df); kwargs...)
 end
 
-# private function to add one condition row into platform
+# private function to add one scenario row into platform
 
-function _add_condition!(platform::Platform, row::Any) # maybe not any
+function _add_scenario!(platform::Platform, row::Any) # maybe not any
   _id = row[:id]
   model_name = get(row, :model, :nameless)
 
   if !haskey(platform.models, model_name)
-    @warn "Lost model $(model_name). Condition $_id has been skipped."
+    @warn "Lost model $(model_name). Scenario $_id has been skipped."
     return nothing # BRAKE
   else
     model = platform.models[model_name]
@@ -114,7 +114,7 @@ function _add_condition!(platform::Platform, row::Any) # maybe not any
         push!(_events_active, Symbol(splitted_key[2]) => bool(row[key]))
       elseif splitted_key[1] == SWITCHER_SAVE_PREFIX
         save_evt_vec = split(row[key], ";")
-        @assert length(save_evt_vec) == 2 "Events saving setup accepts two values (e.g. true;false). Check the conditions table."
+        @assert length(save_evt_vec) == 2 "Events saving setup accepts two values (e.g. true;false). Check the scenarios table."
         push!(_events_save, Symbol(splitted_key[2]) => (bool(save_evt_vec[1]), bool(save_evt_vec[2])))
       end
     end
@@ -140,7 +140,7 @@ function _add_condition!(platform::Platform, row::Any) # maybe not any
     _observables = nothing
   end
 
-  condition = Condition(
+  scenario = Scenario(
     model;
     parameters = _parameters,
     events_active = _events_active,
@@ -150,25 +150,25 @@ function _add_condition!(platform::Platform, row::Any) # maybe not any
     observables = _observables
   )
 
-  push!(platform.conditions, _id => condition)
+  push!(platform.scenarios, _id => scenario)
 end
 
 # helper to read from csv and xlsx
 
-function read_conditions_csv(filepath::String; kwargs...)
+function read_scenarios_csv(filepath::String; kwargs...)
   df = DataFrame(CSV.File(
     filepath,
     types = Dict(:id => Symbol, :model=>Symbol, :tspan => Float64);
     kwargs...)
   )
-  assert_conditions(df)
+  assert_scenarios(df)
   
   return df
 end
 
-function read_conditions_xlsx(filepath::String, sheet=1; kwargs...)
+function read_scenarios_xlsx(filepath::String, sheet=1; kwargs...)
   df = DataFrame(XLSX.readtable(filepath, sheet,infer_eltypes=true)...)
-  assert_conditions(df)
+  assert_scenarios(df)
 
   df[!,:id] .= Symbol.(df[!,:id])
   "tspan" in names(df) && (df[!,:tspan] .= float64.(df[!,:tspan]))
@@ -177,9 +177,9 @@ function read_conditions_xlsx(filepath::String, sheet=1; kwargs...)
 end
 
 """
-    read_conditions(filepath::String, sheet=1; kwargs...)
+    read_scenarios(filepath::String, sheet=1; kwargs...)
 
-Reads table file with conditions to `DataFrame`
+Reads table file with scenarios to `DataFrame`
 
 Arguments:
 
@@ -187,20 +187,20 @@ Arguments:
 - `sheet` : number of sheet in case of ".xlsx" file. Default is `1`
 - kwargs : other arguments supported by `CSV.File`
 """
-function read_conditions(filepath::String, sheet=1; kwargs...)
+function read_scenarios(filepath::String, sheet=1; kwargs...)
   ext = splitext(filepath)[end]
 
   if ext == ".csv"
-    df = read_conditions_csv(filepath; kwargs...)
+    df = read_scenarios_csv(filepath; kwargs...)
   elseif ext == ".xlsx"
-    df = read_conditions_xlsx(filepath, sheet)
+    df = read_scenarios_xlsx(filepath, sheet)
   else  
     error("Extension $ext is not supported.")
   end
   return df
 end
 
-function assert_conditions(df)
+function assert_scenarios(df)
   names_df = names(df)
   for f in ["id"]
     @assert f ∈ names_df "Required column name $f is not found in measurements table."

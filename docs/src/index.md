@@ -12,10 +12,10 @@ __The main features__ of the package are
 - reach capabilities for estimating parameters' values based on experimental datasets
 - support for working with multiple models including simultaneous fitting
 - parallel simulations
-- storage of data and conditions the unified formats
-- import of datasets and conditions from CSV/Excel tables 
+- storage of data and scenarios the unified formats
+- import of datasets and scenarios from CSV/Excel tables 
 - full Heta standard support
-- storing models, conditions and data in the `Platform` object for easy management of platform components
+- storing models, scenarios and data in the `Platform` object for easy management of platform components
 - utilizing the facilities of OpenSource projects like [Julia](https://julialang.org/) and [SciML ecosystem](https://sciml.ai/).
 
 ## Installation
@@ -66,7 +66,7 @@ platform = load_platform("./my_project")
 model = platform.models[:nameless]
 
 # single simulation and plot
-results = HetaSimulator.Condition(model; tspan = (0., 1200.)) |> sim
+results = Scenario(model; tspan = (0., 1200.)) |> sim
 plot(results)
 ```
 
@@ -88,11 +88,11 @@ df = DataFrame(results)
 
 The user of HetaSimulator typically deals with the following three types:
 - `Model` - an ODE model, containing rhs, rules, initial parameters and vector of events.
-- `Condition` - condition representing a special model's setup for simulations or fitting. This setup can include initial parameters and events settings, output variables etc. In case of fitting `Condition` should also include experimental data. A common usage of `Condition` can be model's simulation with different drugs (parameters and events setup). Different `Condition`'s can be united to run multi-conditional simulations and fitting.
-- `Platform` - container for different `Model`s and `Condition`s.
+- `Scenario` - scenario representing a special model's setup for simulations or fitting. This setup can include initial parameters and events settings, output variables etc. In case of fitting `Scenario` should also include experimental data. A common usage of `Scenario` can be model's simulation with different drugs (parameters and events setup). Different `Scenario`'s can be united to run multi-scenarios simulations and fitting.
+- `Platform` - container for different `Model`s and `Scenario`s.
 
-The user can perform the following three operations with both `Model`, `Condition` and `Platform`
-- `sim` - run a single or multi-conditional simulations. 
+The user can perform the following three operations with both `Model`, `Scenario` and `Platform`
+- `sim` - run a single or multi-scenarios simulations. 
 - `fit` - fit a model to experimental data. 
 - `mc` - run Monte-Carlo or virtual patients simulations.
 
