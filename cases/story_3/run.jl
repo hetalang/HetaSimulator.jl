@@ -5,25 +5,25 @@ p = load_platform("$HetaSimulatorDir/cases/story_3")
 # p1 = load_jlplatform("./cases/story_3/dist/julia_platform/model.jl")
 
 
-### load conditions
+### load scenarios
 
-cond_df = read_conditions("$HetaSimulatorDir/cases/story_3/conditions.csv")
-# cond_df = read_conditions("$HetaSimulatorDir/cases/story_3/conditions.xlsx")
-add_conditions!(p, cond_df)
+scn_df = read_conditions("$HetaSimulatorDir/cases/story_3/conditions.csv")
+# scn_df = read_conditions("$HetaSimulatorDir/cases/story_3/conditions.xlsx")
+add_conditions!(p, scn_df)
 
-condition1 = conditions(p)[:dose_1]
+scenario1 = conditions(p)[:dose_1]
 
-### create conditions
+### create scenarios
 
 model = models(p)[:nameless]
-new_condition = HetaSimulator.Condition(
+new_scenario = HetaSimulator.Condition(
     model,
     parameters = [:dose=>100.],
     events_active = [:sw1=>false, :sw1=>true],
     tspan = (0.,1000.),
     observables = [:A0, :C1, :C2, :v_abs, :v_el, :v_distr]
     ) 
-push!(conditions(p), :multiple_100=>new_condition)
+push!(conditions(p), :multiple_100=>new_scenario)
 
 ### create measurements
 

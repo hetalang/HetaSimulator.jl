@@ -20,12 +20,12 @@ conditions(p::Platform) = p.conditions
 
 function Base.show(io::IO, ::MIME"text/plain", p::Platform)
   models_names = join(keys(p.models), ", ")
-  conditions_names = join(keys(p.conditions), ", ")
+  scn_names = join(keys(p.conditions), ", ")
 
   println(io, "+---------------------------------------------------------------------------")
   println(io, "| Platform contains:")
   println(io, "|   $(length(models(p))) model(s): $models_names. Use `models(platform)` for details.")
-  println(io, "|   $(length(conditions(p))) condition(s): $conditions_names. Use `conditions(platform)` for details.")
+  println(io, "|   $(length(conditions(p))) condition(s): $scn_names. Use `conditions(platform)` for details.")
   println(io, "+---------------------------------------------------------------------------")
 end
 
@@ -136,10 +136,10 @@ measurements(c::Condition) = c.measurements
 function Base.show(io::IO, ::MIME"text/plain", c::Condition)
   println(io, "+---------------------------------------------------------------------------")
   println(io, "| Condition contains:")
-  println(io, "|   $(length(saveat(c))) saveat values: $(saveat(c)). Use `saveat(cond)` for details.")
-  println(io, "|   tspan: $(tspan(c)). Use `tspan(cond)` for details.")
-  println(io, "|   $(length(parameters(c))) parameters(s). Use `parameters(cond)` for details.")
-  println(io, "|   $(length(measurements(c))) measurement(s). Use `measurements(cond)` for details.")
+  println(io, "|   $(length(saveat(c))) saveat values: $(saveat(c)). Use `saveat(scenario)` for details.")
+  println(io, "|   tspan: $(tspan(c)). Use `tspan(scenario)` for details.")
+  println(io, "|   $(length(parameters(c))) parameters(s). Use `parameters(scenario)` for details.")
+  println(io, "|   $(length(measurements(c))) measurement(s). Use `measurements(scenario)` for details.")
   #println(io, "|   $(length(events_active(c))) event(s). Use `events_active(c::Condition)` for details.")
   #println(io, "|   $(length(events_save(c))) event(s). Use `events_save(c::Condition)` for details.")
   #println(io, "|   $(length(observables(c))) observable(s). Use `observables(c::Condition)` for details.")
@@ -180,14 +180,14 @@ vals(s::Simulation) = s.vals.u
 """
     struct SimResults{S, C<:Condition} <: AbstractResults
       sim::S
-      cond::C 
+      scenario::C 
     end
 
 Structure storing results from [`sim`]{@ref} method applied for one [`HetaSimulator.Condition`]{@ref}.
 """
 struct SimResults{S, C<:Condition} <: AbstractResults
   sim::S
-  cond::C 
+  scenario::C 
 end
 
 status(s::SimResults) = status(s.sim)
@@ -240,7 +240,7 @@ end
     struct MCResults{S,C} <: AbstractResults
       sim::S
       saveat::Bool
-      cond::C
+      scenario::C
     end
 
 Structure storing results of [`mc`]{@ref} method applied for one `Condition`.
@@ -248,7 +248,7 @@ Structure storing results of [`mc`]{@ref} method applied for one `Condition`.
 struct MCResults{S,C} <: AbstractResults
   sim::S
   saveat::Bool
-  cond::C
+  scenario::C
   # converged
   # elapsed_time
 end

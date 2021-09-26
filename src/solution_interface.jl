@@ -3,7 +3,7 @@
 observables(sr::SimResults) = observables(sr.sim)
 observables(sim::Simulation) = collect(keys(sim.vals.u[1]))
 observables(sim::MCResults) = collect(keys(sim.u[1][1]))
-constants(sim::SimResults) = sim.cond.prob.p.constants
+constants(sim::SimResults) = sim.scenario.prob.p.constants
 
 @inline Base.getindex(sim::Simulation, I...) = sim.vals[I...]
 @inline Base.getindex(sim::Simulation, i::Symbol,::Colon) = [sim.vals[j][i] for j in 1:length(sim.vals)]
@@ -68,10 +68,10 @@ end
     (time, vals)
   end
 
-  if measurements == true && !isempty(sr.cond.measurements)
+  if measurements == true && !isempty(sr.scenario.measurements)
     t_meas = NamedTuple{Tuple(vars)}([Float64[] for i in eachindex(vars)])
     vals_meas = NamedTuple{Tuple(vars)}([Float64[] for i in eachindex(vars)])
-    for meas in sr.cond.measurements
+    for meas in sr.scenario.measurements
       μ = meas.μ 
       if isa(μ,Symbol) && μ ∈ vars 
         push!(t_meas[μ], meas.t)

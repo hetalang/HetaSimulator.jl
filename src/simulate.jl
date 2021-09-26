@@ -4,23 +4,23 @@ const DEFAULT_ALG = AutoTsit5(Rosenbrock23())
 
 const EMPTY_PROBLEM = ODEProblem(() -> nothing, [0.0], (0.,1.))
 
-### simulate condition
+### simulate scenarios
 
 """
-    sim(cond::Condition; 
+    sim(scenario::Condition; 
       parameters_upd::Union{Nothing, Vector{P}}=nothing,
       alg=DEFAULT_ALG, 
       reltol=DEFAULT_SIMULATION_RELTOL, 
       abstol=DEFAULT_SIMULATION_ABSTOL,
       kwargs...)
 
-Simulate single condition `cond`. Returns [`SimResults`](@ref) type.
+Simulate single condition `scenario`. Returns [`SimResults`](@ref) type.
 
 Example: `Condition(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]) |> sim`
 
 Arguments:
 
-- `cond` : simulation condition of type [`HetaSimulator.Condition`](@ref)
+- `scenario` : simulation condition of type [`HetaSimulator.Condition`](@ref)
 - `parameters_upd` : constants, which overwrite both `Model` and `HetaSimulator.Condition` constants. Default is `nothing`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
@@ -28,7 +28,7 @@ Arguments:
 - kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
 function sim(
-  cond::Condition; 
+  scenario::Condition; 
   parameters_upd::Union{Nothing, Vector{P}}=nothing,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
@@ -36,11 +36,11 @@ function sim(
   kwargs... # other solver arguments
 ) where P<:Pair
 
-  prob = !isnothing(parameters_upd) ? update_init_values(cond.prob, cond.init_func, NamedTuple(parameters_upd)) : cond.prob
+  prob = !isnothing(parameters_upd) ? update_init_values(scenario.prob, scenario.init_func, NamedTuple(parameters_upd)) : scenario.prob
   sol = solve(prob, alg; reltol = reltol, abstol = abstol,
     save_start = false, save_end = false, save_everystep = false, kwargs...)
 
-  return build_results(sol, cond)
+  return build_results(sol, scenario)
 end
 
 function build_results(sol::SciMLBase.AbstractODESolution)
@@ -48,7 +48,7 @@ function build_results(sol::SciMLBase.AbstractODESolution)
   return Simulation(sv, sol.retcode)
 end
 
-build_results(sol::SciMLBase.AbstractODESolution, cond) = SimResults(build_results(sol), cond)
+build_results(sol::SciMLBase.AbstractODESolution, scenario) = SimResults(build_results(sol), scenario)
 
 ### simulate Model
 """
@@ -79,7 +79,7 @@ Arguments:
 - `saveat` : time points, where solution should be saved. Default `nothing` values stands for saving solution at timepoints reached by the solver 
 - `tspan` : time span for the ODE problem
 - `save_scope` : should scope be saved together with solution. Default is `true`
-- kwargs : other solver related arguments supported by `sim(cond::Condition)`
+- kwargs : other solver related arguments supported by `sim(scenario::Condition)`
 """
 function sim(
   model::Model;
@@ -106,7 +106,7 @@ end
 ### general interface for EnsembleProblem
 
 """
-    sim(condition_pairs::Vector{P}; 
+    sim(scenario_pairs::Vector{P}; 
       parameters_upd::Union{Nothing, Vector}=nothing,
       alg=DEFAULT_ALG, 
       reltol=DEFAULT_SIMULATION_RELTOL, 
@@ -116,11 +116,11 @@ end
 
 Simulate multiple conditions. Returns `Vector{Pair}`.
 
-Example: `sim([:x => cond1, :y=>cond2, :z=>cond3])`
+Example: `sim([:x => scn1, :y=>scn2, :z=>scn3])`
 
 Arguments:
 
-- `condition_pairs` : vector of pairs containing names and conditions of type [`HetaSimulator.Condition`](@ref)
+- `scenario_pairs` : vector of pairs containing names and conditions of type [`HetaSimulator.Condition`](@ref)
 - `parameters_upd` : constants, which overwrite both `Model` and `Condition` constants. Default is `nothing`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
@@ -129,7 +129,7 @@ Arguments:
 - kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
 function sim(
-  condition_pairs::Vector{P};
+  scenario_pairs::Vector{P};
   parameters_upd::Union{Nothing, Vector}=nothing,
   alg = DEFAULT_ALG, 
   reltol = DEFAULT_SIMULATION_RELTOL, 
@@ -139,21 +139,21 @@ function sim(
   kwargs... # other arguments for OrdinaryDiffEq.solve()
 ) where P<:Pair
 
-  isempty(condition_pairs) && return SimResults[] # BRAKE
+  isempty(scenario_pairs) && return SimResults[] # BRAKE
 
   progress_on = (parallel_type == EnsembleSerial()) # tmp fix
-  p = Progress(length(condition_pairs), dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled=progress_on)
+  p = Progress(length(scenario_pairs), dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled=progress_on)
 
   function prob_func(prob,i,repeat)
     next!(p)
-    prob_i = last(condition_pairs[i]).prob
-    init_func_i = last(condition_pairs[i]).init_func
+    prob_i = last(scenario_pairs[i]).prob
+    init_func_i = last(scenario_pairs[i]).init_func
     !isnothing(parameters_upd) ? 
       update_init_values(prob_i, init_func_i, NamedTuple(parameters_upd)) : prob_i
   end
 
   function _output(sol,i)
-    build_results(sol,last(condition_pairs[i])),false
+    build_results(sol,last(scenario_pairs[i])),false
   end
   
   _reduction(u,batch,I) = (append!(u,batch),false)
@@ -165,7 +165,7 @@ function sim(
   )
 
   solution = solve(prob, alg, parallel_type;
-    trajectories = length(condition_pairs),
+    trajectories = length(scenario_pairs),
     reltol = reltol,
     abstol = abstol,
     save_start = false,
@@ -173,7 +173,7 @@ function sim(
     save_everystep = false,
     kwargs...
     )
-  return [Pair{Symbol,SimResults}(first(cp), u) for (cp,u) in zip(condition_pairs, solution.u)]
+  return [Pair{Symbol,SimResults}(first(cp), u) for (cp,u) in zip(scenario_pairs, solution.u)]
 end
 
 ### simulate many conditions
@@ -183,19 +183,19 @@ end
 
 Simulate multiple conditions. Returns `Vector{Pair}`.
 
-Example: `sim([cond1, cond2, cond3])`
+Example: `sim([scn1, scn2, scn3])`
 
 Arguments:
 
 - `conditions` : `Vector` containing names and conditions of type [`HetaSimulator.Condition`](@ref)
-- kwargs : other kwargs supported by `sim(condition_pairs::Vector{Pair})`
+- kwargs : other kwargs supported by `sim(scenario_pairs::Vector{Pair})`
 """
 function sim(
   conditions::AbstractVector{C};
   kwargs... # other arguments to sim(::Vector{Pair})
 ) where {C<:AbstractCond}
-  condition_pairs = [Symbol("_$i") => cond for (i, cond) in pairs(conditions)]
-  return sim(condition_pairs; kwargs...)
+  scenario_pairs = [Symbol("_$i") => scn for (i, scn) in pairs(conditions)]
+  return sim(scenario_pairs; kwargs...)
 end
 
 ### simulate Platform
@@ -213,7 +213,7 @@ Arguments:
 
 - `platform` : platform of [`Platform`](@ref) type
 - `conditions` : `Vector` containing names of conditions included in platform. Default value `nothing` stands for all conditions in the platform 
-- kwargs : other kwargs supported by `sim(condition_pairs::Vector{Pair})`
+- kwargs : other kwargs supported by `sim(scenario_pairs::Vector{Pair})`
 """
 function sim(
   platform::Platform;
@@ -223,16 +223,16 @@ function sim(
   @assert length(platform.conditions) != 0 "Platform should contain at least one condition."
 
   if isnothing(conditions)
-    condition_pairs = [platform.conditions...]
+    scenario_pairs = [platform.conditions...]
   else
-    condition_pairs = Pair{Symbol,AbstractCond}[]
-    for cond_name in conditions
-      @assert haskey(platform.conditions, cond_name) "No condition :$cond_name found in the platform."
-      push!(condition_pairs, cond_name=>platform.conditions[cond_name])
+    scenario_pairs = Pair{Symbol,AbstractCond}[]
+    for scn_name in conditions
+      @assert haskey(platform.conditions, scn_name) "No condition :$scn_name found in the platform."
+      push!(scenario_pairs, scn_name=>platform.conditions[scn_name])
     end
   end
 
-  return sim(condition_pairs; kwargs...)
+  return sim(scenario_pairs; kwargs...)
 end
 
 

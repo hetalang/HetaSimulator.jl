@@ -31,7 +31,7 @@ _* `saveat[]` or `tspan` must be set for the particular `Condition`. If you set 
 Condition table can be loaded into Julia environment as a `DataFrame` using `HetaSimulator.read_conditions` method. This method reads the file, checks the content and formats the data to be used inside Platform object.
 
 ```julia
-conditions_csv = read_conditions("./conditions.csv")
+scn_csv = read_conditions("./conditions.csv")
 
 4×7 DataFrame
  Row │ id         parameters.k1  parameters.k2  parameters.k3  saveat[]           tspan      observables[] 
@@ -45,7 +45,7 @@ conditions_csv = read_conditions("./conditions.csv")
 The data frame can be loaded into platform using the `HetaSimulator.add_conditions!` method.
 
 ```julia
-add_conditions!(platform, conditions_csv)
+add_conditions!(platform, scn_csv)
 
 conditions(platform)
 Dict{Symbol, Condition} with 4 entries:
@@ -60,9 +60,9 @@ Loading file __conditions.csv__ with the following content.
 
 id | model | parameters.k1 | parameters.k2 | parameters.k3 | saveat[] | tspan | observables[] | events_active.sw1 | events_active.sw2 | events_save.sw1
 --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
-cond1 | |  | 0.001 | 0.02 | 0;12;24;48;72;120;150 | | | true | false | true;false
-cond2 | nameless | 0.001 |  |  | |  1000 | | | true |
-cond3 | another_model | | 0.001  |  | 0;12;24;48;72;120 |  | | false |
+scn1 | |  | 0.001 | 0.02 | 0;12;24;48;72;120;150 | | | true | false | true;false
+scn2 | nameless | 0.001 |  |  | |  1000 | | | true |
+scn3 | another_model | | 0.001  |  | 0;12;24;48;72;120 |  | | false |
 
 Read as `DataFrame` object.
 
@@ -76,34 +76,34 @@ Add all conditions to Platform
 add_conditions!(platform, conditions)
 ```
 
-As a result the Platform will contain three conditions: cond1, cond2, cond3.
+As a result the Platform will contain three conditions: scn1, scn2, scn3.
 
 These operations are equivalent of manually created `Condition` objects.
 
 ```julia
-cond1 = HetaSimulator.Condition(
+scn1 = HetaSimulator.Condition(
   platform.models[:nameless];
   parameters = [:k2=>0.001, :k3=>0.02],
   saveat = [0, 12, 24, 48, 72, 120, 150],
   events_active = [:sw1=>true, :sw2=>false],
   events_save = [:sw1=>(true,false)]
 )
-push!(platform.conditions, :cond1=>cond1)
+push!(platform.conditions, :scn1=>scn1)
 
-cond2 = HetaSimulator.Condition(
+scn2 = HetaSimulator.Condition(
   platform.models[:nameless];
   parameters = [:k1=>0.001],
   tspan = (0., 1000.),
   events_active = [:sw2=>true]
 )
-push!(platform.conditions, :cond2=>cond2)
+push!(platform.conditions, :scn2=>scn2)
 
-cond3 = HetaSimulator.Condition(
+scn3 = HetaSimulator.Condition(
   platform.models[:another_model];
   parameters = [:k2=>0.001],
   saveat = [0, 12, 24, 48, 72, 120],
   events_active = [:sw1=>false]
 )
-push!(platform.conditions, :cond3=>cond3)
+push!(platform.conditions, :scn3=>scn3)
 
 ```

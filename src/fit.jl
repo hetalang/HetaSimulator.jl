@@ -4,7 +4,7 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
 ### general interface
 
 """
-    fit(condition_pairs::AbstractVector{Pair{Symbol, C}},
+    fit(scenario_pairs::AbstractVector{Pair{Symbol, C}},
       params::Vector{Pair{Symbol,Float64}};
       alg=DEFAULT_ALG,
       reltol=DEFAULT_FITTING_RELTOL,
@@ -24,11 +24,11 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
 
 Fit parameters to experimental measurements. Returns `FitResults` type.
 
-Example: `fit([:x=>cond2, :y=>cond3, :z=>cond4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
+Example: `fit([:x=>scn2, :y=>scn3, :z=>scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
 
 Arguments:
 
-- `condition_pairs` : vector of pairs containing names and conditions of type [`HetaSimulator.Condition`](@ref)
+- `scenario_pairs` : vector of pairs containing names and conditions of type [`HetaSimulator.Condition`](@ref)
 - `params` : optimization parameters and their initial values
 - `parameters_upd` : constants, which overwrite both `Model` and `HetaSimulator.Condition` constants. Default is `nothing`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
@@ -48,7 +48,7 @@ Arguments:
 - kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
 function fit(
-  condition_pairs::AbstractVector{Pair{Symbol, C}},
+  scenario_pairs::AbstractVector{Pair{Symbol, C}},
   params::Vector{Pair{Symbol,Float64}};
   parameters_upd::Union{Nothing, Vector{P}}=nothing,
   alg=DEFAULT_ALG,
@@ -68,35 +68,35 @@ function fit(
   kwargs... # other arguments to sim()
 ) where {C<:AbstractCond, P<:Pair}
 
-  selected_condition_pairs = Pair{Symbol,Condition}[]
-  for cond_pair in condition_pairs # iterate through condition names
-    if isempty(last(cond_pair).measurements)
-      @warn "Condition \":$(first(cond_pair))\" has no measurements. It will be excluded from fitting."
+  selected_scenario_pairs = Pair{Symbol,Condition}[]
+  for scenario_pair in scenario_pairs # iterate through condition names
+    if isempty(last(scenario_pair).measurements)
+      @warn "Condition \":$(first(scenario_pair))\" has no measurements. It will be excluded from fitting."
     else
-      push!(selected_condition_pairs, cond_pair)
+      push!(selected_scenario_pairs, scenario_pair)
     end
   end
   
-  isempty(selected_condition_pairs) && throw("No measurements points included in conditions.")
+  isempty(selected_scenario_pairs) && throw("No measurements points included in conditions.")
   
   # update saveat and initial values
   selected_prob = []
-  for cond in selected_condition_pairs
-    prob_i = remake_saveat(last(cond).prob, last(cond).measurements)
-    prob_i = !isnothing(parameters_upd) ? update_init_values(prob_i, last(cond).init_func, NamedTuple(parameters_upd)) : prob_i
+  for scn in selected_scenario_pairs
+    prob_i = remake_saveat(last(scn).prob, last(scn).measurements)
+    prob_i = !isnothing(parameters_upd) ? update_init_values(prob_i, last(scn).init_func, NamedTuple(parameters_upd)) : prob_i
     push!(selected_prob, prob_i)
   end
 
   function prob_func(x)
     function internal_prob_func(prob,i,repeat)
-      update_init_values(selected_prob[i],last(selected_condition_pairs[i]).init_func,x)
+      update_init_values(selected_prob[i],last(selected_scenario_pairs[i]).init_func,x)
     end
   end
 
   function _output(sol, i)
-    sol.retcode != :Success && error("Simulated condition $i returned $(sol.retcode) status")
-    sim = build_results(sol,last(selected_condition_pairs[i]))
-    loss_val = loss(sim, sim.cond.measurements) 
+    sol.retcode != :Success && error("Simulated scenario $i returned $(sol.retcode) status")
+    sim = build_results(sol,last(selected_scenario_pairs[i]))
+    loss_val = loss(sim, sim.scenario.measurements) 
     (loss_val, false)
   end
 
@@ -118,7 +118,7 @@ function fit(
     prob_i = prob(x_nt)
     sol = try
       solve(prob_i, alg, parallel_type;
-        trajectories = length(selected_condition_pairs),
+        trajectories = length(selected_scenario_pairs),
         reltol,
         abstol,
         save_start = false, 
@@ -159,7 +159,7 @@ function fit(
 end
 
 """
-    fit(condition_pairs::AbstractVector{Pair{Symbol, C}},
+    fit(scenario_pairs::AbstractVector{Pair{Symbol, C}},
       params_df::DataFrame;
       kwargs...
     ) where C<:AbstractCond
@@ -168,12 +168,12 @@ Fit parameters to experimental measurements. Returns `FitResults` type.
 
 Arguments:
 
-- `condition_pairs` : vector of pairs containing names and conditions of type [`HetaSimulator.Condition`](@ref)
+- `scenario_pairs` : vector of pairs containing names and conditions of type [`HetaSimulator.Condition`](@ref)
 - `params` : DataFrame with optimization parameters setup and their initial values
-- kwargs : other solver related arguments supported by `fit(condition_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
+- kwargs : other solver related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
 """
 function fit(
-  condition_pairs::AbstractVector{Pair{Symbol, C}},
+  scenario_pairs::AbstractVector{Pair{Symbol, C}},
   params_df::DataFrame;
   kwargs...
 ) where C<:AbstractCond
@@ -187,10 +187,10 @@ function fit(
   scale = gdf[(true,)].parameterScale
   parameters_upd = haskey(gdf, (false,)) ? gdf[(false,)].parameterId .=> gdf[(false,)].nominalValue : nothing
 
-  fit(condition_pairs, params; parameters_upd, lbounds, ubounds, scale, kwargs...)
+  fit(scenario_pairs, params; parameters_upd, lbounds, ubounds, scale, kwargs...)
 end
 
-### fit many conditions
+### fit many scenarios
 """
     fit(conditions::AbstractVector{C},
       params;
@@ -199,21 +199,21 @@ end
 
 Fit parameters to experimental measurements. Returns `FitResults` type.
 
-Example: `fit([cond2, cond3, cond4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
+Example: `fit([scn2, scn3, scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
 
 Arguments:
 
 - `conditions` : vector of conditions of type [`HetaSimulator.Condition`](@ref)
 - `params` : optimization parameters and their initial values
-- kwargs : other solver related arguments supported by `fit(condition_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
+- kwargs : other solver related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
 """
 function fit(
   conditions::AbstractVector{C},
   params;
   kwargs... # other arguments to sim(::Vector{Pair})
 ) where {C<:AbstractCond}
-  condition_pairs = Pair{Symbol,AbstractCond}[Symbol("_$i") => cond for (i, cond) in pairs(conditions)]
-  return fit(condition_pairs, params; kwargs...)
+  scenario_pairs = Pair{Symbol,AbstractCond}[Symbol("_$i") => scn for (i, scn) in pairs(conditions)]
+  return fit(scenario_pairs, params; kwargs...)
 end
 
 ### fit platform
@@ -226,14 +226,14 @@ end
 
 Fit parameters to experimental measurements. Returns `FitResults` type.
 
-Example: `fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3];conditions=[:cond2,:cond3])`
+Example: `fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3];conditions=[:scn2,:scn3])`
 
 Arguments:
 
 - `platform` : platform of [`Platform`](@ref) type
 - `params` : optimization parameters and their initial values
 - `conditions` : vector of conditions of type [`HetaSimulator.Condition`](@ref) or `nothing` to fit all conditions. Default is `nothing`
-- kwargs : other solver related arguments supported by `fit(condition_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
+- kwargs : other solver related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
 """
 function fit(
   platform::Platform,
@@ -242,16 +242,16 @@ function fit(
   kwargs... # other arguments to fit()
 )
   if isnothing(conditions)
-    condition_pairs = [platform.conditions...]
+    scenario_pairs = [platform.conditions...]
   else
-    condition_pairs = Pair{Symbol,AbstractCond}[]
-    for cond_name in conditions
-      @assert haskey(platform.conditions, cond_name) "No condition :$cond_name found in the platform."
-      push!(condition_pairs, cond_name=>platform.conditions[cond_name])
+    scenario_pairs = Pair{Symbol,AbstractCond}[]
+    for scn_name in conditions
+      @assert haskey(platform.conditions, scn_name) "No condition :$scn_name found in the platform."
+      push!(scenario_pairs, scn_name=>platform.conditions[scn_name])
     end
   end
 
-  return fit(condition_pairs, params; kwargs...)
+  return fit(scenario_pairs, params; kwargs...)
 end
 
 function scale_params(x, scale::Symbol)

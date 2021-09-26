@@ -8,7 +8,7 @@ using HetaSimulator, Plots
 
 platform = load_platform("$HetaSimulatorDir/cases/story_2", rm_out=false);
 # platform.models
-# platform.conditions
+# platform.scenarios
 
 ################################## Single Simulation ######################################
 
@@ -16,12 +16,12 @@ model = platform.models[:nameless]
 
 sim(model; tspan = (0., 200.)) |> plot
 
-################################## load and simulate conditions  #####################
+################################## load and simulate scenarios  #####################
 
-### load conditions from csv
-conditions_csv = read_conditions("./cases/story_2/conditions.csv")
-# conditions_xlsx = read_conditions("./cases/story_2/conditions.xlsx")
-add_conditions!(platform, conditions_csv)
+### load scenarios from csv
+scn_csv = read_conditions("./cases/story_2/conditions.csv")
+# scn_xlsx = read_conditions("./cases/story_2/conditions.xlsx")
+add_conditions!(platform, scn_csv)
 
 ### sim
 sim1 = sim(platform, conditions = [:three]);

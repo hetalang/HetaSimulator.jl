@@ -4,7 +4,7 @@ The general workflow for HetaSimulator is
 
 - Writing a modeling platform in the Heta format
 - Loading platform into Julia environment
-- Creating model's settings and data adding conditions and measurements
+- Creating model's settings and data adding scenarios and measurements
 - Solve problems using the methods: sim, mc, fit
 - Analyze the results
 
@@ -92,7 +92,7 @@ Where parameters are
 
 ## Loading platform from the Heta format
 
-HetaSimulator loads modeling platform into `Platform` type object that is a container for all models simulation settings and experimental data. When you load a platform from Heta it includes only models converted from `concrete namespaces`. The condition storage is empty and will be populated manually or imported from tables.
+HetaSimulator loads modeling platform into `Platform` type object that is a container for all models simulation settings and experimental data. When you load a platform from Heta it includes only models converted from `concrete namespaces`. The scenario storage is empty and will be populated manually or imported from tables.
 
 ### Loading with internal compiler
 
@@ -191,7 +191,7 @@ Create file __conditions.csv__ file inside __my\_example__ with the following co
 The table can be loaded with the [`read_conditions`](@ref) function.
 
 ```julia
-cond_df = read_conditions("./my_example/conditions.csv")
+scn_df = read_conditions("./my_example/conditions.csv")
 ```
 ```julia
 4×4 DataFrame
@@ -204,12 +204,12 @@ cond_df = read_conditions("./my_example/conditions.csv")
    4 │ multiple_15               15              false               true
 ```
 
-The function reads the content of CSV file, checks components and stores in `cond_df` variable of `DataFrame` format.
+The function reads the content of CSV file, checks components and stores in `scn_df` variable of `DataFrame` format.
 
 This should be loaded into `Platform` object.
 
 ```julia
-add_conditions!(p, cond_df)
+add_conditions!(p, scn_df)
 ```
 
 As we can see all 4 conditions from the table were added.
@@ -229,10 +229,10 @@ To get the particular condition you can use the following syntax.
 condition1 = conditions(p)[:dose_1]
 +---------------------------------------------------------------------------
 | Condition contains:
-|   0 saveat values: Float64[]. Use `saveat(cond)` for details.
-|   tspan: (0.0, 48.0). Use `tspan(cond)` for details.
-|   4 parameters(s). Use `parameters(cond)` for details.
-|   0 measurement(s). Use `measurements(cond)` for details.
+|   0 saveat values: Float64[]. Use `saveat(scenario)` for details.
+|   tspan: (0.0, 48.0). Use `tspan(scenario)` for details.
+|   4 parameters(s). Use `parameters(scenario)` for details.
+|   0 measurement(s). Use `measurements(scenario)` for details.
 +---------------------------------------------------------------------------
 ```
 
@@ -243,7 +243,7 @@ See more about condition tables in [tabular CSV format](../table-formats/conditi
 Instead of using CSV tables one can fill the XSLT file and load condition table in the same manner.
 
 ```julia
-cond_df = read_conditions("./my_example/conditions.xlsx")
+scn_df = read_conditions("./my_example/conditions.xlsx")
 ```
 ```julia
 4×4 DataFrame
@@ -282,10 +282,10 @@ new_condition = HetaSimulator.Condition(
 
 +---------------------------------------------------------------------------
 | Condition contains:
-|   0 saveat values: Float64[]. Use `saveat(cond)` for details.
-|   tspan: (0.0, 1000.0). Use `tspan(cond)` for details.
-|   4 parameters(s). Use `parameters(cond)` for details.
-|   0 measurement(s). Use `measurements(cond)` for details.
+|   0 saveat values: Float64[]. Use `saveat(scenario)` for details.
+|   tspan: (0.0, 1000.0). Use `tspan(scenario)` for details.
+|   4 parameters(s). Use `parameters(scenario)` for details.
+|   0 measurement(s). Use `measurements(scenario)` for details.
 +---------------------------------------------------------------------------
 ```
 
@@ -548,8 +548,8 @@ Take a note that the model compilation and loading `Condition`s  and `Measuremen
 ```julia
 p = load_platform("$HetaSimulatorDir/cases/story_3")
 
-cond_df = read_conditions("$HetaSimulatorDir/cases/story_3/conditions.csv")
-add_conditions!(p, cond_df)
+scn_df = read_conditions("$HetaSimulatorDir/cases/story_3/conditions.csv")
+add_conditions!(p, scn_df)
 
 measurements_df = read_measurements("$HetaSimulatorDir/cases/story_3/measurements.csv")
 add_measurements!(p, measurements_df)

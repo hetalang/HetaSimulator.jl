@@ -16,7 +16,7 @@ end
 
 function add_event(evt::TimeEvent, events_save::Tuple{Bool, Bool}=(true,true), evt_name=nothing)
   tstops = Float64[]
-  #cond_func(u, t, integrator) = t in tstops
+  #scn_func(u, t, integrator) = t in tstops
 
   function init_time_event(cb,u,t,integrator)
       append!(tstops, evt.condition_func(integrator.sol.prob.p.constants, integrator.sol.prob.tspan))

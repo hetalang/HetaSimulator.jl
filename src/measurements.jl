@@ -28,12 +28,12 @@ function add_measurements!(
   lost_refs = Symbol[]
 
   for row in selected_rows
-    condition_ref = row[:condition]
+    scenario_ref = row[:condition]
 
-    if !haskey(platform.conditions, condition_ref)
-      push!(lost_refs, condition_ref)
+    if !haskey(platform.conditions, scenario_ref)
+      push!(lost_refs, scenario_ref)
     else
-      condition = platform.conditions[condition_ref]
+      condition = platform.conditions[scenario_ref]
       _add_measurement!(condition, row)
     end
   end
@@ -177,10 +177,10 @@ end
 
 # ! Current assumption is that error dist is normal or lognormal
 
-measurements_as_table(sr::SimResults) = measurements_as_table(sr.cond)
+measurements_as_table(sr::SimResults) = measurements_as_table(sr.scenario)
 
-function measurements_as_table(cond::Condition)
-  meas = measurements(cond)
+function measurements_as_table(scn::Condition)
+  meas = measurements(scn)
   @assert !isempty(meas) "Condition doesn't contain measurements."
 
   lm = length(meas)
