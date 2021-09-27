@@ -39,7 +39,7 @@ res = sim(p)
 # savefig(plotd, "sim2.png")
 
 res |> plot
-res_df = DataFrame(res)
+res_df = DataFrame(res) # XXX: error here
 
 plot(res[1])
 res_df1 = DataFrame(res[1])
@@ -47,7 +47,7 @@ res_df1 = DataFrame(res[1])
 ### Monte-Carlo
 
 mc_res = mc(p, [:kabs=>Normal(10.,5e-1), :kel=>Normal(0.2,5e-3)], 1000)
-mc_res |> DataFrame
+mc_res |> DataFrame # error here
 mc_res |> plot
 # plotd = plot(mc_res)
 # savefig(plotd, "sim3.png")
@@ -91,4 +91,4 @@ fit_res0 = fit(p, params_df0)
 
 # overwrite dose and estimate other parameters
 params_df1 = read_parameters("$HetaSimulatorDir/cases/story_3/parameters.csv")
-fit_res1 = fit(p, params_df)
+fit_res1 = fit(p, params_df1)

@@ -14,7 +14,7 @@ platform = load_platform("$HetaSimulatorDir/cases/story_2", rm_out=false);
 
 model = platform.models[:nameless]
 
-sim(model; tspan = (0., 200.)) |> plot
+Scenario(model; tspan = (0., 200.)) |> sim |> plot
 
 ################################## load and simulate scenarios  #####################
 
@@ -24,7 +24,7 @@ scn_csv = read_scenarios("./cases/story_2/scenarios.csv")
 add_scenarios!(platform, scn_csv)
 
 ### sim
-sim1 = sim(platform, scenario = [:three]);
+sim1 = sim(platform, scenarios = [:three]);
 sim1 |> plot
 sim_all = sim(platform);
 sim_all |> plot

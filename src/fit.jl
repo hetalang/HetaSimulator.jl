@@ -28,9 +28,9 @@ Example: `fit([:x=>scn2, :y=>scn3, :z=>scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
 
 Arguments:
 
-- `scenario_pairs` : vector of pairs containing names and scenarios of type [`HetaSimulator.Scenario`](@ref)
+- `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
 - `params` : optimization parameters and their initial values
-- `parameters_upd` : constants, which overwrite both `Model` and `HetaSimulator.Scenario` constants. Default is `nothing`
+- `parameters_upd` : constants, which overwrite both `Model` and `Scenario` constants. Default is `nothing`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-6
 - `abstol` : relative tolerance. Default is 1e-8
@@ -168,7 +168,7 @@ Fit parameters to experimental measurements. Returns `FitResults` type.
 
 Arguments:
 
-- `scenario_pairs` : vector of pairs containing names and scenarios of type [`HetaSimulator.Scenario`](@ref)
+- `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
 - `params` : DataFrame with optimization parameters setup and their initial values
 - kwargs : other solver related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
 """
@@ -203,7 +203,7 @@ Example: `fit([scn2, scn3, scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
 
 Arguments:
 
-- `scenarios` : vector of scenarios of type [`HetaSimulator.Scenario`](@ref)
+- `scenarios` : vector of scenarios of type [`Scenario`](@ref)
 - `params` : optimization parameters and their initial values
 - kwargs : other solver related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
 """
@@ -232,7 +232,7 @@ Arguments:
 
 - `platform` : platform of [`Platform`](@ref) type
 - `params` : optimization parameters and their initial values
-- `scenarios` : vector of scenarios of type [`HetaSimulator.Scenario`](@ref) or `nothing` to fit all scenarios. Default is `nothing`
+- `scenarios` : vector of scenarios of type [`Scenario`](@ref) or `nothing` to fit all scenarios. Default is `nothing`
 - kwargs : other solver related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
 """
 function fit(

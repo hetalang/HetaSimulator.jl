@@ -19,7 +19,7 @@ Example: `mc(scenario, [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 
 Arguments:
 
-- `scenario` : simulation scenario of type [`HetaSimulator.Scenario`](@ref)
+- `scenario` : simulation scenario of type [`Scenario`](@ref)
 - `params` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
 - `verbose` : print iteration progress. Default is `false`
@@ -111,7 +111,7 @@ Example: `mc(scn1, DataFrame(k2=rand(3),k3=rand(3)), 1000)`
 
 Arguments:
 
-- `scenario` : simulation scenario of type [`HetaSimulator.Scenario`](@ref)
+- `scenario` : simulation scenario of type [`Scenario`](@ref)
 - `params` : DataFrame with pre-generated parameters.
 - `num_iter` : number of Monte-Carlo iterations 
 - kwargs : other solver related arguments supported by `mc(scenario::Scenario, params::Vector, num_iter::Int64)`
@@ -213,7 +213,7 @@ Example: `mc([:c1=>scn1,:c2=>scn2], [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1
 
 Arguments:
 
-- `scenario_pairs` : vector of pairs containing names and scenarios of type [`HetaSimulator.Scenario`](@ref)
+- `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
 - `params` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
 - `verbose` : print iteration progress. Default is `false`
@@ -316,7 +316,7 @@ Example: `mc([scn1,scn2], [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 100
 
 Arguments:
 
-- `scenario_pairs` : vector of scenarios of type [`HetaSimulator.Scenario`](@ref)
+- `scenario_pairs` : vector of scenarios of type [`Scenario`](@ref)
 - `params` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
 - kwargs : other solver related arguments supported by `mc(scenario_pairs::Vector{<:Pair}, params::Vector, num_iter::Int64)`

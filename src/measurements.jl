@@ -134,9 +134,9 @@ function read_measurements_xlsx(filepath::String, sheet=1; kwargs...)
 
   df[!,:t] .= Float64.(df[!,:t])
   df[!,:measurement] .= Float64.(df[!,:measurement])
-  haspropery(df, :scope) && (df[!,:scope] .= Symbol.(df[!,:scope]))
+  hasproperty(df, :scope) && (df[!,:scope] .= Symbol.(df[!,:scope]))
   df[!,:scenario] .= Symbol.(df[!,:scenario])
-  haspropery(df, Symbol("prob.type")) && (df[!,Symbol("prob.type")] .= Symbol.(df[!,Symbol("prob.type")]))
+  hasproperty(df, Symbol("prob.type")) && (df[!,Symbol("prob.type")] .= Symbol.(df[!,Symbol("prob.type")]))
 
   return df
 end

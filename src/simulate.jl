@@ -20,8 +20,8 @@ Example: `Scenario(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]) |> sim
 
 Arguments:
 
-- `scenario` : simulation scenario of type [`HetaSimulator.Scenario`](@ref)
-- `parameters_upd` : constants, which overwrite both `Model` and `HetaSimulator.Scenario` constants. Default is `nothing`
+- `scenario` : simulation scenario of type [`Scenario`](@ref)
+- `parameters_upd` : constants, which overwrite both `Model` and `Scenario` constants. Default is `nothing`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -120,7 +120,7 @@ Example: `sim([:x => scn1, :y=>scn2, :z=>scn3])`
 
 Arguments:
 
-- `scenario_pairs` : vector of pairs containing names and scenarios of type [`HetaSimulator.Scenario`](@ref)
+- `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
 - `parameters_upd` : constants, which overwrite both `Model` and `Scenario` constants. Default is `nothing`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
@@ -187,7 +187,7 @@ Example: `sim([scn1, scn2, scn3])`
 
 Arguments:
 
-- `scenarios` : `Vector` containing names and scenarios of type [`HetaSimulator.Scenario`](@ref)
+- `scenarios` : `Vector` containing names and scenarios of type [`Scenario`](@ref)
 - kwargs : other kwargs supported by `sim(scenario_pairs::Vector{Pair})`
 """
 function sim(

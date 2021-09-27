@@ -15,29 +15,30 @@ model = platform.models[:nameless];
 
 ################################## Single Simulation ######################################
 
-sim(model; tspan = (0., 200.)) |> plot
-sim(model; tspan = (0., 200.), parameters_upd = [:k1=>0.01]) |> plot
-sim(model; saveat = 0:10:100) |> plot
-sim(model; saveat = 0:10:100, tspan = (0., 50.)) |> plot
-sim(model; saveat = 0:10:100, tspan = (0., 500.)) |> plot
-sim(
+Scenario(model; tspan = (0., 200.)) |> sim |> plot
+scn0 = Scenario(model; tspan = (0., 200.)) 
+sim(scn0, parameters_upd = [:k1=>0.01]) |> plot
+Scenario(model; saveat = 0:10:100) |> sim |> plot
+Scenario(model; saveat = 0:10:100, tspan = (0., 50.)) |> sim |> plot
+Scenario(model; saveat = 0:10:100, tspan = (0., 500.)) |> sim |> plot
+Scenario( # throw error
     model; 
     tspan = (0., 500.),
     events_active=[:sw1=>false, :ss1 => false],
     events_save=[:sw1=>(true,true), :ss1=>(true,true)]
-    ) |> plot
-sim(
+    ) |> sim |> plot
+Scenario(
     model;
     tspan = (0., 500.),
     events_active=[:sw1=>false],
     events_save=[:sw1=>(true,true)]
-    ) |> plot
-sim(
+    ) |> sim |> plot
+Scenario(
     model;
     tspan = (0., 500.),
     events_active=[:sw1=>true],
     events_save=[:sw1=>(false,false)]
-    ) |> plot
+    ) |> sim |> plot
 
 
 ### single scenario sim()
@@ -61,8 +62,8 @@ scn3 = Scenario(
     );
 sim(scn3) |> plot
 
-### sim sequentially
-sim.([scn1, scn2, scn3]) |> plot
+### sim sequentially 
+sim.([scn1, scn2, scn3]) .|> plot
 ### sim together
 sim([scn1, scn2, scn3]) |> plot
 sim([:x => scn1, :y=>scn2, :z=>scn3]) |> plot
@@ -82,7 +83,7 @@ sim(scn3, parameters_upd = optim(res2))
 
 # sim all scenarios
 sol = sim([:c1=>scn1, :c2=>scn2, :c3=>scn3, :c4=>scn4]);
-plot(sol) # wrong plot
+plot(sol)
 
 # plot selected observables
 plot(sol; vars=[:a,:c])
@@ -96,21 +97,21 @@ add_scenarios!(platform, scn_csv)
 
 ################################## Monte-Carlo Simulations  #####################
 
-mcscn1 = Scenario(
+mc_scn1 = Scenario(
     model;
     tspan = (0., 200.),
     parameters = [:k1=>0.01],
     saveat = [50., 80., 150.]
     );
 
-mcscn2 = Scenario(
+mc_scn2 = Scenario(
     model;
     tspan = (0., 200.),
     parameters = [:k1=>0.02],
     saveat = [50., 100., 200.]
     );
     
-mcscn3 = Scenario(
+mc_scn3 = Scenario(
     model; 
     tspan = (0., 200.),
     parameters = [:k1=>0.03],
@@ -119,23 +120,23 @@ mcscn3 = Scenario(
     );
 
 # single MC Simulation
-mcsim1 = mc(mcscn1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000)
-plot(mcsim1)
+mc_sim1 = mc(mc_scn1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000)
+plot(mc_sim1)
 
 # multi MC Simulation
-mcsim2 = mc(
-    [:mc1=>mcscn1,:mc2=>mcscn2,:mc3=>mcscn3],
+mc_sim2 = mc(
+    [:mc1=>mc_scn1,:mc2=>mc_scn2,:mc3=>mc_scn3],
     [:k1=>0.01, :k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)],
     1000
   )
-plot(mcsim2)
+plot(mc_sim2)
 
-mcsim3 = mc(
-    [mcscn1, mcscn2, mcscn3],
+mc_sim3 = mc(
+    [mc_scn1, mc_scn2, mc_scn3],
     [:k1=>0.01, :k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)],
     1000
   )
-plot(mcsim3)
+plot(mc_sim3)
 
 ################################## Monte-Carlo Statistics  #####################
 #= FIXME

@@ -183,7 +183,7 @@ vals(s::Simulation) = s.vals.u
       scenario::C 
     end
 
-Structure storing results from [`sim`]{@ref} method applied for one [`HetaSimulator.Scenario`]{@ref}.
+Structure storing results from [`sim`]{@ref} method applied for one [`Scenario`]{@ref}.
 """
 struct SimResults{S, C<:Scenario} <: AbstractResults
   sim::S

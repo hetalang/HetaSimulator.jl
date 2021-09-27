@@ -8,7 +8,7 @@ platform = load_platform("./my_project")
 model = platform.models[:nameless]
 
 # single simulation
-results = sim(model; tspan = (0., 1200.))
+results = Scenario(model; tspan = (0., 1200.)) |> sim
 plotd = plot(results)
 # savefig(plotd,"file.png")
 
