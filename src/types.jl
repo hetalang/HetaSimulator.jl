@@ -22,11 +22,14 @@ function Base.show(io::IO, ::MIME"text/plain", p::Platform)
   models_names = join(keys(p.models), ", ")
   scn_names = join(keys(p.scenarios), ", ")
 
-  println(io, "+---------------------------------------------------------------------------")
-  println(io, "| Platform contains:")
-  println(io, "|   $(length(models(p))) model(s): $models_names. Use `models(platform)` for details.")
-  println(io, "|   $(length(scenarios(p))) scenario(s): $scn_names. Use `scenarios(platform)` for details.")
-  println(io, "+---------------------------------------------------------------------------")
+  measurements_count = 0
+  for (x, y) in scenarios(p)
+    measurements_count += length(measurements(y))
+  end
+
+  println(io, "Platform with $(length(models(p))) models, $(length(scenarios(p))) scenarios, $measurements_count measurements")
+  println(io, "   Models: $models_names. Use `models(platform)` for details.")
+  println(io, "   Scenarios: $scn_names. Use `scenarios(platform)` for details.")
 end
 
 ################################## Model ###########################################
@@ -72,17 +75,15 @@ end
 function Base.show(io::IO, ::MIME"text/plain", m::Model)
   # observables_names = join(obs(m), ", ")
 
-  println(io, "+---------------------------------------------------------------------------")
-  println(io, "| Model contains:")
-  println(io, "|   $(length(m.constants)) constant(s). Use constants(model) to get the list.")
-  println(io, "|   $(length(m.records_output)) static, dynamic and rule record(s). Use `records(model)` to get the list.")
-  println(io, "|   $(length(m.events)) switchers(s). Use `switchers(model)` to get the list.")
-  println(io, "| Use the following methods to get the default options:")
-  println(io, "|   - parameters(model)")
-  println(io, "|   - events_active(model)")
-  println(io, "|   - events_save(model)")
-  println(io, "|   - observables(model) : $(observables(m))")
-  println(io, "+---------------------------------------------------------------------------")
+  println(io, "Model containing $(length(m.constants)) constants, $(length(m.records_output)) records, $(length(m.events)) switchers.")
+  println(io, "   Use `constants(model)` to get the constants.")
+  println(io, "   Use `records(model)` to get the records.")
+  println(io, "   Use `switchers(model)` to get the switchers.")
+  println(io, " Use the following methods to get the default options:")
+  println(io, "   - parameters(model)")
+  println(io, "   - events_active(model)")
+  println(io, "   - events_save(model)")
+  println(io, "   - observables(model)")
 end
 
 ################################## Params ###########################################
@@ -134,16 +135,14 @@ parameters(c::Scenario) = c.prob.p.constants
 measurements(c::Scenario) = c.measurements
 
 function Base.show(io::IO, ::MIME"text/plain", c::Scenario)
-  println(io, "+---------------------------------------------------------------------------")
-  println(io, "| Scenario contains:")
-  println(io, "|   $(length(saveat(c))) saveat values: $(saveat(c)). Use `saveat(scenario)` for details.")
-  println(io, "|   tspan: $(tspan(c)). Use `tspan(scenario)` for details.")
-  println(io, "|   $(length(parameters(c))) parameters(s). Use `parameters(scenario)` for details.")
-  println(io, "|   $(length(measurements(c))) measurement(s). Use `measurements(scenario)` for details.")
-  #println(io, "|   $(length(events_active(c))) event(s). Use `events_active(c::Scenario)` for details.")
-  #println(io, "|   $(length(events_save(c))) event(s). Use `events_save(c::Scenario)` for details.")
-  #println(io, "|   $(length(observables(c))) observable(s). Use `observables(c::Scenario)` for details.")
-  println(io, "+---------------------------------------------------------------------------")
+  println(io, "Scenario containing")
+  println(io, "   $(length(saveat(c))) saveat values: $(saveat(c)). Use `saveat(scenario)` for details.")
+  println(io, "   tspan: $(tspan(c)). Use `tspan(scenario)` for details.")
+  println(io, "   $(length(parameters(c))) parameters(s). Use `parameters(scenario)` for details.")
+  println(io, "   $(length(measurements(c))) measurement(s). Use `measurements(scenario)` for details.")
+  #println(io, "   $(length(events_active(c))) event(s). Use `events_active(c::Scenario)` for details.")
+  #println(io, "   $(length(events_save(c))) event(s). Use `events_save(c::Scenario)` for details.")
+  #println(io, "   $(length(observables(c))) observable(s). Use `observables(c::Scenario)` for details.")
 end
 
 ################################## SimResults ###########################################
@@ -197,11 +196,9 @@ vals(s::SimResults) = vals(s.sim)
 @inline Base.length(S::SimResults) = length(S.sim)
 
 function Base.show(io::IO, m::MIME"text/plain", S::SimResults)
-  println(io, "+---------------------------------------------------------------------------")
-  println(io, "| Status :$(status(S)).")
-  println(io, "| Use `DataFrame(sim)` to convert results to DataFrame.")
-  println(io, "| Use `plot(sim)` to plot results.")
-  println(io, "+---------------------------------------------------------------------------")
+  println(io, "SimResults with status :$(status(S)).")
+  println(io, " Use `DataFrame(sim)` to convert results to DataFrame.")
+  println(io, " Use `plot(sim)` to plot results.")
 end
 Base.show(io::IO, m::MIME"text/plain", PS::Pair{Symbol, S}) where S<:SimResults = Base.show(io, m, last(PS))
 
@@ -215,14 +212,12 @@ end
 =#
 function Base.show(io::IO, m::MIME"text/plain", V::Vector{Pair{Symbol, S}}) where S<:SimResults
   show_string = [*(":", String(x), " => ...") for x in first.(V)]
-  println(io, "+---------------------------------------------------------------------------")
-  println(io, "| Simulation results for $(length(V)) scenario(s).") 
-  println(io, "| [$(join(show_string, ", "))]")
-  println(io, "| Use `sol[id]` to get component by id.")
-  println(io, "| Use `sol[i]` to get component by number.")
-  println(io, "| Use `DataFrame(sol)` to transform.")
-  println(io, "| Use `plot(sol)` to plot results.")
-  println(io, "+---------------------------------------------------------------------------")
+  println(io, "Pair{Symbol, SimResults}[] for $(length(V)) scenario(s).") 
+  println(io, "    [$(join(show_string, ", "))]")
+  println(io, "    Use `sol[id]` to get component by id.")
+  println(io, "    Use `sol[i]` to get component by number.")
+  println(io, "    Use `DataFrame(sol)` to transform.")
+  println(io, "    Use `plot(sol)` to plot results.")
 end
 
 function Base.getindex(V::Vector{Pair{Symbol, S}}, id::Symbol) where S<:SimResults

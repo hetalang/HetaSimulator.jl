@@ -3,7 +3,7 @@
 ## 0.4.1
 
 - Rename `Condition` => `Scenario`
-- minor fixes to rewrite savedvalues in SimResults
+- minor fixes to rewrite saved values in SimResults
 - plot layout changes
 - distribution type :lognormal
 - `read_parameters` method

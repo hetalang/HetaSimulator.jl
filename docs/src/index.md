@@ -121,5 +121,3 @@ Copyright 2020-2021, InSysBio LLC
 
 - Ivan Borisov
 - Evgeny Metelkin
-
-**HetaSimulator** is inspired by user's experience in QSP projects and the software packages like [SBMLToolbox](http://sbml.org/Software/SBMLToolbox), [mrgsolve](https://mrgsolve.github.io/), [DBSolve](http://insysbio.com/en/software/db-solve-optimum), [dMod](https://github.com/dkaschek/dMod).
