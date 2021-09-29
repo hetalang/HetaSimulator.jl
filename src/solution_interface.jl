@@ -127,40 +127,36 @@ end
 
 ############################ DataFrames ########################################
 
-function DataFrame(s::Simulation)
+function DataFrame(s::Simulation; vars=observables(s))
   df = DataFrame(t=s.vals.t)
 
-  labels = observables(s)
-  for (i,v) in enumerate(labels)
-      df[!, v] = s[i,:]
-  end
-
+  [df[!, v] = s[v,:] for v in vars]
   !isnothing(s.scope) && (df[!,:scope]=s.scope)
   
   return df
 end
 
-DataFrame(sr::SimResults) = DataFrame(sr.sim)
+DataFrame(sr::SimResults; kwargs...) = DataFrame(sr.sim; kwargs...)
 
-function DataFrame(sr::Pair{Symbol,S}) where S<:SimResults
-  df = DataFrame(last(sr))
+function DataFrame(sr::Pair{Symbol,S}; kwargs...) where S<:SimResults
+  df = DataFrame(last(sr); kwargs...)
   df[!, :scenario] .= first(sr) # add new column
 
   return df
 end
 
-function DataFrame(res::Vector{Pair{Symbol,S}}) where S<:SimResults
-  df_vectors = DataFrame.(res)
+function DataFrame(res::Vector{Pair{Symbol,S}}; kwargs...) where S<:SimResults
+  df_vectors = DataFrame.(res; kwargs...)
 
-  return vcat(df_vectors...)
+  return vcat(df_vectors...; cols=:union)
 end
 
-function DataFrame(mcr::MCResults)
+function DataFrame(mcr::MCResults; kwargs...)
   # df performance
   df = DataFrame()
 
   for (i,s) in enumerate(mcr.sim)
-      dfs = DataFrame(s)
+      dfs = DataFrame(s; kwargs...)
       insertcols!(dfs, 1, :iter => fill(i, length(s)))
       df = vcat(df,dfs)
   end
@@ -168,17 +164,17 @@ function DataFrame(mcr::MCResults)
   return df
 end
 
-function DataFrame(mcr::Pair{Symbol,S}) where S<:MCResults
-  df = DataFrame(last(mcr))
+function DataFrame(mcr::Pair{Symbol,S}; kwargs...) where S<:MCResults
+  df = DataFrame(last(mcr); kwargs...)
   df[!, :scenario] .= first(mcr) # add new column
 
   return df
 end
 
-function DataFrame(res::Vector{Pair{Symbol,S}}) where S<:MCResults
-  df_vectors = DataFrame.(res)
+function DataFrame(res::Vector{Pair{Symbol,S}}; kwargs...) where S<:MCResults
+  df_vectors = DataFrame.(res; kwargs...)
 
-  return vcat(df_vectors...)
+  return vcat(df_vectors...; cols=:union)
 end
 
 ############################ Save Results ########################################

@@ -49,10 +49,16 @@ function Scenario(
   return Scenario(model.init_func, prob, measurements)
 end
 
+# Scenario struct method
+function add_scenarios!(p, scen::Vector{P}) where P <: Pair 
+  [push!(scenarios(p), s) for s in scen]
+  return nothing
+end
+
 # CSV methods
 function add_scenarios!(
   platform::Platform,
-  vector::AbstractVector;
+  vector::DataFrames.DataFrameRows;
   subset::AbstractVector{P} = Pair{Symbol, Symbol}[]
 ) where P <: Pair{Symbol, Symbol}
   selected_rows = _subset(vector, subset)
