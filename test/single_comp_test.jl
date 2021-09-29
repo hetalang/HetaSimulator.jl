@@ -9,8 +9,8 @@ model = platform.models[:nameless];
 ## wrong observables
 @test_throws ErrorException("The following observables have not been found in the model: [:GG]") Scenario(model; observables=[:r1, :GG], tspan=(0,120))
 
-# Simulate model
-s = sim(model, tspan = (0., 200.), saveat = [0.0, 150., 250.], observables=[:r1])
+# Simulate default scenario
+s = Scenario(model, tspan = (0., 200.), saveat = [0.0, 150., 250.], observables=[:r1]) |> sim
 @test typeof(s) <: HetaSimulator.SimResults
 @test status(s) == :Success
 @test times(s)[end] == 250.

@@ -26,7 +26,7 @@ Arguments:
 - `model` : model of type [`Model`](@ref)
 - `measurements` : `Vector` of measurements. Default is empty `Vector{AbstractMeasurementPoint}`
 - `observables` : names of output observables. Overwrites default model's values. Default is `nothing`
-- `parameters` : parameters variation setup. Default is empty `Vector{Pair}`
+- `parameters` : `Vector` of `Pair`s containing constants' names and values. Overwrites default model's values. Default is empty vector.
 - `events_active` : `Vector` of `Pair`s containing events' names and true/false values. Overwrites default model's values. Default is empty `Vector{Pair}`
 - `events_save` : `Tuple` or `Vector{Tuple}` marking whether to save solution before and after event. Default is `(true,true)` for all events
 - `saveat` : time points, where solution should be saved. Default `nothing` values stands for saving solution at timepoints reached by the solver 

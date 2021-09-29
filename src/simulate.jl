@@ -4,7 +4,7 @@ const DEFAULT_ALG = AutoTsit5(Rosenbrock23())
 
 const EMPTY_PROBLEM = ODEProblem(() -> nothing, [0.0], (0.,1.))
 
-### simulate scenarios
+### simulate scenario
 
 """
     sim(scenario::Scenario; 
@@ -25,10 +25,10 @@ Arguments:
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
-- kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
+- `kwargs...` : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
 function sim(
-  scenario::Scenario; 
+  scenario::Scenario;
   parameters_upd::Union{Nothing, Vector{P}}=nothing,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
@@ -50,60 +50,7 @@ end
 
 build_results(sol::SciMLBase.AbstractODESolution, scenario) = SimResults(build_results(sol), scenario)
 
-### simulate Model
-"""
-    sim(model::Model; 
-      parameters::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
-      measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
-      events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
-      events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}}=(true,true), 
-      observables::Union{Nothing,Vector{Symbol}} = nothing,
-      saveat::Union{Nothing,AbstractVector} = nothing,
-      tspan::Union{Nothing,Tuple} = nothing,
-      save_scope::Bool=true,
-      time_type::DataType=Float64,
-      kwargs...)
-
-Simulate model of type [`Model`](@ref). Returns [`SimResults`](@ref) type.
-
-Example: `sim(model; tspan = (0., 200.), parameters_upd = [:k1=>0.01])`
-
-Arguments:
-
-- `model` : model of type [`Model`](@ref)
-- `parameters` : `Vector` of `Pair`s containing constants' names and values. Overwrites default model's values. Default is empty vector 
-- `measurements` : `Vector` of measurements. Default is empty vector 
-- `events_active` : `Vector` of `Pair`s containing events' names and true/false values. Overwrites default model's values. Default is empty vector 
-- `events_save` : `Tuple` or `Vector{Tuple}` marking whether to save solution before and after event. Default is `(true,true)` for all events
-- `observables` : names of output observables. Overwrites default model's values. Default is empty vector
-- `saveat` : time points, where solution should be saved. Default `nothing` values stands for saving solution at timepoints reached by the solver 
-- `tspan` : time span for the ODE problem
-- `save_scope` : should scope be saved together with solution. Default is `true`
-- kwargs : other solver related arguments supported by `sim(scenario::Scenario)`
-"""
-function sim(
-  model::Model;
-
-  ## arguments for Scenario(::Model,...)
-  parameters::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
-  measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
-  events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
-  events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}}=(true,true), 
-  observables::Union{Nothing,Vector{Symbol}} = nothing,
-  saveat::Union{Nothing,AbstractVector} = nothing,
-  tspan::Union{Nothing,Tuple} = nothing,
-  save_scope::Bool=true,
-  time_type::DataType=Float64,
-  kwargs... # sim(c::Scenario) kwargs
-)
-  scenario = Scenario(
-    model; parameters, measurements,
-    events_active, events_save, observables, saveat, tspan, save_scope, time_type)
-
-  return sim(scenario; kwargs...)
-end
-
-### general interface for EnsembleProblem
+### simulate scenario pairs
 
 """
     sim(scenario_pairs::Vector{P}; 
@@ -126,7 +73,7 @@ Arguments:
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
 - `parallel_type` : type of multiple simulations parallelism. Default is no parallelism. See SciML docs for details
-- kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
+- `kwargs...` : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
 function sim(
   scenario_pairs::Vector{P};
@@ -176,7 +123,7 @@ function sim(
   return [Pair{Symbol,SimResults}(first(cp), u) for (cp,u) in zip(scenario_pairs, solution.u)]
 end
 
-### simulate many scenarios
+### simulate scenario array, XXX: do we need it?
 
 """
     sim(scenarios::AbstractVector{C}; kwargs...) where {C<:AbstractScenario}
@@ -213,7 +160,7 @@ Arguments:
 
 - `platform` : platform of [`Platform`](@ref) type
 - `scenarios` : `Vector` containing names of scenarios included in platform. Default value `nothing` stands for all scenarios in the platform 
-- kwargs : other kwargs supported by `sim(scenario_pairs::Vector{Pair})`
+- `kwargs...` : other kwargs supported by `sim(scenario_pairs::Vector{Pair})`
 """
 function sim(
   platform::Platform;
@@ -234,7 +181,6 @@ function sim(
 
   return sim(scenario_pairs; kwargs...)
 end
-
 
 function default_output(sol,i)
   sim = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
