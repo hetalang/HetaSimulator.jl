@@ -130,7 +130,7 @@ end
 function DataFrame(s::Simulation; vars=observables(s))
   df = DataFrame(t=s.vals.t)
 
-  [df[!, v] = s[v,:] for v in vars]
+  [df[!, v] = s[v,:] for v in vars[in.(vars, Ref(observables(s)))]]
   !isnothing(s.scope) && (df[!,:scope]=s.scope)
   
   return df
