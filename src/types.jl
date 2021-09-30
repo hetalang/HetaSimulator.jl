@@ -129,20 +129,36 @@ struct Scenario{F,P,M} <: AbstractScenario
   measurements::M
 end 
 
-saveat(c::Scenario) = c.prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat_cache
-tspan(c::Scenario) = c.prob.tspan
-parameters(c::Scenario) = c.prob.p.constants
-measurements(c::Scenario) = c.measurements
+saveat(scn::Scenario) = scn.prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat_cache
+tspan(scn::Scenario) = scn.prob.tspan
+parameters(scn::Scenario) = scn.prob.p.constants
+measurements(scn::Scenario) = scn.measurements
 
-function Base.show(io::IO, ::MIME"text/plain", c::Scenario)
-  println(io, "Scenario containing")
-  println(io, "   $(length(saveat(c))) saveat values: $(saveat(c)). Use `saveat(scenario)` for details.")
-  println(io, "   tspan: $(tspan(c)). Use `tspan(scenario)` for details.")
-  println(io, "   $(length(parameters(c))) parameters(s). Use `parameters(scenario)` for details.")
-  println(io, "   $(length(measurements(c))) measurement(s). Use `measurements(scenario)` for details.")
-  #println(io, "   $(length(events_active(c))) event(s). Use `events_active(c::Scenario)` for details.")
-  #println(io, "   $(length(events_save(c))) event(s). Use `events_save(c::Scenario)` for details.")
-  #println(io, "   $(length(observables(c))) observable(s). Use `observables(c::Scenario)` for details.")
+function Base.show(io::IO, ::MIME"text/plain", scn::Scenario)
+  if length(saveat(scn)) == 0
+    time_points_str = "for tspan=$(tspan(scn))"
+  else
+    time_points_str = "for saveat=$(saveat(scn))"
+  end
+
+  #=
+  if length(parameters(scn)) < 6
+    pair_str = map((p) -> ":$(first(p))=>$(last(p))", parameters(scn))
+    short_parameters_str = "[$(join(pair_str, ", "))]"
+  else
+    pair_str = map((p) -> ":$(first(p))=>$(last(p))", first(parameters(scn), 5))
+    short_parameters_str = "[$(join(pair_str, ", ")), ...]"
+  end
+  =#
+
+  println(io, "Scenario $time_points_str")
+  println(io, "   tspan: $(tspan(scn)).")
+  println(io, "   saveat: $(saveat(scn)).")
+  println(io, "   $(length(parameters(scn))) parameters. Use `parameters(scenario)` for details.")
+  println(io, "   $(length(measurements(scn))) measurements. Use `measurements(scenario)` for details.")
+  #println(io, "   $(length(events_active(scn))) events. Use `events_active(scn::Scenario)` for details.")
+  #println(io, "   $(length(events_save(scn))) event(s). Use `events_save(scn::Scenario)` for details.")
+  #println(io, "   $(length(observables(scn))) observable(s). Use `observables(scn::Scenario)` for details.")
 end
 
 ################################## SimResults ###########################################
@@ -197,33 +213,37 @@ struct SimResults{S, C<:Scenario} <: AbstractResults
   scenario::C 
 end
 
-status(s::SimResults) = status(s.sim)
-times(s::SimResults) = times(s.sim)
-vals(s::SimResults) = vals(s.sim)
+status(sr::SimResults) = status(sr.sim)
+times(sr::SimResults) = times(sr.sim)
+vals(sr::SimResults) = vals(sr.sim)
 
-@inline Base.length(S::SimResults) = length(S.sim)
+@inline Base.length(sr::SimResults) = length(sr.sim)
 
-function Base.show(io::IO, m::MIME"text/plain", S::SimResults)
-  println(io, "SimResults with status :$(status(S)).")
-  println(io, " Use `DataFrame(sim)` to convert results to DataFrame.")
-  println(io, " Use `plot(sim)` to plot results.")
+function Base.show(io::IO, m::MIME"text/plain", sr::SimResults)
+  dim2 = length(keys(sr.sim[1])) # number of observables
+  dimentions_str = "$(length(sr))x$dim2"
+
+  println(io, "$dimentions_str SimResults with status :$(status(sr)).")
+  println(io, "    Use `DataFrame(res)` to convert results to DataFrame.")
+  println(io, "    Use `plot(res)` to plot results.")
 end
-Base.show(io::IO, m::MIME"text/plain", PS::Pair{Symbol, S}) where S<:SimResults = Base.show(io, m, last(PS))
 
-#= XXX: do we need it?
-function Base.show(io::IO, m::MIME"text/plain", V::Vector{S}) where S<:SimResults
-  println(io, "+---------------------------------------------------------------------------")
-  println(io, "| Simulation results for $(length(V)) scenario(s).") 
-  println(io, "| Use `sol[i]` to get th i-th component.")
-  println(io, "+---------------------------------------------------------------------------")
+function Base.show(io::IO, m::MIME"text/plain", srp::Pair{Symbol, S}) where S<:SimResults
+  sr = last(srp)
+  dim2 = length(keys(sr.sim[1])) # number of observables
+  dimentions_str = "$(length(sr))x$dim2"
+  println(io, ":$(first(srp)) => $dimentions_str SimResults with status :$(status(sr)).")
 end
-=#
+
 function Base.show(io::IO, m::MIME"text/plain", V::Vector{Pair{Symbol, S}}) where S<:SimResults
-  show_string = [*(":", String(x), " => ...") for x in first.(V)]
-  println(io, "Pair{Symbol, SimResults}[] for $(length(V)) scenario(s).") 
-  println(io, "    [$(join(show_string, ", "))]")
-  println(io, "    Use `sol[id]` to get component by id.")
-  println(io, "    Use `sol[i]` to get component by number.")
+  println(io, "$(length(V))-element Vector{Pair{Symbol, SimResults}}") 
+
+  for x in V
+    print("\t")
+    show(io, m, x)
+  end
+  #println(io, "    Use `sol[id]` to get component by id.")
+  #println(io, "    Use `sol[i]` to get component by number.")
   println(io, "    Use `DataFrame(sol)` to transform.")
   println(io, "    Use `plot(sol)` to plot results.")
 end
