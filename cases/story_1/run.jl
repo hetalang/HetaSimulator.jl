@@ -120,7 +120,7 @@ mc_scn3 = Scenario(
     );
 
 # single MC Simulation
-mc_sim1 = mc(mc_scn1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000)
+mcsim1 = mc(mc_scn1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000)
 plot(mc_sim1)
 
 # multi MC Simulation
@@ -139,7 +139,7 @@ mc_sim3 = mc(
 plot(mc_sim3)
 
 ################################## Monte-Carlo Statistics  #####################
-#= FIXME
+
 # mean
 timestep_mean(mcsim1,2)
 timepoint_mean(mcsim1,80)
@@ -177,7 +177,7 @@ ens = EnsembleSummary(mcsim1;quantiles=[0.05,0.95])
 plot(ens)
 
 ################################## Monte-Carlo Parallel #####################
-
+#= 
 using Distributed
 addprocs(2)
 @everywhere using HetaSimulator

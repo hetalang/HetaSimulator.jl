@@ -370,9 +370,17 @@ function mc(
   return mc(scenario_pairs,params,num_iter;kwargs...)
 end
 
-#=FIXME
-DiffEqBase.EnsembleAnalysis.get_timestep(mc::MCResults,i) = (getindex(as_simulation(mc,j),i) for j in 1:length(mc))
-DiffEqBase.EnsembleAnalysis.get_timepoint(mc::MCResults,t) = (as_simulation(mc,j)(:,t) for j in 1:length(mc))
+
+function DiffEqBase.EnsembleAnalysis.get_timestep(mcr::MCResults,i) 
+  @assert has_saveat(mcr) "Solution doesn't contain single time vector, default statistics are not available."
+  return (getindex(mcr[j],i)[:] for j in 1:length(mcr))
+end
+
+function DiffEqBase.EnsembleAnalysis.get_timepoint(mcr::MCResults,t) 
+  @assert has_saveat(mcr) "Solution doesn't contain single time vector, default statistics are not available."
+  return (mcr[j](t)[:] for j in 1:length(mcr))
+end
+
 
 function DiffEqBase.EnsembleAnalysis.EnsembleSummary(sim::MCResults,
   t=sim[1].t;quantiles=[0.05,0.95])
@@ -385,7 +393,7 @@ function DiffEqBase.EnsembleAnalysis.EnsembleSummary(sim::MCResults,
 
   EnsembleSummary{Float64,2,typeof(t),typeof(m),typeof(v),typeof(qlow),typeof(qhigh)}(t,m,v,qlow,qhigh,trajectories,0.0,true)
 end
-=#
+
 
 generate_cons(vp::Vector{P},i)  where P<:Pair = NamedTuple([k=>generate_cons(v,i) for (k,v) in vp])
 generate_cons(nt::NamedTuple,i) = NamedTuple{keys(nt)}([generate_cons(v,i) for v in nt])

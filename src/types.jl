@@ -176,6 +176,14 @@ vals(s::Simulation) = s.vals.u
 
 @inline Base.length(S::Simulation) = length(S.vals.t)
 
+# tmp fix to support https://github.com/SciML/SciMLBase.jl/blob/ccaba96f4d7e29e9980cd4cd7270086fc5e542d6/src/ensemble/ensemble_analysis.jl#L56
+function Base.getproperty(s::Simulation, sym::Symbol)
+  if sym == :t
+    return s.vals.t
+  else
+    return getfield(s, sym)
+  end
+end
 """
     struct SimResults{S, C<:Scenario} <: AbstractResults
       sim::S

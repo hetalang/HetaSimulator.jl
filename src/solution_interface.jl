@@ -22,6 +22,7 @@ function solat(sim::Simulation, t, idx, scope)
   return sim[_id][idx]
 end
 
+(s::Simulation)(t, idx=:, scope=:ode_) = solat(s, t, idx, scope)
 (sr::SimResults)(t, idx=:, scope=:ode_) = solat(sr.sim, t, idx, scope)
 
 ############################ Plots ########################################
