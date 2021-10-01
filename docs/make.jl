@@ -10,15 +10,19 @@ makedocs(
         canonical="https://hetalang.github.io/HetaSimulator.jl/dev/"
     ),
     pages = [
-        "Home" => "index.md",
-        "Basics" => [
+        "Home" => "index.md", # readme
+        "Basics" => [ # background, discussion
             "basics/overview.md",
             "basics/design.md",
             "table-formats/scenario.md",
             "table-formats/measurement.md",
             "table-formats/parameters.md"
         ],
-        "Methods" => ["methods/sim.md"],
+        "Tutorial" => [ # methods
+            "tutorial/sim.md",
+            #"tutorial/mc.md",
+            #"tutorial/fit.md",
+        ],
         "API" => "api.md"
     ],
 )
