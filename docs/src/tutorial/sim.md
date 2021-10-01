@@ -349,7 +349,7 @@ The results of multiple simulations can be visualized all together using `plot` 
 
 ```julia
 # plot everything
-plot(res_selected)
+plot(res_selected, yscale=:log10, ylims=(1e-3,1e2))
 ```
 
 ![fig07](./fig07.png)
@@ -368,11 +368,11 @@ CSV.write("res_selected_df.csv", res_selected_df)
 
 1. The typical workflow for simulation of modeling platforms in HetaCompiler.jl consist of the following steps: (1) loading Heta-based models into a `Platform` object; (2) creating and addition scenarios using `Scenario` constructor or from CSV tables; (3) run `sim` method for the whole platform or selected scenarios; (4) display results using `plot` or transform into `DataFrame`.
 
-1. `Model` and `Scenario` objects are "unmutable". This means a user cannot update their parts directly. User can just create new Scenario and use `add _scenarios!` method using the same identifiers. This replaces the previous corresponding scenarios.
+1. `Model` and `Scenario` objects are "unmutable". This means a user cannot update their parts directly. User can just create new Scenario and use `add_scenarios!` method using the same identifiers. This replaces the previous scenarios with selected ids.
 
 1. To update a model structure one should include changes into source Heta-based model and repeat all the steps.
 
-1. In many cased the chain Julia syntax can be useful. The following code creates the default scenario, simulate and plot one line.
+1. In many cased the chain Julia syntax can be useful. The following code creates the default scenario, simulate and plot with one line.
     ```julia
     Scenario(models(p)[:nameless], tspan = (0,100)) |> sim |> plot
     ```
