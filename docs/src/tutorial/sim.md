@@ -1,4 +1,4 @@
-# `sim` method. `Scenario` objects
+# Scenario. Simulation
 
 ## Working example
 

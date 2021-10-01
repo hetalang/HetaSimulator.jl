@@ -13,12 +13,12 @@ makedocs(
         "Home" => "index.md", # readme
         "Basics" => [ # background, discussion
             "basics/overview.md",
-            "basics/design.md",
             "table-formats/scenario.md",
             "table-formats/measurement.md",
             "table-formats/parameters.md"
         ],
         "Tutorial" => [ # methods
+            "tutorial/intro.md",
             "tutorial/sim.md",
             #"tutorial/mc.md",
             #"tutorial/fit.md",

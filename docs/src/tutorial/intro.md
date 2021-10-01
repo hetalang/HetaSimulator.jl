@@ -1,6 +1,4 @@
-# Design decisions
-
-## Architecture
+# Introduction
 
 HetaSimulator was designed as a modeling environment for Quantitative Systems Pharmacology (QSP) and Systems Biology (SB) projects.
 The endpoint users are not experienced Julia users but rather researchers having biological, biophisical and bioinformatical background.
@@ -9,6 +7,8 @@ We avoided complex user interfaces and limit the number of different methods for
 The approach implies the "modeling platform" term that means everything helpful for modeling: models structure, variables, parameters, scenarios and experimental dataset. From the practical point of view "modeling platform" is the same as project files.
 The representation of modeling platform in the HetaSimulator package is object of the [`Platform`](@ref) type.
 This object stores `Model`s, `Scenario`s and `Measurement`s.
+
+## Architecture
 
 [`Model`](@ref) type represents one concrete namespace imported from [Heta-compiler](https://hetalang.github.io/#/heta-compiler/). It stores information about ODE system, initialization of initial values, events as well as default values of constants. The HetaSimulator approach imply multi-model usage so simulations and optimizations can be done for several models simultaneously without specific preparations.
 
@@ -23,7 +23,6 @@ There is no need to create more than one `Platform` object because it can store 
 There are base methods that can be applied for a platform object, for example `sim`, `mc` and `fit`.
 These methods can be applied for a particular `Scenario` or for the whole platform (all scenarios in platform).
 The last approach is preferable.
-
 
 ## HetaSimulator vs Heta-compiler
 
