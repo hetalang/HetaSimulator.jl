@@ -95,7 +95,7 @@ function mc(
     end
   end
 
-  return MCResults(solution.u, !has_saveat(scenario), scenario)
+  return MCResults(solution.u, has_saveat(scenario), scenario)
 end
 
 """
@@ -298,7 +298,7 @@ function mc(
 
   for i in 1:lc
     ret[i] = first(scenario_pairs[i]) => 
-      MCResults(solution.u[lp*(i-1)+1:i*lp], false, last(scenario_pairs[i]))
+      MCResults(solution.u[lp*(i-1)+1:i*lp], has_saveat(last(scenario_pairs[i])), last(scenario_pairs[i]))
   end
   return ret
 end

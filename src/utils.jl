@@ -33,7 +33,7 @@ function _subset(
   end
 end
 
-has_saveat(c::Scenario) = !isempty(c.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values.u) 
+has_saveat(c::Scenario) = !isempty(c.prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat_cache) 
 has_saveat(mcr::MCResults) = mcr.saveat
 
 # auxilary method to update values in LVector

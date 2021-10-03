@@ -115,28 +115,27 @@ mc_scn3 = Scenario(
     model; 
     tspan = (0., 200.),
     parameters = [:k1=>0.03],
-    saveat = [50., 100., 180.],
     events_active=[:sw1 => false]
     );
 
 # single MC Simulation
-mcsim1 = mc(mc_scn1, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000)
-plot(mc_sim1)
+mcsim1 = mc(mc_scn1, [:k1=>Uniform(1e-3,1e-2), :k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000)
+plot(mcsim1)
 
 # multi MC Simulation
-mc_sim2 = mc(
+mcsim2 = mc(
     [:mc1=>mc_scn1,:mc2=>mc_scn2,:mc3=>mc_scn3],
     [:k1=>0.01, :k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)],
     1000
   )
-plot(mc_sim2)
+plot(mcsim2)
 
-mc_sim3 = mc(
+mcsim3 = mc(
     [mc_scn1, mc_scn2, mc_scn3],
-    [:k1=>0.01, :k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)],
+    [:k1=>0.01, :k2=>LogNormal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)],
     1000
   )
-plot(mc_sim3)
+plot(mcsim3)
 
 ################################## Monte-Carlo Statistics  #####################
 
