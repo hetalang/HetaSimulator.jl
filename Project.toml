@@ -17,13 +17,14 @@ OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"
 ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
 RecipesBase = "3cdcf5f2-1ef4-517c-9805-6587b60abb01"
 Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
-StructArrays = "09ab397b-f2b6-538f-b94a-2f83cf4a842a"
 Sundials = "c3572dad-4567-51f8-b174-8c6c989267f4"
 XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"
 
 [compat]
+CSV = "0.8.5"
 DiffEqBase = "6.47"
 LabelledArrays = "1.6.1"
+Sundials = "4.4.3"
 julia = "1.6"
 
 [extras]
