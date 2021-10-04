@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.4.2
+
+- update `show` method for many types
+- remove `sim(m::Model)` support
+- support of statistics for `mc` method
+- `vars` argument in `DataFrame` method for `SimResults`
+- `add_scenarios!` method for `Vector{Pair{Symbol, Scenario}}` 
+
 ## 0.4.1
 
 - Rename `Condition` => `Scenario`
