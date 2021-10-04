@@ -366,9 +366,9 @@ CSV.write("res_selected_df.csv", res_selected_df)
 
 ## Final remarks
 
-1. The typical workflow for simulation of modeling platforms in HetaCompiler.jl consist of the following steps: (1) loading Heta-based models into a `Platform` object; (2) creating and addition scenarios using `Scenario` constructor or from CSV tables; (3) run `sim` method for the whole platform or selected scenarios; (4) display results using `plot` or transform into `DataFrame`.
+1. The typical workflow for simulation of modeling platforms in HetaSimulator.jl consists of the following steps: (1) loading Heta-based models into a `Platform` object; (2) creating and addition scenarios using `Scenario` constructor or from CSV tables; (3) run `sim` method for the whole platform or for selected scenarios; (4) display results using `plot` or transform into `DataFrame`.
 
-1. `Model` and `Scenario` objects are "unmutable". This means a user cannot update their parts directly. User can just create new Scenario and use `add_scenarios!` method using the same identifiers. This replaces the previous scenarios with selected ids.
+1. `Model` and `Scenario` objects are "un-mutable". This means a user cannot update their parts directly. User can only create new Scenario and use `add_scenarios!` method using the same identifiers. This replaces the previous scenarios with selected ids.
 
 1. To update a model structure one should include changes into source Heta-based model and repeat all the steps.
 
