@@ -20,7 +20,7 @@ makedocs(
         "Tutorial" => [ # methods
             "tutorial/intro.md",
             "tutorial/sim.md",
-            #"tutorial/mc.md",
+            "tutorial/mc.md",
             #"tutorial/fit.md",
         ],
         "API" => "api.md"
