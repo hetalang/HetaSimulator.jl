@@ -16,6 +16,13 @@ s = Scenario(model, tspan = (0., 200.), saveat = [0.0, 150., 250.], observables=
 @test times(s)[end] == 250.
 @test vals(s)[1][:r1] == 0.1
 
+# tests related to saveat, tspan behavior
+s1 = Scenario(model, tspan = (0., 200.)) |> sim
+s2 = Scenario(model, saveat = [150., 200.]) |> sim
+@test times(s1)[1] == 0.0
+@test times(s1)[end] == 200.0
+@test times(s2) == [150., 200.]
+
 # Simulate scenario
 scn1 = Scenario(model; parameters = [:k1=>0.02], tspan = (0., 200.), saveat = [0.0, 150., 250.], observables=[:r1])
 scn2 = Scenario(model; parameters = [:k1=>0.015], tspan = (0., 200.), observables=[:r1])
