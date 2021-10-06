@@ -17,8 +17,8 @@ function Platform(
     model_pairs = [pair[1] => Model(pair[2]...) for pair in pairs(models)]
     
     platform = Platform(
-        Dict{Symbol,Model}(model_pairs),
-        Dict{Symbol,Scenario}()
+        OrderedDict{Symbol,Model}(model_pairs),
+        OrderedDict{Symbol,Scenario}()
     )
     println("OK!")
 

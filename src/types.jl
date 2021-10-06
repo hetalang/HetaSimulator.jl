@@ -11,8 +11,8 @@ Typically HetaSimulator works with one platform object which can include several
 Usually a `Platform` is created based on Heta formatted files using [`load_platform`]{@ref}.
 """
 struct Platform{M,C}
-  models::Dict{Symbol,M}
-  scenarios::Dict{Symbol,C}
+  models::OrderedDict{Symbol,M}
+  scenarios::OrderedDict{Symbol,C}
 end
 
 models(p::Platform) = p.models
