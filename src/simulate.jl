@@ -22,6 +22,7 @@ Arguments:
 
 - `scenario` : simulation scenario of type [`Scenario`](@ref)
 - `parameters_upd` : constants, which overwrite both `Model` and `Scenario` constants. Default is `nothing`
+- `save_parameters` : save parameters with simulated values. Default is `false` 
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -30,6 +31,7 @@ Arguments:
 function sim(
   scenario::Scenario;
   parameters_upd::Union{Nothing, Vector{P}}=nothing,
+  save_parameters=false,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
@@ -40,15 +42,16 @@ function sim(
   sol = solve(prob, alg; reltol = reltol, abstol = abstol,
     save_start = false, save_end = false, save_everystep = false, kwargs...)
 
-  return build_results(sol, scenario)
+  return build_results(sol, scenario; save_parameters)
 end
 
-function build_results(sol::SciMLBase.AbstractODESolution)
+function build_results(sol::SciMLBase.AbstractODESolution; save_parameters=false)
+  params = save_parameters ? sol.prob.p.constants : nothing
   sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-  return Simulation(sv, sol.retcode)
+  return Simulation(sv, params, sol.retcode)
 end
 
-build_results(sol::SciMLBase.AbstractODESolution, scenario) = SimResults(build_results(sol), scenario)
+build_results(sol::SciMLBase.AbstractODESolution, scenario; save_parameters=false) = SimResults(build_results(sol; save_parameters), scenario)
 
 ### simulate scenario pairs
 
@@ -69,6 +72,7 @@ Arguments:
 
 - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
 - `parameters_upd` : constants, which overwrite both `Model` and `Scenario` constants. Default is `nothing`
+- `save_parameters` : save parameters with simulated values. Default is `false` 
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -78,6 +82,7 @@ Arguments:
 function sim(
   scenario_pairs::Vector{P};
   parameters_upd::Union{Nothing, Vector}=nothing,
+  save_parameters=false,
   alg = DEFAULT_ALG, 
   reltol = DEFAULT_SIMULATION_RELTOL, 
   abstol = DEFAULT_SIMULATION_ABSTOL,
@@ -100,7 +105,7 @@ function sim(
   end
 
   function _output(sol,i)
-    build_results(sol,last(scenario_pairs[i])),false
+    build_results(sol,last(scenario_pairs[i]); save_parameters),false
   end
   
   _reduction(u,batch,I) = (append!(u,batch),false)

@@ -177,18 +177,25 @@ function clear_savings(sv::SavedValues)
   return nothing
 end
 
-struct Simulation{V,scopeType}
+struct Simulation{V,scopeType,P}
   vals::V
   scope::scopeType
+  params::P
   status::Symbol
 end
 
 # copy fix is tmp needed not to rewrite SavedValues with new simulation
-Simulation(sv::SavedValues,status::Symbol) = Simulation(DiffEqBase.SciMLBase.DiffEqArray(copy(sv.u),copy(sv.t)),sv.scope,status) 
+Simulation(sv::SavedValues, params, status::Symbol) = Simulation(
+  DiffEqBase.SciMLBase.DiffEqArray(copy(sv.u),copy(sv.t)),
+  sv.scope,
+  params,
+  status
+) 
 
 status(s::Simulation) = s.status
 times(s::Simulation) = s.vals.t
 vals(s::Simulation) = s.vals.u
+parameters(s::Simulation) = s.params
 
 @inline Base.length(S::Simulation) = length(S.vals.t)
 
@@ -216,6 +223,7 @@ end
 status(sr::SimResults) = status(sr.sim)
 times(sr::SimResults) = times(sr.sim)
 vals(sr::SimResults) = vals(sr.sim)
+parameters(sr::SimResults) = parameters(sr.sim)
 
 @inline Base.length(sr::SimResults) = length(sr.sim)
 

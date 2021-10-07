@@ -22,6 +22,7 @@ Arguments:
 - `scenario` : simulation scenario of type [`Scenario`](@ref)
 - `params` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
+- `save_parameters` : save parameters with simulated values. Default is `false` 
 - `verbose` : print iteration progress. Default is `false`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
@@ -33,6 +34,7 @@ function mc(
   scenario::Scenario,
   params::Vector{P},
   num_iter::Int;
+  save_parameters=false,
   verbose=false,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
@@ -47,7 +49,7 @@ function mc(
 
   progress_on = true #(parallel_type == EnsembleSerial()) # tmp fix
   p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled = progress_on)
-
+  
   function prob_func(prob,i,repeat)
     verbose && println("Processing iteration $i")
     parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true)
@@ -55,7 +57,7 @@ function mc(
   end
 
   function output_func(sol, i)
-    sim = build_results(sol)
+    sim = build_results(sol; save_parameters)
     (sim, false)
   end
 
@@ -216,6 +218,7 @@ Arguments:
 - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
 - `params` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
+- `save_parameters` : save parameters with simulated values. Default is `false` 
 - `verbose` : print iteration progress. Default is `false`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
@@ -227,6 +230,7 @@ function mc(
   scenario_pairs::Vector{CP},
   params::Vector{PP},
   num_iter::Int;
+  save_parameters=false,
   verbose=false,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
@@ -254,7 +258,7 @@ function mc(
   end
 
   function output_func(sol, i)
-    sim = build_results(sol)
+    sim = build_results(sol; save_parameters)
     (sim, false)
   end
 

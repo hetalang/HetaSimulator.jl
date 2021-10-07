@@ -35,13 +35,14 @@ scn2 = Scenario(model; parameters = [:k1=>0.015], tspan = (0., 200.), observable
 @test parameters(scn2)[:k1] == 0.015
 
 cs1 = sim(scn1)
-cs2 = sim([:one=>scn1,:two=>scn2])
+cs2 = sim([:one=>scn1,:two=>scn2]; save_parameters=true)
 @test typeof(cs1) <: HetaSimulator.SimResults
 @test typeof(cs2) <: Vector{Pair{Symbol, HetaSimulator.SimResults}}
-
+@test isnothing(parameters(cs1))
+@test !isempty(parameters(last(cs2[:one]))) # to be fixed
 
 # Monte-Carlo simulation tests
-mc1 =  mc(model, [:k1=>Normal(0.02,1e-3)], 100; tspan = (0., 200.), observables=[:r1])
+mc1 =  mc(model, [:k1=>Normal(0.02,1e-3)], 100; tspan = (0., 200.), observables=[:r1], save_parameters=true)
 mc2 = mc([:one=>scn1,:two=>scn2], [:k1=>Normal(0.02,1e-3)], 100)
 @test typeof(mc1) <: HetaSimulator.MCResults
 @test typeof(mc2) <: Vector{Pair{Symbol, HetaSimulator.MCResults}}
@@ -49,6 +50,7 @@ mc2 = mc([:one=>scn1,:two=>scn2], [:k1=>Normal(0.02,1e-3)], 100)
 @test typeof(mc2[1]) <: Pair{Symbol, HetaSimulator.MCResults}
 @test length(mc1) == 100
 @test times(mc1[1])[end] == 200.
+@test !isempty(parameters(mc1[1]))
 
 # Fitting tests
 fscn1 = Scenario(model; parameters = [:k1=>0.02], tspan = (0., 200.), observables=[:A, :B, :r1])
