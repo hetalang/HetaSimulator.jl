@@ -12,14 +12,17 @@ constants(sim::SimResults) = sim.scenario.prob.p.constants
 
 solat(sr::SimResults, args...) = solat(sr.sim, args...)
 
-function solat(sim::Simulation, t, idx, scope)
+solat(sim::Simulation, t, idx, scope) = solat(sim, t, scope)[idx]
+solat(sim::Simulation, t, idx::Colon, scope) = solat(sim, t, scope)
+
+function solat(sim::Simulation, t, scope)
   if scope == :ode_ || scope == :start_
       _id = findfirst(x->x==t, sim.vals.t) # change to searchsortedfirst ?
   else
       t_id = findall(x->x==t, sim.vals.t)
       _id = t_id[findfirst(x->x==scope, @view(sim.scope[t_id]))]
   end
-  return sim[_id][idx]
+  return sim[_id]
 end
 
 (s::Simulation)(t, idx=:, scope=:ode_) = solat(s, t, idx, scope)

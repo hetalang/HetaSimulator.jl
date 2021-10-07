@@ -374,15 +374,18 @@ function mc(
   return mc(scenario_pairs,params,num_iter;kwargs...)
 end
 
+########################################## Statistics ######################################################
+
+# currently median and quantile don't output LVector
 
 function DiffEqBase.EnsembleAnalysis.get_timestep(mcr::MCResults,i) 
   @assert has_saveat(mcr) "Solution doesn't contain single time vector, default statistics are not available."
-  return (getindex(mcr[j],i)[:] for j in 1:length(mcr))
+  return (getindex(mcr[j],i) for j in 1:length(mcr))
 end
 
 function DiffEqBase.EnsembleAnalysis.get_timepoint(mcr::MCResults,t) 
   @assert has_saveat(mcr) "Solution doesn't contain single time vector, default statistics are not available."
-  return (mcr[j](t)[:] for j in 1:length(mcr))
+  return (mcr[j](t) for j in 1:length(mcr))
 end
 
 
