@@ -1,3 +1,7 @@
+/*
+    Example from README.md file
+*/
+
 // index.heta file in directory "my_project"
 comp1 @Compartment .= 1.5;
 

@@ -19,6 +19,7 @@ const OBSERVABLES_HEADER = Symbol("observables[]")
     )
 
 Builds simulation scenario of type [`Scenario`](@ref)
+
 Example: `Scenario(model; tspan = (0., 200.), saveat = [0.0, 150., 250.])`
 
 Arguments:

@@ -9,6 +9,8 @@ The main storage representing a modeling platform.
 Typically HetaSimulator works with one platform object which can include several models and scenarios.
 
 Usually a `Platform` is created based on Heta formatted files using [`load_platform`]{@ref}.
+
+To get the platform content use methods: `models(platform)`, `scenarios(platform).
 """
 struct Platform{M,C}
   models::OrderedDict{Symbol,M}
@@ -28,8 +30,8 @@ function Base.show(io::IO, ::MIME"text/plain", p::Platform)
   end
 
   println(io, "Platform with $(length(models(p))) models, $(length(scenarios(p))) scenarios, $measurements_count measurements")
-  println(io, "   Models: $models_names. Use `models(platform)` for details.")
-  println(io, "   Scenarios: $scn_names. Use `scenarios(platform)` for details.")
+  println(io, "   Models: $models_names")
+  println(io, "   Scenarios: $scn_names")
 end
 
 ################################## Model ###########################################
@@ -49,6 +51,12 @@ abstract type AbstractModel end
 
 Structure storing core properties of ODE model.
 This represent the content of one namespace from a Heta platform.
+
+To get list of model content use methods: constants(model), records(model), switchers(model).
+
+To get the default model options use methods: `parameters(model)`, 
+`events_active(model)`, `events_save(model)`, `observables(model)`.
+These options can be rewritten by a [`Scenario`]{@ref}.
 """
 struct Model{IF,OF,EV,SG,C,EA} <: AbstractModel
   init_func::IF
@@ -72,18 +80,27 @@ observables(m::Model) = begin # observables
   first.(only_true)
 end
 
+# auxilary function to display first n components of vector
+function print_lim(x::Union{Vector, Tuple}, n::Int)
+  first_n = ["$y" for y in first(x, n)]
+  if length(x) > n
+    push!(first_n, "...")
+  end
+  return join(first_n, ", ")
+end
+function print_lim(::Nothing, n::Int)
+  return "-"
+end
+
 function Base.show(io::IO, ::MIME"text/plain", m::Model)
-  # observables_names = join(obs(m), ", ")
+  const_str = print_lim(constants(m), 10)
+  record_str = print_lim(records(m), 10)
+  switchers_str = print_lim(switchers(m), 10)
 
   println(io, "Model containing $(length(m.constants)) constants, $(length(m.records_output)) records, $(length(m.events)) switchers.")
-  println(io, "   Use `constants(model)` to get the constants.")
-  println(io, "   Use `records(model)` to get the records.")
-  println(io, "   Use `switchers(model)` to get the switchers.")
-  println(io, " Use the following methods to get the default options:")
-  println(io, "   - parameters(model)")
-  println(io, "   - events_active(model)")
-  println(io, "   - events_save(model)")
-  println(io, "   - observables(model)")
+  println(io, "   Constants: $const_str")
+  println(io, "   Records: $record_str")
+  println(io, "   Switchers (events): $switchers_str")
 end
 
 ################################## Params ###########################################
@@ -123,6 +140,17 @@ const MeasurementVector{P} = AbstractVector{P} where P<:AbstractMeasurementPoint
 ################################## Scenario ###########################################
 abstract type AbstractScenario end
 
+"""
+  struct Scenario{F,P,M} <: AbstractScenario
+    init_func::F
+    prob::P
+    measurements::M
+  end
+
+  Type representing simulation conditions, i.e. model variant with updated constants and outputs.
+
+  To get the internal properties use methods: `saveat(scenario)`, `tspan(scenario)`, `parameters(scenario)`, `measurements(scenario)`
+"""
 struct Scenario{F,P,M} <: AbstractScenario
   init_func::F
   prob::P
@@ -133,32 +161,29 @@ saveat(scn::Scenario) = scn.prob.kwargs[:callback].discrete_callbacks[1].affect!
 tspan(scn::Scenario) = scn.prob.tspan
 parameters(scn::Scenario) = scn.prob.p.constants
 measurements(scn::Scenario) = scn.measurements
+# events_active(scn::Scenario)
+# events_save(scn::Scenario)
+# observables(scn::Scenario)
 
 function Base.show(io::IO, ::MIME"text/plain", scn::Scenario)
+  saveat_str = print_lim(saveat(scn), 10)
+  parameters_str = print_lim(
+    keys(parameters(scn)),
+    10
+    )
+  measurements_count = length(measurements(scn))
+
   if length(saveat(scn)) == 0
     time_points_str = "for tspan=$(tspan(scn))"
   else
-    time_points_str = "for saveat=$(saveat(scn))"
+    time_points_str = "for saveat=$(saveat_str)"
   end
-
-  #=
-  if length(parameters(scn)) < 6
-    pair_str = map((p) -> ":$(first(p))=>$(last(p))", parameters(scn))
-    short_parameters_str = "[$(join(pair_str, ", "))]"
-  else
-    pair_str = map((p) -> ":$(first(p))=>$(last(p))", first(parameters(scn), 5))
-    short_parameters_str = "[$(join(pair_str, ", ")), ...]"
-  end
-  =#
 
   println(io, "Scenario $time_points_str")
-  println(io, "   tspan: $(tspan(scn)).")
-  println(io, "   saveat: $(saveat(scn)).")
-  println(io, "   $(length(parameters(scn))) parameters. Use `parameters(scenario)` for details.")
-  println(io, "   $(length(measurements(scn))) measurements. Use `measurements(scenario)` for details.")
-  #println(io, "   $(length(events_active(scn))) events. Use `events_active(scn::Scenario)` for details.")
-  #println(io, "   $(length(events_save(scn))) event(s). Use `events_save(scn::Scenario)` for details.")
-  #println(io, "   $(length(observables(scn))) observable(s). Use `observables(scn::Scenario)` for details.")
+  println(io, "   Time range (tspan): $(tspan(scn))")
+  println(io, "   Exact time points (saveat): $(saveat_str)")
+  println(io, "   Parameters: $(parameters_str)")
+  println(io, "   Measurement points count: $(measurements_count)")
 end
 
 ################################## SimResults ###########################################
@@ -207,6 +232,7 @@ function Base.getproperty(s::Simulation, sym::Symbol)
     return getfield(s, sym)
   end
 end
+
 """
     struct SimResults{S, C<:Scenario} <: AbstractResults
       sim::S
@@ -214,6 +240,10 @@ end
     end
 
 Structure storing results from [`sim`]{@ref} method applied for one [`Scenario`]{@ref}.
+
+To get the content use methods: `status(results)`, `times(results)`, `vals(results)`, `parameters(results)`, observables(results).
+
+The results can be transformed using `DataFrame` method or visualized using `plot` method.
 """
 struct SimResults{S, C<:Scenario} <: AbstractResults
   sim::S
@@ -223,45 +253,48 @@ end
 status(sr::SimResults) = status(sr.sim)
 times(sr::SimResults) = times(sr.sim)
 vals(sr::SimResults) = vals(sr.sim)
-parameters(sr::SimResults) = parameters(sr.sim)
+parameters(sr::SimResults) = parameters(sr.sim) # XXX: check here, maybe better is parameters(sr.scenario)
+observables(sr::SimResults) = [keys(vals(sr.sim)[1])...]
 
 @inline Base.length(sr::SimResults) = length(sr.sim)
 
 function Base.show(io::IO, m::MIME"text/plain", sr::SimResults)
   dim2 = length(keys(sr.sim[1])) # number of observables
   dimentions_str = "$(length(sr))x$dim2"
+  times_str = print_lim(times(sr), 10)
+  outputs_str = print_lim(observables(sr), 10)
+  parameters_str = print_lim(parameters(sr), 10)
 
   println(io, "$dimentions_str SimResults with status :$(status(sr)).")
-  println(io, "    Use `DataFrame(res)` to convert results to DataFrame.")
-  println(io, "    Use `plot(res)` to plot results.")
+  println(io, "    Solution status: $(status(sr))")
+  println(io, "    Time points (times): $(times_str)")
+  println(io, "    Observables (outputs): $(outputs_str)")
+  println(io, "    Parameters: $(parameters_str)")
 end
 
-function Base.show(io::IO, m::MIME"text/plain", srp::Pair{Symbol, S}) where S<:SimResults
+function Base.show(io::IO, m::MIME"text/plain", srp::Pair{Symbol, S}, short::Bool = false) where S<:SimResults
   sr = last(srp)
   dim2 = length(keys(sr.sim[1])) # number of observables
   dimentions_str = "$(length(sr))x$dim2"
-  println(io, ":$(first(srp)) => $dimentions_str SimResults with status :$(status(sr)).")
+
+  short || println(io, "Pair{Symbol, SimResults}")
+  println(io, "    :$(first(srp)) => $dimentions_str SimResults with status :$(status(sr)).")
 end
 
-function Base.show(io::IO, m::MIME"text/plain", V::Vector{Pair{Symbol, S}}) where S<:SimResults
-  println(io, "$(length(V))-element Vector{Pair{Symbol, SimResults}}") 
+function Base.show(io::IO, m::MIME"text/plain", vector::Vector{Pair{Symbol, S}}) where S<:SimResults
+  println(io, "$(length(vector))-element Vector{Pair{Symbol, SimResults}}") 
 
-  for x in V
-    print("\t")
-    show(io, m, x)
+  for x in vector
+    show(io, m, x, true)
   end
-  #println(io, "    Use `sol[id]` to get component by id.")
-  #println(io, "    Use `sol[i]` to get component by number.")
-  println(io, "    Use `DataFrame(sol)` to transform.")
-  println(io, "    Use `plot(sol)` to plot results.")
 end
 
-function Base.getindex(V::Vector{Pair{Symbol, S}}, id::Symbol) where S<:SimResults
-  ind = findfirst((x) -> first(x)===id, V)
+function Base.getindex(vector::Vector{Pair{Symbol, S}}, id::Symbol) where S<:SimResults
+  ind = findfirst((x) -> first(x)===id, vector)
   if ind === nothing
     throw("Index :$id is not found.")
   else
-    return V[ind]
+    return vector[ind]
   end
 end
 

@@ -1,3 +1,7 @@
+#=
+    Example from README.md file
+=#
+
 using HetaSimulator, Plots
 
 # set the absolute or relative path to the project directory
