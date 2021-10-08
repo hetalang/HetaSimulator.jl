@@ -95,7 +95,7 @@ function fit(
 
   function _output(sol, i)
     sol.retcode != :Success && error("Simulated scenario $i returned $(sol.retcode) status")
-    sim = build_results(sol,last(selected_scenario_pairs[i]))
+    sim = build_results(sol,last(selected_scenario_pairs[i]), nothing)
     loss_val = loss(sim, sim.scenario.measurements) 
     (loss_val, false)
   end

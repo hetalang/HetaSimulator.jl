@@ -22,7 +22,6 @@ Arguments:
 - `scenario` : simulation scenario of type [`Scenario`](@ref)
 - `params` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
-- `save_parameters` : save parameters with simulated values. Default is `false` 
 - `verbose` : print iteration progress. Default is `false`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
@@ -34,7 +33,6 @@ function mc(
   scenario::Scenario,
   params::Vector{P},
   num_iter::Int;
-  save_parameters=false,
   verbose=false,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
@@ -56,8 +54,9 @@ function mc(
     update_init_values(prob, init_func, generate_cons(params_nt,i))
   end
 
+  params_names = collect(keys(params_nt))
   function output_func(sol, i)
-    sim = build_results(sol; save_parameters)
+    sim = build_results(sol, params_names)
     (sim, false)
   end
 
@@ -218,7 +217,6 @@ Arguments:
 - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
 - `params` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
-- `save_parameters` : save parameters with simulated values. Default is `false` 
 - `verbose` : print iteration progress. Default is `false`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
@@ -230,7 +228,6 @@ function mc(
   scenario_pairs::Vector{CP},
   params::Vector{PP},
   num_iter::Int;
-  save_parameters=false,
   verbose=false,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
@@ -257,8 +254,9 @@ function mc(
     update_init_values(prob_i, init_i, params_pregenerated[iter_i[1]])
   end
 
+  params_names = collect(keys(params_nt))
   function output_func(sol, i)
-    sim = build_results(sol; save_parameters)
+    sim = build_results(sol, params_names)
     (sim, false)
   end
 

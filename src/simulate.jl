@@ -22,7 +22,6 @@ Arguments:
 
 - `scenario` : simulation scenario of type [`Scenario`](@ref)
 - `parameters_upd` : constants, which overwrite both `Model` and `Scenario` constants. Default is `nothing`
-- `save_parameters` : save parameters with simulated values. Default is `false` 
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -31,27 +30,26 @@ Arguments:
 function sim(
   scenario::Scenario;
   parameters_upd::Union{Nothing, Vector{P}}=nothing,
-  save_parameters=false,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
   kwargs... # other solver arguments
 ) where P<:Pair
-
+  
   prob = !isnothing(parameters_upd) ? update_init_values(scenario.prob, scenario.init_func, NamedTuple(parameters_upd)) : scenario.prob
   sol = solve(prob, alg; reltol = reltol, abstol = abstol,
     save_start = false, save_end = false, save_everystep = false, kwargs...)
-
-  return build_results(sol, scenario; save_parameters)
+  params_names = !isnothing(parameters_upd) ? collect(keys(NamedTuple(parameters_upd))) : nothing
+  return build_results(sol, scenario, params_names)
 end
 
-function build_results(sol::SciMLBase.AbstractODESolution; save_parameters=false)
-  params = save_parameters ? sol.prob.p.constants : nothing
+function build_results(sol::SciMLBase.AbstractODESolution, params_names)
+  params = isnothing(params_names) ? nothing : @LArray sol.prob.p.constants[params_names] Tuple(params_names)
   sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
   return Simulation(sv, params, sol.retcode)
 end
 
-build_results(sol::SciMLBase.AbstractODESolution, scenario; save_parameters=false) = SimResults(build_results(sol; save_parameters), scenario)
+build_results(sol::SciMLBase.AbstractODESolution, scenario, params_names) = SimResults(build_results(sol, params_names), scenario)
 
 ### simulate scenario pairs
 
@@ -72,7 +70,6 @@ Arguments:
 
 - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
 - `parameters_upd` : constants, which overwrite both `Model` and `Scenario` constants. Default is `nothing`
-- `save_parameters` : save parameters with simulated values. Default is `false` 
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -82,11 +79,9 @@ Arguments:
 function sim(
   scenario_pairs::Vector{P};
   parameters_upd::Union{Nothing, Vector}=nothing,
-  save_parameters=false,
   alg = DEFAULT_ALG, 
   reltol = DEFAULT_SIMULATION_RELTOL, 
   abstol = DEFAULT_SIMULATION_ABSTOL,
-
   parallel_type=EnsembleSerial(),
   kwargs... # other arguments for OrdinaryDiffEq.solve()
 ) where P<:Pair
@@ -104,8 +99,10 @@ function sim(
       update_init_values(prob_i, init_func_i, NamedTuple(parameters_upd)) : prob_i
   end
 
+  params_names = !isnothing(parameters_upd) ? collect(keys(NamedTuple(parameters_upd))) : nothing
+
   function _output(sol,i)
-    build_results(sol,last(scenario_pairs[i]); save_parameters),false
+    build_results(sol,last(scenario_pairs[i]), params_names),false
   end
   
   _reduction(u,batch,I) = (append!(u,batch),false)
