@@ -14,6 +14,10 @@
 - checking `atStart: true`, `atStart: false` inside Events
 - read Scenario from Heta
 - implement Regression sensitivity method
+- `show` methods in autotesting
+- store and show parameters associated with model, Scenario, Sim/MC/Fit Results
+- rename Results => Result
+- Empty object in parameters instead of nothing
 
 ## postponed changes
 
