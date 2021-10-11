@@ -263,7 +263,7 @@ function Base.show(io::IO, m::MIME"text/plain", sr::SimResults)
   dimentions_str = "$(length(sr))x$dim2"
   times_str = print_lim(times(sr), 10)
   outputs_str = print_lim(observables(sr), 10)
-  parameters_str = print_lim(parameters(sr), 10)
+  parameters_str = isnothing(parameters(sr)) ? "-" : print_lim(keys(parameters(sr)), 10)
 
   println(io, "$dimentions_str SimResults with status :$(status(sr)).")
   println(io, "    Solution status: $(status(sr))")
@@ -308,6 +308,10 @@ end
     end
 
 Structure storing results of [`mc`]{@ref} method applied for one `Scenario`.
+
+To convert into tabular format, use `DataFrame` method.
+
+The base visulaization can be done with `plot` method.
 """
 struct MCResults{S,C} <: AbstractResults
   sim::S
@@ -317,36 +321,49 @@ struct MCResults{S,C} <: AbstractResults
   # elapsed_time
 end
 
-@inline Base.length(S::MCResults) = length(S.sim)
-status_summary(MC::MCResults) = counter([sim.status for sim in MC])
+@inline Base.length(mcr::MCResults) = length(mcr.sim)
+status_summary(mcr::MCResults) = counter([s.status for s in mcr.sim])
 
-function Base.show(io::IO, m::MIME"text/plain", MC::MCResults)
-  println(io, "+---------------------------------------------------------------------------")
-  println(io, "| Monte-Carlo results for $(length(MC)) iterations." )
-  println(io, "| Use `plot(sol::MCResults)` to plot results.")
-  println(io, "+---------------------------------------------------------------------------")
+function Base.show(io::IO, m::MIME"text/plain", mcr::MCResults, short::Bool = false)
+  # dimentions
+  dim0 = length(mcr)
+  if mcr.saveat 
+    dim1 = length(times(mcr.sim[1]))
+  else
+    dim1 = "?"
+  end
+  dim2 = length(mcr.sim[1]) # test only first Simulation
+  dimentions_str = "$(dim0)x$(dim1)x$(dim2)"
+
+  # other
+  status_pairs = [":$(first(x)) x $(last(x))" for x in status_summary(mcr)]
+  status = join(status_pairs, ", ")
+  outputs_str = print_lim(observables(mcr.sim[1]), 10)
+  parameters_1 = parameters(mcr.sim[1])
+  parameters_str = isnothing(parameters_1) ? "-" : print_lim(keys(parameters_1), 10)
+  
+  println(io, "$(dimentions_str) MCResults with status $(status)" )
+  if !short
+  println(io, "    Solution status: $(status)")
+  println(io, "    Observables (outputs): $(outputs_str)")
+  println(io, "    Parameters: $(parameters_str)")
+  end
 end
 
-Base.show(io::IO, m::MIME"text/plain", PS::Pair{Symbol, S}) where S<:MCResults = Base.show(io, m, last(PS))
-#= XXX: do we need it?
-function Base.show(io::IO, m::MIME"text/plain", VMC::Vector{MC}) where MC<:MCResults
-  println(io, "+---------------------------------------------------------------------------")
-  println(io, "| Monte-Carlo results for $(length(VMC)) scenario(s).") 
-  println(io, "| Use `sol[i]` to index Monte-Carlo results.")
-  println(io, "+---------------------------------------------------------------------------")
+function Base.show(io::IO, m::MIME"text/plain", mcrp::Pair{Symbol, S}, short=false) where S<:MCResults 
+  short || println(io, "Pair{Symbol, MCResults}")
+  print(io, "    :$(first(mcrp)) => ")
+  Base.show(io, m, last(mcrp), true)
 end
-=#
-function Base.show(io::IO, m::MIME"text/plain", VMC::Vector{Pair{Symbol, S}}) where S<:MCResults
-  show_string = [*(":", String(x), " => ...") for x in first.(VMC)]
-  println(io, "+---------------------------------------------------------------------------")
-  println(io, "| Monte-Carlo results for $(length(VMC)) scenario(s).") 
-  println(io, "| [$(join(show_string, ", "))]")
-  println(io, "| Use `sol[id]` to get component by id.")
-  println(io, "| Use `sol[i]` to get component by number.")
-  println(io, "| Use `DataFrame(sol)` to transform.")
-  println(io, "| Use `plot(sol)` to plot results.")
-  println(io, "+---------------------------------------------------------------------------")
+
+function Base.show(io::IO, m::MIME"text/plain", vector::Vector{Pair{Symbol, S}}) where S<:MCResults
+  println(io, "$(length(vector))-element Vector{Pair{Symbol, MCResults}}") 
+
+  for x in vector
+    show(io, m, x, true)
+  end
 end
+
 function Base.getindex(V::Vector{Pair{Symbol, S}}, id::Symbol) where S<:MCResults
   ind = findfirst((x) -> first(x)===id, V)
   if ind === nothing
