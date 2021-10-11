@@ -254,7 +254,7 @@ status(sr::SimResults) = status(sr.sim)
 times(sr::SimResults) = times(sr.sim)
 vals(sr::SimResults) = vals(sr.sim)
 parameters(sr::SimResults) = parameters(sr.sim) # XXX: check here, maybe better is parameters(sr.scenario)
-observables(sr::SimResults) = [keys(vals(sr.sim)[1])...]
+#observables(sr::SimResults) = [keys(vals(sr.sim)[1])...]
 
 @inline Base.length(sr::SimResults) = length(sr.sim)
 
@@ -394,7 +394,22 @@ struct StopEvent{F1} <: AbstractEvent
 end
 
 ################################## Fitting ###########################################
+"""
+    struct FitResults{L<:Real, I}
+      obj::L
+      optim::Vector{Pair{Symbol,Float64}}
+      status::Symbol
+      numevals::I
+    end
 
+Results of [`fit`](@ref).
+
+Use `optim` method to get optimal values.
+
+Use `object` method to get optimal objective function.
+
+Use `status` to get status.
+"""
 struct FitResults{L<:Real, I}
   obj::L
   optim::Vector{Pair{Symbol,Float64}}
@@ -402,14 +417,13 @@ struct FitResults{L<:Real, I}
   numevals::I
 end
 
-function Base.show(io::IO, m::MIME"text/plain", F::FitResults)
-  println(io, "+---------------------------------------------------------------------------")
-  println(io, "| Fitting results:")
-  println(io, "|   status: $(F.status)")
-  println(io, "|   optim: $(F.optim). Access optim estimate with `optim(f::FitResults)`")
-  println(io, "|   objective function value: $(F.obj). Access objective value with `obj(f::FitResults)`")
-  println(io, "|   number of objective function evaluations: $(F.numevals)")
-  println(io, "+---------------------------------------------------------------------------")
+function Base.show(io::IO, m::MIME"text/plain", fr::FitResults)
+  
+  println(io, "FitResults with status :$(fr.status)")
+  println(io, "   Status: $(fr.status)")
+  println(io, "   Optimal values: $(fr.optim)")
+  println(io, "   Objective function value: $(fr.obj)")
+  println(io, "   Objective function evaluations count: $(fr.numevals)")
 end
 
 optim(f::FitResults) = f.optim
