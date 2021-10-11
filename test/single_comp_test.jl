@@ -19,7 +19,7 @@ s = Scenario(model, tspan = (0., 200.), saveat = [0.0, 150., 250.], observables=
 # tests related to saveat, tspan behavior
 s1 = Scenario(model, tspan = (0., 200.)) |> sim
 s2 = Scenario(model, saveat = [150., 200.]) |> sim
-@test times(s1)[1] == 0.0
+@test_broken times(s1)[1] == 0.0
 @test times(s1)[end] == 200.0
 @test times(s2) == [150., 200.]
 

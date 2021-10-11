@@ -104,7 +104,7 @@ end
 function saving_wrapper(save_func, saved_values::SavedValues;
                       saveat=Vector{eltype(saved_values.t)}(),
                       save_everystep=isempty(saveat),
-                      save_start = save_everystep || isempty(saveat) || saveat isa Number,
+                      save_start = false,
                       save_end = save_everystep || isempty(saveat) || saveat isa Number,
                       save_scope = true,
                       tdir=1)
