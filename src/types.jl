@@ -224,6 +224,7 @@ status(sr::SimResults) = status(sr.sim)
 times(sr::SimResults) = times(sr.sim)
 vals(sr::SimResults) = vals(sr.sim)
 parameters(sr::SimResults) = parameters(sr.sim)
+measurements(sr::SimResults) = sr.scenario.measurements
 
 @inline Base.length(sr::SimResults) = length(sr.sim)
 

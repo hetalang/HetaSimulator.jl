@@ -88,7 +88,7 @@ plot(sol)
 # plot selected observables
 plot(sol; vars=[:a,:c])
 # plot selected observables without data
-plot(sol; vars=[:a,:c], measurements=false)
+plot(sol; vars=[:a,:c], show_measurements=false)
 
 ################################## Scenarios ###################################
 

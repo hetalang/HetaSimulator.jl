@@ -38,6 +38,7 @@ module HetaSimulator
   include("simulate.jl")
   include("saving.jl")
   include("solution_interface.jl")
+  include("plots.jl")
   include("loss.jl")
   include("fit.jl")
   include("monte_carlo.jl")
