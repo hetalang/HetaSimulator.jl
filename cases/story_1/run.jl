@@ -1,5 +1,10 @@
 #=
-    "low level" i.e. without Platform
+    "low level" way i.e. without Platform
+    Scenario constructor, loading measurements from file
+    `sim` for single scenario, scenario array, pairs array
+    `fit` for scenario array, pairs array
+    `mc` for single scenario, scenario array, pairs array
+    statistics
 =#
 using HetaSimulator, Plots
 
@@ -7,7 +12,7 @@ using HetaSimulator, Plots
 # heta_update_dev()
 
 platform = load_platform("$HetaSimulatorDir/cases/story_1", rm_out = false);
-model = platform.models[:nameless];
+model = platform.models[:nameless]
 # parameters(model) # def_parameters
 # events_active(model) # def_events_active
 # events_save(model) # def_events_save
@@ -16,7 +21,7 @@ model = platform.models[:nameless];
 ################################## Single Simulation ######################################
 
 Scenario(model; tspan = (0., 200.)) |> sim |> plot
-scn0 = Scenario(model; tspan = (0., 200.)) 
+scn0 = Scenario(model; tspan = (0., 200.))
 sim(scn0, parameters_upd = [:k1=>0.01]) |> plot
 Scenario(model; saveat = 0:10:100) |> sim |> plot
 Scenario(model; saveat = 0:10:100, tspan = (0., 50.)) |> sim |> plot
@@ -39,7 +44,7 @@ Scenario(
     events_active=[:sw1=>true],
     events_save=[:sw1=>(false,false)]
     ) |> sim |> plot
-
+sim(Scenario(model, tspan = (0., 10.), parameters=[:k1=>1e-3]), parameter_upd = [:k1=>1e-3])
 
 ### single scenario sim()
 scn1 = Scenario(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]);
@@ -89,11 +94,6 @@ plot(sol)
 plot(sol; vars=[:a,:c])
 # plot selected observables without data
 plot(sol; vars=[:a,:c], show_measurements=false)
-
-################################## Scenarios ###################################
-
-scn_csv = read_scenarios("$HetaSimulatorDir/cases/story_2/scenarios_w_events.csv")
-add_scenarios!(platform, scn_csv)
 
 ################################## Monte-Carlo Simulations  #####################
 

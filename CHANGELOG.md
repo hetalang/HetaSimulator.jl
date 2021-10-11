@@ -7,6 +7,8 @@
 - support of statistics for `mc` method
 - `vars` argument in `DataFrame` method for `SimResults`
 - `add_scenarios!` method for `Vector{Pair{Symbol, Scenario}}` 
+- store parameters in `Simulation`
+- `OrderedDict` in `Platform`
 
 ## 0.4.1
 

@@ -1,25 +1,29 @@
 ## bugs
 
-- проверка размерности при load_platform
-- DataFrame для MCResults при разных output
+- `parameters` method in Scenario and SimResults should get the scenario-level parameters but not the full list of constants
 
 ## features
 
-- удалить поддержку методов для `Model`
-
-- более информативные show для объектов
-- примеры в документации с использованием plotly и вариантов красивых графиков
-- легенда не помещается на рисунке
-- ? доп проверка на этапе read_conditions
-+ множественные графики не помещаются на одну панель
-- компоновка графиков по желанию пользователя. ? Tags
-
-- add fit methods for Model, Condition, Vector{Condition} 
-- add CI
+- `OrderedDict` for storing SimResults
+- checking units while load_platform
+- better show methods
+- legend outside of plot
+- split plots horizontally 
+- add loss methods for Condition, Vector{Condition} 
+- add CI estimation
 - checking `atStart: true`, `atStart: false` inside Events
-- 
+- read Scenario from Heta
+- implement Regression sensitivity method
+- `show` methods in autotesting
+- store and show parameters associated with model, Scenario, Sim/MC/Fit Results
+- rename Results => Result
+- Empty object in parameters instead of nothing
 
 ## postponed changes
 
+- special approach for analysis of `MCResults`: statistics
 - checking Model version
-- 
+- implement optimization of `mc`: online statistics, auto-stop by criterion
+- compose plots based on tags
+- examples of extended graphics using plotly, etc.
+- https://diffeq.sciml.ai/stable/analysis/global_sensitivity/
