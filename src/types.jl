@@ -72,7 +72,7 @@ constants(m::Model) = [keys(m.constants)...]
 records(m::Model) = first.(m.records_output)
 switchers(m::Model) = [keys(m.events)...]
 
-parameters(m::Model) = collect(Pair{Symbol, Real}, pairs(m.constants))
+#parameters(m::Model) = collect(Pair{Symbol, Real}, pairs(m.constants))
 events_active(m::Model) = collect(Pair{Symbol, Bool}, pairs(m.events_active))
 events_save(m::Model) = [first(x) => (true,true) for x in pairs(m.events)]
 observables(m::Model) = begin # observables
@@ -322,6 +322,7 @@ struct MCResults{S,C} <: AbstractResults
 end
 
 @inline Base.length(mcr::MCResults) = length(mcr.sim)
+parameters(mcr::MCResults) = [parameters(mcr[i]) for i in 1:length(mcr)]
 status_summary(mcr::MCResults) = counter([s.status for s in mcr.sim])
 
 function Base.show(io::IO, m::MIME"text/plain", mcr::MCResults, short::Bool = false)

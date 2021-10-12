@@ -42,13 +42,15 @@ cs2 = sim([:one=>scn1,:two=>scn2], parameters_upd=[:k1=>0.03])
 @test parameters(last(cs2[:one]))[:k1] == 0.03
 
 # Monte-Carlo simulation tests
-mc1 =  mc(model, [:k1=>Normal(0.02,1e-3)], 100; tspan = (0., 200.), observables=[:r1])
-mc2 = mc([:one=>scn1,:two=>scn2], [:k1=>Normal(0.02,1e-3)], 100)
+mciter = 100
+mc1 =  mc(model, [:k1=>Normal(0.02,1e-3)], mciter; tspan = (0., 200.), observables=[:r1])
+mc2 = mc([:one=>scn1,:two=>scn2], [:k1=>Normal(0.02,1e-3)], mciter)
 @test typeof(mc1) <: HetaSimulator.MCResults
 @test typeof(mc2) <: Vector{Pair{Symbol, HetaSimulator.MCResults}}
 @test typeof(mc1[1]) <: HetaSimulator.Simulation
 @test typeof(mc2[1]) <: Pair{Symbol, HetaSimulator.MCResults}
-@test length(mc1) == 100
+@test length(mc1) == mciter
+@test typeof(parameters(mc1)) <: Vector
 @test times(mc1[1])[end] == 200.
 @test keys((parameters(mc1[1]))) == (:k1,)
 
