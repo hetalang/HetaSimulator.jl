@@ -10,6 +10,7 @@ end
  
   xguide --> "time"
   yguide --> "output"
+  legend --> :right
   label --> permutedims(string.(vars))
   xlims --> (time[1],time[end])
   linewidth --> 3
@@ -19,11 +20,28 @@ end
 
 @recipe function plot(sr::SimResults; vars=observables(sr), show_measurements=true)
 
-  @series begin
-    sr.sim
+  # this code should be replaced with 
+  #   @series begin
+  #     sr.sim
+  #   end
+  # when we separate plots for sim and measurements
+
+  @assert !isempty(vals(sr)) "Results don't contain output. You should probably add output observables to your model"
+
+  time = times(sr)
+  for id in vars 
+    @series begin
+      xguide --> "time"
+      yguide --> "output"
+      label --> String(id)
+      xlims --> (time[1],time[end])
+      linewidth --> 3
+      (time, sr[id,:])
+    end
   end
 
   # todo: separate plots for measurement tables
+  vars = observables(sr)
   if show_measurements && !isempty(measurements(sr))
     t_meas = NamedTuple{Tuple(vars)}([Float64[] for i in eachindex(vars)])
     vals_meas = NamedTuple{Tuple(vars)}([Float64[] for i in eachindex(vars)])
