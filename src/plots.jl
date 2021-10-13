@@ -27,21 +27,23 @@ end
   # when we separate plots for sim and measurements
 
   @assert !isempty(vals(sr)) "Results don't contain output. You should probably add output observables to your model"
+  
+  color_choice = theme_palette(:auto)
 
   time = times(sr)
-  for id in vars 
+  for (i,v) in enumerate(vars) 
     @series begin
       xguide --> "time"
       yguide --> "output"
-      label --> String(id)
+      label --> String(v)
+      seriescolor --> color_choice[i]
       xlims --> (time[1],time[end])
       linewidth --> 3
-      (time, sr[id,:])
+      (time, sr[v,:])
     end
   end
 
   # todo: separate plots for measurement tables
-  vars = observables(sr)
   if show_measurements && !isempty(measurements(sr))
     t_meas = NamedTuple{Tuple(vars)}([Float64[] for i in eachindex(vars)])
     vals_meas = NamedTuple{Tuple(vars)}([Float64[] for i in eachindex(vars)])
@@ -52,13 +54,14 @@ end
         push!(vals_meas[μ], meas.val)
       end
     end
-    for v in vars
+    for (i,v) in enumerate(vars) 
       if !isempty(t_meas[v])
         @series begin
           seriestype --> :scatter
           xguide --> "time"
           yguide --> "output"
           label --> "$(v)"
+          seriescolor --> color_choice[i]
           (t_meas[v], vals_meas[v])
         end
       end

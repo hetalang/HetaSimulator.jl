@@ -29,7 +29,7 @@ function Base.show(io::IO, ::MIME"text/plain", p::Platform)
     measurements_count += length(measurements(y))
   end
 
-  println(io, "Platform with $(length(models(p))) models, $(length(scenarios(p))) scenarios, $measurements_count measurements")
+  println(io, "Platform with $(length(models(p))) model(s), $(length(scenarios(p))) scenario(s), $measurements_count measurement(s)")
   println(io, "   Models: $models_names")
   println(io, "   Scenarios: $scn_names")
 end
@@ -97,7 +97,7 @@ function Base.show(io::IO, ::MIME"text/plain", m::Model)
   record_str = print_lim(records(m), 10)
   switchers_str = print_lim(switchers(m), 10)
 
-  println(io, "Model containing $(length(m.constants)) constants, $(length(m.records_output)) records, $(length(m.events)) switchers.")
+  println(io, "Model contains $(length(m.constants)) constant(s), $(length(m.records_output)) record(s), $(length(m.events)) switcher(s).")
   println(io, "   Constants: $const_str")
   println(io, "   Records: $record_str")
   println(io, "   Switchers (events): $switchers_str")
@@ -181,9 +181,9 @@ function Base.show(io::IO, ::MIME"text/plain", scn::Scenario)
 
   println(io, "Scenario $time_points_str")
   println(io, "   Time range (tspan): $(tspan(scn))")
-  println(io, "   Exact time points (saveat): $(saveat_str)")
+  println(io, "   Time points to save the solution at (saveat): $(saveat_str)")
   println(io, "   Parameters: $(parameters_str)")
-  println(io, "   Measurement points count: $(measurements_count)")
+  println(io, "   Number of measurement points: $(measurements_count)")
 end
 
 ################################## SimResults ###########################################

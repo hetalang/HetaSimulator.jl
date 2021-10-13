@@ -24,6 +24,7 @@ module HetaSimulator
   using XLSX
   #plots
   using RecipesBase
+  using PlotThemes: theme_palette
 
   const HetaSimulatorDir = dirname(Base.@__DIR__)
 
