@@ -415,4 +415,4 @@ Arguments:
 
 - `filepath`: path to the file with pre-generated parameters
 """
-read_mcvecs(filepath::String) = DataFrame(CSV.File(filepath))
+read_mcvecs(filepath::String) = DataFrame(CSV.File(filepath; typemap=Dict(Int => Float64)))
