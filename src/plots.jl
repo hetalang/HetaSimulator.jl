@@ -60,7 +60,7 @@ end
           seriestype --> :scatter
           xguide --> "time"
           yguide --> "output"
-          label --> "$(v)"
+          label --> false
           seriescolor --> color_choice[i]
           (t_meas[v], vals_meas[v])
         end

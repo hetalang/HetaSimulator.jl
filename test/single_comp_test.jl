@@ -1,5 +1,7 @@
 platform = load_platform("$HetaSimulatorDir/test/examples/single_comp", rm_out = false);
 model = platform.models[:nameless];
+@test test_show(platform)
+@test test_show(model)
 
 @test isfile("$HetaSimulatorDir/test/examples/single_comp/_julia/model.jl")
 
@@ -11,6 +13,7 @@ model = platform.models[:nameless];
 
 # Simulate default scenario
 s = Scenario(model, tspan = (0., 200.), saveat = [0.0, 150., 250.], observables=[:r1]) |> sim
+@test test_show(s)
 @test typeof(s) <: HetaSimulator.SimResults
 @test status(s) == :Success
 @test times(s)[end] == 250.
@@ -27,6 +30,7 @@ s2 = Scenario(model, saveat = [150., 200.]) |> sim
 scn1 = Scenario(model; parameters = [:k1=>0.02], tspan = (0., 200.), saveat = [0.0, 150., 250.], observables=[:r1])
 scn2 = Scenario(model; parameters = [:k1=>0.015], tspan = (0., 200.), observables=[:r1])
 @test typeof(scn1) <: Scenario
+@test test_show(scn1)
 @test saveat(scn1) == [0.0, 150., 250.]
 @test saveat(scn2) == Float64[]
 @test tspan(scn1) == (0., 250.)
@@ -46,6 +50,7 @@ mciter = 100
 mc1 =  mc(model, [:k1=>Normal(0.02,1e-3)], mciter; tspan = (0., 200.), observables=[:r1])
 mc2 = mc([:one=>scn1,:two=>scn2], [:k1=>Normal(0.02,1e-3)], mciter)
 @test typeof(mc1) <: HetaSimulator.MCResults
+@test test_show(mc1)
 @test typeof(mc2) <: Vector{Pair{Symbol, HetaSimulator.MCResults}}
 @test typeof(mc1[1]) <: HetaSimulator.Simulation
 @test typeof(mc2[1]) <: Pair{Symbol, HetaSimulator.MCResults}
@@ -62,6 +67,8 @@ add_measurements!(fscn1, data; subset = [:scenario => :one])
 add_measurements!(fscn2, data; subset = [:scenario => :two])
 fres = fit([:one=>fscn1, :two=>fscn2], [:k1=>0.01])
 
+@test typeof(fres) <: HetaSimulator.FitResults
+@test test_show(fres)
 @test length(measurements(fscn1)) == 24
 @test length(measurements(fscn2)) == 24
 @test status(fres) == :FTOL_REACHED
