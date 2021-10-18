@@ -1,26 +1,26 @@
 ## bugs
 
-- `parameters` method in Scenario and SimResults should get the scenario-level parameters but not the full list of constants
+- `parameters` method in Scenario should get the scenario-level parameters but not the full list of constants
+- zero time event savings
 
 ## features
 
-- `OrderedDict` for storing SimResults
+- Empty object in parameters instead of nothing
+- implement Regression sensitivity method
+- remove experimental points from legend
+
 - checking units while load_platform
-- better show methods
 - legend outside of plot
-- split plots horizontally 
+- split plots horizontally
 - add loss methods for Condition, Vector{Condition} 
 - add CI estimation
 - checking `atStart: true`, `atStart: false` inside Events
 - read Scenario from Heta
-- implement Regression sensitivity method
-- `show` methods in autotesting
-- store and show parameters associated with model, Scenario, Sim/MC/Fit Results
 - rename Results => Result
-- Empty object in parameters instead of nothing
 
 ## postponed changes
 
+- `OrderedDict` for storing SimResults
 - special approach for analysis of `MCResults`: statistics
 - checking Model version
 - implement optimization of `mc`: online statistics, auto-stop by criterion

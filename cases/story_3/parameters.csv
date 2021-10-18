@@ -1,4 +1,4 @@
-parameterId,parameterName,parameterScale,lowerBound,upperBound,nominalValue,estimate
+parameter,parameterName,scale,lower,upper,nominal,estimate
 dose,dose,,,,20,0
 kabs,kabs,lin,1,100,8,1
 kel,kel,log,0,60,2.2,1

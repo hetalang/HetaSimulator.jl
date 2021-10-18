@@ -181,11 +181,11 @@ function fit(
   gdf = groupby(params_df, :estimate)
   @assert haskey(gdf, (true,)) "No parameters to estimate."
 
-  params = gdf[(true,)].parameterId .=> gdf[(true,)].nominalValue
-  lbounds = gdf[(true,)].lowerBound
-  ubounds = gdf[(true,)].upperBound
-  scale = gdf[(true,)].parameterScale
-  parameters_upd = haskey(gdf, (false,)) ? gdf[(false,)].parameterId .=> gdf[(false,)].nominalValue : nothing
+  params = gdf[(true,)].parameter .=> gdf[(true,)].nominal
+  lbounds = gdf[(true,)].lower
+  ubounds = gdf[(true,)].upper
+  scale = gdf[(true,)].scale
+  parameters_upd = haskey(gdf, (false,)) ? gdf[(false,)].parameter .=> gdf[(false,)].nominal : nothing
 
   fit(scenario_pairs, params; parameters_upd, lbounds, ubounds, scale, kwargs...)
 end

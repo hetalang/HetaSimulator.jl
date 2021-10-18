@@ -7,9 +7,9 @@ The content of the table can be loaded into Julia environment as a `DataFrame` t
 
 The first row is intended for headers which clarify the columns meaning. The sequence of columns is not important.
 
-- `id` : a `String` representing unique identifier of constant. The corresponding constant must be declared in `Model`'s namespace (`@Const` component).
+- `parameter` : a `String` representing unique identifier of constant. The corresponding constant must be declared in `Model`'s namespace (`@Const` component).
 
-- `value` (optional): a `Float64` nominal value which will be used as an initial value for the parameter. If the value is skipped than the default value from model will be used.
+- `nominal` (optional): a `Float64` nominal value which will be used as an initial value for the parameter. If it is skipped than the default constant value from model will be used.
 
 - `lower` (optional): a `Float64` value that declares the lower bound of the parameter. If skipped than the parameter value will not be limited.
 
@@ -37,7 +37,7 @@ fit_results = fit(p, parameters_csv)
 
 Loading file __parameters.csv__ with the following content.
 
-id | value | lower | upper | scale | estimate
+parameter | nominal | lower | upper | scale | estimate
 --- | --- | --- | ---- | ---- | ---
 sigma\_K|0.1|1e-6|1e3|log|1
 sigma\_P|0.1|1e-6|1e3|log|1
@@ -47,7 +47,7 @@ Kp\_R\_D|5.562383e+01|1e-6|1e3|log|0
 Read as `DataFrame` object.
 
 ```julia
-params = read_scenarios("./parameters.csv")
+params = read_parameters("./parameters.csv")
 res = fit(p, params)
 ```
 
@@ -56,11 +56,12 @@ As a result the Platform will be fitted based on all experimental data using thr
 These operations are equivalent to the following.
 
 ```julia
-params = [
-    :sigma_K = [:value => 0.1, :lower => 1e-6, :upper => 1e3, :scale => :log, :estimate => true],
-    :sigma_P = [:value => 0.1, :lower => 1e-6, :upper => 1e3, :scale => :log, :estimate => true],
-    :Kp_K_D = [:value => 5.562383e+01, :lower => 1e-6, :upper => 1e3, :scale => :log, :estimate => true],
-    :Kp_R_D = [:value => 5.562383e+01, :lower => 1e-6, :upper => 1e3, :scale => :log, :estimate => false]
-]
-res = fit(p, params)
+res = fit(
+    p,
+    [:sigma_K => 0.1, :sigma_P => 0.1, :Kp_K_D => 5.562383e+01];
+    parameters_upd = [:Kp_R_D => 5.562383e+01]
+    lbounds = [1e-6, 1e-6, 1e-6],
+    ubounds = [1e3, 1e3, 1e3],
+    scale = [:log, :log, :log]
+)
 ```

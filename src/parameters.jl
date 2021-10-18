@@ -3,11 +3,11 @@
 # https://petab.readthedocs.io/en/latest/documentation_data_format.html#id3
 
 const PARAMS_FIELDS_DICT = Base.ImmutableDict(
-  :parameterId => Symbol,
-  :parameterScale => Symbol,
-  :lowerBound => Float64,
-  :upperBound => Float64,
-  :nominalValue => Float64,
+  :parameter => Symbol, # parametersId
+  :scale => Symbol,     # parameterScale
+  :lower => Float64,    # lowerBound
+  :upper => Float64,    # upperBound
+  :nominal => Float64,  # nominalValue
   :estimate => Bool
 )
 
