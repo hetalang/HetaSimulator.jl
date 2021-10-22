@@ -1,5 +1,20 @@
 # Fitting. Measurements
 
+The [`fit`](@ref) can be used to evaluate a model parameters based on experimental data.
+Typically the method is applied for the whole platform but can be also used for selected `Scenario`s.
+
+_Before start be sure you have the latest __HetaSimulator.jl__ version. If you don't have it reinstall using the Julia environment.
+
+```julia
+] # switch to Pkg mode
+add https://github.com/hetalang/HetaSimulator.jl
+```
+
+## Working example
+
+This lesson uses the following model code.
+
+File can be downloaded here: [index.heta](./fit-files/index.heta)
 
 ```heta
 // Compartments
@@ -39,12 +54,10 @@ sigma2 @Const = 0.1;
 sigma3 @Const = 0.1;
 ```
 
-File can be downloaded here: [index.heta](./fit-files/index.heta)
+Download the file or create  __index.heta__ with VSCode in the working directory.
 
-```julia
-# reinstall HetaSimulator
-] add https://github.com/hetalang/HetaSimulator.jl
-```
+Load the platform into the Julia environment. You should clarify the path to the modeling platform as the first argument.
+Today we will use the same working directory where the index.heta file is located.
 
 ```julia
 using HetaSimulator, Plots
@@ -52,25 +65,31 @@ using HetaSimulator, Plots
 p = load_platform(".")
 ```
 
+The following table describing 4 scenarios will be used.
+
 ![fig01](fit-fig01.png)
 
 File can be downloaded here: [scenarios.csv](./fit-files/scenarios.csv)
 
+Load scenarios into the platform.
+
 ```julia
-# load scenarios
 scn_df = read_scenarios("./scenarios.csv")
 add_scenarios!(p, scn_df)
 ```
 
 ## Load measurements
 
+Experimental data can be used for both: visualizing and parameter estimation.
+To read more about measurements tables format see the [documentation](../table-formats/measurement).
+
 ![fig02](fit-fig02.png)
 
-File can be downloaded here: [measurements.csv](./fit-files/measurements.csv)
+File can be downloaded here: [measurements.csv](./fit-files/measurements.csv). The presented dataset includes the measurement of `C1` with unknown variance equal for a particular condition.
+
+The measurement table can be loaded into platform using `read_measurements` and `add_measurements!` functions.
 
 ```julia
-# see table measurements.csv describing data with unknown variance
-# see more detales in https://hetalang.github.io/HetaSimulator.jl/dev/table-formats/measurement/
 measurements_df = read_measurements("./measurements.csv")
 ```
 
@@ -100,8 +119,10 @@ Platform with 1 model(s), 4 scenario(s), 90 measurement(s)
    Scenarios: dose_1, dose_10, dose_100, multiple_15
 ```
 
+If we run the simulations and then plot them we see the simulation results together with measured values.
+
 ```julia
-### simulate all
+# simulate all
 res = sim(p)
 
 # plot all default
@@ -109,6 +130,8 @@ plot(res)
 ```
 
 ![fit-fig03](./fit-fig03.png)
+
+To display in more convenient way one can use the additional `yscale` and `ylim` arguments. 
 
 ```julia
 # plot C1, C2 in log scale
@@ -118,6 +141,10 @@ plot(res, yscale=:log10, ylim=(1e-3, 1e3))
 ![fit-fig04](./fit-fig04.png)
 
 ## Fitting
+
+Before we run the optimization procedure we should select the parameters to optimize with the starting values.
+
+`sigma1`, `sigma2`, `sigma3` are not included in the main model code. They describe just the variability of error for the scenarios: `dose_1`, `dose_10` and `dose_100`.
 
 ```julia
 # fitted parameters
@@ -142,6 +169,10 @@ FitResults with status :FTOL_REACHED
    Objective function evaluations count: 134
 ```
 
+The scenario `multiple_15` does not include any measurement. That's why we see the warning message here. This is not an error.
+
+
+The optimal value of the parameters can be obtained with `optim` method applied for `FitResults`.
 ```julia
 # optimal parameters
 optim(res_optim)
@@ -157,17 +188,27 @@ optim(res_optim)
  :sigma3 => 0.11672689231044918
 ```
 
+To display the simulations with updated parameters values we can use `parameters_upd` argument in `sim`.
+
 ```julia
 # check fitting quality 
 res = sim(p, parameters_upd = optim(res_optim))
-plot(res, yscale=:log10, ylims=(1e-3,1e2))
+plot(res, yscale=:log10, vars=[:C1,:C2], ylims=(1e-3,1e2))
 ```
+
+![fig05](fit-fig05.png)
 
 ## Fitting with parameters table
 
-![fig05](fit-fig06.png)
+The parameters set that is used for `fit` can also be taken from tables.
+The description of table format can be found in [documentation](..table-formats/parameters/).
+
+For example we will use the following table.
+
+![fig06](fit-fig06.png)
 
 File can be downloaded here: [parameters.csv](./fit-files/parameters.csv)
+The table can be loaded with `read_parameters` method.
 
 ```julia
 # read parameters from table
@@ -187,6 +228,8 @@ params_df = read_parameters("./parameters.csv")
    6 │ sigma3     lin         0.0     10.0      0.1      true
 ```
 
+As previously we can use this `DataFrame` for optimization.
+
 ```julia
 res_optim = fit(p, params_df)
 ```
@@ -201,10 +244,13 @@ FitResults with status :FTOL_REACHED
    Objective function evaluations count: 108
 ```
 
-## additional optimization-specific options
+## Additional optimization-specific options
 
+Internally `HetaSimulator` uses NLopt library. We can choose the optimization algorithm as well as additional options.
+
+Read more here: <https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/>
+ 
 ```julia
-# see also https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/
 res_optim = fit(
     p, 
     params_df, 
@@ -216,7 +262,8 @@ res_optim = fit(
 optim(res_optim)
 ```
 
-## see API docs
+There are several options which are available for a user. 
+To know more read about [`fit`](@ref) in API documentation.
 
 - fit_alg : fitting algorithm. Default is :LN_NELDERMEAD
 - ftol_abs : absolute tolerance on function value. Default is 0.0
