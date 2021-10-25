@@ -128,8 +128,8 @@ function _add_scenario!(platform::Platform, row::Any) # maybe not any
   end
 
   if haskey(row, SAVEAT_HEADER) && !ismissing(row[SAVEAT_HEADER])
-    saveat_str = split(row[SAVEAT_HEADER], ";")
-    _saveat = parse.(Float64, saveat_str)
+    save_times = row[SAVEAT_HEADER]
+    _saveat = typeof(save_times) <: Number ? [Float64(save_times)] : parse.(Float64, split(save_times, ";"))
   else  
     _saveat = nothing
   end
