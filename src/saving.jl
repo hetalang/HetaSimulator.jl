@@ -98,13 +98,13 @@ function saving_initialize(cb, u, t, integrator)
       cb.affect!.saveiter = 0
   end
   clear_savings(cb.affect!.saved_values)
-  cb.affect!.save_start && cb.affect!(integrator, scope=:start_)
+  cb.affect!.save_start && save_timepoint!(integrator, :start_)
 end
 
 function saving_wrapper(save_func, saved_values::SavedValues;
                       saveat=Vector{eltype(saved_values.t)}(),
                       save_everystep=isempty(saveat),
-                      save_start = false,
+                      save_start = save_everystep || isempty(saveat) || saveat isa Number,
                       save_end = save_everystep || isempty(saveat) || saveat isa Number,
                       save_scope = true,
                       tdir=1)
@@ -120,4 +120,45 @@ function saving_wrapper(save_func, saved_values::SavedValues;
   DiscreteCallback(condtion, affect!;
                    initialize = saving_initialize,
                    save_positions=(false,false))
+end
+
+# force saving at current timepoint
+function save_timepoint!(integrator::DiffEqBase.AbstractODEIntegrator, scope=:ode_)
+
+  affect! = integrator.opts.callback.discrete_callbacks[1].affect!
+  affect!.saveiter += 1
+  copyat_or_push!(affect!.saved_values.t, affect!.saveiter, integrator.t)
+  affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope, Val{false})
+  copyat_or_push!(affect!.saved_values.u, affect!.saveiter, affect!.save_func(integrator.u, integrator.t, integrator),Val{false})
+end
+
+# check saveat points before applying a callback
+function save_after_step!(integrator)
+  affect! = integrator.opts.callback.discrete_callbacks[1].affect!
+  while !isempty(affect!.saveat) && integrator.tdir * first(affect!.saveat) <= integrator.tdir * integrator.t # Perform saveat
+    affect!.saveiter += 1
+    curt = pop!(affect!.saveat) # current time
+    curu = integrator(curt)
+
+    if curt != integrator.t # If <t, interpolate
+      if typeof(integrator) <: OrdinaryDiffEq.ODEIntegrator
+          # Expand lazy dense for interpolation
+          DiffEqBase.addsteps!(integrator)
+      end
+      if !DiffEqBase.isinplace(integrator.sol.prob)
+          curu = integrator(curt)
+      else
+          curu = first(get_tmp_cache(integrator))
+          integrator(curu,curt) # inplace since save_func allocates
+      end
+      copyat_or_push!(affect!.saved_values.t, affect!.saveiter, curt)
+      affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope, Val{false})
+      copyat_or_push!(affect!.saved_values.u, affect!.saveiter,
+                      affect!.save_func(curu, curt, integrator),Val{false})
+    else # ==t, just save
+      copyat_or_push!(affect!.saved_values.t, affect!.saveiter, integrator.t)
+      affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope, Val{false})
+      copyat_or_push!(affect!.saved_values.u, affect!.saveiter, affect!.save_func(integrator.u, integrator.t, integrator),Val{false})
+    end   
+  end 
 end
