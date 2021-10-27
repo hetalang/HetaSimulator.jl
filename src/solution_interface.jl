@@ -2,7 +2,7 @@
 
 observables(sr::SimResults) = observables(sr.sim)
 observables(sim::Simulation) = collect(keys(sim.vals.u[1]))
-observables(sim::MCResults) = collect(keys(sim.u[1][1]))
+observables(sim::MCResults) = observables(sim[1])
 constants(sim::SimResults) = sim.scenario.prob.p.constants
 
 @inline Base.getindex(sim::Simulation, I...) = sim.vals[I...]

@@ -49,6 +49,7 @@ cs2 = sim([:one=>scn1,:two=>scn2], parameters_upd=[:k1=>0.03])
 mciter = 100
 mc1 =  mc(model, [:k1=>Normal(0.02,1e-3)], mciter; tspan = (0., 200.), observables=[:r1])
 mc2 = mc([:one=>scn1,:two=>scn2], [:k1=>Normal(0.02,1e-3)], mciter)
+gsar = gsa(mc1,200)
 @test typeof(mc1) <: HetaSimulator.MCResults
 @test test_show(mc1)
 @test typeof(mc2) <: Vector{Pair{Symbol, HetaSimulator.MCResults}}
@@ -58,6 +59,9 @@ mc2 = mc([:one=>scn1,:two=>scn2], [:k1=>Normal(0.02,1e-3)], mciter)
 @test typeof(parameters(mc1)) <: Vector
 @test times(mc1[1])[end] == 200.
 @test keys((parameters(mc1[1]))) == (:k1,)
+@test size(pearson(gsar)) == (1,1)
+@test size(partial(gsar)) == (1,1)
+@test size(standard(gsar)) == (1,1)
 
 # Fitting tests
 fscn1 = Scenario(model; parameters = [:k1=>0.02], tspan = (0., 200.), observables=[:A, :B, :r1])

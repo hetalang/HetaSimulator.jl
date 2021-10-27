@@ -1,0 +1,81 @@
+# functions to perform Global Sensitivity Anlaysis
+
+struct GSAResults
+  output_names::Vector{Symbol}
+  params_names::Vector{Symbol}
+  pearson::Matrix{Float64}
+  partial::Matrix{Float64}
+  standard::Matrix{Float64}
+end
+
+parameters(gsar::GSAResults) = gsar.params_names
+output(gsar::GSAResults) = gsar.output_names
+pearson(gsar::GSAResults) = gsar.pearson
+partial(gsar::GSAResults) = gsar.partial
+standard(gsar::GSAResults) = gsar.standard
+
+function DataFrames.DataFrame(gsar::GSAResults, coef::Symbol)
+  if coef == :pearson
+    mat = pearson(gsar)
+  elseif coef == :partial
+    mat = partial(gsar)
+  elseif coef == :standard
+    mat = standard(gsar)
+  else
+    throw("Coeffitient type $coef not supported.")
+  end
+  df = DataFrame(mat, output(gsar))
+  insertcols!(df, 1, :parameter => parameters(gsar))
+  return df
+end
+
+"""
+    gsa(mcr::MCResults, timepoint::Number)
+
+Computes Pearson Correlation Coeffitients, Partial Regression Coeffietients and Standard Regression Coeffitients for 
+parameters vector and output at a given timepoint
+
+Arguments:
+
+- `mcr`: Monte-Carlo results of type `MCResults`
+- `timepoint`: Time to compute coeffitients at 
+"""
+function gsa(mcr::MCResults, timepoint::Number)
+  
+  params = parameters(mcr)
+  params_mat = vecvec_to_mat(VectorOfArray(parameters(mcr)))'
+  outvals_mat = vecvec_to_mat(VectorOfArray([mcr[i](timepoint) for i in 1:length(mcr)]))'
+
+  output_names = observables(mcr)
+  params_names = collect(keys(params[1]))
+
+  pearson = _calculate_correlation_matrix(outvals_mat, params_mat)
+  partial = _calculate_partial_correlation_coefficients(outvals_mat, params_mat)
+  standard = _calculate_standard_regression_coefficients(outvals_mat, params_mat)
+
+  return GSAResults(output_names, params_names, pearson, partial, standard)
+end
+
+
+# the following code was coppied from 
+# https://github.com/SciML/GlobalSensitivity.jl/blob/master/src/regression_sensitivity.jl
+
+function _calculate_standard_regression_coefficients(X, Y)
+  β̂ = X' \ Y'
+  srcs = (β̂ .* std(X, dims = 2) ./ std(Y, dims = 2)')
+  return Matrix(transpose(srcs))
+end
+
+function _calculate_correlation_matrix(X, Y)
+  corr = cov(X, Y, dims = 2) ./ (std(X, dims = 2) .* std(Y, dims = 2)')
+  return Matrix(transpose(corr))
+end
+
+function _calculate_partial_correlation_coefficients(X, Y)
+  XY = vcat(X, Y)
+  corr = cov(XY, dims = 2) ./ (std(XY, dims = 2) .* std(XY, dims = 2)')
+  prec = pinv(corr) # precision matrix
+  pcc_XY = -prec ./ sqrt.(diag(prec) .* diag(prec)')
+  # return partial correlation matrix relating f: X -> Y model values
+  return Matrix(transpose(pcc_XY[axes(X, 1), lastindex(X, 1) .+ axes(Y, 1)]))
+end

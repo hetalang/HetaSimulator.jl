@@ -17,7 +17,9 @@ module HetaSimulator
   # utils
   @reexport using DataFrames
   @reexport using Distributions
+  using LinearAlgebra: pinv, diag
   using Distributed
+  using RecursiveArrayTools: vecvec_to_mat, VectorOfArray
   using ProgressMeter
   # measurements 
   using CSV
@@ -44,6 +46,7 @@ module HetaSimulator
   include("fit.jl")
   include("monte_carlo.jl")
   include("import_platform.jl")
+  include("gsa.jl")
 
   export heta_update, heta_update_dev, heta_build, load_platform, load_jlplatform, load_jlmodel
   export Platform, Model, Scenario, Params
@@ -60,4 +63,5 @@ module HetaSimulator
   export update
   export times, vals, status, status_summary
   export save_results, save_optim, read_mcvecs
+  export gsa, pearson, partial, standard
 end

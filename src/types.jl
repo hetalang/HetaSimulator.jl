@@ -323,6 +323,7 @@ end
 
 @inline Base.length(mcr::MCResults) = length(mcr.sim)
 parameters(mcr::MCResults) = [parameters(mcr[i]) for i in 1:length(mcr)]
+vals(mcr::MCResults) = [vals(mcr[i]) for i in 1:length(mcr)]
 status_summary(mcr::MCResults) = counter([s.status for s in mcr.sim])
 
 function Base.show(io::IO, m::MIME"text/plain", mcr::MCResults, short::Bool = false)
