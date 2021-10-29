@@ -1,3 +1,4 @@
+# the code was tested on v0.4.2
 # reinstall HetaSimulator
 # ] add https://github.com/hetalang/HetaSimulator.jl
 

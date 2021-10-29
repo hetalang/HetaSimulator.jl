@@ -1,6 +1,7 @@
 ## bugs
 
 - `parameters` method in Scenario should get the scenario-level parameters but not the full list of constants
+- get parameters from MCResults, Pair{Symbol, MCResults}, Vector{Pair{Symbol, MCResults}}
 
 ## features
 
@@ -11,6 +12,7 @@
 - split plots horizontally
 - checking `atStart: true`, `atStart: false` inside Events
 - rename Results => Result
+- allow using both saveat and tspan
 
 ## postponed changes
 

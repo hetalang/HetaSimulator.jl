@@ -12,7 +12,9 @@ add https://github.com/hetalang/HetaSimulator.jl
 
 ## Working example
 
-This lesson uses the following modeling code. 
+This lesson uses the following modeling code.
+
+File can be downloaded here: [index.heta](./mc-files/index.heta)
 
 ```julia
 comp1 @Compartment .= 1.1;
@@ -45,7 +47,7 @@ a [sw1]= a + 1;
 //ss1 @StopSwitcher {trigger: t > 10};
 ```
 
-Create __index.heta__ file with the contend and place it into the __monte_carlo__ directory.
+Create __index.heta__ file with the contend and place it into the working directory.
 
 Load the platform into the Julia environment. You should clarify the path to the modeling platform as the first argument.
 
@@ -53,7 +55,7 @@ Load the platform into the Julia environment. You should clarify the path to the
 using HetaSimulator, Plots
 using Distributed # to use parallel simulations
 
-platform = load_platform("./monte_carlo")
+platform = load_platform(".")
 model = platform.models[:nameless]
 ```
 
@@ -110,6 +112,12 @@ plot(mcsim1, vars=[:b])
 
 ![mc-fig01](./mc-fig01.png)
 
+Monte-Carlo results can also be transformed into DataFrame.
+
+```julia
+DataFrame(mcsim1, vars=[:a, :b])
+```
+
 ## Multiple scenarios simulations
 
 In the same way as it was done for `sim` method we can also run `mc` for multiple scenarios.
@@ -126,6 +134,12 @@ plot(mcsim2)
 
 ![mc-fig02](./mc-fig02.png)
 
+Results of simulations can be transformed into `DataFrame` too.
+
+```julia
+mc_df2 = DataFrame(mcsim2)
+```
+
 ## Monte-Carlo for whole platform
 
 Scenarios for `mc` can also be loaded from CSV file.
@@ -133,6 +147,8 @@ Scenarios for `mc` can also be loaded from CSV file.
 Create file __scenarios.csv__ in the same directory and fill it with the data.
 
 ![mc-fig03](mc-fig03.png)
+
+File can be downloaded here: [scenarios.csv](./mc-files/scenarios.csv)
 
 Load it as a scenarios table.
 
@@ -166,6 +182,8 @@ mcvecs0 = DataFrame(k1=0.01, k2=rand(Normal(1e-3,1e-4), 50), k3=rand(Uniform(1e-
 ```
 
 Or it can be loaded from CSV file.
+
+File can be downloaded here: [params.csv](./mc-files/params.csv)
 
 ![mc-fig05](mc-fig05.png)
 
@@ -254,8 +272,8 @@ plot(ens)
 ## Final remarks
 
 1. Monte-Carlo simulations can be done for both `tspan` and `saveat` approaches. 
-  If you set `saveat` the another argument `tspan` will be ignored.
-  In case of `tspan` approach time points in results will be selected automatically.
+    If you set `saveat` the another argument `tspan` will be ignored.
+    In case of `tspan` approach time points in results will be selected automatically.
 
 1. If you are going to use "statistics" methods you should always set the `saveat` argument.
 
