@@ -4,6 +4,8 @@
 
 As an example we will use a model describing a simple two-compartment pharmacokinetic model stored in single __.heta__ file. It is expected that the model code will be placed into "index.heta" file located in a directory __my\_example__ or something like that.
 
+File can be downloaded here: [index.heta](./sim-files/index.heta)
+
 ```julia
 // Compartments
 Vol0 @Compartment .= 1;
@@ -164,6 +166,8 @@ The most simple way to populate a platform by scenarios is to create a file with
 Create file __scenarios.csv__ file inside __my\_example__ with the following content.
 
 ![fig03](./fig03.png)
+
+File can be downloaded here: [scenarios.csv](./sim-files/scenarios.csv).
 
 The table can be created in Excel, saved as a CSV file and then loaded with the [`read_scenarios`](@ref) function as a `DataFrame`.
 

@@ -16,6 +16,7 @@
 
 ## postponed changes
 
+- extended chain syntax
 - read Scenario from Heta
 - add CI estimation
 - add loss methods for Condition, Vector{Condition}
