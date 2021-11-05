@@ -133,7 +133,7 @@ function save_timepoint!(integrator::DiffEqBase.AbstractODEIntegrator, scope=:od
 end
 
 # check saveat points before applying a callback
-function save_after_step!(integrator)
+function save_after_step!(integrator, scope = :ode_)
   affect! = integrator.opts.callback.discrete_callbacks[1].affect!
   while !isempty(affect!.saveat) && integrator.tdir * first(affect!.saveat) <= integrator.tdir * integrator.t # Perform saveat
     affect!.saveiter += 1
