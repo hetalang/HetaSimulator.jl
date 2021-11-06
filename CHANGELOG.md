@@ -9,7 +9,7 @@
 - `add_scenarios!` method for `Vector{Pair{Symbol, Scenario}}` 
 - store parameters in `Simulation`
 - `OrderedDict` in `Platform`
-- new `plot` results
+- update `plot` for results
 - fix bug with single `saveat`
 - fix bugs in saving callback
 - global sensitivity for `MCResult`

@@ -29,7 +29,7 @@ plot(res)
 # savefig(plotd, "fig.png")
 
 # plot C1, C2 in log scale
-plot(res, yscale=:log10, ylim=(1e-3, 1e3))
+plot(res, vars=[:C1,:C2], yscale=:log10, ylim=(1e-3, 1e3))
 # plotd = plot(res, vars=[:C1,:C2], yscale=:log10, ylim=(1e-3, 1e3))
 # savefig(plotd, "fig.png")
 

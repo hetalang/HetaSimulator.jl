@@ -135,7 +135,7 @@ To display in more convenient way one can use the additional `yscale` and `ylim`
 
 ```julia
 # plot C1, C2 in log scale
-plot(res, yscale=:log10, ylim=(1e-3, 1e3))
+plot(res, vars=[:C1,:C2], yscale=:log10, ylim=(1e-3, 1e3))
 ```
 
 ![fit-fig04](./fit-fig04.png)
@@ -265,10 +265,10 @@ optim(res_optim)
 There are several options which are available for a user. 
 To know more read about [`fit`](@ref) in API documentation.
 
-- fit_alg : fitting algorithm. Default is :LN_NELDERMEAD
-- ftol_abs : absolute tolerance on function value. Default is 0.0
-- ftol_rel : relative tolerance on function value. Default is 1e-4
-- xtol_rel : relative tolerance on optimization parameters. Default is 0.0
-- xtol_rel : absolute tolerance on optimization parameters. Default is 0.0
-- maxeval : maximum number of function evaluations. Default is 1e4
-- maxtime : maximum optimization time (in seconds). Default is 0
+- `fit_alg` : fitting algorithm. Default is `:LN_NELDERMEAD`
+- `ftol_abs` : absolute tolerance on function value. Default is `0.0`
+- `ftol_rel` : relative tolerance on function value. Default is `1e-4`
+- `xtol_rel` : relative tolerance on optimization parameters. Default is `0.0`
+- `xtol_rel` : absolute tolerance on optimization parameters. Default is `0.0`
+- `maxeval` : maximum number of function evaluations. Default is `1e4`
+- `maxtime` : maximum optimization time (in seconds). Default is `0`
