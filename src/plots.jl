@@ -28,7 +28,7 @@ end
 
   @assert !isempty(vals(sr)) "Results don't contain output. You should probably add output observables to your model"
   
-  color_choice = theme_palette(:auto)
+  #color_choice = theme_palette(:auto)
 
   time = times(sr)
   for (i,v) in enumerate(vars) 
@@ -36,7 +36,8 @@ end
       xguide --> "time"
       yguide --> "output"
       label --> String(v)
-      seriescolor --> color_choice[i]
+      seriescolor --> i
+      #seriescolor --> color_choice[i]
       xlims --> (time[1],time[end])
       linewidth --> 3
       (time, sr[v,:])
@@ -61,7 +62,8 @@ end
           xguide --> "time"
           yguide --> "output"
           label --> false
-          seriescolor --> color_choice[i]
+          seriescolor --> i
+          #seriescolor --> color_choice[i]
           (t_meas[v], vals_meas[v])
         end
       end
