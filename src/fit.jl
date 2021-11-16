@@ -68,6 +68,9 @@ function fit(
   kwargs... # other arguments to sim()
 ) where {C<:AbstractScenario, P<:Pair}
 
+  # names of parameters used in fitting and saved in params field of solution
+  params_names = first.(params)
+
   selected_scenario_pairs = Pair{Symbol,Scenario}[]
   for scenario_pair in scenario_pairs # iterate through scenarios names
     if isempty(last(scenario_pair).measurements)
@@ -95,7 +98,7 @@ function fit(
 
   function _output(sol, i)
     sol.retcode != :Success && error("Simulated scenario $i returned $(sol.retcode) status")
-    sim = build_results(sol,last(selected_scenario_pairs[i]), nothing)
+    sim = build_results(sol,last(selected_scenario_pairs[i]), params_names)
     loss_val = loss(sim, sim.scenario.measurements) 
     (loss_val, false)
   end
@@ -110,7 +113,7 @@ function fit(
     reduction = _reduction
   )
 
-  params_names = first.(params)
+
 
   function obj_func(x, grad)
     # try - catch is a tmp solution for NLopt 
