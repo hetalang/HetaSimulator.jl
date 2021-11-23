@@ -42,7 +42,7 @@ cs1 = sim(scn1)
 cs2 = sim([:one=>scn1,:two=>scn2], parameters_upd=[:k1=>0.03])
 @test typeof(cs1) <: HetaSimulator.SimResults
 @test typeof(cs2) <: Vector{Pair{Symbol, HetaSimulator.SimResults}}
-@test isnothing(parameters(cs1))
+@test length(parameters(cs1))==0
 @test parameters(last(cs2[:one]))[:k1] == 0.03
 
 # Monte-Carlo simulation tests

@@ -29,22 +29,26 @@ Arguments:
 """
 function sim(
   scenario::Scenario;
-  parameters_upd::Union{Nothing, Vector{P}}=nothing,
+  parameters_upd::Vector{P}=Pair{:Symbol, Float64}[],
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
   kwargs... # other solver arguments
 ) where P<:Pair
   
-  prob = !isnothing(parameters_upd) ? update_init_values(scenario.prob, scenario.init_func, NamedTuple(parameters_upd)) : scenario.prob
+  prob = length(parameters_upd) > 0 ? update_init_values(scenario.prob, scenario.init_func, NamedTuple(parameters_upd)) : scenario.prob
   sol = solve(prob, alg; reltol = reltol, abstol = abstol,
     save_start = false, save_end = false, save_everystep = false, kwargs...)
-  params_names = !isnothing(parameters_upd) ? collect(keys(NamedTuple(parameters_upd))) : nothing
+  params_names = Symbol[first(x) for x in parameters_upd]
   return build_results(sol, scenario, params_names)
 end
 
-function build_results(sol::SciMLBase.AbstractODESolution, params_names)
-  params = isnothing(params_names) ? nothing : @LArray sol.prob.p.constants[params_names] Tuple(params_names)
+function build_results(sol::SciMLBase.AbstractODESolution, params_names::Vector{Symbol})
+  params = if length(params_names) > 0 
+    @LArray sol.prob.p.constants[params_names] Tuple(params_names)
+  else
+    @LArray Float64[] ()
+  end
   sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
   return Simulation(sv, params, sol.retcode)
 end

@@ -81,7 +81,7 @@ observables(m::Model) = begin # observables
 end
 
 # auxilary function to display first n components of vector
-function print_lim(x::Union{Vector, Tuple}, n::Int)
+function print_lim(x::Union{Vector, Tuple}, n::Int) 
   first_n = ["$y" for y in first(x, n)]
   if length(x) > n
     push!(first_n, "...")
@@ -263,7 +263,7 @@ function Base.show(io::IO, m::MIME"text/plain", sr::SimResults)
   dimentions_str = "$(length(sr))x$dim2"
   times_str = print_lim(times(sr), 10)
   outputs_str = print_lim(observables(sr), 10)
-  parameters_str = isnothing(parameters(sr)) ? "-" : print_lim(keys(parameters(sr)), 10)
+  parameters_str = print_lim(keys(parameters(sr)), 10)
 
   println(io, "$dimentions_str SimResults with status :$(status(sr)).")
   println(io, "    Solution status: $(status(sr))")

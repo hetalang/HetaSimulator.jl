@@ -57,20 +57,19 @@ function Model(
     records_output_ = collect(Pair{Symbol,Bool}, pairs(records_output))
     events_active_ = collect(Pair{Symbol,Bool}, pairs(events_active))
 
-    # Should we (1) store prob in Model, (2) store in Scenario (3) nowhere
-    ### fake run
-    
-    #_u0, _p0 = init_func(constants_num)
-    #constants = LVector(constants_num)
-    #_params = Params(constants, _p0)
-    #prob = ODEProblem(ode_func, _u0, (0.,1.), _params)
+    ### fake run, disabled because it slows model loading down
+    #=
+    _u0, _p0 = init_func(constants_num)
+    constants = LVector(constants_num)
+    _params = Params(constants, _p0)
+    prob = ODEProblem(ode_func, _u0, (0.,1.), _params)
 
     # check if default alg can solve the prob
-    #integrator = init(prob, DEFAULT_ALG)
-    #step!(integrator)
-    #ret = check_error(integrator)
-    #ret != :Success && @warn "Default algorithm returned $ret status. Consider using a different algorithm."
-    
+    integrator = init(prob, DEFAULT_ALG)
+    step!(integrator)
+    ret = check_error(integrator)
+    ret != :Success && @warn "Default algorithm returned $ret status. Consider using a different algorithm."
+    =#
     model = Model(
         init_func,            # init_func
         ode_func,             # ode_func
