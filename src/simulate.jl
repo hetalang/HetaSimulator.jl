@@ -8,7 +8,7 @@ const EMPTY_PROBLEM = ODEProblem(() -> nothing, [0.0], (0.,1.))
 
 """
     sim(scenario::Scenario; 
-      parameters_upd::Union{Nothing, Vector{P}}=nothing,
+      parameters_upd::Vector{P}=Pair{Symbol, Float64}[],
       alg=DEFAULT_ALG, 
       reltol=DEFAULT_SIMULATION_RELTOL, 
       abstol=DEFAULT_SIMULATION_ABSTOL,
@@ -21,7 +21,7 @@ Example: `Scenario(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]) |> sim
 Arguments:
 
 - `scenario` : simulation scenario of type [`Scenario`](@ref)
-- `parameters_upd` : constants, which overwrite both `Model` and `Scenario` constants. Default is `nothing`
+- `parameters_upd` : constants, which overwrite both `Model` and `Scenario` constants. Default is empty vector.
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -29,7 +29,7 @@ Arguments:
 """
 function sim(
   scenario::Scenario;
-  parameters_upd::Vector{P}=Pair{:Symbol, Float64}[],
+  parameters_upd::Vector{P}=Pair{Symbol, Float64}[],
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
@@ -59,7 +59,7 @@ build_results(sol::SciMLBase.AbstractODESolution, scenario, params_names) = SimR
 
 """
     sim(scenario_pairs::Vector{P}; 
-      parameters_upd::Union{Nothing, Vector}=nothing,
+      parameters_upd::Vector{Pair{Symbol, Float64}}=Pair{Symbol, Float64}[],
       alg=DEFAULT_ALG, 
       reltol=DEFAULT_SIMULATION_RELTOL, 
       abstol=DEFAULT_SIMULATION_ABSTOL,
@@ -73,7 +73,7 @@ Example: `sim([:x => scn1, :y=>scn2, :z=>scn3])`
 Arguments:
 
 - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
-- `parameters_upd` : constants, which overwrite both `Model` and `Scenario` constants. Default is `nothing`
+- `parameters_upd` : constants, which overwrite both `Model` and `Scenario` constants. Default is empty vector.
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -82,7 +82,7 @@ Arguments:
 """
 function sim(
   scenario_pairs::Vector{P};
-  parameters_upd::Union{Nothing, Vector}=nothing,
+  parameters_upd::Vector{Pair{Symbol, Float64}}=Pair{Symbol, Float64}[],
   alg = DEFAULT_ALG, 
   reltol = DEFAULT_SIMULATION_RELTOL, 
   abstol = DEFAULT_SIMULATION_ABSTOL,
@@ -99,11 +99,10 @@ function sim(
     next!(p)
     prob_i = last(scenario_pairs[i]).prob
     init_func_i = last(scenario_pairs[i]).init_func
-    !isnothing(parameters_upd) ? 
-      update_init_values(prob_i, init_func_i, NamedTuple(parameters_upd)) : prob_i
+    length(parameters_upd) > 0 ? update_init_values(prob_i, init_func_i, NamedTuple(parameters_upd)) : prob_i
   end
 
-  params_names = !isnothing(parameters_upd) ? collect(keys(NamedTuple(parameters_upd))) : nothing
+  params_names = Symbol[first(x) for x in parameters_upd]
 
   function _output(sol,i)
     build_results(sol,last(scenario_pairs[i]), params_names),false
