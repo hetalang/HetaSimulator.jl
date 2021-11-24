@@ -13,7 +13,7 @@ platform = load_platform("$HetaSimulatorDir/cases/story_0")
 model = platform.models[:nameless]
 
 # single simulation
-results = Scenario(model; tspan = (0., 1200.), parameters=[:k1=>0.1]) |> sim;
+results = Scenario(model; tspan = (0., 1200.), parameters=[:k1=>0.1]) |> sim
 plotd = plot(results)
 # savefig(plotd,"file.png")
 

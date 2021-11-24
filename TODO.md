@@ -1,25 +1,27 @@
+_The rest of ideas and issues are posted in https://github.com/hetalang/heta-discussion/discussions and https://github.com/hetalang/HetaSimulator.jl/issues_
+
 ## bugs
 
 - `parameters` method in Scenario should get the scenario-level parameters but not the full list of constants
-- get parameters from MCResults, Pair{Symbol, MCResults}, Vector{Pair{Symbol, MCResults}}
+- wrong get parameters from MCResults, Pair{Symbol, MCResults}, Vector{Pair{Symbol, MCResults}}
+- ? slow show method for Model
+- 
 
 ## features
 
-- Empty object in parameters instead of nothing
-- legend: display experimental points on line
-- check conversion from SimResults, MCResults to DataFrame: where is constants?
+- allow using both saveat and tspan, move tspan to sim
+- remove unnecessary rules from events
 - legend outside of plot
 - split plots horizontally
 - checking `atStart: true`, `atStart: false` inside Events
 - rename Results => Result
-- allow using both saveat and tspan
+- add loss methods for Condition, Vector{Condition}
 
-## postponed changes
+## ideas
 
 - extended chain syntax
 - read Scenario from Heta
 - add CI estimation
-- add loss methods for Condition, Vector{Condition}
 - checking units while load_platform
 - `OrderedDict` for storing SimResults
 - checking Model version
