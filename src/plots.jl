@@ -18,7 +18,7 @@ end
 end
 
 
-@recipe function plot(sr::SimResults; vars=observables(sr), show_measurements=true)
+@recipe function plot(sr::SimResult; vars=observables(sr), show_measurements=true)
 
   # this code should be replaced with 
   #   @series begin
@@ -72,18 +72,18 @@ end
   nothing
 end
 #= XXX: do we need it?
-@recipe function plot(sim::Vector{S}) where S <:AbstractResults
+@recipe function plot(sim::Vector{S}) where S <:AbstractResult
   [Symbol("_$i")=>s for (i,s) in enumerate(sim)]
 end
 =#
-@recipe function plot(s::Pair{Symbol,S}) where S<:AbstractResults
+@recipe function plot(s::Pair{Symbol,S}) where S<:AbstractResult
   @series begin
     title := "$(first(s))"
     last(s)
   end
 end
 
-@recipe function plot(sim::Vector{Pair{Symbol,S}}) where S<:AbstractResults
+@recipe function plot(sim::Vector{Pair{Symbol,S}}) where S<:AbstractResult
   (m,n) = layout_choice(length(sim))
   layout := (m,n)
   size := (400*n,300*m)
@@ -97,7 +97,7 @@ end
 end
 
 #https://github.com/SciML/SciMLBase.jl/blob/7151bbe784df70cc572073d76d3a818aa8d1f4d0/src/ensemble/ensemble_solutions.jl#L102
-@recipe function plot(sol::MCResults)
+@recipe function plot(sol::MCResult)
   for i in 1:length(sol)
     @series begin
       legend := false

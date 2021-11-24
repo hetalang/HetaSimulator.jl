@@ -370,20 +370,20 @@ There are three main problem types that can currently be solved with HetaSimulat
 - [__Monte-Carlo__](#montecarlo) type simulations that performs repeated simulations based on pre-set parameters distributions with [`mc`](@ref) method.
 - [__Fitting__](#fitting) or parameter identification problem that optimizes values of selected model constants to reach the minimal discrepancy between simulations and experimental values which is solved by [`fit`](@ref) method.
 
-Each method returns the solution of its specific type: `SimResults`, `MCResults` and `FitResults` or other types that include them.
+Each method returns the solution of its specific type: `SimResult`, `MCResult` and `FitResult` or other types that include them.
 
 The methods can be applied on different levels: `Platform`, `Scenario` or `Model` to allow applying all scenarios in the platform, some of them or the default one.
 Some important "target vs method" variants are shown in the next table.
 
 Target | Method | Results | Comments
 --- | --- | --- | ---
-`Platform` | `sim` | `Vector{Pair{Symbol,SimResults}}` | All or selected list of scenarios in model will run
-`Scenario` | `sim` | `SimResults` | Only target scenario will run
-`Model` | `sim` | `SimResults` | The scenario created from default model's options will run
-`Platform` | `mc` | `Vector{Pair{Symbol,MCResults}}` | All or selected list of scenarios in model will run multiple times.
-`Scenario` | `mc` | `MCResults` | Target scenario will run multiple times
-`Model` | `mc` | `SimResults` | The default scenario will run multiple times
-`Platform` | `fit` | `FitResults` | All or selected list of scenarios together their measurements will be used to optimize parameters.
+`Platform` | `sim` | `Vector{Pair{Symbol,SimResult}}` | All or selected list of scenarios in model will run
+`Scenario` | `sim` | `SimResult` | Only target scenario will run
+`Model` | `sim` | `SimResult` | The scenario created from default model's options will run
+`Platform` | `mc` | `Vector{Pair{Symbol,MCResult}}` | All or selected list of scenarios in model will run multiple times.
+`Scenario` | `mc` | `MCResult` | Target scenario will run multiple times
+`Model` | `mc` | `SimResult` | The default scenario will run multiple times
+`Platform` | `fit` | `FitResult` | All or selected list of scenarios together their measurements will be used to optimize parameters.
 
 *This page provides the example of applying methods on the `Platform` level only*
 
@@ -474,7 +474,7 @@ plot(res[1])
 
 ### Monte-Carlo
 
-Monte-Carlo method runs simulation many times combining all simulations into single object `MCResults`.
+Monte-Carlo method runs simulation many times combining all simulations into single object `MCResult`.
 You should clarify here the distribution of random parameters and number of iterations.
 
 ```julia
@@ -581,8 +581,8 @@ fit_res = fit(p, to_fit)
 +---------------------------------------------------------------------------
 | Fitting results:
 |   status: FTOL_REACHED
-|   optim: [:kabs => 9.664612290142436, :Q => 3.182280353785782, :kel => 0.20333675237278281, :sigma1 => 0.20073592014870978, :sigma2 => 0.15748031874469834, :sigma3 => 0.11672689231044918]. Access optim estimate with `optim(f::FitResults)`
-|   objective function value: 4164.493819852298. Access objective value with `obj(f::FitResults)`
+|   optim: [:kabs => 9.664612290142436, :Q => 3.182280353785782, :kel => 0.20333675237278281, :sigma1 => 0.20073592014870978, :sigma2 => 0.15748031874469834, :sigma3 => 0.11672689231044918]. Access optim estimate with `optim(f::FitResult)`
+|   objective function value: 4164.493819852298. Access objective value with `obj(f::FitResult)`
 |   number of objective function evaluations: 134
 +---------------------------------------------------------------------------
 ```

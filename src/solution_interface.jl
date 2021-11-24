@@ -1,16 +1,16 @@
 ############################ Accessing Solution Values #####################
 
-observables(sr::SimResults) = observables(sr.sim)
+observables(sr::SimResult) = observables(sr.sim)
 observables(sim::Simulation) = collect(keys(sim.vals.u[1]))
-observables(sim::MCResults) = observables(sim[1])
-constants(sim::SimResults) = sim.scenario.prob.p.constants
+observables(sim::MCResult) = observables(sim[1])
+constants(sim::SimResult) = sim.scenario.prob.p.constants
 
 @inline Base.getindex(sim::Simulation, I...) = sim.vals[I...]
 @inline Base.getindex(sim::Simulation, i::Symbol,::Colon) = [sim.vals[j][i] for j in 1:length(sim.vals)]
-@inline Base.getindex(sr::SimResults, I...) = sr.sim[I...]
-@inline Base.getindex(mc::MCResults, I...) = mc.sim[I...]
+@inline Base.getindex(sr::SimResult, I...) = sr.sim[I...]
+@inline Base.getindex(mc::MCResult, I...) = mc.sim[I...]
 
-solat(sr::SimResults, args...) = solat(sr.sim, args...)
+solat(sr::SimResult, args...) = solat(sr.sim, args...)
 
 solat(sim::Simulation, t, idx, scope) = solat(sim, t, scope)[idx]
 solat(sim::Simulation, t, idx::Colon, scope) = solat(sim, t, scope)
@@ -26,7 +26,7 @@ function solat(sim::Simulation, t, scope)
 end
 
 (s::Simulation)(t, idx=:, scope=:ode_) = solat(s, t, idx, scope)
-(sr::SimResults)(t, idx=:, scope=:ode_) = solat(sr.sim, t, idx, scope)
+(sr::SimResult)(t, idx=:, scope=:ode_) = solat(sr.sim, t, idx, scope)
 
 ############################ DataFrames ########################################
 
@@ -39,22 +39,22 @@ function DataFrame(s::Simulation; vars=observables(s))
   return df
 end
 
-DataFrame(sr::SimResults; kwargs...) = DataFrame(sr.sim; kwargs...)
+DataFrame(sr::SimResult; kwargs...) = DataFrame(sr.sim; kwargs...)
 
-function DataFrame(sr::Pair{Symbol,S}; kwargs...) where S<:SimResults
+function DataFrame(sr::Pair{Symbol,S}; kwargs...) where S<:SimResult
   df = DataFrame(last(sr); kwargs...)
   df[!, :scenario] .= first(sr) # add new column
 
   return df
 end
 
-function DataFrame(res::Vector{Pair{Symbol,S}}; kwargs...) where S<:SimResults
+function DataFrame(res::Vector{Pair{Symbol,S}}; kwargs...) where S<:SimResult
   df_vectors = DataFrame.(res; kwargs...)
 
   return vcat(df_vectors...; cols=:union)
 end
 
-function DataFrame(mcr::MCResults; kwargs...)
+function DataFrame(mcr::MCResult; kwargs...)
   # df performance
   df = DataFrame()
 
@@ -67,35 +67,35 @@ function DataFrame(mcr::MCResults; kwargs...)
   return df
 end
 
-function DataFrame(mcr::Pair{Symbol,S}; kwargs...) where S<:MCResults
+function DataFrame(mcr::Pair{Symbol,S}; kwargs...) where S<:MCResult
   df = DataFrame(last(mcr); kwargs...)
   df[!, :scenario] .= first(mcr) # add new column
 
   return df
 end
 
-function DataFrame(res::Vector{Pair{Symbol,S}}; kwargs...) where S<:MCResults
+function DataFrame(res::Vector{Pair{Symbol,S}}; kwargs...) where S<:MCResult
   df_vectors = DataFrame.(res; kwargs...)
 
   return vcat(df_vectors...; cols=:union)
 end
 
-############################ Save Results ########################################
+############################ Save Result ########################################
 """
-    save_results(filepath::String, sim::AbstractResults) 
+    save_results(filepath::String, sim::AbstractResult) 
 
 Save results as csv file
 
 Arguments:
 
 - `filepath`: path and name of the file to write to
-- `sim`: simulation results of `AbstractResults` type
+- `sim`: simulation results of `AbstractResult` type
 """
-save_results(filepath::String, sim::AbstractResults) = save_results(filepath, DataFrame(sim))
+save_results(filepath::String, sim::AbstractResult) = save_results(filepath, DataFrame(sim))
 
 save_results(filepath::String, df::DataFrame) = CSV.write(filepath, df, delim=";")
 
-function save_optim(filepath::String, fr::FitResults)
+function save_optim(filepath::String, fr::FitResult)
   optim_params = optim(fr)
   open(filepath,"a") do io
     for op in optim_params
@@ -105,7 +105,7 @@ function save_optim(filepath::String, fr::FitResults)
 end
 
 #=FIXME
-function save_results(path::String, mcsim::MCResults; groupby::Symbol=:observables) 
+function save_results(path::String, mcsim::MCResult; groupby::Symbol=:observables) 
   if groupby == :simulations
     for i in 1:length(mcsim)
       save_results("$path/$i.csv", mcsim[i])

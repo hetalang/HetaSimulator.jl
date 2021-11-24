@@ -1,4 +1,4 @@
-function loss(sim::SimResults, measurements::Vector)
+function loss(sim::SimResult, measurements::Vector)
   loss = 0.0
   for dp in measurements
     loss += loss_point(sim, dp)
@@ -6,7 +6,7 @@ function loss(sim::SimResults, measurements::Vector)
   return loss
 end
 
-function loss_point(sim::SimResults, dp::NormalMeasurementPoint{MU,S}) where {MU,S}
+function loss_point(sim::SimResult, dp::NormalMeasurementPoint{MU,S}) where {MU,S}
   sim_val = _param_value(sim, dp.μ, dp)
   measurements_val = dp.val
   sigma = _param_value(sim, dp.σ, dp)
@@ -15,7 +15,7 @@ function loss_point(sim::SimResults, dp::NormalMeasurementPoint{MU,S}) where {MU
   log(2π) + log(sigma_sq) + (sim_val - measurements_val)^2 / sigma_sq
 end
 
-function loss_point(sim::SimResults, dp::LogNormalMeasurementPoint{MU,S}) where {MU,S}
+function loss_point(sim::SimResult, dp::LogNormalMeasurementPoint{MU,S}) where {MU,S}
   sim_val = _param_value(sim, dp.μ, dp)
   measurements_val = dp.val
   sigma = _param_value(sim, dp.σ, dp)

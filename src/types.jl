@@ -186,8 +186,8 @@ function Base.show(io::IO, ::MIME"text/plain", scn::Scenario)
   println(io, "   Number of measurement points: $(measurements_count)")
 end
 
-################################## SimResults ###########################################
-abstract type AbstractResults end
+################################## SimResult ###########################################
+abstract type AbstractResult end
 
 struct SavedValues{uType,tType,scopeType}
   u::uType
@@ -234,7 +234,7 @@ function Base.getproperty(s::Simulation, sym::Symbol)
 end
 
 """
-    struct SimResults{S, C<:Scenario} <: AbstractResults
+    struct SimResult{S, C<:Scenario} <: AbstractResult
       sim::S
       scenario::C 
     end
@@ -245,51 +245,51 @@ To get the content use methods: `status(results)`, `times(results)`, `vals(resul
 
 The results can be transformed using `DataFrame` method or visualized using `plot` method.
 """
-struct SimResults{S, C<:Scenario} <: AbstractResults
+struct SimResult{S, C<:Scenario} <: AbstractResult
   sim::S
   scenario::C 
 end
 
-status(sr::SimResults) = status(sr.sim)
-times(sr::SimResults) = times(sr.sim)
-vals(sr::SimResults) = vals(sr.sim)
-parameters(sr::SimResults) = parameters(sr.sim)
-measurements(sr::SimResults) = sr.scenario.measurements
+status(sr::SimResult) = status(sr.sim)
+times(sr::SimResult) = times(sr.sim)
+vals(sr::SimResult) = vals(sr.sim)
+parameters(sr::SimResult) = parameters(sr.sim)
+measurements(sr::SimResult) = sr.scenario.measurements
 
-@inline Base.length(sr::SimResults) = length(sr.sim)
+@inline Base.length(sr::SimResult) = length(sr.sim)
 
-function Base.show(io::IO, m::MIME"text/plain", sr::SimResults)
+function Base.show(io::IO, m::MIME"text/plain", sr::SimResult)
   dim2 = length(keys(sr.sim[1])) # number of observables
   dimentions_str = "$(length(sr))x$dim2"
   times_str = print_lim(times(sr), 10)
   outputs_str = print_lim(observables(sr), 10)
   parameters_str = print_lim(keys(parameters(sr)), 10)
 
-  println(io, "$dimentions_str SimResults with status :$(status(sr)).")
+  println(io, "$dimentions_str SimResult with status :$(status(sr)).")
   println(io, "    Solution status: $(status(sr))")
   println(io, "    Time points (times): $(times_str)")
   println(io, "    Observables (outputs): $(outputs_str)")
   println(io, "    Parameters: $(parameters_str)")
 end
 
-function Base.show(io::IO, m::MIME"text/plain", srp::Pair{Symbol, S}, short::Bool = false) where S<:SimResults
+function Base.show(io::IO, m::MIME"text/plain", srp::Pair{Symbol, S}, short::Bool = false) where S<:SimResult
   sr = last(srp)
   dim2 = length(keys(sr.sim[1])) # number of observables
   dimentions_str = "$(length(sr))x$dim2"
 
-  short || println(io, "Pair{Symbol, SimResults}")
-  println(io, "    :$(first(srp)) => $dimentions_str SimResults with status :$(status(sr)).")
+  short || println(io, "Pair{Symbol, SimResult}")
+  println(io, "    :$(first(srp)) => $dimentions_str SimResult with status :$(status(sr)).")
 end
 
-function Base.show(io::IO, m::MIME"text/plain", vector::Vector{Pair{Symbol, S}}) where S<:SimResults
-  println(io, "$(length(vector))-element Vector{Pair{Symbol, SimResults}}") 
+function Base.show(io::IO, m::MIME"text/plain", vector::Vector{Pair{Symbol, S}}) where S<:SimResult
+  println(io, "$(length(vector))-element Vector{Pair{Symbol, SimResult}}") 
 
   for x in vector
     show(io, m, x, true)
   end
 end
 
-function Base.getindex(vector::Vector{Pair{Symbol, S}}, id::Symbol) where S<:SimResults
+function Base.getindex(vector::Vector{Pair{Symbol, S}}, id::Symbol) where S<:SimResult
   ind = findfirst((x) -> first(x)===id, vector)
   if ind === nothing
     throw("Index :$id is not found.")
@@ -301,7 +301,7 @@ end
 ################################## Monte-Carlo Simulation ##############################
 
 """
-    struct MCResults{S,C} <: AbstractResults
+    struct MCResult{S,C} <: AbstractResult
       sim::S
       saveat::Bool
       scenario::C
@@ -313,7 +313,7 @@ To convert into tabular format, use `DataFrame` method.
 
 The base visulaization can be done with `plot` method.
 """
-struct MCResults{S,C} <: AbstractResults
+struct MCResult{S,C} <: AbstractResult
   sim::S
   saveat::Bool
   scenario::C
@@ -321,12 +321,12 @@ struct MCResults{S,C} <: AbstractResults
   # elapsed_time
 end
 
-@inline Base.length(mcr::MCResults) = length(mcr.sim)
-parameters(mcr::MCResults) = [parameters(mcr[i]) for i in 1:length(mcr)]
-vals(mcr::MCResults) = [vals(mcr[i]) for i in 1:length(mcr)]
-status_summary(mcr::MCResults) = counter([s.status for s in mcr.sim])
+@inline Base.length(mcr::MCResult) = length(mcr.sim)
+parameters(mcr::MCResult) = [parameters(mcr[i]) for i in 1:length(mcr)]
+vals(mcr::MCResult) = [vals(mcr[i]) for i in 1:length(mcr)]
+status_summary(mcr::MCResult) = counter([s.status for s in mcr.sim])
 
-function Base.show(io::IO, m::MIME"text/plain", mcr::MCResults, short::Bool = false)
+function Base.show(io::IO, m::MIME"text/plain", mcr::MCResult, short::Bool = false)
   # dimentions
   dim0 = length(mcr)
   if mcr.saveat 
@@ -344,7 +344,7 @@ function Base.show(io::IO, m::MIME"text/plain", mcr::MCResults, short::Bool = fa
   parameters_1 = parameters(mcr.sim[1])
   parameters_str = isnothing(parameters_1) ? "-" : print_lim(keys(parameters_1), 10)
   
-  println(io, "$(dimentions_str) MCResults with status $(status)" )
+  println(io, "$(dimentions_str) MCResult with status $(status)" )
   if !short
   println(io, "    Solution status: $(status)")
   println(io, "    Observables (outputs): $(outputs_str)")
@@ -352,21 +352,21 @@ function Base.show(io::IO, m::MIME"text/plain", mcr::MCResults, short::Bool = fa
   end
 end
 
-function Base.show(io::IO, m::MIME"text/plain", mcrp::Pair{Symbol, S}, short=false) where S<:MCResults 
-  short || println(io, "Pair{Symbol, MCResults}")
+function Base.show(io::IO, m::MIME"text/plain", mcrp::Pair{Symbol, S}, short=false) where S<:MCResult 
+  short || println(io, "Pair{Symbol, MCResult}")
   print(io, "    :$(first(mcrp)) => ")
   Base.show(io, m, last(mcrp), true)
 end
 
-function Base.show(io::IO, m::MIME"text/plain", vector::Vector{Pair{Symbol, S}}) where S<:MCResults
-  println(io, "$(length(vector))-element Vector{Pair{Symbol, MCResults}}") 
+function Base.show(io::IO, m::MIME"text/plain", vector::Vector{Pair{Symbol, S}}) where S<:MCResult
+  println(io, "$(length(vector))-element Vector{Pair{Symbol, MCResult}}") 
 
   for x in vector
     show(io, m, x, true)
   end
 end
 
-function Base.getindex(V::Vector{Pair{Symbol, S}}, id::Symbol) where S<:MCResults
+function Base.getindex(V::Vector{Pair{Symbol, S}}, id::Symbol) where S<:MCResult
   ind = findfirst((x) -> first(x)===id, V)
   if ind === nothing
     throw("Index :$id is not found.")
@@ -397,14 +397,14 @@ end
 
 ################################## Fitting ###########################################
 """
-    struct FitResults{L<:Real, I}
+    struct FitResult{L<:Real, I}
       obj::L
       optim::Vector{Pair{Symbol,Float64}}
       status::Symbol
       numevals::I
     end
 
-Results of [`fit`](@ref).
+Result of [`fit`](@ref).
 
 Use `optim` method to get optimal values.
 
@@ -412,22 +412,22 @@ Use `object` method to get optimal objective function.
 
 Use `status` to get status.
 """
-struct FitResults{L<:Real, I}
+struct FitResult{L<:Real, I}
   obj::L
   optim::Vector{Pair{Symbol,Float64}}
   status::Symbol
   numevals::I
 end
 
-function Base.show(io::IO, m::MIME"text/plain", fr::FitResults)
+function Base.show(io::IO, m::MIME"text/plain", fr::FitResult)
   
-  println(io, "FitResults with status :$(fr.status)")
+  println(io, "FitResult with status :$(fr.status)")
   println(io, "   Status: $(fr.status)")
   println(io, "   Optimal values: $(fr.optim)")
   println(io, "   Objective function value: $(fr.obj)")
   println(io, "   Objective function evaluations count: $(fr.numevals)")
 end
 
-optim(f::FitResults) = f.optim
-obj(f::FitResults) = f.obj
-status(f::FitResults) = f.status
+optim(f::FitResult) = f.optim
+obj(f::FitResult) = f.obj
+status(f::FitResult) = f.status

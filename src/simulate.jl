@@ -14,7 +14,7 @@ const EMPTY_PROBLEM = ODEProblem(() -> nothing, [0.0], (0.,1.))
       abstol=DEFAULT_SIMULATION_ABSTOL,
       kwargs...)
 
-Simulate single `Scenario`. Returns [`SimResults`](@ref) type.
+Simulate single `Scenario`. Returns [`SimResult`](@ref) type.
 
 Example: `Scenario(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]) |> sim`
 
@@ -53,7 +53,7 @@ function build_results(sol::SciMLBase.AbstractODESolution, params_names::Vector{
   return Simulation(sv, params, sol.retcode)
 end
 
-build_results(sol::SciMLBase.AbstractODESolution, scenario, params_names) = SimResults(build_results(sol, params_names), scenario)
+build_results(sol::SciMLBase.AbstractODESolution, scenario, params_names) = SimResult(build_results(sol, params_names), scenario)
 
 ### simulate scenario pairs
 
@@ -90,7 +90,7 @@ function sim(
   kwargs... # other arguments for OrdinaryDiffEq.solve()
 ) where P<:Pair
 
-  isempty(scenario_pairs) && return SimResults[] # BRAKE
+  isempty(scenario_pairs) && return SimResult[] # BRAKE
 
   progress_on = (parallel_type == EnsembleSerial()) # tmp fix
   p = Progress(length(scenario_pairs), dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled=progress_on)
@@ -125,7 +125,7 @@ function sim(
     save_everystep = false,
     kwargs...
     )
-  return [Pair{Symbol,SimResults}(first(cp), u) for (cp,u) in zip(scenario_pairs, solution.u)]
+  return [Pair{Symbol,SimResult}(first(cp), u) for (cp,u) in zip(scenario_pairs, solution.u)]
 end
 
 ### simulate scenario array, XXX: do we need it?

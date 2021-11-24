@@ -234,15 +234,15 @@ res2 = sim(scenario2)
 ```
 
 ```
-91x3 SimResults with status :Success.
+91x3 SimResult with status :Success.
     Use `DataFrame(res)` to convert results to DataFrame.
     Use `plot(res)` to plot results.
 ```
 
-`sim` method applied for a single `Scenario` returns object of type [`HetaSimulator.SimResults`](@ref). 
+`sim` method applied for a single `Scenario` returns object of type [`HetaSimulator.SimResult`](@ref). 
 The method has the additional arguments which can set the integration methods and other options. For more information see [`sim`](@ref)
 
-The results can be visualized using `plot` recipe which create the default representation of `SimResults` content. 
+The results can be visualized using `plot` recipe which create the default representation of `SimResult` content. 
 
 ```julia
 # plot all
@@ -307,18 +307,18 @@ res_mult = sim(p)
 
 ```
 Progress: 100%[==================================================] Time: 0:00:06
-6-element Vector{Pair{Symbol, SimResults}}
-        :multiple_15 => 237x3 SimResults with status :Success.
-        :dose_1 => 91x3 SimResults with status :Success.
-        :dose_10 => 109x3 SimResults with status :Success.
-        :scn1 => 320x3 SimResults with status :Success.
-        :dose_100 => 132x3 SimResults with status :Success.
-        :scn0 => 83x3 SimResults with status :Success.
+6-element Vector{Pair{Symbol, SimResult}}
+        :multiple_15 => 237x3 SimResult with status :Success.
+        :dose_1 => 91x3 SimResult with status :Success.
+        :dose_10 => 109x3 SimResult with status :Success.
+        :scn1 => 320x3 SimResult with status :Success.
+        :dose_100 => 132x3 SimResult with status :Success.
+        :scn0 => 83x3 SimResult with status :Success.
     Use `DataFrame(sol)` to transform.
     Use `plot(sol)` to plot results.
 ```
 
-The result of the method applied for a platform will be a vector of pairs `Symbol` identifier vs `SimResults`.
+The result of the method applied for a platform will be a vector of pairs `Symbol` identifier vs `SimResult`.
 To obtain the particular sim result a user can use numerical or symbol indexing.
 
 ```julia
@@ -327,7 +327,7 @@ res_mult[2][2]
 ```
 
 ```
-91x3 SimResults with status :Success.
+91x3 SimResult with status :Success.
     Use `DataFrame(res)` to convert results to DataFrame.
     Use `plot(res)` to plot results.
 ```
@@ -338,7 +338,7 @@ res_mult[:multiple_15][2]
 ```
 
 ```
-237x3 SimResults with status :Success.
+237x3 SimResult with status :Success.
     Use `DataFrame(res)` to convert results to DataFrame.
     Use `plot(res)` to plot results.
 ```
@@ -381,6 +381,6 @@ CSV.write("res_selected_df.csv", res_selected_df)
     Scenario(models(p)[:nameless], tspan = (0,100)) |> sim |> plot
     ```
 
-1. `plot` method for `SimResults` gives only a simple default representation. For extended graphics a user can transform everything into a `DataFrame` and plot manually.
+1. `plot` method for `SimResult` gives only a simple default representation. For extended graphics a user can transform everything into a `DataFrame` and plot manually.
 
 1. For multiple simulations of the Monte-Carlo type one should use `mc` method instead of `sim` method. `Scenario` is not the same as single simulation task in Monte-Carlo.

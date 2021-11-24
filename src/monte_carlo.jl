@@ -13,7 +13,7 @@ const progch = RemoteChannel(()->Channel{Bool}(), 1)
       kwargs...
     )
 
-Run Monte-Carlo simulations with single `Scenario`. Returns [`MCResults`](@ref) type.
+Run Monte-Carlo simulations with single `Scenario`. Returns [`MCResult`](@ref) type.
 
 Example: `mc(scenario, [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 
@@ -96,7 +96,7 @@ function mc(
     end
   end
 
-  return MCResults(solution.u, has_saveat(scenario), scenario)
+  return MCResult(solution.u, has_saveat(scenario), scenario)
 end
 
 """
@@ -106,7 +106,7 @@ end
       kwargs...
     )
 
-Run Monte-Carlo simulations with single scenario `Scenario`. Returns [`MCResults`](@ref) type.
+Run Monte-Carlo simulations with single scenario `Scenario`. Returns [`MCResult`](@ref) type.
 
 Example: `mc(scn1, DataFrame(k2=rand(3),k3=rand(3)), 1000)`
 
@@ -151,7 +151,7 @@ end
       kwargs...
     )
 
-Run Monte-Carlo simulations with `Model`. Returns [`MCResults`](@ref) type.
+Run Monte-Carlo simulations with `Model`. Returns [`MCResult`](@ref) type.
 
 Example: `mc(model, [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 
@@ -208,7 +208,7 @@ end
       kwargs...
     )
 
-Run Monte-Carlo simulations with single `Scenario`. Returns `Vector{MCResults}` type.
+Run Monte-Carlo simulations with single `Scenario`. Returns `Vector{MCResult}` type.
 
 Example: `mc([:c1=>scn1,:c2=>scn2], [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 
@@ -296,11 +296,11 @@ function mc(
     end
   end
 
-  ret = Vector{Pair{Symbol,MCResults}}(undef, lc)
+  ret = Vector{Pair{Symbol,MCResult}}(undef, lc)
 
   for i in 1:lc
     ret[i] = first(scenario_pairs[i]) => 
-      MCResults(solution.u[lp*(i-1)+1:i*lp], has_saveat(last(scenario_pairs[i])), last(scenario_pairs[i]))
+      MCResult(solution.u[lp*(i-1)+1:i*lp], has_saveat(last(scenario_pairs[i])), last(scenario_pairs[i]))
   end
   return ret
 end
@@ -312,7 +312,7 @@ end
       kwargs...
     )
 
-Run Monte-Carlo simulations with single scenario. Returns `Vector{MCResults}` type.
+Run Monte-Carlo simulations with single scenario. Returns `Vector{MCResult}` type.
 
 Example: `mc([scn1,scn2], [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 
@@ -341,7 +341,7 @@ end
       kwargs...
     )
 
-Run Monte-Carlo simulations with single `Scenario`. Returns `Vector{MCResults}` type.
+Run Monte-Carlo simulations with single `Scenario`. Returns `Vector{MCResult}` type.
 
 Example: `mc(platform, [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 
@@ -376,18 +376,18 @@ end
 
 # currently median and quantile don't output LVector
 
-function DiffEqBase.EnsembleAnalysis.get_timestep(mcr::MCResults,i) 
+function DiffEqBase.EnsembleAnalysis.get_timestep(mcr::MCResult,i) 
   @assert has_saveat(mcr) "Solution doesn't contain single time vector, default statistics are not available."
   return (getindex(mcr[j],i) for j in 1:length(mcr))
 end
 
-function DiffEqBase.EnsembleAnalysis.get_timepoint(mcr::MCResults,t) 
+function DiffEqBase.EnsembleAnalysis.get_timepoint(mcr::MCResult,t) 
   @assert has_saveat(mcr) "Solution doesn't contain single time vector, default statistics are not available."
   return (mcr[j](t) for j in 1:length(mcr))
 end
 
 
-function DiffEqBase.EnsembleAnalysis.EnsembleSummary(sim::MCResults,
+function DiffEqBase.EnsembleAnalysis.EnsembleSummary(sim::MCResult,
   t=sim[1].t;quantiles=[0.05,0.95])
 
   m,v = timeseries_point_meanvar(sim,t)

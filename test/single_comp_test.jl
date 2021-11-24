@@ -14,7 +14,7 @@ model = platform.models[:nameless];
 # Simulate default scenario
 s = Scenario(model, tspan = (0., 200.), saveat = [0.0, 150., 250.], observables=[:r1]) |> sim
 @test test_show(s)
-@test typeof(s) <: HetaSimulator.SimResults
+@test typeof(s) <: HetaSimulator.SimResult
 @test status(s) == :Success
 @test times(s)[end] == 250.
 @test vals(s)[1][:r1] == 0.1
@@ -40,8 +40,8 @@ scn2 = Scenario(model; parameters = [:k1=>0.015], tspan = (0., 200.), observable
 
 cs1 = sim(scn1)
 cs2 = sim([:one=>scn1,:two=>scn2], parameters_upd=[:k1=>0.03])
-@test typeof(cs1) <: HetaSimulator.SimResults
-@test typeof(cs2) <: Vector{Pair{Symbol, HetaSimulator.SimResults}}
+@test typeof(cs1) <: HetaSimulator.SimResult
+@test typeof(cs2) <: Vector{Pair{Symbol, HetaSimulator.SimResult}}
 @test length(parameters(cs1))==0
 @test parameters(last(cs2[:one]))[:k1] == 0.03
 
@@ -50,11 +50,11 @@ mciter = 100
 mc1 =  mc(model, [:k1=>Normal(0.02,1e-3)], mciter; tspan = (0., 200.), observables=[:r1])
 mc2 = mc([:one=>scn1,:two=>scn2], [:k1=>Normal(0.02,1e-3)], mciter)
 gsar = gsa(mc1,200)
-@test typeof(mc1) <: HetaSimulator.MCResults
+@test typeof(mc1) <: HetaSimulator.MCResult
 @test test_show(mc1)
-@test typeof(mc2) <: Vector{Pair{Symbol, HetaSimulator.MCResults}}
+@test typeof(mc2) <: Vector{Pair{Symbol, HetaSimulator.MCResult}}
 @test typeof(mc1[1]) <: HetaSimulator.Simulation
-@test typeof(mc2[1]) <: Pair{Symbol, HetaSimulator.MCResults}
+@test typeof(mc2[1]) <: Pair{Symbol, HetaSimulator.MCResult}
 @test length(mc1) == mciter
 @test typeof(parameters(mc1)) <: Vector
 @test times(mc1[1])[end] == 200.
@@ -71,7 +71,7 @@ add_measurements!(fscn1, data; subset = [:scenario => :one])
 add_measurements!(fscn2, data; subset = [:scenario => :two])
 fres = fit([:one=>fscn1, :two=>fscn2], [:k1=>0.01])
 
-@test typeof(fres) <: HetaSimulator.FitResults
+@test typeof(fres) <: HetaSimulator.FitResult
 @test test_show(fres)
 @test length(measurements(fscn1)) == 24
 @test length(measurements(fscn2)) == 24

@@ -121,7 +121,7 @@ DataFrame(mcsim1, vars=[:a, :b])
 ## Multiple scenarios simulations
 
 In the same way as it was done for `sim` method we can also run `mc` for multiple scenarios.
-The returned object will be of type `MCResults`.
+The returned object will be of type `MCResult`.
 
 ```julia
 mcsim2 = mc(

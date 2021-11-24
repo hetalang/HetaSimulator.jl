@@ -162,7 +162,7 @@ res_optim = fit(p, to_fit) # default fitting
 ```
 ┌ Warning: Scenario ":multiple_15" has no measurements. It will be excluded from fitting.
 └ @ HetaSimulator y:\HetaSimulator.jl\src\fit.jl:74
-FitResults with status :FTOL_REACHED
+FitResult with status :FTOL_REACHED
    Status: FTOL_REACHED
    Optimal values: [:kabs => 9.664612290142436, :Q => 3.182280353785782, :kel => 0.20333675237278281, :sigma1 => 0.20073592014870978, :sigma2 => 0.15748031874469834, :sigma3 => 0.11672689231044918]
    Objective function value: 4164.493819852298
@@ -172,7 +172,7 @@ FitResults with status :FTOL_REACHED
 The scenario `multiple_15` does not include any measurement. That's why we see the warning message here. This is not an error.
 
 
-The optimal value of the parameters can be obtained with `optim` method applied for `FitResults`.
+The optimal value of the parameters can be obtained with `optim` method applied for `FitResult`.
 ```julia
 # optimal parameters
 optim(res_optim)
@@ -237,7 +237,7 @@ res_optim = fit(p, params_df)
 ```
 ┌ Warning: Scenario ":multiple_15" has no measurements. It will be excluded from fitting.
 └ @ HetaSimulator y:\HetaSimulator.jl\src\fit.jl:74
-FitResults with status :FTOL_REACHED
+FitResult with status :FTOL_REACHED
    Status: FTOL_REACHED
    Optimal values: [:kabs => 9.696004253888853, :kel => 0.20422994254743634, :Q => 3.1651123659949176, :sigma1 => 0.15675092258640785, :sigma2 => 0.10972117348555543, :sigma3 => 0.0957743148928216]
    Objective function value: 4164.577650364314

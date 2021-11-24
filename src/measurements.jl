@@ -177,7 +177,7 @@ end
 
 # ! Current assumption is that error dist is normal or lognormal
 
-measurements_as_table(sr::SimResults) = measurements_as_table(sr.scenario)
+measurements_as_table(sr::SimResult) = measurements_as_table(sr.scenario)
 
 function measurements_as_table(scn::Scenario)
   meas = measurements(scn)

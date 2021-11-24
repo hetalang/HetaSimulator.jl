@@ -1,6 +1,6 @@
 # functions to perform Global Sensitivity Anlaysis
 
-struct GSAResults
+struct GSAResult
   output_names::Vector{Symbol}
   params_names::Vector{Symbol}
   pearson::Matrix{Float64}
@@ -8,13 +8,13 @@ struct GSAResults
   standard::Matrix{Float64}
 end
 
-parameters(gsar::GSAResults) = gsar.params_names
-output(gsar::GSAResults) = gsar.output_names
-pearson(gsar::GSAResults) = gsar.pearson
-partial(gsar::GSAResults) = gsar.partial
-standard(gsar::GSAResults) = gsar.standard
+parameters(gsar::GSAResult) = gsar.params_names
+output(gsar::GSAResult) = gsar.output_names
+pearson(gsar::GSAResult) = gsar.pearson
+partial(gsar::GSAResult) = gsar.partial
+standard(gsar::GSAResult) = gsar.standard
 
-function DataFrames.DataFrame(gsar::GSAResults, coef::Symbol)
+function DataFrames.DataFrame(gsar::GSAResult, coef::Symbol)
   if coef == :pearson
     mat = pearson(gsar)
   elseif coef == :partial
@@ -30,17 +30,17 @@ function DataFrames.DataFrame(gsar::GSAResults, coef::Symbol)
 end
 
 """
-    gsa(mcr::MCResults, timepoint::Number)
+    gsa(mcr::MCResult, timepoint::Number)
 
 Computes Pearson Correlation Coeffitients, Partial Regression Coeffietients and Standard Regression Coeffitients for 
 parameters vector and output at a given timepoint
 
 Arguments:
 
-- `mcr`: Monte-Carlo results of type `MCResults`
+- `mcr`: Monte-Carlo results of type `MCResult`
 - `timepoint`: Time to compute coeffitients at 
 """
-function gsa(mcr::MCResults, timepoint::Number)
+function gsa(mcr::MCResult, timepoint::Number)
   
   params = parameters(mcr)
   params_mat = vecvec_to_mat(VectorOfArray(parameters(mcr)))'
@@ -53,7 +53,7 @@ function gsa(mcr::MCResults, timepoint::Number)
   partial = _calculate_partial_correlation_coefficients(outvals_mat, params_mat)
   standard = _calculate_standard_regression_coefficients(outvals_mat, params_mat)
 
-  return GSAResults(output_names, params_names, pearson, partial, standard)
+  return GSAResult(output_names, params_names, pearson, partial, standard)
 end
 
 

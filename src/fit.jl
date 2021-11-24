@@ -22,7 +22,7 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
       kwargs... 
     ) where C<:AbstractScenario
 
-Fit parameters to experimental measurements. Returns `FitResults` type.
+Fit parameters to experimental measurements. Returns `FitResult` type.
 
 Example: `fit([:x=>scn2, :y=>scn3, :z=>scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
 
@@ -157,7 +157,7 @@ function fit(
   # to create pairs from Float64
   minx_pairs = [key=>value for (key, value) in zip(first.(params), unscale_params.(minx, scale))]
   
-  return FitResults(minf, minx_pairs, ret, opt.numevals)
+  return FitResult(minf, minx_pairs, ret, opt.numevals)
 
 end
 
@@ -167,7 +167,7 @@ end
       kwargs...
     ) where C<:AbstractScenario
 
-Fit parameters to experimental measurements. Returns `FitResults` type.
+Fit parameters to experimental measurements. Returns `FitResult` type.
 
 Arguments:
 
@@ -200,7 +200,7 @@ end
       kwargs...
     ) where C<:AbstractScenario
 
-Fit parameters to experimental measurements. Returns `FitResults` type.
+Fit parameters to experimental measurements. Returns `FitResult` type.
 
 Example: `fit([scn2, scn3, scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
 
@@ -227,7 +227,7 @@ end
       kwargs...
     ) where C<:AbstractScenario
 
-Fit parameters to experimental measurements. Returns `FitResults` type.
+Fit parameters to experimental measurements. Returns `FitResult` type.
 
 Example: `fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3];scenarios=[:scn2,:scn3])`
 
