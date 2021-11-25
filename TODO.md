@@ -4,7 +4,6 @@ _The rest of ideas and issues are posted in https://github.com/hetalang/heta-dis
 
 - `parameters` method in Scenario should get the scenario-level parameters but not the full list of constants
 - wrong get parameters from MCResults, Pair{Symbol, MCResults}, Vector{Pair{Symbol, MCResults}}
-- 
 
 ## features
 

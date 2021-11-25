@@ -2,18 +2,19 @@
 
 ## 0.4.2
 
+- add global sensitivity for `MCResult`: `gsa`
+- add `save_as_heta` method
+- rename `Results` to `Result`
+- fix bug to allow params in loss func
+- remove fake run inside `load_platform`
 - update `show` method for many types
 - remove `sim(m::Model)` support
-- support of statistics for `mc` method
 - `vars` argument in `DataFrame` method for `SimResults`
 - `add_scenarios!` method for `Vector{Pair{Symbol, Scenario}}` 
-- store parameters in `Simulation`
 - `OrderedDict` in `Platform`
-- update `plot` for results
+- update `plot` style
 - fix bug with single `saveat`
 - fix bugs in saving callback
-- global sensitivity for `MCResult`
-- change headers for parameters table for fitting 
 
 ## 0.4.1
 
