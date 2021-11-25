@@ -2,7 +2,7 @@
 
 ## Working example
 
-As an example we will use a model describing a simple two-compartment pharmacokinetic model stored in single __.heta__ file. It is expected that the model code will be placed into "index.heta" file located in a directory __my\_example__ or something like that.
+As an example we will use a model describing a simple two-compartment pharmacokinetic model stored in single __.heta__ file. It is expected that the model code will be placed into "index.heta" file located in the working directory.
 
 File can be downloaded here: [index.heta](./sim-files/index.heta)
 
@@ -44,35 +44,37 @@ using HetaSimulator, Plots
 
 # create Platform from the project files
 # "index.heta" file inside is the default entry point
-p = load_platform("./my_example");
-
-# get the default model
-model = models(p)[:nameless]
+p = load_platform(".")
 ```
 
 ```
 No declaration file, running with defaults...
-[info] Builder initialized in directory "Y:\my_example".
+[info] Builder initialized in directory "Y:\HetaSimulator.jl\docs\src\tutorial\sim-files".
 [info] Compilation of module "index.heta" of type "heta"...
-[info] Reading module of type "heta" from file "Y:\my_example\index.heta"...
+[info] Reading module of type "heta" from file "Y:\HetaSimulator.jl\docs\src\tutorial\sim-files\index.heta"...
 [info] Setting references in elements, total length 52
 [info] Checking for circular references in Records.
 [warn] Units checking skipped. To turn it on set "unitsCheck: true" in declaration.
 [info] Checking unit's terms.
 [warn] "Julia only" mode
-[info] Exporting to "Y:\my_example\_julia" of format "Julia"...
+[info] Exporting to "Y:\HetaSimulator.jl\docs\src\tutorial\sim-files\_julia" of format "Julia"...
 Compilation OK!
 Loading platform... OK!
+Platform with 1 model(s), 0 scenario(s), 0 measurement(s)
+   Models: nameless
+   Scenarios: 
+```
 
-Model containing 4 constants, 9 records, 2 switchers.
-   Use `constants(model)` to get the constants.
-   Use `records(model)` to get the records.
-   Use `switchers(model)` to get the switchers.
- Use the following methods to get the default options:
-   - parameters(model)
-   - events_active(model)
-   - events_save(model)
-   - observables(model)
+```julia
+# get the default model
+model = models(p)[:nameless]
+```
+
+```
+Model contains 4 constant(s), 9 record(s), 2 switcher(s).
+   Constants: dose, kabs, kel, Q
+   Records: Vol0, Vol1, Vol2, A0, C1, C2, v_abs, v_el, v_distr
+   Switchers (events): sw1, sw2
 ```
 
 ## Creating scenarios
@@ -101,10 +103,10 @@ scenario0 = Scenario(model, tspan = (0, 10))
 
 ```
 Scenario for tspan=(0.0, 10.0)
-   tspan: (0.0, 10.0).
-   saveat: Float64[].
-   4 parameters. Use `parameters(scenario)` for details.
-   0 measurements. Use `measurements(scenario)` for details.
+   Time range (tspan): (0.0, 10.0)
+   Time points to save the solution at (saveat): 
+   Parameters: dose, kabs, kel, Q
+   Number of measurement points: 0
 ```
 
 The scenario can be simulated from the scenario and plotted.
@@ -113,7 +115,7 @@ res0 = sim(scenario0)
 plot(res0)
 ```
 
-![fig01](./fig01.png)
+![fig01](./sim-fig01.png)
 
 Creating scenario we can also update some of the model default options.
 The next example is the case when we want to update the simulation conditions:
@@ -138,7 +140,7 @@ res1 = sim(scenario1)
 plot(res1)
 ```
 
-![fig02](./fig02.png)
+![fig02](./sim-fig02.png)
 
 To read more about available options see API docs for [`Scenario`](@ref) function.
 
@@ -151,28 +153,32 @@ add_scenarios!(p, [:scn0 => scenario0, :scn1 => scenario1])
 
 where `:scn0` and `:scn` are identifiers for the scenarios in the dictionary.
 
-As it can be seen now the model include them.
+As it can be seen now the model includes them.
+
+```julia
+p
+```
 
 ```
-Platform with 1 models, 2 scenarios, 0 measurements
-   Models: nameless. Use `models(platform)` for details.
-   Scenarios: scn1, scn0. Use `scenarios(platform)` for details.
+Platform with 1 model(s), 2 scenario(s), 0 measurement(s)
+   Models: nameless
+   Scenarios: scn0, scn1
 ```
 
 ### Import scenarios from CSV tables
 
 The most simple way to populate a platform by scenarios is to create a file with `Scenario` in [tabular CSV format](../table-formats/scenario.md).
 
-Create file __scenarios.csv__ file inside __my\_example__ with the following content.
+Create file __scenarios.csv__ file inside the working directory with the following content.
 
-![fig03](./fig03.png)
+![fig03](./sim-fig03.png)
 
 File can be downloaded here: [scenarios.csv](./sim-files/scenarios.csv).
 
 The table can be created in Excel, saved as a CSV file and then loaded with the [`read_scenarios`](@ref) function as a `DataFrame`.
 
 ```julia
-scenarios_df = read_scenarios("./my_example/scenarios.csv")
+scenarios_df = read_scenarios("scenarios.csv")
 ```
 
 ```
@@ -201,9 +207,9 @@ p
 ```
 
 ```
-Platform with 1 models, 6 scenarios, 0 measurements
-   Models: nameless. Use `models(platform)` for details.
-   Scenarios: multiple_15, dose_1, dose_10, scn1, dose_100, scn0. Use `scenarios(platform)` for details.
+Platform with 1 model(s), 6 scenario(s), 0 measurement(s)       
+   Models: nameless
+   Scenarios: scn0, scn1, dose_1, dose_10, dose_100, multiple_15
 ```
 
 The particular scenario loaded directly into `Platform` can be obtained using the syntax.
@@ -214,10 +220,10 @@ scenario2 = scenarios(p)[:dose_1]
 
 ```
 Scenario for tspan=(0.0, 50.0)
-   tspan: (0.0, 50.0).
-   saveat: Float64[].
-   4 parameters. Use `parameters(scenario)` for details.
-   0 measurements. Use `measurements(scenario)` for details.
+   Time range (tspan): (0.0, 50.0)
+   Time points to save the solution at (saveat):
+   Parameters: dose, kabs, kel, Q
+   Number of measurement points: 0
 ```
 
 See more about scenario tables in [tabular CSV format](../table-formats/scenario.md).
@@ -234,9 +240,11 @@ res2 = sim(scenario2)
 ```
 
 ```
-91x3 SimResult with status :Success.
-    Use `DataFrame(res)` to convert results to DataFrame.
-    Use `plot(res)` to plot results.
+315x3 SimResult with status :Success.
+    Solution status: Success
+    Time points (times): 0.0, 0.0, 0.0, 4.999950000250002e-7, 5.499945000275002e-6, 5.549944500277502e-5, 0.0005554944450277752, 0.0031405418644452152, 0.007928302918050478, 0.014985582147596817, ...
+    Observables (outputs): C1, C2, v_el
+    Parameters:
 ```
 
 `sim` method applied for a single `Scenario` returns object of type [`HetaSimulator.SimResult`](@ref). 
@@ -248,7 +256,7 @@ The results can be visualized using `plot` recipe which create the default repre
 # plot all
 plot(res2)
 ```
-![fig04](./fig04.png)
+![fig04](./sim-fig04.png)
 
 The figure displays all simulated points and all output variables declared in `observables` of the scenario.
 A user can select chosen observables for displaying. The other general `plot` arguments like `yscale`, `ylim` and others can be used.
@@ -257,7 +265,7 @@ A user can select chosen observables for displaying. The other general `plot` ar
 # plot C1, C2
 plot(res2, vars = [:C1, :C2])
 ```
-![fig05](./fig05.png)
+![fig05](./sim-fig05.png)
 
 The results can be transformed into `DataFrame` object for further modifications and saving.
 
@@ -267,16 +275,20 @@ res_df = DataFrame(res1)
 ```
 
 ```
-91×5 DataFrame
- Row │ t            A0            C1           C2           scope  
-     │ Float64      Float64       Float64      Float64      Symbol 
-─────┼─────────────────────────────────────────────────────────────
-   1 │  0.0          0.0          0.0          0.0          ode_
-   2 │  0.0          1.0          0.0          0.0          sw1
-  ⋮  │      ⋮            ⋮             ⋮            ⋮         ⋮
-  90 │ 48.7368      -3.03066e-34  0.00022778   0.000846342  ode_
-  91 │ 50.0          4.06546e-35  0.000208774  0.000775723  ode_
-                                                    87 rows omitted
+315×5 DataFrame
+ Row │ t             C1           C2           v_el          scope  
+     │ Float64       Float64      Float64      Float64       Symbol 
+─────┼──────────────────────────────────────────────────────────────
+   1 │  0.0          0.0          0.0           0.0          start_
+   2 │  0.0          0.0          0.0           0.0          ode_
+   3 │  0.0          0.0          0.0           0.0          sw2
+   4 │  4.99995e-7   0.000158728  3.74355e-12   0.000499992  ode_
+  ⋮  │      ⋮             ⋮            ⋮            ⋮          ⋮
+ 312 │ 49.4347       6.63602      1.77171      20.9035       ode_
+ 313 │ 49.6571       5.79124      1.86371      18.2424       ode_
+ 314 │ 49.8827       5.05502      1.93842      15.9233       ode_
+ 315 │ 50.0          4.71407      1.97083      14.8493       ode_
+                                                    307 rows omitted
 ```
 
 As in plot method the observables can be selected by the optional `vars` argument.
@@ -306,16 +318,14 @@ res_mult = sim(p)
 ```
 
 ```
-Progress: 100%[==================================================] Time: 0:00:06
+Progress: 100%[==================================================] Time: 0:00:01        
 6-element Vector{Pair{Symbol, SimResult}}
-        :multiple_15 => 237x3 SimResult with status :Success.
-        :dose_1 => 91x3 SimResult with status :Success.
-        :dose_10 => 109x3 SimResult with status :Success.
-        :scn1 => 320x3 SimResult with status :Success.
-        :dose_100 => 132x3 SimResult with status :Success.
-        :scn0 => 83x3 SimResult with status :Success.
-    Use `DataFrame(sol)` to transform.
-    Use `plot(sol)` to plot results.
+    :scn0 => 84x3 SimResult with status :Success.
+    :scn1 => 315x3 SimResult with status :Success.
+    :dose_1 => 81x3 SimResult with status :Success.
+    :dose_10 => 100x3 SimResult with status :Success.
+    :dose_100 => 124x3 SimResult with status :Success.
+    :multiple_15 => 227x3 SimResult with status :Success.
 ```
 
 The result of the method applied for a platform will be a vector of pairs `Symbol` identifier vs `SimResult`.
@@ -327,9 +337,11 @@ res_mult[2][2]
 ```
 
 ```
-91x3 SimResult with status :Success.
-    Use `DataFrame(res)` to convert results to DataFrame.
-    Use `plot(res)` to plot results.
+315x3 SimResult with status :Success.
+    Solution status: Success
+    Time points (times): 0.0, 0.0, 0.0, 4.999950000250002e-7, 5.499945000275002e-6, 5.549944500277502e-5, 0.0005554944450277752, 0.0031405418644452152, 0.007928302918050478, 0.014985582147596817, ...
+    Observables (outputs): C1, C2, v_el
+    Parameters: 
 ```
 
 ```julia
@@ -338,9 +350,11 @@ res_mult[:multiple_15][2]
 ```
 
 ```
-237x3 SimResult with status :Success.
-    Use `DataFrame(res)` to convert results to DataFrame.
-    Use `plot(res)` to plot results.
+227x3 SimResult with status :Success.
+    Solution status: Success
+    Time points (times): 0.0, 0.0, 0.0, 3.3331111185190124e-6, 3.666422230370913e-5, 0.00036997533415561033, 0.003174221862346261, 0.008946283182509052, 0.01702472658406691, 0.028016975164716275, ...
+    Observables (outputs): A0, C1, C2
+    Parameters: 
 ```
 
 To simulate the selected scenarios one can use `scenarios` argument.
@@ -356,7 +370,7 @@ The results of multiple simulations can be visualized all together using `plot` 
 plot(res_selected, yscale=:log10, ylims=(1e-3,1e2))
 ```
 
-![fig07](./fig07.png)
+![fig07](./sim-fig07.png)
 
 The generated figure includes all condition simulations titled with scenario identifier. The additional arguments as `vars` and plot options can be used as well.
 

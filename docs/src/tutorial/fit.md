@@ -124,7 +124,17 @@ If we run the simulations and then plot them we see the simulation results toget
 ```julia
 # simulate all
 res = sim(p)
+```
 
+```
+4-element Vector{Pair{Symbol, SimResult}}
+    :dose_1 => 80x3 SimResult with status :Success.
+    :dose_10 => 100x3 SimResult with status :Success.
+    :dose_100 => 124x3 SimResult with status :Success.
+    :multiple_15 => 668x3 SimResult with status :Success.
+```
+
+```julia
 # plot all default
 plot(res)
 ```
@@ -161,12 +171,12 @@ res_optim = fit(p, to_fit) # default fitting
 
 ```
 ┌ Warning: Scenario ":multiple_15" has no measurements. It will be excluded from fitting.
-└ @ HetaSimulator y:\HetaSimulator.jl\src\fit.jl:74
-FitResult with status :FTOL_REACHED
-   Status: FTOL_REACHED
-   Optimal values: [:kabs => 9.664612290142436, :Q => 3.182280353785782, :kel => 0.20333675237278281, :sigma1 => 0.20073592014870978, :sigma2 => 0.15748031874469834, :sigma3 => 0.11672689231044918]
-   Objective function value: 4164.493819852298
-   Objective function evaluations count: 134
+└ @ HetaSimulator y:\HetaSimulator.jl\src\fit.jl:77
+FitResult with status :XTOL_REACHED
+   Status: XTOL_REACHED
+   Optimal values: [:kabs => 18.868605026704916, :Q => 4.043662480774219, :kel => 0.17104243648378176, :sigma1 => 0.020347955494158528, :sigma2 => 0.31561050699802246, :sigma3 => 0.5716026958426483]
+   OF value: 140.96503722971997
+   OF count: 8612
 ```
 
 The scenario `multiple_15` does not include any measurement. That's why we see the warning message here. This is not an error.
@@ -179,13 +189,13 @@ optim(res_optim)
 ```
 
 ```
-6-element Vector{Pair{Symbol, Float64}}:
-   :kabs => 9.664612290142436
-      :Q => 3.182280353785782
-    :kel => 0.20333675237278281
- :sigma1 => 0.20073592014870978
- :sigma2 => 0.15748031874469834
- :sigma3 => 0.11672689231044918
+ 6-element Vector{Pair{Symbol, Float64}}:
+   :kabs => 18.868605026704916
+      :Q => 4.043662480774219
+    :kel => 0.17104243648378176
+ :sigma1 => 0.020347955494158528
+ :sigma2 => 0.31561050699802246
+ :sigma3 => 0.5716026958426483
 ```
 
 To display the simulations with updated parameters values we can use `parameters_upd` argument in `sim`.
@@ -201,7 +211,7 @@ plot(res, yscale=:log10, vars=[:C1,:C2], ylims=(1e-3,1e2))
 ## Fitting with parameters table
 
 The parameters set that is used for `fit` can also be taken from tables.
-The description of table format can be found in [documentation](..table-formats/parameters/).
+The description of table format can be found in [documentation](../table-formats/parameters/).
 
 For example we will use the following table.
 
@@ -236,12 +246,12 @@ res_optim = fit(p, params_df)
 
 ```
 ┌ Warning: Scenario ":multiple_15" has no measurements. It will be excluded from fitting.
-└ @ HetaSimulator y:\HetaSimulator.jl\src\fit.jl:74
+└ @ HetaSimulator 
 FitResult with status :FTOL_REACHED
    Status: FTOL_REACHED
-   Optimal values: [:kabs => 9.696004253888853, :kel => 0.20422994254743634, :Q => 3.1651123659949176, :sigma1 => 0.15675092258640785, :sigma2 => 0.10972117348555543, :sigma3 => 0.0957743148928216]
-   Objective function value: 4164.577650364314
-   Objective function evaluations count: 108
+   Optimal values: [:kabs => 8.669590504032879, :kel => 0.2299120380231296, :Q => 3.386457652767808, :sigma1 => 0.010105725225267037, :sigma2 => 0.09951673713071268, :sigma3 => 0.6024808584834973]
+   OF value: -101.7645013649068
+   OF count: 417
 ```
 
 ## Additional optimization-specific options

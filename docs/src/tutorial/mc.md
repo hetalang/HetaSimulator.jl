@@ -60,15 +60,10 @@ model = platform.models[:nameless]
 ```
 
 ```
-Model containing 3 constants, 8 records, 1 switchers.
-    Use `constants(model)` to get the constants.
-    Use `records(model)` to get the records.
-    Use `switchers(model)` to get the switchers.
-  Use the following methods to get the default options:
-    - parameters(model)
-    - events_active(model)
-    - events_save(model)
-    - observables(model)
+Model contains 3 constant(s), 8 record(s), 1 switcher(s).
+   Constants: k1, k2, k3
+   Records: comp1, comp2, a, b, c, d, r1, r2
+   Switchers (events): sw1
 ```
 
 ## Single scenario simulations
