@@ -411,6 +411,8 @@ Use `optim` method to get optimal values.
 Use `object` method to get optimal objective function.
 
 Use `status` to get status.
+
+The optimal parameters can be saved in heta file, see [`save_as_heta`](@ref) method.
 """
 struct FitResult{L<:Real, I}
   obj::L
@@ -424,8 +426,8 @@ function Base.show(io::IO, m::MIME"text/plain", fr::FitResult)
   println(io, "FitResult with status :$(fr.status)")
   println(io, "   Status: $(fr.status)")
   println(io, "   Optimal values: $(fr.optim)")
-  println(io, "   Objective function value: $(fr.obj)")
-  println(io, "   Objective function evaluations count: $(fr.numevals)")
+  println(io, "   OF value: $(fr.obj)")
+  println(io, "   OF count: $(fr.numevals)")
 end
 
 optim(f::FitResult) = f.optim

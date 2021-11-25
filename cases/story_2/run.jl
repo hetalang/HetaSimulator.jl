@@ -43,6 +43,11 @@ fit2 = fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3], scenarios = [:withdata2])
 fit3 = fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3], scenarios = [:dataone,:withdata2])
 fit_all = fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3])
 
+# save_as_heta("optimal.heta", fit_all, append=false)
+# save_as_heta("optimal.heta", [:k1=>0.1,:k2=>0.2,:k3=>0.3])
+# save_as_heta("optimal.heta", (k1=0.1,k2=0.2,k3=0.3))
+optim(fit_all)
+
 ### Monte-Carlo Simulations
 
 mcsim1 = mc(platform, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000)

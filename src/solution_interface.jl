@@ -95,15 +95,6 @@ save_results(filepath::String, sim::AbstractResult) = save_results(filepath, Dat
 
 save_results(filepath::String, df::DataFrame) = CSV.write(filepath, df, delim=";")
 
-function save_optim(filepath::String, fr::FitResult)
-  optim_params = optim(fr)
-  open(filepath,"a") do io
-    for op in optim_params
-      println(io,"$(first(op)) = $(last(op));")
-    end
- end
-end
-
 #=FIXME
 function save_results(path::String, mcsim::MCResult; groupby::Symbol=:observables) 
   if groupby == :simulations
