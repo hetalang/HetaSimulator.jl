@@ -14,7 +14,7 @@ function save_as_heta(filepath::String, data; append = true)
   mode = append ? "a" : "w"
   open(filepath, mode) do io
     save_as_heta(io, data)
-    println(io, "")
+    # println(io, "") // empty string
   end
 end
 
