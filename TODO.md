@@ -4,11 +4,12 @@ _The rest of ideas and issues are posted in https://github.com/hetalang/heta-dis
 
 - `parameters` method in Scenario should get the scenario-level parameters but not the full list of constants
 - wrong get parameters from MCResults, Pair{Symbol, MCResults}, Vector{Pair{Symbol, MCResults}}
+- very slow show(::Model)
 
 ## features
 
+- sim() and mc() are compiled independently
 - allow using both saveat and tspan, move tspan to sim
-- remove unnecessary rules from events
 - legend outside of plot
 - split plots horizontally
 - checking `atStart: true`, `atStart: false` inside Events
@@ -16,10 +17,11 @@ _The rest of ideas and issues are posted in https://github.com/hetalang/heta-dis
 
 ## ideas
 
+- Explicit simulations, ExplicitScenario/NonODEScenario ?
 - extended chain syntax
 - read Scenario from Heta
 - add CI estimation
-- checking units while load_platform
+- checking units when `load_platform`
 - `OrderedDict` for storing SimResults
 - checking Model version
 - implement optimization of `mc`: online statistics, auto-stop by criterion

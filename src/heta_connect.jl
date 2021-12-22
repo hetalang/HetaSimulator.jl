@@ -19,6 +19,16 @@ heta_update() = run(`$NPM_PATH i -g heta-compiler --prefix $NODE_DIR`)
 # install particular version
 heta_update(version::String) = run(`$NPM_PATH i -g heta-compiler@$version --prefix $NODE_DIR`)
 # install from GitHub's repository
+
+"""
+    heta_update_dev(branch::String = "master")
+
+Installs heta-compiler from GitHub's repository <https://github.com/hetalang/heta-compiler>.
+
+Arguments:
+
+- `branch` : branch to install, default is "master".  
+"""
 heta_update_dev(branch::String = "master") = run(`$NPM_PATH i -g https://github.com/hetalang/heta-compiler.git\#$branch --prefix $NODE_DIR`)
 
 """

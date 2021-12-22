@@ -20,7 +20,7 @@ end
 models(p::Platform) = p.models
 scenarios(p::Platform) = p.scenarios
 
-function Base.show(io::IO, ::MIME"text/plain", p::Platform)
+function Base.show(io::IO, mime::MIME"text/plain", p::Platform)
   models_names = join(keys(p.models), ", ")
   scn_names = join(keys(p.scenarios), ", ")
 
@@ -81,7 +81,7 @@ observables(m::Model) = begin # observables
 end
 
 # auxilary function to display first n components of vector
-function print_lim(x::Union{Vector, Tuple}, n::Int) 
+function print_lim(x::Union{Vector, Tuple}, n::Int)
   first_n = ["$y" for y in first(x, n)]
   if length(x) > n
     push!(first_n, "...")
@@ -92,7 +92,7 @@ function print_lim(::Nothing, n::Int)
   return "-"
 end
 
-function Base.show(io::IO, ::MIME"text/plain", m::Model)
+function Base.show(io::IO, mime::MIME"text/plain", m::AbstractModel)
   const_str = print_lim(constants(m), 10)
   record_str = print_lim(records(m), 10)
   switchers_str = print_lim(switchers(m), 10)
@@ -165,7 +165,7 @@ measurements(scn::Scenario) = scn.measurements
 # events_save(scn::Scenario)
 # observables(scn::Scenario)
 
-function Base.show(io::IO, ::MIME"text/plain", scn::Scenario)
+function Base.show(io::IO, mime::MIME"text/plain", scn::Scenario)
   saveat_str = print_lim(saveat(scn), 10)
   parameters_str = print_lim(
     keys(parameters(scn)),
@@ -258,7 +258,7 @@ measurements(sr::SimResult) = sr.scenario.measurements
 
 @inline Base.length(sr::SimResult) = length(sr.sim)
 
-function Base.show(io::IO, m::MIME"text/plain", sr::SimResult)
+function Base.show(io::IO, mime::MIME"text/plain", sr::SimResult)
   dim2 = length(keys(sr.sim[1])) # number of observables
   dimentions_str = "$(length(sr))x$dim2"
   times_str = print_lim(times(sr), 10)
@@ -272,7 +272,7 @@ function Base.show(io::IO, m::MIME"text/plain", sr::SimResult)
   println(io, "    Parameters: $(parameters_str)")
 end
 
-function Base.show(io::IO, m::MIME"text/plain", srp::Pair{Symbol, S}, short::Bool = false) where S<:SimResult
+function Base.show(io::IO, mime::MIME"text/plain", srp::Pair{Symbol, S}, short::Bool = false) where S<:SimResult
   sr = last(srp)
   dim2 = length(keys(sr.sim[1])) # number of observables
   dimentions_str = "$(length(sr))x$dim2"
@@ -281,11 +281,11 @@ function Base.show(io::IO, m::MIME"text/plain", srp::Pair{Symbol, S}, short::Boo
   println(io, "    :$(first(srp)) => $dimentions_str SimResult with status :$(status(sr)).")
 end
 
-function Base.show(io::IO, m::MIME"text/plain", vector::Vector{Pair{Symbol, S}}) where S<:SimResult
+function Base.show(io::IO, mime::MIME"text/plain", vector::Vector{Pair{Symbol, S}}) where S<:SimResult
   println(io, "$(length(vector))-element Vector{Pair{Symbol, SimResult}}") 
 
   for x in vector
-    show(io, m, x, true)
+    show(io, mime, x, true)
   end
 end
 
@@ -326,7 +326,7 @@ parameters(mcr::MCResult) = [parameters(mcr[i]) for i in 1:length(mcr)]
 vals(mcr::MCResult) = [vals(mcr[i]) for i in 1:length(mcr)]
 status_summary(mcr::MCResult) = counter([s.status for s in mcr.sim])
 
-function Base.show(io::IO, m::MIME"text/plain", mcr::MCResult, short::Bool = false)
+function Base.show(io::IO, mime::MIME"text/plain", mcr::MCResult, short::Bool = false)
   # dimentions
   dim0 = length(mcr)
   if mcr.saveat 
@@ -352,17 +352,17 @@ function Base.show(io::IO, m::MIME"text/plain", mcr::MCResult, short::Bool = fal
   end
 end
 
-function Base.show(io::IO, m::MIME"text/plain", mcrp::Pair{Symbol, S}, short=false) where S<:MCResult 
+function Base.show(io::IO, mime::MIME"text/plain", mcrp::Pair{Symbol, S}, short=false) where S<:MCResult 
   short || println(io, "Pair{Symbol, MCResult}")
   print(io, "    :$(first(mcrp)) => ")
-  Base.show(io, m, last(mcrp), true)
+  Base.show(io, mime, last(mcrp), true)
 end
 
-function Base.show(io::IO, m::MIME"text/plain", vector::Vector{Pair{Symbol, S}}) where S<:MCResult
+function Base.show(io::IO, mime::MIME"text/plain", vector::Vector{Pair{Symbol, S}}) where S<:MCResult
   println(io, "$(length(vector))-element Vector{Pair{Symbol, MCResult}}") 
 
   for x in vector
-    show(io, m, x, true)
+    show(io, mime, x, true)
   end
 end
 
@@ -421,7 +421,7 @@ struct FitResult{L<:Real, I}
   numevals::I
 end
 
-function Base.show(io::IO, m::MIME"text/plain", fr::FitResult)
+function Base.show(io::IO, mime::MIME"text/plain", fr::FitResult)
   
   println(io, "FitResult with status :$(fr.status)")
   println(io, "   Status: $(fr.status)")
