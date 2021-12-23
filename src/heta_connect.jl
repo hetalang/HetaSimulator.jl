@@ -9,7 +9,7 @@ const MODEL_NAME = "model.jl"
 """
     heta_update(version::String)
 
-Installs heta-compiler from NPM.
+To install or update heta-compiler from NPM.
 
 Arguments:
 
@@ -33,9 +33,10 @@ heta_update_dev(branch::String = "master") = run(`$NPM_PATH i -g https://github.
 
 """
     heta_build(
-      heta_index::AbstractString;
+      target_dir::AbstractString;
       declaration::String = "platform",
       skip_export::Bool = false,
+      units_check::Bool = false,
       log_mode::String = "error",
       debug::Bool = false,
       julia_only::Bool = false,
@@ -52,9 +53,10 @@ https://hetalang.github.io/#/heta-compiler/cli-references?id=running-build-with-
 
 Arguments:
 
-- `heta_index` : path to `heta.index` file
+- `target_dir` : path to a Heta platform directory
 - `declaration` : path to declaration file. Default is `"platform"`
 - `skip_export` : if set to `true` no files will be created. Default is `false`
+- `units_check` : if set to `true` units will be checked for the consistancy
 - `log_mode` : log mode. Default is `"error"`
 - `debug` : turn on debug mode. Default is `false`
 - `julia_only` : export only julia-based model. Default is `false`
@@ -64,9 +66,10 @@ Arguments:
 - `type` : type of the source file. Default is `"heta"`
 """
 function heta_build(
-  heta_index::AbstractString;
+  target_dir::AbstractString;
   declaration::String = "platform",
   skip_export::Bool = false,
+  units_check::Bool = false,
   log_mode::String = "error",
   debug::Bool = false,
   julia_only::Bool = false,
@@ -81,18 +84,19 @@ function heta_build(
   !isdir(heta_build_path) && throw("Heta compiler is not installed. Run `heta_update()` to install it.")
 
   # convert to absolute path
-  _heta_index = abspath(heta_index)
+  _target_dir = abspath(target_dir)
 
   # check if the dir contains src, index.heta, platform.json
-  #isdir("$_heta_index/src") && throw("src directory not found in $_heta_index")
-  #!isfile("$_heta_index/index.heta") && throw("index.heta file not found in $_heta_index")
-  #!isfile("$_heta_index/platform.json") && throw("platform.json file not found in $_heta_index")
+  #isdir("$_target_dir/src") && throw("src directory not found in $_target_dir")
+  #!isfile("$_target_dir/index.heta") && throw("index.heta file not found in $_target_dir")
+  #!isfile("$_target_dir/platform.json") && throw("platform.json file not found in $_target_dir")
 
   # cmd options supported by heta-compiler
   options_array = String[]
 
   declaration != "platform" && push!(options_array, "--declaration", declaration)
   skip_export && push!(options_array, "--skip-export")
+  units_check && push!(options_array, "--units-check")
   log_mode != "error" && push!(options_array, "--log-mode", log_mode)
   debug && push!(options_array, "--debug")
   julia_only && push!(options_array, "--julia-only")
@@ -110,14 +114,14 @@ function heta_build(
   end
   =#
 
-  run_build = run(ignorestatus(`$NODE_DIR/node $heta_build_path/bin/heta-build.js $options_array $_heta_index`))
+  run_build = run(ignorestatus(`$NODE_DIR/node $heta_build_path/bin/heta-build.js $options_array $_target_dir`))
   return run_build.exitcode
 end
 
 
 """
     load_platform(  
-      heta_index::AbstractString;
+      target_dir::AbstractString;
       rm_out::Bool = true,
       julia_only::Bool = true, 
       dist_dir::String = ".",
@@ -133,31 +137,29 @@ https://hetalang.github.io/#/heta-compiler/cli-references?id=running-build-with-
 
 Arguments:
 
-- `heta_index` : path to `heta.index` file
+- `target_dir` : path to a Heta platform directory
 - `rm_out` : should the file with Julia model be removed after the model is loaded. Default is `true`
-- `julia_only` : export only julia-based model. Default is `true`
 - `dist_dir` : directory path, where to write distributives to. Default is `"."`
 - kwargs : other arguments supported by `heta_build`
 
 """
 function load_platform(
-  heta_index::AbstractString;
+  target_dir::AbstractString;
   rm_out::Bool = true,
-  julia_only::Bool = true, 
   dist_dir::String = ".",
   kwargs...
 )
   # convert heta model to julia 
-  build_exitcode = heta_build(heta_index; julia_only, dist_dir, kwargs...)
+  build_exitcode = heta_build(target_dir; julia_only = true, dist_dir = dist_dir, kwargs...)
     
   # check the exitcode (0 - success, 1 - failure) 
   build_exitcode == 1 && throw("Compilation errors. Likely there is an error in the code of the model. See logs")
     
   #convert to absolute path
-  _heta_index = abspath(heta_index)
+  _target_dir = abspath(target_dir)
 
   # load model to Main
-  return load_jlplatform("$_heta_index/$MODEL_DIR/$MODEL_NAME"; rm_out)
+  return load_jlplatform("$_target_dir/$MODEL_DIR/$MODEL_NAME"; rm_out)
 end
 
 """
