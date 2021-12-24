@@ -27,6 +27,7 @@ XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"
 CSV = "0.8.5"
 DiffEqBase = "6.78"
 LabelledArrays = "1.6.1"
+ProgressMeter = "1"
 Sundials = "4.7.0"
 julia = "1.6"
 
