@@ -1,5 +1,6 @@
 /cases/*/dist
 /cases/*/_julia
+Manifest.toml
 
 /drafts
 cases/story_3/st3_tests.jl
