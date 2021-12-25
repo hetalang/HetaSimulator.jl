@@ -404,11 +404,11 @@ function DiffEqBase.EnsembleAnalysis.EnsembleSummary(sim::MCResult,
 end
 
 
-generate_cons(vp::Vector{P},i)  where P<:Pair = NamedTuple([k=>generate_cons(v,i) for (k,v) in vp])
+generate_cons(vp::AbstractVector{P},i)  where P<:Pair = NamedTuple([k=>generate_cons(v,i) for (k,v) in vp])
 generate_cons(nt::NamedTuple,i) = NamedTuple{keys(nt)}([generate_cons(v,i) for v in nt])
 generate_cons(v::Distribution,i) = rand(v)
 generate_cons(v::Real,i) = v
-generate_cons(v::Vector{R},i) where R<:Float64 = v[i]
+generate_cons(v::AbstractVector{R},i) where R<:Float64 = v[i]
 
 """
     read_mcvecs(filepath::String)
