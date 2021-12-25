@@ -23,6 +23,7 @@ Arguments:
 - `params` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
 - `verbose` : print iteration progress. Default is `false`
+- `progress_bar` : show progress bar. Default is `false`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -34,6 +35,7 @@ function mc(
   params::Vector{P},
   num_iter::Int;
   verbose=false,
+  progress_bar=false,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
@@ -45,12 +47,12 @@ function mc(
   init_func = scenario.init_func
   params_nt = NamedTuple(params)
 
-  progress_on = true #(parallel_type == EnsembleSerial()) # tmp fix
-  p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled = progress_on)
+  #(parallel_type == EnsembleSerial()) # tmp fix
+  p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled = progress_bar)
   
   function prob_func(prob,i,repeat)
     verbose && println("Processing iteration $i")
-    parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true)
+    progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
     update_init_values(prob, init_func, generate_cons(params_nt,i))
   end
 
@@ -66,17 +68,7 @@ function mc(
     #reduction = reduction_func
   )
 
-  if parallel_type != EnsembleDistributed()
-    solution = solve(prob, alg, parallel_type;
-      trajectories = num_iter,
-      reltol = reltol,
-      abstol = abstol,
-      save_start = false,
-      save_end = false,
-      save_everystep = false,
-      kwargs...
-    )
-  else
+  if progress_bar && (parallel_type == EnsembleDistributed())
     @sync begin
       @async while take!(progch)
         next!(p)
@@ -94,6 +86,16 @@ function mc(
         put!(progch, false)
       end
     end
+  else
+    solution = solve(prob, alg, parallel_type;
+      trajectories = num_iter,
+      reltol = reltol,
+      abstol = abstol,
+      save_start = false,
+      save_end = false,
+      save_everystep = false,
+      kwargs...
+    )
   end
 
   return MCResult(solution.u, has_saveat(scenario), scenario)
@@ -218,6 +220,7 @@ Arguments:
 - `params` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
 - `verbose` : print iteration progress. Default is `false`
+- `progress_bar` : show progress bar. Default is `false`
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -229,6 +232,7 @@ function mc(
   params::Vector{PP},
   num_iter::Int;
   verbose=false,
+  progress_bar=false,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
@@ -243,12 +247,12 @@ function mc(
   iter = collect(Iterators.product(1:lp,1:lc))
 
 
-  p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled=true)
+  p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled=progress_bar)
 
   function prob_func(prob,i,repeat)
     iter_i = iter[i]
     verbose && println("Processing scenario $(iter_i[2]) iteration $(iter_i[1])")
-    parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true)
+    progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
     prob_i = last(scenario_pairs[iter_i[2]]).prob
     init_i = last(scenario_pairs[iter_i[2]]).init_func
     update_init_values(prob_i, init_i, params_pregenerated[iter_i[1]])
@@ -266,17 +270,7 @@ function mc(
     #reduction = reduction_func
   )
 
-  if parallel_type != EnsembleDistributed()
-    solution = solve(prob, alg, parallel_type;
-      trajectories = lp*lc,
-      reltol = reltol,
-      abstol = abstol,
-      save_start = false,
-      save_end = false,
-      save_everystep = false,
-      kwargs...
-    )
-  else
+  if progress_bar && (parallel_type == EnsembleDistributed())
     @sync begin
       @async while take!(progch)
         next!(p)
@@ -294,6 +288,16 @@ function mc(
         put!(progch, false)
       end
     end
+  else
+    solution = solve(prob, alg, parallel_type;
+      trajectories = lp*lc,
+      reltol = reltol,
+      abstol = abstol,
+      save_start = false,
+      save_end = false,
+      save_everystep = false,
+      kwargs...
+    )
   end
 
   ret = Vector{Pair{Symbol,MCResult}}(undef, lc)
