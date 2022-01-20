@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.4.3
+
+- remove manifest file
+- units checking support
+
 ## 0.4.2
 
 - add global sensitivity for `MCResult`: `gsa`
