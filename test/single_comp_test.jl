@@ -47,9 +47,9 @@ cs2 = sim([:one=>scn1,:two=>scn2], parameters_upd=[:k1=>0.03])
 
 # Monte-Carlo simulation tests
 mciter = 100
-mc1 =  mc(model, [:k1=>Normal(0.02,1e-3)], mciter; tspan = (0., 200.), observables=[:r1])
+mc1 = mc(Scenario(model, tspan = (0., 200.), observables=[:r1]), [:k1=>Normal(0.02,1e-3)], mciter)
 mc2 = mc([:one=>scn1,:two=>scn2], [:k1=>Normal(0.02,1e-3)], mciter)
-gsar = gsa(mc1,200)
+gsar = gsa(mc1, 200)
 @test typeof(mc1) <: HetaSimulator.MCResult
 @test test_show(mc1)
 @test typeof(mc2) <: Vector{Pair{Symbol, HetaSimulator.MCResult}}

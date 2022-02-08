@@ -4,7 +4,7 @@ const progch = RemoteChannel(()->Channel{Bool}(), 1)
 """
     mc(scenario::Scenario,
       params::Vector{<:Pair},
-      num_iter::Int64;
+      num_iter::Int;
       verbose=false,
       alg=DEFAULT_ALG,
       reltol=DEFAULT_SIMULATION_RELTOL,
@@ -104,7 +104,7 @@ end
 """
     mc(scenario::Scenario,
       params::DataFrame,
-      num_iter::Int64;
+      num_iter::Int;
       kwargs...
     )
 
@@ -120,15 +120,14 @@ Arguments:
 - kwargs : other solver related arguments supported by `mc(scenario::Scenario, params::Vector, num_iter::Int64)`
 """
 function mc(
-  scenario::Scenario,
+  scenario::Union{Scenario, Vector{Pair{Symbol,Scenario}}, Vector{Scenario}, Platform},
   params::DataFrame;
-  num_iter::Int= size(params)[1],
+  num_iter::Int = size(params)[1],
   kwargs...
 ) 
   cons = keys(parameters(scenario))
   params_pairs = Pair[]
   
-
   for pstr in names(params)
     psym = Symbol(pstr)
     @assert (psym in cons) "$psym is not found in models constants."   
@@ -136,64 +135,6 @@ function mc(
   end
 
   return mc(scenario, params_pairs, num_iter; kwargs...)
-end
-
-"""
-    mc(model::Model,
-      params::Vector{<:Pair},
-      num_iter::Int64;
-      measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
-      events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
-      events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}}=(true,true), 
-      observables::Union{Nothing,Vector{Symbol}} = nothing,
-      saveat::Union{Nothing,AbstractVector} = nothing,
-      tspan::Union{Nothing,Tuple} = nothing,
-      save_scope::Bool=false,
-      time_type::DataType=Float64,
-      kwargs...
-    )
-
-Run Monte-Carlo simulations with `Model`. Returns [`MCResult`](@ref) type.
-
-Example: `mc(model, [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
-
-Arguments:
-
-- `model` : model of type [`Model`](@ref)
-- `params` : parameters variation setup
-- `num_iter` : number of Monte-Carlo iterations
-- `measurements` : `Vector` of measurements. Default is empty vector 
-- `events_active` : `Vector` of `Pair`s containing events' names and true/false values. Overwrites default model's values. Default is empty vector 
-- `events_save` : `Tuple` or `Vector{Tuple}` marking whether to save solution before and after event. Default is `(true,true)` for all events
-- `observables` : names of output observables. Overwrites default model's values. Default is empty vector
-- `saveat` : time points, where solution should be saved. Default `nothing` values stands for saving solution at timepoints reached by the solver 
-- `tspan` : time span for the ODE problem
-- `save_scope` : should scope be saved together with solution. Default is `false`
-- kwargs : other solver related arguments supported by `mc(scenario::Scenario, params::Vector, num_iter::Int64)`
-"""
-function mc(
-  model::Model,
-  params::Vector{P},
-  num_iter::Int;
-
-  ## arguments for Scenario(::Model,...)
-  measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
-  events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
-  events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}}=(true,true), 
-  observables::Union{Nothing,Vector{Symbol}} = nothing,
-  saveat::Union{Nothing,AbstractVector} = nothing,
-  tspan::Union{Nothing,Tuple} = nothing,
-  save_scope::Bool=false,
-  time_type::DataType=Float64,
-
-  kwargs...
-) where P<:Pair
-
-  scenario = Scenario(
-    model; measurements,
-    events_active, events_save, observables, saveat, tspan, save_scope, time_type)
-
-  return mc(scenario, params, num_iter; kwargs...)
 end
 
 # multi scenario Monte-Carlo

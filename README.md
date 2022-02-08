@@ -1,4 +1,5 @@
 [![Heta project](https://img.shields.io/badge/%CD%B1-Heta_project-blue)](https://hetalang.github.io/)
+[![version](https://juliahub.com/docs/HetaSimulator/version.svg)](https://juliahub.com/ui/Packages/HetaSimulator/IIE0h)
 [![GitHub issues](https://img.shields.io/github/issues/hetalang/HetaSimulator.jl.svg)](https://GitHub.com/hetalang/HetaSimulator.jl/issues/)
 [![Coverage Status](https://coveralls.io/repos/github/hetalang/HetaSimulator.jl/badge.svg?branch=master)](https://coveralls.io/github/hetalang/HetaSimulator.jl?branch=master)
 [![api-docs](https://img.shields.io/website?down_color=yellow&label=api-docs&up_color=green&url=https%3A%2F%2Fhetalang.github.io%2FHetaSimulator.jl%2Fdev%2F)](https://hetalang.github.io/HetaSimulator.jl/dev)
@@ -21,13 +22,13 @@ Internally HetaSimulator utilizes the facilities of OpenSource projects like [Ju
 
 ## Installation
 
-It is assumed that you have **Julia** v1.6 installed. The latest Julia release can be downloaded from [julialang.org](https://julialang.org/downloads/)
+It is assumed that you have **Julia** installed. The latest Julia release can be downloaded from [julialang.org](https://julialang.org/downloads/)
 
 To install or update HetaSimulator and Heta compiler run the code below in Julia environment:
 
 ```julia
 julia> ]
-(@v1.6) pkg> add https://github.com/hetalang/HetaSimulator.jl.git
+(@v1.6) pkg> add HetaSimulator
 julia> using HetaSimulator
 julia> heta_update() # installs "Heta compiler" in NodeJS
 ```
@@ -87,13 +88,6 @@ df = DataFrame(results)
 
 *To read more about available functions, see the [documentation](https://hetalang.github.io/HetaSimulator.jl/dev/)*
 
-## Known issues and limitations
-
-- Currently the HetaSimulator package is not published on Julia repository, use the direct link to install 
-   ```julia
-   ] add https://github.com/hetalang/HetaSimulator.jl
-   ```
-
 ## Getting help
 
 - Read the [docs](https://hetalang.github.io/HetaSimulator.jl/dev/)
@@ -110,4 +104,4 @@ df = DataFrame(results)
 
 This package is distributed under the terms of the [MIT License](./LICENSE).
 
-Copyright 2020-2021, InSysBio LLC
+Copyright 2020-2022, InSysBio LLC

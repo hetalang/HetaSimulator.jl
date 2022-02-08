@@ -1,9 +1,15 @@
 # Change Log
 
-## 0.4.3
+## 0.4.5
+
+- add support for `mc(..., params::DataFrame, ...)` where the first argument is vector or platform
+
+## 0.4.4
 
 - remove manifest file
 - units checking support
+
+## 0.4.3 - skipped
 
 ## 0.4.2
 
