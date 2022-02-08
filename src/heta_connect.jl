@@ -6,19 +6,20 @@ const NODE_DIR = dirname(nodejs_cmd().exec[1])
 const MODEL_DIR = "_julia"
 const MODEL_NAME = "model.jl"
 
+# heta-compiler supported version
+const HETA_COMPILER_SUPPORTED = "0.6.10"
+
 """
-    heta_update(version::String)
+    heta_update(version::String = HETA_COMPILER_SUPPORTED)
 
 To install or update heta-compiler from NPM.
 
 Arguments:
 
-- `version` : `heta compiler` version. If the value is not provided, `heta_update` installs the latest version of `heta compiler` 
+- `version` : `heta compiler` version. If the value is not provided, `heta_update` installs
+   the latest version of `heta compiler` compartible with HetaSimulator.
 """
-heta_update() = run(`$NPM_PATH i -g heta-compiler --prefix $NODE_DIR`)
-# install particular version
-heta_update(version::String) = run(`$NPM_PATH i -g heta-compiler@$version --prefix $NODE_DIR`)
-# install from GitHub's repository
+heta_update(version::String=HETA_COMPILER_SUPPORTED) = run(`$NPM_PATH i -g heta-compiler@$version --prefix $NODE_DIR`)
 
 """
     heta_update_dev(branch::String = "master")

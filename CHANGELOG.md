@@ -3,6 +3,8 @@
 ## 0.4.5
 
 - add support for `mc(..., params::DataFrame, ...)` where the first argument is vector or platform
+- use `NaNMath` functions inside model
+- install the latest supported version of "heta compiler"
 
 ## 0.4.4
 
