@@ -51,6 +51,9 @@ module HetaSimulator
   include("gsa.jl")
   include("save_as_heta.jl")
 
+  
+  heta_update()
+
   export heta_update, heta_update_dev, heta_build, load_platform, load_jlplatform, load_jlmodel
   export Platform, Model, Scenario, Params
   export read_scenarios, add_scenarios!
