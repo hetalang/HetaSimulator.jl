@@ -14,7 +14,7 @@ The latest documentation can be found here: <https://hetalang.github.io/HetaSimu
 
 ## Introduction
 
-Heta language is a domain-specific modeling language (DSL) for dynamic quantitative models used in quantitative systems pharmacology (QSP) and systems biology (SB). Heta code and tabular formats can be translated into [variety of formats](https://hetalang.github.io/#/heta-compiler/?id=supported-tools) like Simbiology, Matlab, mrgsolve, DBSolve and many others.
+Heta language is a domain-specific modeling language (DSL) for dynamic models used in quantitative systems pharmacology (QSP) and systems biology (SB). The Heta code and the tables can be translated into [variety of formats](https://hetalang.github.io/#/heta-compiler/?id=supported-tools) like Simbiology, Matlab, mrgsolve, DBSolve and many others.
 
 This package provides the simulation engines for the Heta-based models and modeling platforms to be run in Julia. A QSP model can be directly run using the HetaSimulator without additional tools. The ODE system in general form can also be run with HetaSimulator.
 
@@ -29,13 +29,13 @@ To install or update HetaSimulator and Heta compiler run the code below in Julia
 ```julia
 julia> ]
 (@v1.6) pkg> add HetaSimulator
-julia> using HetaSimulator
-julia> heta_update() # installs "Heta compiler" in NodeJS
 ```
 
-Internally HetaSimulator uses Heta compiler which is installed inside the package. If you want to update it to the last version just run.
+Internally HetaSimulator uses Heta compiler. 
+Sometimes it is required to update the compiler's version.
 ```julia
-julia> heta_update() # updates to the latest stable version
+# update heta compiler for v0.6.10
+julia> heta_update("0.6.10") 
 ```
 
 ## Basic usage

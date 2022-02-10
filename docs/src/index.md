@@ -12,7 +12,7 @@ __The main features__ of the package are
 - reach capabilities for estimating parameters' values based on experimental datasets
 - support for working with multiple models including simultaneous fitting
 - parallel simulations
-- storage of data and scenarios the unified formats
+- storage of data and scenarios in the unified formats
 - import of datasets and scenarios from CSV/Excel tables 
 - full Heta standard support
 - storing models, scenarios and data in the `Platform` object for easy management of platform components
@@ -20,20 +20,21 @@ __The main features__ of the package are
 
 ## Installation
 
-It is assumed that you have **Julia** v1.6 installed. The latest Julia release can be downloaded from [julialang.org](https://julialang.org/downloads/)
+It is assumed that you have **Julia** installed. 
+The latest Julia release can be downloaded from [julialang.org](https://julialang.org/downloads/)
 
-To install or update HetaSimulator and Heta compiler run the code below in Julia environment:
+To install or update HetaSimulator run the code below in Julia environment:
 
 ```julia
 julia> ]
-(@v1.6) pkg> add https://github.com/hetalang/HetaSimulator.jl.git
-julia> using HetaSimulator
-julia> heta_update() # installs "Heta compiler" in NodeJS
+(@v1.6) pkg> add HetaSimulator
 ```
 
-Internally HetaSimulator uses Heta compiler which must be installed inside the package. If you want to update it to the last version just run.
+Internally HetaSimulator uses Heta compiler. 
+Sometimes it is required to update the compiler's version.
 ```julia
-julia> heta_update() # updates to the latest stable version
+# update heta compiler for v0.6.10
+julia> heta_update("0.6.10") 
 ```
 
 ## Basic usage
@@ -98,13 +99,6 @@ The user can perform the following three operations with both `Model`, `Scenario
 
 See documentation for detailed overview of **HetaSimulator** types and functions' arguments.
 
-## Known issues and limitations
-
-- Currently the HetaSimulator package is not published on Julia repository, use the direct link to install 
-   ```julia
-   ] add https://github.com/hetalang/HetaSimulator.jl
-   ```
-
 ## Getting help
 
 - Read the [docs](https://hetalang.github.io/HetaSimulator.jl/dev/)
@@ -115,7 +109,7 @@ See documentation for detailed overview of **HetaSimulator** types and functions
 
 This package is distributed under the terms of the **MIT License**.
 
-Copyright 2020-2021, InSysBio LLC
+Copyright 2020-2022, InSysBio LLC
 
 ## Authors and history
 

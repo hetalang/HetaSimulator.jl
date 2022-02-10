@@ -7,7 +7,7 @@ _Before start be sure you have the latest __HetaSimulator.jl__ version. If you d
 
 ```julia
 ] # switch to Pkg mode
-add https://github.com/hetalang/HetaSimulator.jl
+add HetaSimulator
 ```
 
 ## Working example
