@@ -66,13 +66,13 @@ function (affect!::SavingEvent)(integrator,force_save = false; scope = :ode_)
               integrator(curu,curt) # inplace since save_func allocates
           end
           copyat_or_push!(affect!.saved_values.t, affect!.saveiter, curt)
-          affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope, Val{false})
+          affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope)
           copyat_or_push!(affect!.saved_values.u, affect!.saveiter,
                           affect!.save_func(curu, curt, integrator),Val{false})
       else # ==t, just save
           just_saved = true
           copyat_or_push!(affect!.saved_values.t, affect!.saveiter, integrator.t)
-          affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope, Val{false})
+          affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope)
           copyat_or_push!(affect!.saved_values.u, affect!.saveiter, affect!.save_func(integrator.u, integrator.t, integrator),Val{false})
       end
   end
@@ -82,7 +82,7 @@ function (affect!::SavingEvent)(integrator,force_save = false; scope = :ode_)
 
       affect!.saveiter += 1
       copyat_or_push!(affect!.saved_values.t, affect!.saveiter, integrator.t)
-      affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope, Val{false})
+      affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope)
       copyat_or_push!(affect!.saved_values.u, affect!.saveiter, affect!.save_func(integrator.u, integrator.t, integrator),Val{false})
   end
   u_modified!(integrator, false)
@@ -128,7 +128,7 @@ function save_timepoint!(integrator::DiffEqBase.AbstractODEIntegrator, scope=:od
   affect! = integrator.opts.callback.discrete_callbacks[1].affect!
   affect!.saveiter += 1
   copyat_or_push!(affect!.saved_values.t, affect!.saveiter, integrator.t)
-  affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope, Val{false})
+  affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope)
   copyat_or_push!(affect!.saved_values.u, affect!.saveiter, affect!.save_func(integrator.u, integrator.t, integrator),Val{false})
 end
 
@@ -152,12 +152,12 @@ function save_after_step!(integrator, scope = :ode_)
           integrator(curu,curt) # inplace since save_func allocates
       end
       copyat_or_push!(affect!.saved_values.t, affect!.saveiter, curt)
-      affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope, Val{false})
+      affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope)
       copyat_or_push!(affect!.saved_values.u, affect!.saveiter,
                       affect!.save_func(curu, curt, integrator),Val{false})
     else # ==t, just save
       copyat_or_push!(affect!.saved_values.t, affect!.saveiter, integrator.t)
-      affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope, Val{false})
+      affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope)
       copyat_or_push!(affect!.saved_values.u, affect!.saveiter, affect!.save_func(integrator.u, integrator.t, integrator),Val{false})
     end   
   end 
