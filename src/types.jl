@@ -326,7 +326,7 @@ parameters(mcr::MCResult) = [parameters(mcr[i]) for i in 1:length(mcr)]
 vals(mcr::MCResult) = [vals(mcr[i]) for i in 1:length(mcr)]
 status_summary(mcr::MCResult) = counter([s.status for s in mcr.sim])
 
-function Base.show(io::IO, mime::MIME"text/plain", mcr::MCResult, short::Bool = false)
+function Base.show(io::IO, mime::MIME"text/plain", mcr::MCResult{S,C}, short::Bool = false) where {S<:Simulation, C}
   # dimentions
   dim0 = length(mcr)
   if mcr.saveat 
@@ -346,10 +346,14 @@ function Base.show(io::IO, mime::MIME"text/plain", mcr::MCResult, short::Bool = 
   
   println(io, "$(dimentions_str) MCResult with status $(status)" )
   if !short
-  println(io, "    Solution status: $(status)")
-  println(io, "    Observables (outputs): $(outputs_str)")
-  println(io, "    Parameters: $(parameters_str)")
+    println(io, "    Solution status: $(status)")
+    println(io, "    Observables (outputs): $(outputs_str)")
+    println(io, "    Parameters: $(parameters_str)")
   end
+end
+
+function Base.show(io::IO, mime::MIME"text/plain", mcr::MCResult{S,C}, short::Bool = false) where {S, C}
+  println(io, "Reduced MCResults" )
 end
 
 function Base.show(io::IO, mime::MIME"text/plain", mcrp::Pair{Symbol, S}, short=false) where S<:MCResult 

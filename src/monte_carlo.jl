@@ -1,6 +1,10 @@
 # RemoteChannel used for progress monitoring in parallel setup
 const progch = RemoteChannel(()->Channel{Bool}(), 1)
 
+# as in SciMLBase
+DEFAULT_REDUCTION(u,data,I) = append!(u, data), false
+DEFAULT_OUTPUT(sol,i) = sol
+
 """
     mc(scenario::Scenario,
       params::Vector{<:Pair},
@@ -27,6 +31,8 @@ Arguments:
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
+- `output_func` : the function determines what is saved from the solution to the output array. Defaults to saving the solution itself
+- `reduction_func` : this function determines how to reduce the data in each batch. Defaults to appending the data from the batches
 - `parallel_type` : parallel setup. See SciML docs for details. Default is no parallelism: EnsembleSerial()
 - kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
@@ -39,6 +45,8 @@ function mc(
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
+  output_func=DEFAULT_OUTPUT,
+  reduction_func = DEFAULT_REDUCTION,
   parallel_type=EnsembleSerial(),
   kwargs...
 ) where P<:Pair
@@ -57,15 +65,15 @@ function mc(
   end
 
   params_names = collect(keys(params_nt))
-  function output_func(sol, i)
+  function _output(sol, i)
     sim = build_results(sol, params_names)
-    (sim, false)
+    (output_func(sim, i), false)
   end
 
   prob = EnsembleProblem(prob0;
     prob_func = prob_func,
-    output_func = output_func,
-    #reduction = reduction_func
+    output_func = _output,
+    reduction = reduction_func
   )
 
   if progress_bar && (parallel_type == EnsembleDistributed())
@@ -165,6 +173,8 @@ Arguments:
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
+- `output_func` : the function determines what is saved from the solution to the output array. Defaults to saving the solution itself
+- `reduction_func` : this function determines how to reduce the data in each batch. Defaults to appending the data from the batches
 - `parallel_type` : parallel setup. See SciML docs for details. Default is no parallelism: EnsembleSerial()
 - kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
@@ -177,6 +187,8 @@ function mc(
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
+  output_func=DEFAULT_OUTPUT,
+  reduction_func = DEFAULT_REDUCTION,
   parallel_type=EnsembleSerial(),
   kwargs...
 ) where {CP<:Pair, PP<:Pair}
@@ -200,15 +212,15 @@ function mc(
   end
 
   params_names = collect(keys(params_nt))
-  function output_func(sol, i)
+  function _output(sol, i)
     sim = build_results(sol, params_names)
-    (sim, false)
+    (output_func(sim, i), false)
   end
 
   prob = EnsembleProblem(last(scenario_pairs[1]).prob;
     prob_func = prob_func,
-    output_func = output_func,
-    #reduction = reduction_func
+    output_func = _output,
+    reduction = reduction_func
   )
 
   if progress_bar && (parallel_type == EnsembleDistributed())

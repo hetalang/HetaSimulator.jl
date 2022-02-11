@@ -47,8 +47,20 @@ cs2 = sim([:one=>scn1,:two=>scn2], parameters_upd=[:k1=>0.03])
 
 # Monte-Carlo simulation tests
 mciter = 100
+
+function output_func(sol, i)
+  last(vals(sol))
+end
+
+#=
+function reduction_func(mcsol, sol, I)
+  (last.(vals.(sol)), false)
+end
+=#
+
 mc1 = mc(Scenario(model, tspan = (0., 200.), observables=[:r1]), [:k1=>Normal(0.02,1e-3)], mciter)
 mc2 = mc([:one=>scn1,:two=>scn2], [:k1=>Normal(0.02,1e-3)], mciter)
+mc1_reduced = mc(Scenario(model, tspan = (0., 200.), observables=[:r1]), [:k1=>Normal(0.02,1e-3)], mciter; output_func=output_func)
 gsar = gsa(mc1, 200)
 @test typeof(mc1) <: HetaSimulator.MCResult
 @test test_show(mc1)
@@ -62,6 +74,8 @@ gsar = gsa(mc1, 200)
 @test size(pearson(gsar)) == (1,1)
 @test size(partial(gsar)) == (1,1)
 @test size(standard(gsar)) == (1,1)
+@test length(mc1_reduced) == mciter
+
 
 # Fitting tests
 fscn1 = Scenario(model; parameters = [:k1=>0.02], tspan = (0., 200.), observables=[:A, :B, :r1])
