@@ -229,7 +229,6 @@ To get the particular scenario you can use the following syntax.
 scenario1 = scenarios(p)[:dose_1]
 +---------------------------------------------------------------------------
 | Scenario contains:
-|   0 saveat values: Float64[]. Use `saveat(scenario)` for details.
 |   tspan: (0.0, 48.0). Use `tspan(scenario)` for details.
 |   4 parameters(s). Use `parameters(scenario)` for details.
 |   0 measurement(s). Use `measurements(scenario)` for details.
@@ -282,7 +281,6 @@ new_scenario = Scenario(
 
 +---------------------------------------------------------------------------
 | Scenario contains:
-|   0 saveat values: Float64[]. Use `saveat(scenario)` for details.
 |   tspan: (0.0, 1000.0). Use `tspan(scenario)` for details.
 |   4 parameters(s). Use `parameters(scenario)` for details.
 |   0 measurement(s). Use `measurements(scenario)` for details.

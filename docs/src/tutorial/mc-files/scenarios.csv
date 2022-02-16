@@ -1,5 +1,5 @@
-id,parameters.k1,parameters.k2,parameters.k3,saveat[],tspan,observables[],events_active.sw1
-one,,0.001,0.02,0;12;24;48;72;120,150,,1
-two,0.001,,,0;12;24;48;72;120,,,TRUE
-three,1.00E-03,0.1,,,250,,
-four,1.00E-04,,0.2,,1000,b;c,
+id,parameters.k1,parameters.k2,parameters.k3,tspan,observables[],events_active.sw1
+one,,0.001,0.02,150,,1
+two,0.001,,,150,,TRUE
+three,1.00E-03,0.1,,250,,
+four,1.00E-04,,0.2,1000,b;c,

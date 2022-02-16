@@ -89,7 +89,6 @@ The scenario-based approach is used to store pre-defined model's options: dose v
 
 `Scenario` objects can be created and loaded directly from Julia environment.
 
-The minimal set of properties to create a scenario is the `tspan` or `saveat` arguments in `Scenario` constructor.
 The next code will create a `Scenario` for simulating the default model with time range from 0 to 10. The rest of options will be taken from default `:nameless` model:
 
 - output records (observables) will be taken from records marked with `{output: true}` in heta code.
@@ -103,8 +102,7 @@ scenario0 = Scenario(model, tspan = (0, 10))
 
 ```
 Scenario for tspan=(0.0, 10.0)
-   Time range (tspan): (0.0, 10.0)
-   Time points to save the solution at (saveat): 
+   Time range (tspan): (0.0, 10.0) 
    Parameters: dose, kabs, kel, Q
    Number of measurement points: 0
 ```
@@ -221,7 +219,6 @@ scenario2 = scenarios(p)[:dose_1]
 ```
 Scenario for tspan=(0.0, 50.0)
    Time range (tspan): (0.0, 50.0)
-   Time points to save the solution at (saveat):
    Parameters: dose, kabs, kel, Q
    Number of measurement points: 0
 ```

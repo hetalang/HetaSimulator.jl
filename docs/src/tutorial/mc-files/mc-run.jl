@@ -11,23 +11,22 @@ model = platform.models[:nameless]
 ### Single scenario simulations
 
 mcscn1 = Scenario(
-  model;
-  tspan = (0., 200.),
-  parameters = [:k1=>0.01],
-  saveat = [50., 80., 150.]
+  model,
+  (0., 200.);
+  parameters = [:k1=>0.01]
 )
 
 mcscn2 = Scenario(
-  model;
-  tspan = (0., 200.),
-  parameters = [:k1=>0.02],
-  saveat = [50., 100., 200.]
+  model,
+  (0., 200.);
+  parameters = [:k1=>0.02]
 )
 
 mcsim1 = mc(
   mcscn1,
   [:k1=>Uniform(1e-3,1e-2), :k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)],
-  100
+  100,
+  saveat = [50., 80., 150.]
 )
 
 plotd = plot(mcsim1, vars=[:b])
@@ -40,7 +39,8 @@ mc_df1 = DataFrame(mcsim1, vars=[:a, :b])
 mcsim2 = mc(
   [:mc1=>mcscn1,:mc2=>mcscn2],
   [:k1=>0.01, :k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)],
-  100
+  100,
+  saveat = [50., 100., 200.]
 )
 plotd = plot(mcsim2)
 # savefig(plotd,"file.png")
