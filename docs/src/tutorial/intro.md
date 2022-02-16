@@ -30,8 +30,16 @@ Both [Heta compiler](https://hetalang.github.io/#/heta-compiler/) and HetaSimula
 They uses the same standards of model and notation and can be applied in the same projects.
 Furthermore currently the `heta-simulator` JS code is used internally in HetaSimulator.
 
-The latest stable version of `heta-compieler` can be obtained using the command
+When a user installs HetaSimulator in Julia the most appropriate version of __heta compiler__ will be installed as well.
+
+If you need to reinstall heta compiler it can be done with the following code.
 
 ```julia
 heta_update()
+```
+
+To instal a specific version of the compiler you can use 
+
+```julia
+heta_update("0.6.9") # for heta-compiler v0.6.9
 ```

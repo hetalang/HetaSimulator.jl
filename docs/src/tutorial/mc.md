@@ -7,7 +7,7 @@ _Before start be sure you have the latest __HetaSimulator.jl__ version. If you d
 
 ```julia
 ] # switch to Pkg mode
-add https://github.com/hetalang/HetaSimulator.jl
+add HetaSimulator
 ```
 
 ## Working example
@@ -266,5 +266,4 @@ plot(ens)
 
 1. If you are going to use "statistics" methods you should always set the `saveat` argument in `mc`.
 
-1. If you run `mc` with parameters generated online, i.e. without pre-generated set currently you cannot obtain the input parameters values directly.
-  This will be fixed in one of future releases. Before that if you need them use pre-generation.
+1. If you run `mc` with parameters generated online, i.e. without pre-generated set currently you cannot obtain the input parameters values directly.  This will be fixed in one of future releases. Before that if you need them use pre-generation.

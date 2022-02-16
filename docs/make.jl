@@ -13,6 +13,7 @@ makedocs(
         "Home" => "index.md", # readme
         "Basics" => [ # background, discussion
             "basics/overview.md",
+            "basics/distributed.md",
             "table-formats/scenario.md",
             "table-formats/measurement.md",
             "table-formats/parameters.md"

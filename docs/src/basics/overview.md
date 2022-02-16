@@ -5,7 +5,7 @@ The general workflow for HetaSimulator is
 - Writing a modeling platform in the Heta format
 - Loading platform into Julia environment
 - Creating model's settings and data adding scenarios and measurements
-- Solve problems using the methods: sim, mc, fit
+- Solve problems using the methods: `sim`, `mc`, `fit`
 - Analyze the results
 
 The particular workflow may be iterative, i.e. include updates to the model and re-simulation based on estimated parameters or model structure updates. It depend on the user's needs.
@@ -106,22 +106,21 @@ p = load_platform("./my_example")
 
 ```julia
 No declaration file, running with defaults...
-[info] Builder initialized in directory "Y:\HetaSimulator.jl\cases\story_3".
+[info] Builder initialized in directory "Y:\my_example".
 [info] Compilation of module "index.heta" of type "heta"...
-[info] Reading module of type "heta" from file "Y:\HetaSimulator.jl\cases\story_3\index.heta"...
+[info] Reading module of type "heta" from file "Y:\my_example\index.heta"...
 [info] Setting references in elements, total length 50
 [info] Checking for circular references in Records.
 [warn] Units checking skipped. To turn it on set "unitsCheck: true" in declaration.
 [info] Checking unit's terms.
 [warn] "Julia only" mode
-[info] Exporting to "Y:\HetaSimulator.jl\cases\story_3\_julia" of format "Julia"...
+[info] Exporting to "Y:\my_example\_julia" of format "Julia"...
 Compilation OK!
 Loading platform... OK!
-+---------------------------------------------------------------------------
-| Platform contains:
-|   1 model(s): nameless. Use `models(platform)` for details.
-|   0 scenario(s): . Use `scenarios(platform)` for details.
-+---------------------------------------------------------------------------
+
+Platform with 1 model(s), 0 scenario(s), 0 measurement(s)
+   Models: nameless
+   Scenarios:    
 ```
 
 The first argument of `load_platform` declares the absolute or relative path to the platform directory.
@@ -142,7 +141,7 @@ The list of additional arguments is approximately the same as [CLI options](http
 
 Alternatively you can use files generated with stand-alone [Heta compiler](https://hetalang.github.io/#/heta-compiler/).
 
-To do so the model code should be updated with the following statement.
+To do so the model code should be updated with the `#export` statement.
 
 ```heta
 ...
@@ -159,11 +158,9 @@ p = load_jlplatform("./my_example/dist/julia_platform/model.jl")
 ```
 ```julia
 Loading platform... OK!
-+---------------------------------------------------------------------------
-| Platform contains:
-|   1 model(s): nameless. Use `models(platform)` for details.
-|   0 scenario(s): . Use `scenarios(platform)` for details.
-+---------------------------------------------------------------------------
+Platform with 1 model(s), 0 scenario(s), 0 measurement(s)
+   Models: nameless
+   Scenarios:   
 ```
 
 ## Creating scenarios
@@ -216,23 +213,20 @@ As we can see all 4 scenarios from the table were added.
 
 ```julia
 p
-+---------------------------------------------------------------------------
-| Platform contains:
-|   1 model(s): nameless. Use `models(platform)` for details.
-|   4 scenario(s): multiple_15, dose_1, dose_10, dose_100. Use `scenarios(platform)` for details.
-+---------------------------------------------------------------------------
+Platform with 1 model(s), 4 scenario(s), 0 measurement(s)
+   Models: nameless
+   Scenarios: dose_1, dose_10, dose_100, multiple_15
 ```
 
 To get the particular scenario you can use the following syntax.
 
 ```julia
 scenario1 = scenarios(p)[:dose_1]
-+---------------------------------------------------------------------------
-| Scenario contains:
-|   tspan: (0.0, 48.0). Use `tspan(scenario)` for details.
-|   4 parameters(s). Use `parameters(scenario)` for details.
-|   0 measurement(s). Use `measurements(scenario)` for details.
-+---------------------------------------------------------------------------
+Scenario for tspan=(0.0, 48.0)
+   Time range (tspan): (0.0, 48.0)
+   Time points to save the solution at (saveat): 
+   Parameters: dose, kabs, kel, Q, sigma1, sigma2, sigma3
+   Number of measurement points: 0
 ```
 
 See more about scenario tables in [tabular CSV format](../table-formats/scenario.md).
@@ -278,13 +272,14 @@ new_scenario = Scenario(
     tspan = (0.,1000.),
     observables = [:A0, :C1, :C2, :v_abs, :v_el, :v_distr]
     ) 
+```
 
-+---------------------------------------------------------------------------
-| Scenario contains:
-|   tspan: (0.0, 1000.0). Use `tspan(scenario)` for details.
-|   4 parameters(s). Use `parameters(scenario)` for details.
-|   0 measurement(s). Use `measurements(scenario)` for details.
-+---------------------------------------------------------------------------
+```
+Scenario for tspan=(0.0, 1000.0)
+   Time range (tspan): (0.0, 1000.0)
+   Time points to save the solution at (saveat):
+   Parameters: dose, kabs, kel, Q, sigma1, sigma2, sigma3
+   Number of measurement points: 0
 ```
 
 See more options in API docs for [`Scenario`](@ref) function.
@@ -364,32 +359,30 @@ measurements_df = read_measurements("./my_example/measurements.xlsx")
 
 There are three main problem types that can currently be solved with HetaSimulator:
 
-- [__Simulation__](#simulation) of time-dependence for selected observables for one or several scenarios using [`sim`](@ref) method.
-- [__Monte-Carlo__](#montecarlo) type simulations that performs repeated simulations based on pre-set parameters distributions with [`mc`](@ref) method.
-- [__Fitting__](#fitting) or parameter identification problem that optimizes values of selected model constants to reach the minimal discrepancy between simulations and experimental values which is solved by [`fit`](@ref) method.
+- [__Simulation__](#Simulation) of time-dependence for selected observables for one or several scenarios using [`sim`](@ref) method.
+- [__Monte-Carlo__](#Monte-Carlo) type simulations that performs repeated simulations based on pre-set parameters distributions with [`mc`](@ref) method.
+- [__Fitting__](#Fitting) or parameter identification problem that optimizes values of selected model constants to reach the minimal discrepancy between simulations and experimental values which is solved by [`fit`](@ref) method.
 
 Each method returns the solution of its specific type: `SimResult`, `MCResult` and `FitResult` or other types that include them.
 
-The methods can be applied on different levels: `Platform`, `Scenario` or `Model` to allow applying all scenarios in the platform, some of them or the default one.
+The methods can be applied on different levels: `Platform`, `Scenario` or `Vector` of scenarios to allow applying all scenarios in the platform, some of them or the default one.
 Some important "target vs method" variants are shown in the next table.
 
 Target | Method | Results | Comments
 --- | --- | --- | ---
 `Platform` | `sim` | `Vector{Pair{Symbol,SimResult}}` | All or selected list of scenarios in model will run
 `Scenario` | `sim` | `SimResult` | Only target scenario will run
-`Model` | `sim` | `SimResult` | The scenario created from default model's options will run
 `Platform` | `mc` | `Vector{Pair{Symbol,MCResult}}` | All or selected list of scenarios in model will run multiple times.
 `Scenario` | `mc` | `MCResult` | Target scenario will run multiple times
-`Model` | `mc` | `SimResult` | The default scenario will run multiple times
 `Platform` | `fit` | `FitResult` | All or selected list of scenarios together their measurements will be used to optimize parameters.
 
 *This page provides the example of applying methods on the `Platform` level only*
 
-See more information for each method in extended description: [sim explanations](./sim.md), [mc explanations](./mc.md), [fit explanations](./fit.md).
+See more information for each method in tutorials: [sim](../tutorial/sim.md), [mc explanations](../tutorial/mc.md), [fit explanations](../tutorial/fit.md).
 
 ### Simulation
 
-See more details about `sim` method in [sim method](./sim.md) chapter.
+See more details about `sim` method in [sim method](../tutorial/sim.md) tutorial.
 
 On the previous steps we created the platform `p` and populated it with 4 scenarios and measurement points.
 
@@ -398,15 +391,14 @@ Without additional preparations we can simulate the platform which means running
 ```julia
 res = sim(p)
 ```
-```julia
-+---------------------------------------------------------------------------
-| Simulation results for 4 scenario(s).
-| [:multiple_15 => ..., :dose_1 => ..., :dose_10 => ..., :dose_100 => ...]
-| Use `sol[id]` to get component by id.
-| Use `sol[i]` to get component by number.
-| Use `DataFrame(sol)` to transform.
-| Use `plot(sol)` to plot results.
-+---------------------------------------------------------------------------
+
+```
+5-element Vector{Pair{Symbol, SimResult}}
+    :dose_1 => 80x3 SimResult with status :Success.
+    :dose_10 => 100x3 SimResult with status :Success.
+    :dose_100 => 124x3 SimResult with status :Success.
+    :multiple_15 => 668x3 SimResult with status :Success.
+    :multiple_100 => 163x6 SimResult with status :Success.
 ```
 
 The whole solution consists of parts which corresponds to number of scenarios in Platform.
@@ -478,15 +470,14 @@ You should clarify here the distribution of random parameters and number of iter
 ```julia
 mc_res = mc(p, [:kabs=>Normal(10.,1e-1), :kel=>Normal(0.2,1e-3)], 1000)
 ```
+
 ```julia
-+---------------------------------------------------------------------------
-| Monte-Carlo results for 4 scenario(s).
-| [:multiple_15 => ..., :dose_1 => ..., :dose_10 => ..., :dose_100 => ...]
-| Use `sol[id]` to get component by id.
-| Use `sol[i]` to get component by number.
-| Use `DataFrame(sol)` to transform.
-| Use `plot(sol)` to plot results.
-+---------------------------------------------------------------------------
+5-element Vector{Pair{Symbol, MCResult}}
+    :dose_1 => 1000x?x71 MCResult with status :Success x 1000
+    :dose_10 => 1000x?x88 MCResult with status :Success x 1000
+    :dose_100 => 1000x?x155 MCResult with status :Success x 1000
+    :multiple_15 => 1000x?x583 MCResult with status :Success x 1000
+    :multiple_100 => 1000x?x238 MCResult with status :Success x 1000
 ```
 
 To transform everything into `DataFrame`
@@ -575,14 +566,13 @@ to_fit = [
 ]
 fit_res = fit(p, to_fit)
 ```
+
 ```julia
-+---------------------------------------------------------------------------
-| Fitting results:
-|   status: FTOL_REACHED
-|   optim: [:kabs => 9.664612290142436, :Q => 3.182280353785782, :kel => 0.20333675237278281, :sigma1 => 0.20073592014870978, :sigma2 => 0.15748031874469834, :sigma3 => 0.11672689231044918]. Access optim estimate with `optim(f::FitResult)`
-|   objective function value: 4164.493819852298. Access objective value with `obj(f::FitResult)`
-|   number of objective function evaluations: 134
-+---------------------------------------------------------------------------
+FitResult with status :XTOL_REACHED
+   Status: XTOL_REACHED
+   Optimal values: [:kabs => 18.868605026704916, :Q => 4.043662480774219, :kel => 0.17104243648378176, :sigma1 => 0.020347955494158528, :sigma2 => 0.31561050699802246, :sigma3 => 0.5716026958426483]
+   OF value: 140.96503722972034
+   OF count: 8612
 ```
 
 To get the list of optimal parameters values we should use `optim` function.
@@ -592,12 +582,12 @@ optim(fit_res)
 ```
 ```julia
 6-element Vector{Pair{Symbol, Float64}}:
-   :kabs => 9.664612290142436
-      :Q => 3.182280353785782
-    :kel => 0.20333675237278281
- :sigma1 => 0.20073592014870978
- :sigma2 => 0.15748031874469834
- :sigma3 => 0.11672689231044918
+   :kabs => 18.868605026704916
+      :Q => 4.043662480774219
+    :kel => 0.17104243648378176
+ :sigma1 => 0.020347955494158528        
+ :sigma2 => 0.31561050699802246
+ :sigma3 => 0.5716026958426483
 ```
 
 You can simulate and plot results with the following code.
