@@ -14,7 +14,7 @@ platform = load_platform("$HetaSimulatorDir/cases/story_2", rm_out=false);
 
 model = platform.models[:nameless]
 
-Scenario(model; tspan = (0., 200.)) |> sim |> plot
+Scenario(model, (0., 200.)) |> sim |> plot
 
 ################################## load and simulate scenarios  #####################
 
@@ -60,9 +60,9 @@ plot(mcsim2)
 
 using Distributed
 addprocs(2)
-@everywhere push!(LOAD_PATH, "Y:/")
-@everywhere using Pkg
-@everywhere Pkg.activate("Y:/HetaSimulator.jl")
+#@everywhere push!(LOAD_PATH, "Y:/")
+#@everywhere using Pkg
+#@everywhere Pkg.activate("Y:/HetaSimulator.jl")
 @everywhere using HetaSimulator
 
 mcsim0 = mc(platform, [:k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 20)

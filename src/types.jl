@@ -149,7 +149,7 @@ abstract type AbstractScenario end
 
   Type representing simulation conditions, i.e. model variant with updated constants and outputs.
 
-  To get the internal properties use methods: `saveat(scenario)`, `tspan(scenario)`, `parameters(scenario)`, `measurements(scenario)`
+  To get the internal properties use methods: `tspan(scenario)`, `parameters(scenario)`, `measurements(scenario)`
 """
 struct Scenario{F,P,M} <: AbstractScenario
   init_func::F
@@ -157,7 +157,6 @@ struct Scenario{F,P,M} <: AbstractScenario
   measurements::M
 end 
 
-saveat(scn::Scenario) = scn.prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat_cache
 tspan(scn::Scenario) = scn.prob.tspan
 parameters(scn::Scenario) = scn.prob.p.constants
 measurements(scn::Scenario) = scn.measurements
@@ -166,22 +165,16 @@ measurements(scn::Scenario) = scn.measurements
 # observables(scn::Scenario)
 
 function Base.show(io::IO, mime::MIME"text/plain", scn::Scenario)
-  saveat_str = print_lim(saveat(scn), 10)
   parameters_str = print_lim(
     keys(parameters(scn)),
     10
     )
   measurements_count = length(measurements(scn))
 
-  if length(saveat(scn)) == 0
-    time_points_str = "for tspan=$(tspan(scn))"
-  else
-    time_points_str = "for saveat=$(saveat_str)"
-  end
+  time_points_str = "for tspan=$(tspan(scn))"
 
   println(io, "Scenario $time_points_str")
   println(io, "   Time range (tspan): $(tspan(scn))")
-  println(io, "   Time points to save the solution at (saveat): $(saveat_str)")
   println(io, "   Parameters: $(parameters_str)")
   println(io, "   Number of measurement points: $(measurements_count)")
 end

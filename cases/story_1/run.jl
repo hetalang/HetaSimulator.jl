@@ -20,48 +20,48 @@ model = platform.models[:nameless]
 
 ################################## Single Simulation ######################################
 
-Scenario(model; tspan = (0., 200.)) |> sim |> plot
-scn0 = Scenario(model; tspan = (0., 200.))
+Scenario(model, (0., 200.)) |> sim |> plot
+scn0 = Scenario(model, (0., 200.))
 sim(scn0, parameters_upd = [:k1=>0.01]) |> plot
-Scenario(model; saveat = 0:10:100) |> sim |> plot
-Scenario(model; saveat = 0:10:100, tspan = (0., 50.)) |> sim |> plot
-Scenario(model; saveat = 0:10:100, tspan = (0., 500.)) |> sim |> plot
+sim(Scenario(model, (0,100)), saveat = 0:10:100) |> plot
+sim(Scenario(model, (0., 50.)), saveat = 0:10:100) |> plot
+sim(Scenario(model, (0., 500.)), saveat = 0:10:100) |> plot
 Scenario( # throw error
-    model; 
-    tspan = (0., 500.),
+    model, 
+    (0., 500.);
     events_active=[:sw1=>false, :ss1 => false],
     events_save=[:sw1=>(true,true), :ss1=>(true,true)]
     ) |> sim |> plot
 Scenario(
-    model;
-    tspan = (0., 500.),
+    model,
+    (0., 500.);
     events_active=[:sw1=>false],
     events_save=[:sw1=>(true,true)]
     ) |> sim |> plot
 Scenario(
-    model;
-    tspan = (0., 500.),
+    model,
+    (0., 500.);
     events_active=[:sw1=>true],
     events_save=[:sw1=>(false,false)]
     ) |> sim |> plot
-sim(Scenario(model, tspan = (0., 10.), parameters=[:k1=>1e-3]), parameter_upd = [:k1=>1e-3])
+sim(Scenario(model, (0., 10.); parameters=[:k1=>1e-3]), parameter_upd = [:k1=>1e-3])
 
 ### single scenario sim()
-scn1 = Scenario(model; tspan = (0., 200.), saveat = [0.0, 150., 250.]);
-sim(scn1) |> plot
-sim(scn1; parameters_upd=[:k1=>0.01]) |> plot
+scn1 = Scenario(model, (0., 200.));
+sim(scn1, saveat = [0.0, 150., 250.]) |> plot
+sim(scn1; saveat = [0.0, 150., 250.], parameters_upd=[:k1=>0.01]) |> plot
 
 scn2 = Scenario(
-    model;
-    tspan = (0., 200.),
+    model,
+    (0., 200.);
     events_active=[:sw1=>false],
     parameters = [:k2 => 0.001, :k3 => 0.02]
     );
 sim(scn2) |> plot
 
 scn3 = Scenario(
-    model;
-    tspan = (0., 250.),
+    model,
+    (0., 250.);
     events_active=[:sw1=>false],
     parameters = [:k2 => 0.1]
     );
@@ -78,7 +78,7 @@ sim([:x => scn1, :y=>scn2, :z=>scn3]; parameters_upd=[:k1=>0.01]) |> plot
 #measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv")
 measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements_no_scope.csv")
 measurements_xlsx = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.xlsx")
-scn4 = Scenario(model; parameters = [:k2=>0.001, :k3=>0.04], saveat = [0.0, 50., 150., 250.]);
+scn4 = Scenario(model, (0,250); parameters = [:k2=>0.001, :k3=>0.04]);
 add_measurements!(scn4, measurements_csv; subset = [:scenario => :dataone])
 
 ### fit many scenarios
@@ -87,7 +87,7 @@ res2 = fit([scn2, scn3, scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])
 sim(scn3, parameters_upd = optim(res2))
 
 # sim all scenarios
-sol = sim([:c1=>scn1, :c2=>scn2, :c3=>scn3, :c4=>scn4]);
+sol = sim([:c1=>scn1, :c2=>scn2, :c3=>scn3, :c4=>scn4], saveat = [0.0, 50., 150., 250.]);
 plot(sol)
 
 # plot selected observables
@@ -98,35 +98,34 @@ plot(sol; vars=[:a,:c], show_measurements=false)
 ################################## Monte-Carlo Simulations  #####################
 
 mc_scn1 = Scenario(
-    model;
-    tspan = (0., 200.),
+    model,
+    (0., 200.);
     parameters = [:k1=>0.01],
-    saveat = [50., 80., 150.]
     );
 
 mc_scn2 = Scenario(
-    model;
-    tspan = (0., 200.),
+    model,
+    (0., 200.);
     parameters = [:k1=>0.02],
-    saveat = [50., 100., 200.]
     );
     
 mc_scn3 = Scenario(
-    model; 
-    tspan = (0., 200.),
+    model,
+    (0., 200.);
     parameters = [:k1=>0.03],
     events_active=[:sw1 => false]
     );
 
 # single MC Simulation
-mcsim1 = mc(mc_scn1, [:k1=>Uniform(1e-3,1e-2), :k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000)
+mcsim1 = mc(mc_scn1, [:k1=>Uniform(1e-3,1e-2), :k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000, saveat = [50., 80., 150.])
 plot(mcsim1)
 
 # multi MC Simulation
 mcsim2 = mc(
     [:mc1=>mc_scn1,:mc2=>mc_scn2,:mc3=>mc_scn3],
     [:k1=>0.01, :k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)],
-    1000
+    1000,
+    saveat = [50., 80., 150.]
   )
 plot(mcsim2)
 

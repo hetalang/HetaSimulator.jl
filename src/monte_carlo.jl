@@ -13,6 +13,7 @@ DEFAULT_OUTPUT(sol,i) = sol
       alg=DEFAULT_ALG,
       reltol=DEFAULT_SIMULATION_RELTOL,
       abstol=DEFAULT_SIMULATION_ABSTOL,
+      saveat=Float64[],
       parallel_type=EnsembleSerial(),
       kwargs...
     )
@@ -31,6 +32,7 @@ Arguments:
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
+- `saveat` : time points to save the solution at. Default is solver stepwise saving
 - `output_func` : the function determines what is saved from the solution to the output array. Defaults to saving the solution itself
 - `reduction_func` : this function determines how to reduce the data in each batch. Defaults to appending the data from the batches
 - `parallel_type` : parallel setup. See SciML docs for details. Default is no parallelism: EnsembleSerial()
@@ -45,6 +47,7 @@ function mc(
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
+  saveat=Float64[],
   output_func=DEFAULT_OUTPUT,
   reduction_func = DEFAULT_REDUCTION,
   parallel_type=EnsembleSerial(),
@@ -61,7 +64,8 @@ function mc(
   function prob_func(prob,i,repeat)
     verbose && println("Processing iteration $i")
     progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
-    update_init_values(prob, init_func, generate_cons(params_nt,i))
+    prob_i = !isempty(saveat) ? remake_saveat(prob, saveat) : prob
+    update_init_values(prob_i, init_func, generate_cons(params_nt,i))
   end
 
   params_names = collect(keys(params_nt))
@@ -106,7 +110,7 @@ function mc(
     )
   end
 
-  return MCResult(solution.u, has_saveat(scenario), scenario)
+  return MCResult(solution.u, !isempty(saveat), scenario)
 end
 
 """
@@ -155,6 +159,7 @@ end
       alg=DEFAULT_ALG,
       reltol=DEFAULT_SIMULATION_RELTOL,
       abstol=DEFAULT_SIMULATION_ABSTOL,
+      saveat=Float64[],
       parallel_type=EnsembleSerial(),
       kwargs...
     )
@@ -173,6 +178,7 @@ Arguments:
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
+- `saveat` : time points to save the solution at. Default is solver stepwise saving
 - `output_func` : the function determines what is saved from the solution to the output array. Defaults to saving the solution itself
 - `reduction_func` : this function determines how to reduce the data in each batch. Defaults to appending the data from the batches
 - `parallel_type` : parallel setup. See SciML docs for details. Default is no parallelism: EnsembleSerial()
@@ -187,6 +193,7 @@ function mc(
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
+  saveat=Float64[],
   output_func=DEFAULT_OUTPUT,
   reduction_func = DEFAULT_REDUCTION,
   parallel_type=EnsembleSerial(),
@@ -207,6 +214,7 @@ function mc(
     verbose && println("Processing scenario $(iter_i[2]) iteration $(iter_i[1])")
     progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
     prob_i = last(scenario_pairs[iter_i[2]]).prob
+    prob_i = !isempty(saveat) ? remake_saveat(prob_i, saveat) : prob_i 
     init_i = last(scenario_pairs[iter_i[2]]).init_func
     update_init_values(prob_i, init_i, params_pregenerated[iter_i[1]])
   end
@@ -257,7 +265,7 @@ function mc(
 
   for i in 1:lc
     ret[i] = first(scenario_pairs[i]) => 
-      MCResult(solution.u[lp*(i-1)+1:i*lp], has_saveat(last(scenario_pairs[i])), last(scenario_pairs[i]))
+      MCResult(solution.u[lp*(i-1)+1:i*lp], !isempty(saveat), last(scenario_pairs[i]))
   end
   return ret
 end

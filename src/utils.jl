@@ -33,7 +33,7 @@ function _subset(
   end
 end
 
-has_saveat(c::Scenario) = !isempty(c.prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat_cache) 
+has_saveat(prob::SciMLBase.AbstractODEProblem) = !isempty(prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat_cache) 
 has_saveat(mcr::MCResult) = mcr.saveat
 
 # auxilary method to update values in LVector

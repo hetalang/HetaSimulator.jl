@@ -1,16 +1,13 @@
 function build_ode_problem(
-  model::Model;
+  model::Model,
+  tspan;
   parameters::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
   events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
   events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}} = (true,true), 
   observables_::Union{Nothing,Vector{Symbol}} = nothing,
-  saveat::Union{Nothing,AbstractVector} = nothing,
-  tspan::Union{Nothing,Tuple} = nothing,
   save_scope::Bool = true,
   time_type::DataType = Float64
 )
-  # saveat and tspan
-  _saveat, _tspan = saveat_tspan(saveat, tspan, time_type)
 
   # initial values and params
   init_func = model.init_func
@@ -36,7 +33,7 @@ function build_ode_problem(
     save_scope ? Symbol[] : nothing
     )
   saving_func = model.saving_generator(merged_observables)
-  scb = saving_wrapper(saving_func, saved_values; saveat=_saveat, save_scope)
+  scb = saving_wrapper(saving_func, saved_values; save_scope)
 
   # events
   ev_on_nt = !isnothing(events_active) ? NamedTuple(events_active) : NamedTuple()
@@ -47,12 +44,13 @@ function build_ode_problem(
   return ODEProblem(
     model.ode_func, # ODE function
     u0, # u0
-    _tspan, # tspan
+    tspan, # tspan
     params; # constants and static
     callback = cbs # callback
   )
 end
 
+#=
 function saveat_tspan(saveat, tspan, time_type)
 
   if !isnothing(saveat) && !isempty(saveat)
@@ -71,6 +69,7 @@ end
 collect_saveat(saveat::Tuple) = Float64[]
 collect_saveat(saveat::Vector{S}) where S<:Real = Float64.(saveat)
 collect_saveat(saveat::AbstractRange{S}) where S<:Real = Float64.(saveat)
+=#
 
 function init_values(init_func, constants)
   u0, p0 = init_func(constants)
@@ -83,15 +82,12 @@ function  update_init_values(prob, init_func, x)
   u0, p0 = init_values(init_func, constants)
 
   prob_upd = remake(prob; u0=u0, p=p0)
-  #prob_upd.p.constants .= p0.constants
-  #prob_upd.p.static .= p0.static
   
   return prob_upd
 end
 
-function remake_saveat(prob, measurements)
-  saveat = unique([dp.t for dp in measurements])
-  tspan = (prob.tspan[1], eltype(prob.tspan)(maximum(saveat)))
+function remake_saveat(prob, saveat; tspan = prob.tspan)
+  
   scb_orig = prob.kwargs[:callback].discrete_callbacks[1].affect!
   utype = eltype(prob.u0)
   save_scope = scb_orig.save_scope
@@ -107,6 +103,12 @@ function remake_saveat(prob, measurements)
   cbs = list_callbacks(prob)
   cb_set = CallbackSet(scb_new,cbs[1]...,cbs[2]...)
   remake(prob; callback=cb_set, tspan=tspan)
+end
+
+function remake_saveat(prob, measurements::Vector{M}) where M<:AbstractMeasurementPoint
+  saveat = unique([dp.t for dp in measurements])
+  tspan = (prob.tspan[1], eltype(prob.tspan)(maximum(saveat)))
+  remake_saveat(prob, saveat; tspan)
 end
 
 function list_callbacks(prob)
