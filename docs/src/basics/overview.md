@@ -224,7 +224,6 @@ To get the particular scenario you can use the following syntax.
 scenario1 = scenarios(p)[:dose_1]
 Scenario for tspan=(0.0, 48.0)
    Time range (tspan): (0.0, 48.0)
-   Time points to save the solution at (saveat): 
    Parameters: dose, kabs, kel, Q, sigma1, sigma2, sigma3
    Number of measurement points: 0
 ```
@@ -277,7 +276,6 @@ new_scenario = Scenario(
 ```
 Scenario for tspan=(0.0, 1000.0)
    Time range (tspan): (0.0, 1000.0)
-   Time points to save the solution at (saveat):
    Parameters: dose, kabs, kel, Q, sigma1, sigma2, sigma3
    Number of measurement points: 0
 ```
