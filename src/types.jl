@@ -205,7 +205,7 @@ end
 # copy fix is tmp needed not to rewrite SavedValues with new simulation
 Simulation(sv::SavedValues, params, status::Symbol) = Simulation(
   DiffEqBase.SciMLBase.DiffEqArray(copy(sv.u),copy(sv.t)),
-  sv.scope,
+  copy(sv.scope),
   params,
   status
 ) 
