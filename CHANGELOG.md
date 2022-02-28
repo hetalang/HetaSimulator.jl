@@ -4,7 +4,10 @@
 
 - add support for `mc(..., params::DataFrame, ...)` where the first argument is vector or platform
 - use `NaNMath` functions inside model
-- install the latest supported version of "heta compiler"
+- main version of compiler is fixed to __0.6.10__
+- `output` and `reduce` func added to `mc`
+- fix Results to `DataFrame` conversion
+- move `saveat` from `Scenario` to `sim` and `mc`
 
 ## 0.4.4
 
