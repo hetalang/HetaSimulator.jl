@@ -12,12 +12,12 @@ scenarios(p) # scenarios dictionary (empty)
 model = models(p)[:nameless]
 
 # default
-scenario0 = Scenario(model, tspan = (0, 10), events_active = [:sw1=>false])
+scenario0 = Scenario(model, (0, 10); events_active = [:sw1=>false])
 res0 = sim(scenario0)
 plot(res0)
 
-scenario0 = Scenario(model, saveat = [1, 4, 10], events_active = [:sw1=>false])
-res0 = sim(scenario0)
+scenario0 = Scenario(model, (0, 10); events_active = [:sw1=>false])
+res0 = sim(scenario0, saveat = [1, 4, 10])
 plot(res0)
 
 # update dose
