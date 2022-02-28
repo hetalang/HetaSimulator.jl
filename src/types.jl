@@ -319,7 +319,7 @@ parameters(mcr::MCResult) = [parameters(mcr[i]) for i in 1:length(mcr)]
 vals(mcr::MCResult) = [vals(mcr[i]) for i in 1:length(mcr)]
 status_summary(mcr::MCResult) = counter([s.status for s in mcr.sim])
 
-function Base.show(io::IO, mime::MIME"text/plain", mcr::MCResult{S,C}, short::Bool = false) where {S<:Vector{Simulation}, C}
+function Base.show(io::IO, mime::MIME"text/plain", mcr::MCResult{Vector{S},C}, short::Bool = false) where {S<:Simulation, C}
   # dimentions
   dim0 = length(mcr)
   if mcr.saveat 

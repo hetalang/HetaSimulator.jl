@@ -388,9 +388,10 @@ CSV.write("res_selected_df.csv", res_selected_df)
 1. To update a model structure one should include changes into source Heta-based model and repeat all the steps.
 
 1. In many cased the chain Julia syntax can be useful. The following code creates the default scenario, simulate and plot with one line.
-    ```julia
-    Scenario(models(p)[:nameless], tspan = (0,100)) |> sim |> plot
-    ```
+
+```julia
+Scenario(models(p)[:nameless], tspan = (0,100)) |> sim |> plot
+```
 
 1. `plot` method for `SimResult` gives only a simple default representation. For extended graphics a user can transform everything into a `DataFrame` and plot manually.
 
