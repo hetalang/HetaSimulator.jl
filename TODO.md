@@ -8,22 +8,22 @@ _The rest of ideas and issues are posted in https://github.com/hetalang/heta-dis
 
 ## features
 
+- Additional distribution type for loss function: unified, laplace, BQL
+- parameter updates in `Measurements`
+- checking units when `load_platform`
 - sim() and mc() are compiled independently
-- allow using both saveat and tspan, move tspan to sim
 - legend outside of plot
 - split plots horizontally
 - checking `atStart: true`, `atStart: false` inside Events
-- add loss methods for Condition, Vector{Condition}
+- add loss methods for `Condition`, `Vector{Condition}`
+- extended chain syntax
 
 ## ideas
 
 - Explicit simulations, ExplicitScenario/NonODEScenario ?
-- extended chain syntax
 - read Scenario from Heta
 - add CI estimation
-- checking units when `load_platform`
 - `OrderedDict` for storing SimResults
-- checking Model version
 - implement optimization of `mc`: online statistics, auto-stop by criterion
 - compose plots based on tags
 - examples of extended graphics using plotly, etc.
