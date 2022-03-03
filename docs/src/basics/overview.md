@@ -266,9 +266,9 @@ model = models(p)[:nameless]
 # creating scenario
 new_scenario = Scenario(
     model,
+    (0.,1000.);
     parameters = [:dose=>100.],
     events_active = [:sw1=>false, :sw1=>true],
-    tspan = (0.,1000.),
     observables = [:A0, :C1, :C2, :v_abs, :v_el, :v_distr]
     ) 
 ```

@@ -1,6 +1,10 @@
 # Change Log
 
-## 0.4.5
+## 0.4.6
+
+- fix `NaNMath` bug
+
+## 0.4.5 - deprecated
 
 - add support for `mc(..., params::DataFrame, ...)` where the first argument is vector or platform
 - use `NaNMath` functions inside model

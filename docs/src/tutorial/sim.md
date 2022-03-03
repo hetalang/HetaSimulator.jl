@@ -97,7 +97,7 @@ The next code will create a `Scenario` for simulating the default model with tim
 
 ```julia
 # minimal scenario
-scenario0 = Scenario(model, tspan = (0, 10))
+scenario0 = Scenario(model, (0, 10))
 ```
 
 ```
@@ -129,9 +129,8 @@ The `Scenario` can be created with the following code:
 # creating scenario
 scenario1 = Scenario(
     model,
+    (0.,50.);
     parameters = [:dose=>100.],
-    events_active = [:sw1=>false, :sw2=>true],
-    tspan = (0.,50.),
     observables = [:C1, :C2, :v_el]
 )
 res1 = sim(scenario1)
@@ -390,7 +389,7 @@ CSV.write("res_selected_df.csv", res_selected_df)
 1. In many cased the chain Julia syntax can be useful. The following code creates the default scenario, simulate and plot with one line.
 
 ```julia
-Scenario(models(p)[:nameless], tspan = (0,100)) |> sim |> plot
+Scenario(models(p)[:nameless], (0, 100)) |> sim |> plot
 ```
 
 1. `plot` method for `SimResult` gives only a simple default representation. For extended graphics a user can transform everything into a `DataFrame` and plot manually.

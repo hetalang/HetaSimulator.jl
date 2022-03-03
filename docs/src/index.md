@@ -67,7 +67,7 @@ platform = load_platform("./my_project")
 model = platform.models[:nameless]
 
 # single simulation and plot
-results = Scenario(model; tspan = (0., 1200.)) |> sim
+results = Scenario(model, (0., 1200.)) |> sim
 plot(results)
 ```
 

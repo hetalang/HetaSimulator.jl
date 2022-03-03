@@ -17,7 +17,7 @@ const EMPTY_PROBLEM = ODEProblem(() -> nothing, [0.0], (0.,1.))
 
 Simulate single `Scenario`. Returns [`SimResult`](@ref) type.
 
-Example: `Scenario(model; tspan = (0., 200.)) |> sim`
+Example: `Scenario(model, (0., 200.)) |> sim`
 
 Arguments:
 

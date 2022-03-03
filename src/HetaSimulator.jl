@@ -28,7 +28,7 @@ module HetaSimulator
   using RecipesBase
 
   # Math
-  using NaNMath: log10, log2, log, pow, sqrt
+  @reexport using NaNMath: log10, log2, log, pow, sqrt
 
   const HetaSimulatorDir = dirname(Base.@__DIR__)
 

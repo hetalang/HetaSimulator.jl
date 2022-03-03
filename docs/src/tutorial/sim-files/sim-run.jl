@@ -23,9 +23,9 @@ plot(res0)
 # update dose
 scenario1 = Scenario(
     model,
+    (0.,50.);
     parameters = [:dose=>100.],
     events_active = [:sw1=>false, :sw2=>true],
-    tspan = (0.,50.),
     observables = [:C1, :C2, :v_abs, :v_el, :v_distr]
 )
 res1 = sim(scenario1)
