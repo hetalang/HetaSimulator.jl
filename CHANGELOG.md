@@ -1,6 +1,6 @@
 # Change Log
 
-## 0.4.6
+## 0.4.7
 
 - fix `NaNMath` bug
 

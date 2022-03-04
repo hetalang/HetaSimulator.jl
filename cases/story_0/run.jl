@@ -6,7 +6,8 @@
 using HetaSimulator, Plots
 
 # set the absolute or relative path to the project directory
-platform = load_platform("$HetaSimulatorDir/cases/story_0", units_check=true)
+platform = load_platform("$HetaSimulatorDir/cases/story_0", units_check=true, rm_out = false)
+
 # wait for the model compilation...
 
 # get the base Heta model
