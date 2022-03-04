@@ -3,6 +3,7 @@
 ## 0.4.7
 
 - fix `NaNMath` bug
+- heta-compiler v0.6.11
 
 ## 0.4.5 - deprecated
 
