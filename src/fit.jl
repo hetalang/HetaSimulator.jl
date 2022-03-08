@@ -114,8 +114,10 @@ function fit(
   )
 
 
-
+  count = 0
+  best_ofv = Inf
   function obj_func(x, grad)
+    count+=1
     # try - catch is a tmp solution for NLopt 
     x_nt = NamedTuple{Tuple(params_names)}(unscale_params.(x, scale))
     prob_i = prob(x_nt)
@@ -133,6 +135,12 @@ function fit(
         @warn "Error when calling loss_func($x): $e"
     end
     #println(x_pairs)
+    print("count: $(count)")
+    if best_ofv > sol.u
+      best_ofv = sol.u
+      print(", best OFV: $best_ofv")
+    end
+    println("")
     return sol.u
   end
 
@@ -140,12 +148,14 @@ function fit(
   opt.min_objective = obj_func
 
   opt.ftol_rel = ftol_rel
-  opt.ftol_abs = ftol_abs
+  #opt.ftol_abs = ftol_abs
+  ftol_abs!(opt, ftol_abs)
 
   opt.xtol_rel = xtol_rel
   opt.xtol_abs = xtol_abs
 
-  opt.maxeval = maxeval
+  #opt.maxeval = maxeval
+  maxeval!(opt, maxeval)
   opt.maxtime = maxtime
 
   lower_bounds!(opt, scale_params.(lbounds, scale))
