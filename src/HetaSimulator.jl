@@ -43,6 +43,7 @@ module HetaSimulator
   include("plots.jl")
   include("loss.jl")
   include("fit.jl")
+  include("likelihood.jl")
   include("monte_carlo.jl")
   include("import_platform.jl")
   include("gsa.jl")
@@ -61,7 +62,7 @@ module HetaSimulator
   export CVODE_BDF, CVODE_Adams
   export optim, obj
   export sim, mc
-  export fit, loss
+  export fit, loss, likelihood
   export HetaSimulatorDir
   export update
   export times, vals, status, status_summary

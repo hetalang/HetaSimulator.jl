@@ -15,7 +15,7 @@ The first row is intended for headers which clarify the columns meaning. The seq
 
 - `upper` (optional): a `Float64` value that declares the upper bound of the parameter. If skipped than the parameter value will not be limited.
 
-- `scale` (optional): `String` which can be `direct`, `log`, `logit`. Using the option user can select the space for parameter optimization. Default value is `direct`.
+- `scale` (optional): `String` which can be `lin`, `log`, `logit`. Using the option user can select the space for parameter optimization. Default value is `lin`.
 
 - `estimate` (optional): a `Boolean` value: `true` or `false` or numerical values `0` or `1` which declares if the parameter should be fitted. `0` or `false` value just states the numerical value but the parameter will not be fitted. Default value is `true`.
 
