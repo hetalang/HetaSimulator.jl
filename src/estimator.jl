@@ -1,5 +1,5 @@
 
-function estim(
+function estimator(
   scenario_pairs::AbstractVector{Pair{Symbol, C}},
   params::Vector{Pair{Symbol,Float64}};
   parameters_upd::Union{Nothing, Vector{P}}=nothing,
@@ -72,7 +72,7 @@ function estim(
     return sol.u
 end
 
-function estim(
+function estimator(
   scenario_pairs::AbstractVector{Pair{Symbol, C}},
   params_df::DataFrame;
   kwargs...
@@ -84,19 +84,19 @@ function estim(
   params = gdf[(true,)].parameter .=> gdf[(true,)].nominal
   parameters_upd = haskey(gdf, (false,)) ? gdf[(false,)].parameter .=> gdf[(false,)].nominal : nothing
 
-  estim(scenario_pairs, params; parameters_upd, kwargs...)
+  estimator(scenario_pairs, params; parameters_upd, kwargs...)
 end
 
-function estim(
+function estimator(
   scenarios::AbstractVector{C},
   params; # DataFrame or Vector{Pair{Symbol,Float64}}
   kwargs... # other arguments to fit or sim
 ) where {C<:AbstractScenario}
   scenario_pairs = Pair{Symbol,AbstractScenario}[Symbol("_$i") => scn for (i, scn) in pairs(scenarios)]
-  return estim(scenario_pairs, params; kwargs...)
+  return estimator(scenario_pairs, params; kwargs...)
 end
 
-function estim(
+function estimator(
   platform::Platform,
   params;
   scenarios::Union{AbstractVector{Symbol}, Nothing} = nothing, # all if nothing
@@ -112,5 +112,5 @@ function estim(
     end
   end
 
-  return estim(scenario_pairs, params; kwargs...)
+  return estimator(scenario_pairs, params; kwargs...)
 end
