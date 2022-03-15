@@ -65,7 +65,7 @@ function fit(
   lbounds = fill(0.0, length(params)),
   ubounds = fill(Inf, length(params)),
   scale = fill(:lin, length(params)),
-  kwargs... # other arguments to sim()
+  kwargs... # other arguments to sim
 ) where {C<:AbstractScenario, P<:Pair}
 
   # names of parameters used in fitting and saved in params field of solution
@@ -81,67 +81,35 @@ function fit(
   end
   
   isempty(selected_scenario_pairs) && throw("No measurements points included in scenarios.")
-  
-  # update saveat and initial values
-  selected_prob = []
-  for scn in selected_scenario_pairs
-    prob_i = remake_saveat(last(scn).prob, last(scn).measurements)
-    prob_i = !isnothing(parameters_upd) ? update_init_values(prob_i, last(scn).init_func, NamedTuple(parameters_upd)) : prob_i
-    push!(selected_prob, prob_i)
-  end
 
-  function prob_func(x)
-    function internal_prob_func(prob,i,repeat)
-      update_init_values(selected_prob[i],last(selected_scenario_pairs[i]).init_func,x)
-    end
-  end
-
-  function _output(sol, i)
-    sol.retcode != :Success && error("Simulated scenario $i returned $(sol.retcode) status")
-    sim = build_results(sol,last(selected_scenario_pairs[i]), params_names)
-    loss_val = loss(sim, sim.scenario.measurements) 
-    (loss_val, false)
-  end
-
-  function _reduction(u, batch, I)
-    (sum(batch),false)
-  end
-
-  prob(x) = EnsembleProblem(EMPTY_PROBLEM;
-    prob_func = prob_func(x),
-    output_func = _output,
-    reduction = _reduction
+  estim_fun = estimator( # return function
+    scenario_pairs,
+    params;
+    parameters_upd,
+    alg,
+    reltol,
+    abstol,
+    parallel_type,
+    kwargs...
   )
-
 
   count = 0
   best_ofv = Inf
   function obj_func(x, grad)
     count+=1
     # try - catch is a tmp solution for NLopt 
-    x_nt = NamedTuple{Tuple(params_names)}(unscale_params.(x, scale))
-    prob_i = prob(x_nt)
-    sol = try
-      solve(prob_i, alg, parallel_type;
-        trajectories = length(selected_scenario_pairs),
-        reltol,
-        abstol,
-        save_start = false, 
-        save_end = false, 
-        save_everystep = false, 
-        kwargs...
-    )
+    estim_x = try
+      estim_fun(unscale_params.(x, scale))
     catch e
         @warn "Error when calling loss_func($x): $e"
     end
-    #println(x_pairs)
     print("count: $(count)")
-    if best_ofv > sol.u
-      best_ofv = sol.u
+    if best_ofv > estim_x
+      best_ofv = estim_x
       print(", best OFV: $best_ofv")
     end
     println("")
-    return sol.u
+    return estim_x
   end
 
   opt = Opt(fit_alg, length(params))
@@ -168,7 +136,6 @@ function fit(
   minx_pairs = [key=>value for (key, value) in zip(first.(params), unscale_params.(minx, scale))]
   
   return FitResult(minf, minx_pairs, ret, opt.numevals)
-
 end
 
 """

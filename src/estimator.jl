@@ -1,4 +1,4 @@
-
+# likelihood estimator generator
 function estimator(
   scenario_pairs::AbstractVector{Pair{Symbol, C}},
   params::Vector{Pair{Symbol,Float64}};
@@ -7,7 +7,7 @@ function estimator(
   reltol=DEFAULT_FITTING_RELTOL,
   abstol=DEFAULT_FITTING_ABSTOL,
   parallel_type=EnsembleSerial(),
-  kwargs... # other arguments to sim()
+  kwargs... # other arguments to sim
 ) where {C<:AbstractScenario, P<:Pair}
 
   # names of parameters used in fitting and saved in params field of solution
@@ -49,27 +49,34 @@ function estimator(
     (sum(batch),false)
   end
 
-  prob(x) = EnsembleProblem(EMPTY_PROBLEM;
+  prob(x) = EnsembleProblem(
+    EMPTY_PROBLEM;
     prob_func = prob_func(x),
     output_func = _output,
     reduction = _reduction
   )
 
-  ###
-    x_nt = NamedTuple{Tuple(params_names)}(last.(params))
-    prob_i = prob(x_nt)
-    sol = solve(prob_i, alg, parallel_type;
-        trajectories = length(selected_scenario_pairs),
-        reltol,
-        abstol,
-        save_start = false, 
-        save_end = false, 
-        save_everystep = false, 
-        kwargs...
+  ### function ready for fitting
+
+  function out(x::Vector{Float64}=last.(params))
+    x_nt = NamedTuple{Tuple(params_names)}(x)
+    solution = solve(
+      prob(x_nt),
+      alg,
+      parallel_type;
+      trajectories = length(selected_scenario_pairs),
+      reltol,
+      abstol,
+      save_start = false, 
+      save_end = false, 
+      save_everystep = false, 
+      kwargs...
     )
-    
-    #println(x_pairs)
-    return sol.u
+
+    return solution.u
+  end
+  
+  return out
 end
 
 function estimator(
