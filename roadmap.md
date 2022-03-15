@@ -40,12 +40,13 @@ _Created: 2022-03-02_
 
 ## Techniques and use cases
 
+- Analysis of dependent fitted parameter
 - Validation
 - Local sensitivity
 - Global sensitivity
 - Structural identifiability
 - Practical identifiability and predictability
-- Optimal experiment development
+- Optimal experiment development (design)
 - Predictive and prognostic biomarker discovery
 - Virtual population
 - Cloud resources for parallel simulations

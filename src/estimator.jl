@@ -1,5 +1,5 @@
 
-function likelihood(
+function estim(
   scenario_pairs::AbstractVector{Pair{Symbol, C}},
   params::Vector{Pair{Symbol,Float64}};
   parameters_upd::Union{Nothing, Vector{P}}=nothing,
@@ -72,7 +72,7 @@ function likelihood(
     return sol.u
 end
 
-function likelihood(
+function estim(
   scenario_pairs::AbstractVector{Pair{Symbol, C}},
   params_df::DataFrame;
   kwargs...
@@ -84,10 +84,19 @@ function likelihood(
   params = gdf[(true,)].parameter .=> gdf[(true,)].nominal
   parameters_upd = haskey(gdf, (false,)) ? gdf[(false,)].parameter .=> gdf[(false,)].nominal : nothing
 
-  likelihood(scenario_pairs, params; parameters_upd, kwargs...)
+  estim(scenario_pairs, params; parameters_upd, kwargs...)
 end
 
-function likelihood(
+function estim(
+  scenarios::AbstractVector{C},
+  params; # DataFrame or Vector{Pair{Symbol,Float64}}
+  kwargs... # other arguments to fit or sim
+) where {C<:AbstractScenario}
+  scenario_pairs = Pair{Symbol,AbstractScenario}[Symbol("_$i") => scn for (i, scn) in pairs(scenarios)]
+  return estim(scenario_pairs, params; kwargs...)
+end
+
+function estim(
   platform::Platform,
   params;
   scenarios::Union{AbstractVector{Symbol}, Nothing} = nothing, # all if nothing
@@ -103,5 +112,5 @@ function likelihood(
     end
   end
 
-  return likelihood(scenario_pairs, params; kwargs...)
+  return estim(scenario_pairs, params; kwargs...)
 end

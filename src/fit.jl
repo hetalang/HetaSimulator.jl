@@ -22,30 +22,30 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
       kwargs... 
     ) where C<:AbstractScenario
 
-Fit parameters to experimental measurements. Returns `FitResult` type.
+  Fit parameters to experimental measurements. Returns `FitResult` type.
 
-Example: `fit([:x=>scn2, :y=>scn3, :z=>scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
+  Example: `fit([:x=>scn2, :y=>scn3, :z=>scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
 
-Arguments:
+  Arguments:
 
-- `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
-- `params` : optimization parameters and their initial values
-- `parameters_upd` : constants, which overwrite both `Model` and `Scenario` constants. Default is `nothing`
-- `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
-- `reltol` : relative tolerance. Default is 1e-6
-- `abstol` : relative tolerance. Default is 1e-8
-- `parallel_type` : parallel setup. See SciML docs for details. Default is no parallelism: EnsembleSerial()
-- `ftol_abs` : absolute tolerance on function value. See `NLopt.jl` docs for details. Default is `0.0`
-- `ftol_rel` : relative tolerance on function value. See `NLopt.jl` docs for details. Default is `1e-4`
-- `xtol_rel` : relative tolerance on optimization parameters. See `NLopt.jl` docs for details. Default is `0.0`
-- `xtol_rel` : absolute tolerance on optimization parameters. See `NLopt.jl` docs for details. Default is `0.0`
-- `fit_alg` : fitting algorithm. See `NLopt.jl` docs for details. Default is `:LN_NELDERMEAD`
-- `maxeval` : maximum number of function evaluations. See `NLopt.jl` docs for details. Default is `1e4`
-- `maxtime` : maximum optimization time (in seconds). See `NLopt.jl` docs for details. Default is `0`
-- `lbounds` : lower parameters bounds. See `NLopt.jl` docs for details. Default is `fill(0.0, length(params))`
-- `ubounds` : upper parameters bounds. See `NLopt.jl` docs for details. Default is `fill(Inf, length(params))`
-- `scale`   : scale of the parameters (supports `:lin, :log, :log10`) to be used during fitting. Default is `fill(:lin, length(params))`
-- kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
+  - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
+  - `params` : optimization parameters and their initial values
+  - `parameters_upd` : constants, which overwrite both `Model` and `Scenario` constants. Default is `nothing`
+  - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
+  - `reltol` : relative tolerance. Default is 1e-6
+  - `abstol` : relative tolerance. Default is 1e-8
+  - `parallel_type` : parallel setup. See SciML docs for details. Default is no parallelism: EnsembleSerial()
+  - `ftol_abs` : absolute tolerance on function value. See `NLopt.jl` docs for details. Default is `0.0`
+  - `ftol_rel` : relative tolerance on function value. See `NLopt.jl` docs for details. Default is `1e-4`
+  - `xtol_rel` : relative tolerance on optimization parameters. See `NLopt.jl` docs for details. Default is `0.0`
+  - `xtol_rel` : absolute tolerance on optimization parameters. See `NLopt.jl` docs for details. Default is `0.0`
+  - `fit_alg` : fitting algorithm. See `NLopt.jl` docs for details. Default is `:LN_NELDERMEAD`
+  - `maxeval` : maximum number of function evaluations. See `NLopt.jl` docs for details. Default is `1e4`
+  - `maxtime` : maximum optimization time (in seconds). See `NLopt.jl` docs for details. Default is `0`
+  - `lbounds` : lower parameters bounds. See `NLopt.jl` docs for details. Default is `fill(0.0, length(params))`
+  - `ubounds` : upper parameters bounds. See `NLopt.jl` docs for details. Default is `fill(Inf, length(params))`
+  - `scale`   : scale of the parameters (supports `:lin, :log, :log10`) to be used during fitting. Default is `fill(:lin, length(params))`
+  - kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
 function fit(
   scenario_pairs::AbstractVector{Pair{Symbol, C}},
@@ -177,13 +177,13 @@ end
       kwargs...
     ) where C<:AbstractScenario
 
-Fit parameters to experimental measurements. Returns `FitResult` type.
+  Fit parameters to experimental measurements. Returns `FitResult` type.
 
-Arguments:
+  Arguments:
 
-- `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
-- `params` : DataFrame with optimization parameters setup and their initial values
-- kwargs : other solver related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
+  - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
+  - `params` : DataFrame with optimization parameters setup and their initial values
+  - kwargs : other solver related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
 """
 function fit(
   scenario_pairs::AbstractVector{Pair{Symbol, C}},
@@ -198,38 +198,39 @@ function fit(
   lbounds = gdf[(true,)].lower
   ubounds = gdf[(true,)].upper
   scale = gdf[(true,)].scale
+  # fixed parameters
   parameters_upd = haskey(gdf, (false,)) ? gdf[(false,)].parameter .=> gdf[(false,)].nominal : nothing
 
   fit(scenario_pairs, params; parameters_upd, lbounds, ubounds, scale, kwargs...)
 end
 
-### fit many scenarios
 """
     fit(scenarios::AbstractVector{C},
       params;
       kwargs...
     ) where C<:AbstractScenario
 
-Fit parameters to experimental measurements. Returns `FitResult` type.
+  Fit parameters to experimental measurements. Returns `FitResult` type.
 
-Example: `fit([scn2, scn3, scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
+  Example: `fit([scn2, scn3, scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
 
-Arguments:
+  Arguments:
 
-- `scenarios` : vector of scenarios of type [`Scenario`](@ref)
-- `params` : optimization parameters and their initial values
-- kwargs : other solver related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
+  - `scenarios` : vector of scenarios of type [`Scenario`](@ref)
+  - `params` : optimization parameters and their initial values
+  - kwargs : other solver related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
 """
 function fit(
   scenarios::AbstractVector{C},
-  params;
-  kwargs... # other arguments to sim(::Vector{Pair})
+  params; # DataFrame or Vector{Pair{Symbol,Float64}}
+  kwargs... # other arguments to fit or sim
 ) where {C<:AbstractScenario}
   scenario_pairs = Pair{Symbol,AbstractScenario}[Symbol("_$i") => scn for (i, scn) in pairs(scenarios)]
   return fit(scenario_pairs, params; kwargs...)
 end
 
-### fit platform
+### fit platform ###
+
 """
     fit(platform::Platform,
       params;
@@ -237,22 +238,22 @@ end
       kwargs...
     ) where C<:AbstractScenario
 
-Fit parameters to experimental measurements. Returns `FitResult` type.
+  Fit parameters to experimental measurements. Returns `FitResult` type.
 
-Example: `fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3];scenarios=[:scn2,:scn3])`
+  Example: `fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3];scenarios=[:scn2,:scn3])`
 
-Arguments:
+  Arguments:
 
-- `platform` : platform of [`Platform`](@ref) type
-- `params` : optimization parameters and their initial values
-- `scenarios` : vector of scenarios of type [`Scenario`](@ref) or `nothing` to fit all scenarios. Default is `nothing`
-- kwargs : other solver related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
+  - `platform` : platform of [`Platform`](@ref) type
+  - `params` : optimization parameters and their initial values
+  - `scenarios` : vector of scenarios of type [`Scenario`](@ref) or `nothing` to fit all scenarios. Default is `nothing`
+  - kwargs : other solver related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
 """
 function fit(
   platform::Platform,
-  params;
+  params; # DataFrame or Vector{Pair{Symbol,Float64}}
   scenarios::Union{AbstractVector{Symbol}, Nothing} = nothing, # all if nothing
-  kwargs... # other arguments to fit()
+  kwargs... # other arguments to fit or sim
 )
   if isnothing(scenarios)
     scenario_pairs = [platform.scenarios...]

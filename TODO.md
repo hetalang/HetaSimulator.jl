@@ -6,10 +6,19 @@ _The rest of ideas and issues are posted in https://github.com/hetalang/heta-dis
 - wrong get parameters from MCResults, Pair{Symbol, MCResults}, Vector{Pair{Symbol, MCResults}}
 - very slow show(::Model)
 
+## fitting
+
+- file storing intermediate results: `current-fitting.heta`
+- fitting progress: description of everything
+- parameter updates in `Measurements`
+- force stop Ctrl+C must stop with saved optimal value
+- progress bar of fitting: best fit, ? parameter, number of simulation,
+- storing optimal fitted values inside platform
+- ? `Measurements` as an external object like `parameters` for `mc`
+
 ## features
 
 - Additional distribution type for loss function: unified, laplace, BQL
-- parameter updates in `Measurements`
 - checking units when `load_platform`
 - sim() and mc() are compiled independently
 - legend outside of plot
