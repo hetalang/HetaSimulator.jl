@@ -81,7 +81,7 @@ fscn2 = Scenario(model, (0., 200.); parameters = [:k1=>0.015], observables=[:A, 
 data = read_measurements("$HetaSimulatorDir/test/examples/single_comp/single_comp_data.csv")
 add_measurements!(fscn1, data; subset = [:scenario => :one])
 add_measurements!(fscn2, data; subset = [:scenario => :two])
-fres = fit([:one=>fscn1, :two=>fscn2], [:k1=>0.01])
+fres = fit([:one=>fscn1, :two=>fscn2], [:k1=>0.01], silent=true)
 
 @test typeof(fres) <: HetaSimulator.FitResult
 @test test_show(fres)

@@ -65,6 +65,7 @@ function fit(
   lbounds = fill(0.0, length(params)),
   ubounds = fill(Inf, length(params)),
   scale = fill(:lin, length(params)),
+  silent::Bool = false,
   kwargs... # other arguments to sim
 ) where {C<:AbstractScenario, P<:Pair}
 
@@ -93,8 +94,10 @@ function fit(
     kwargs...
   )
 
+  # progress info
+  prog = ProgressUnknown("Fit counter:"; spinner=false, enabled=!silent, showspeed=true)
   count = 0
-  best_ofv = Inf
+  estim_best = Inf
   function obj_func(x, grad)
     count+=1
     # try - catch is a tmp solution for NLopt 
@@ -103,12 +106,11 @@ function fit(
     catch e
         @warn "Error when calling loss_func($x): $e"
     end
-    print("count: $(count)")
-    if best_ofv > estim_x
-      best_ofv = estim_x
-      print(", best OFV: $best_ofv")
+    
+    if estim_x < estim_best
+      estim_best = estim_x
     end
-    println("")
+    ProgressMeter.update!(prog, count, spinner="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"; showvalues = [(:estimator,round(estim_best; digits=2))])
     return estim_x
   end
 

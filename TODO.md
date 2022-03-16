@@ -9,7 +9,6 @@ _The rest of ideas and issues are posted in https://github.com/hetalang/heta-dis
 ## fitting
 
 - file storing intermediate results: `current-fitting.heta`
-- fitting progress: description of everything
 - parameter updates in `Measurements`
 - force stop Ctrl+C must stop with saved optimal value
 - progress bar of fitting: best fit, ? parameter, number of simulation,
@@ -19,13 +18,11 @@ _The rest of ideas and issues are posted in https://github.com/hetalang/heta-dis
 ## features
 
 - Additional distribution type for loss function: unified, laplace, BQL
-- checking units when `load_platform`
 - sim() and mc() are compiled independently
 - legend outside of plot
 - split plots horizontally
 - checking `atStart: true`, `atStart: false` inside Events
 - add loss methods for `Condition`, `Vector{Condition}`
-- extended chain syntax
 
 ## ideas
 
