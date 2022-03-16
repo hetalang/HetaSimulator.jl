@@ -38,13 +38,14 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
   - `ftol_abs` : absolute tolerance on function value. See `NLopt.jl` docs for details. Default is `0.0`
   - `ftol_rel` : relative tolerance on function value. See `NLopt.jl` docs for details. Default is `1e-4`
   - `xtol_rel` : relative tolerance on optimization parameters. See `NLopt.jl` docs for details. Default is `0.0`
-  - `xtol_rel` : absolute tolerance on optimization parameters. See `NLopt.jl` docs for details. Default is `0.0`
+  - `xtol_abs` : absolute tolerance on optimization parameters. See `NLopt.jl` docs for details. Default is `0.0`
   - `fit_alg` : fitting algorithm. See `NLopt.jl` docs for details. Default is `:LN_NELDERMEAD`
   - `maxeval` : maximum number of function evaluations. See `NLopt.jl` docs for details. Default is `1e4`
   - `maxtime` : maximum optimization time (in seconds). See `NLopt.jl` docs for details. Default is `0`
   - `lbounds` : lower parameters bounds. See `NLopt.jl` docs for details. Default is `fill(0.0, length(params))`
   - `ubounds` : upper parameters bounds. See `NLopt.jl` docs for details. Default is `fill(Inf, length(params))`
   - `scale`   : scale of the parameters (supports `:lin, :log, :log10`) to be used during fitting. Default is `fill(:lin, length(params))`
+  - `progress` : progress mode display. One of three values: `:silent`, `:minimal`, `:full`. Default is `:minimal`
   - kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
 function fit(
@@ -65,7 +66,7 @@ function fit(
   lbounds = fill(0.0, length(params)),
   ubounds = fill(Inf, length(params)),
   scale = fill(:lin, length(params)),
-  silent::Bool = false,
+  progress::Symbol = :minimal,
   kwargs... # other arguments to sim
 ) where {C<:AbstractScenario, P<:Pair}
 
@@ -95,14 +96,15 @@ function fit(
   )
 
   # progress info
-  prog = ProgressUnknown("Fit counter:"; spinner=false, enabled=!silent, showspeed=true)
+  prog = ProgressUnknown("Fit counter:"; spinner=false, enabled=progress!=:silent, showspeed=true)
   count = 0
   estim_best = Inf
   function obj_func(x, grad)
     count+=1
     # try - catch is a tmp solution for NLopt 
+    x_unscaled = unscale_params.(x, scale)
     estim_x = try
-      estim_fun(unscale_params.(x, scale))
+      estim_fun(x_unscaled)
     catch e
         @warn "Error when calling loss_func($x): $e"
     end
@@ -110,7 +112,15 @@ function fit(
     if estim_x < estim_best
       estim_best = estim_x
     end
-    ProgressMeter.update!(prog, count, spinner="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"; showvalues = [(:estimator,round(estim_best; digits=2))])
+
+    values_to_display = [(:ESTIMATOR_BEST, round(estim_best; digits=2))]
+    if progress == :full
+      for i in 1:length(x)
+        push!(values_to_display, (params_names[i], round(x_unscaled[i], sigdigits=3)))
+      end
+    end
+
+    ProgressMeter.update!(prog, count, spinner="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"; showvalues = values_to_display)
     return estim_x
   end
 
