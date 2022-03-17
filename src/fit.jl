@@ -44,7 +44,8 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
   - `maxtime` : maximum optimization time (in seconds). See `NLopt.jl` docs for details. Default is `0`
   - `lbounds` : lower parameters bounds. See `NLopt.jl` docs for details. Default is `fill(0.0, length(params))`
   - `ubounds` : upper parameters bounds. See `NLopt.jl` docs for details. Default is `fill(Inf, length(params))`
-  - `scale`   : scale of the parameters (supports `:lin, :log, :log10`) to be used during fitting. Default is `fill(:lin, length(params))`
+  - `scale`   : scale of the parameters (supports `:lin, :direct, :log, :log10`) to be used during fitting. Default is `fill(:lin, length(params))`.
+                `:direct` value is a synonym of `:lin`.
   - `progress` : progress mode display. One of three values: `:silent`, `:minimal`, `:full`. Default is `:minimal`
   - kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
@@ -248,7 +249,7 @@ function fit(
 end
 
 function scale_params(x, scale::Symbol)
-  if scale == :lin 
+  if scale == :lin || scale == :direct
     return x
   elseif scale == :log
     return log(x)
@@ -260,7 +261,7 @@ function scale_params(x, scale::Symbol)
 end
 
 function unscale_params(x, scale::Symbol)
-  if scale == :lin 
+  if scale == :lin || scale == :direct
     return x
   elseif scale == :log
     return exp(x)

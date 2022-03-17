@@ -69,4 +69,5 @@ module HetaSimulator
   export save_results, read_mcvecs
   export gsa, pearson, partial, standard
   export save_as_heta
+  export scale_params, unscale_params
 end
