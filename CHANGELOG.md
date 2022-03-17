@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.8
+
+- `estimator` method to return estimator function
+- `fit` progress display
+- `:lin` and `:direct` are synonyms
+
 ## 0.4.7
 
 - fix `NaNMath` bug

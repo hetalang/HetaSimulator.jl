@@ -1,4 +1,40 @@
 # likelihood estimator generator
+
+"""
+    function estimator(
+      scenario_pairs::AbstractVector{Pair{Symbol, C}},
+      params::Vector{Pair{Symbol,Float64}};
+      parameters_upd::Union{Nothing, Vector{P}}=nothing,
+      alg=DEFAULT_ALG,
+      reltol=DEFAULT_FITTING_RELTOL,
+      abstol=DEFAULT_FITTING_ABSTOL,
+      parallel_type=EnsembleSerial(),
+      kwargs... # other arguments to sim
+    ) where {C<:AbstractScenario, P<:Pair}
+
+  Generates likelihood estimator function for parameter identification and analysis.
+  It corresponds to `-2ln(L)` as a function depending on parameter set.
+
+  Example: `estimator([:x=>scn2, :y=>scn3, :z=>scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
+
+  Arguments:
+
+  - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
+  - `params` : parameters and their nominal values that will be used as default
+  - `parameters_upd` : constants, which overwrite both `Model` and `Scenario` constants. Default is `nothing`
+  - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
+  - `reltol` : relative tolerance. Default is 1e-6
+  - `abstol` : relative tolerance. Default is 1e-8
+  - `parallel_type` : parallel setup. See SciML docs for details. Default is no parallelism: EnsembleSerial()
+  - `kwargs...` : other ODE solver related arguments supported by `DiffEqBase.solve`. See SciML docs for details
+
+  Returns:
+
+    function(x:Vector{Float64}=last.(params))
+  
+  The method returns ananimous function which depends on parameters vector in the same order as in `params`.
+  This function is ready to be passed to optimizer routine or identifiability analysis.
+"""
 function estimator(
   scenario_pairs::AbstractVector{Pair{Symbol, C}},
   params::Vector{Pair{Symbol,Float64}};
@@ -79,6 +115,23 @@ function estimator(
   return out
 end
 
+"""
+    function estimator(
+      scenario_pairs::AbstractVector{Pair{Symbol, C}},
+      params_df::DataFrame;
+      kwargs...
+    ) where C<:AbstractScenario
+
+  Generates likelihood estimator function for parameter identification and analysis. 
+  It is the interface for parameters from `DataFrame`.
+  See more detailes in base `estimator` method.
+
+  Arguments:
+
+  - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
+  - `params` : DataFrame with optimization parameters setup and their initial values, see [`read_parameters`](@ref)
+  - `kwargs...` : other arguments supported by `estimator`, see base method.
+"""
 function estimator(
   scenario_pairs::AbstractVector{Pair{Symbol, C}},
   params_df::DataFrame;
@@ -94,15 +147,51 @@ function estimator(
   estimator(scenario_pairs, params; parameters_upd, kwargs...)
 end
 
+"""
+    function estimator(
+      scenarios::AbstractVector{C},
+      params;
+      kwargs...
+    ) where {C<:AbstractScenario}
+
+  Generates likelihood estimator function for parameter identification and analysis. 
+  It is the interface for scenarios in vector.
+  See more detailes in base `estimator` method.
+    
+  Arguments:
+  
+  - `scenarios` : vector of scenarios of type [`Scenario`](@ref)
+  - `params` : optimization parameters and their initial values
+  - `kwargs...` : other arguments supported by `estimator`, see base method.
+"""
 function estimator(
   scenarios::AbstractVector{C},
   params; # DataFrame or Vector{Pair{Symbol,Float64}}
-  kwargs... # other arguments to fit or sim
+  kwargs...
 ) where {C<:AbstractScenario}
   scenario_pairs = Pair{Symbol,AbstractScenario}[Symbol("_$i") => scn for (i, scn) in pairs(scenarios)]
   return estimator(scenario_pairs, params; kwargs...)
 end
 
+"""
+    function estimator(
+      platform::Platform,
+      params;
+      scenarios::Union{AbstractVector{Symbol}, Nothing} = nothing, # all if nothing
+      kwargs... 
+    )
+  
+  Generates likelihood estimator function for parameter identification and analysis. 
+  It is the interface for Platform.
+  See more detailes in base `estimator` method.
+
+  Arguments:
+
+  - `platform` : platform of [`Platform`](@ref) type
+  - `params` : optimization parameters and their initial values
+  - `scenarios` : vector of scenarios identifiers of type `Symbol`. Default is `nothing`
+  - `kwargs...` : other arguments supported by `estimator`, see base method.
+"""
 function estimator(
   platform::Platform,
   params;

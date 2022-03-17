@@ -4,8 +4,10 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
 ### general interface
 
 """
-    fit(scenario_pairs::AbstractVector{Pair{Symbol, C}},
+    fit(
+      scenario_pairs::AbstractVector{Pair{Symbol, C}},
       params::Vector{Pair{Symbol,Float64}};
+      parameters_upd::Union{Nothing, Vector{P}}=nothing,
       alg=DEFAULT_ALG,
       reltol=DEFAULT_FITTING_RELTOL,
       abstol=DEFAULT_FITTING_ABSTOL,
@@ -19,8 +21,10 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
       maxtime = 0.0,
       lbounds = fill(0.0, length(params)),
       ubounds = fill(Inf, length(params)),
+      scale = fill(:lin, length(params)),
+      progress::Symbol = :minimal,
       kwargs... 
-    ) where C<:AbstractScenario
+    ) where {C<:AbstractScenario, P<:Pair}
 
   Fit parameters to experimental measurements. Returns `FitResult` type.
 
@@ -47,7 +51,7 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
   - `scale`   : scale of the parameters (supports `:lin, :direct, :log, :log10`) to be used during fitting. Default is `fill(:lin, length(params))`.
                 `:direct` value is a synonym of `:lin`.
   - `progress` : progress mode display. One of three values: `:silent`, `:minimal`, `:full`. Default is `:minimal`
-  - kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
+  - `kwargs...` : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
 function fit(
   scenario_pairs::AbstractVector{Pair{Symbol, C}},
@@ -152,7 +156,8 @@ function fit(
 end
 
 """
-    fit(scenario_pairs::AbstractVector{Pair{Symbol, C}},
+    fit(
+      scenario_pairs::AbstractVector{Pair{Symbol, C}},
       params_df::DataFrame;
       kwargs...
     ) where C<:AbstractScenario
@@ -162,8 +167,8 @@ end
   Arguments:
 
   - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
-  - `params` : DataFrame with optimization parameters setup and their initial values
-  - kwargs : other solver related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
+  - `params` : DataFrame with optimization parameters setup and their initial values, see [`read_parameters`](@ref)
+  - `kwargs...` : other ODE solver and `fit` arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
 """
 function fit(
   scenario_pairs::AbstractVector{Pair{Symbol, C}},
@@ -185,20 +190,23 @@ function fit(
 end
 
 """
-    fit(scenarios::AbstractVector{C},
+    fit(
+      scenarios::AbstractVector{C},
       params;
       kwargs...
     ) where C<:AbstractScenario
 
   Fit parameters to experimental measurements. Returns `FitResult` type.
 
-  Example: `fit([scn2, scn3, scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
+  Example:
+  
+  `fit([scn2, scn3, scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
 
   Arguments:
 
   - `scenarios` : vector of scenarios of type [`Scenario`](@ref)
   - `params` : optimization parameters and their initial values
-  - kwargs : other solver related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
+  - `kwargs...` : other ODE solver and `fit` related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
 """
 function fit(
   scenarios::AbstractVector{C},
@@ -220,14 +228,16 @@ end
 
   Fit parameters to experimental measurements. Returns `FitResult` type.
 
-  Example: `fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3];scenarios=[:scn2,:scn3])`
+  Example:
+  
+  `fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3];scenarios=[:scn2,:scn3])`
 
   Arguments:
 
   - `platform` : platform of [`Platform`](@ref) type
   - `params` : optimization parameters and their initial values
-  - `scenarios` : vector of scenarios of type [`Scenario`](@ref) or `nothing` to fit all scenarios. Default is `nothing`
-  - kwargs : other solver related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
+  - `scenarios` : vector of scenarios identifiers of type `Symbol`. Default is `nothing`
+  - `kwargs...` : other ODE solver and `fit` related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
 """
 function fit(
   platform::Platform,
