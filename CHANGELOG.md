@@ -5,6 +5,7 @@
 - `estimator` method to return estimator function
 - `fit` progress display
 - `:lin` and `:direct` are synonyms
+- fix `NaNMath` problem 2
 
 ## 0.4.7
 

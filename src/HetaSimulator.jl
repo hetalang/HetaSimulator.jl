@@ -11,9 +11,11 @@ module HetaSimulator
   @reexport using OrdinaryDiffEq
   @reexport using DiffEqBase.EnsembleAnalysis
   using Sundials
-  # fitting
+  @reexport using NaNMath
 
+  # fitting
   using NLopt
+
   # utils
   @reexport using DataFrames
   @reexport using Distributions
