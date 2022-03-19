@@ -2,6 +2,8 @@
 
 _Created: 2022-03-02_
 
+_Updated: 2022-03-19_
+
 ## Methods
 
 ### I. Types revision
@@ -13,7 +15,7 @@ _Created: 2022-03-02_
 ### II. Optimization
 
 - [ ] Parameter updates in `Measurement`
-- [ ] `loss` method revision: separate from `fit` method
+- [+] `loss` method revision: separate from `fit` method
 - [ ] `fit` method revision: interface update, another optimization methods, visualization
 - [ ] `identify` method: calculation of CI, CB
 
