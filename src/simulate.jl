@@ -162,7 +162,7 @@ end
 
 """
     sim(platform::Platform; 
-      scenarios::Union{AbstractVector{Symbol}, Nothing} = nothing,
+      scenarios::Union{AbstractVector{Symbol}, AbstractVector{InvertedIndex{Symbol}}, Nothing} = nothing,
       kwargs...) where {C<:AbstractScenario}
 
 Simulate scenarios included in platform. Returns `Vector{Pair}`.
@@ -177,9 +177,9 @@ Arguments:
 """
 function sim(
   platform::Platform;
-  scenarios::Union{AbstractVector{Symbol}, Nothing} = nothing,
+  scenarios::Union{AbstractVector{Symbol}, AbstractVector{InvertedIndex{Symbol}}, Nothing} = nothing,
   kwargs... # other arguments to sim(::Vector{Pair})
-) 
+)
   @assert length(platform.scenarios) != 0 "Platform should contain at least one scenario."
 
   if isnothing(scenarios)
@@ -187,6 +187,7 @@ function sim(
   else
     scenario_pairs = Pair{Symbol,AbstractScenario}[]
     for scn_name in scenarios
+      # TODO: support of InvertedIndex{Symbol}
       @assert haskey(platform.scenarios, scn_name) "No scenario :$scn_name found in the platform."
       push!(scenario_pairs, scn_name=>platform.scenarios[scn_name])
     end

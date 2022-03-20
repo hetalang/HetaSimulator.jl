@@ -38,11 +38,11 @@ fit_results = fit(p, parameters_csv)
 Loading file __parameters.csv__ with the following content.
 
 parameter | nominal | lower | upper | scale | estimate
---- | --- | --- | ---- | ---- | ---
-sigma\_K|0.1|1e-6|1e3|log|1
-sigma\_P|0.1|1e-6|1e3|log|1
-Kp\_K\_D|5.562383e+01|1e-6|1e3|log|1
-Kp\_R\_D|5.562383e+01|1e-6|1e3|log|0
+---|---|---|---|---|---
+sigma\_K | 0.1 | 1e-6 | 1e3 | log | 1
+sigma\_P | 0.1 | 1e-6 | 1e3 | log | 1
+Kp\_K\_D | 5.562383e+01 | 1e-6 | 1e3 | log | 1
+Kp\_R\_D | 5.562383e+01 | 1e-6 | 1e3 | log | 0
 
 Read as `DataFrame` object.
 
