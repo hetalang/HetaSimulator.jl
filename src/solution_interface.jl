@@ -30,8 +30,8 @@ end
 
 ############################ DataFrames ########################################
 
-function DataFrame(s::Simulation; vars=observables(s))
-  df = DataFrame(t=s.vals.t)
+function DataFrame(s::Simulation; vars=observables(s), kwargs...)
+  df = DataFrame(t=s.vals.t, kwargs...)
 
   [df[!, v] = s[v,:] for v in vars[in.(vars, Ref(observables(s)))]]
   !isnothing(s.scope) && (df[!,:scope]=s.scope)
@@ -39,7 +39,20 @@ function DataFrame(s::Simulation; vars=observables(s))
   return df
 end
 
-DataFrame(sr::SimResult; kwargs...) = DataFrame(sr.sim; kwargs...)
+function DataFrame(sr::SimResult; vars=observables(sr.sim), add_parameters=false, kwargs...)
+  df = DataFrame(sr.sim; vars, kwargs...)
+
+  if add_parameters
+    parameters_la = parameters(sr.scenario)
+    parameters_names = keys(parameters_la)
+    
+    for i in 1:length(parameters_la)
+      df[:,parameters_names[i]] .= parameters_la[i]
+    end
+  end
+
+  return df
+end
 
 function DataFrame(sr::Pair{Symbol,S}; kwargs...) where S<:SimResult
   df = DataFrame(last(sr); kwargs...)

@@ -240,13 +240,13 @@ The results can be transformed using `DataFrame` method or visualized using `plo
 """
 struct SimResult{S, C<:Scenario} <: AbstractResult
   sim::S
-  scenario::C 
+  scenario::C
 end
 
 status(sr::SimResult) = status(sr.sim)
 times(sr::SimResult) = times(sr.sim)
 vals(sr::SimResult) = vals(sr.sim)
-parameters(sr::SimResult) = parameters(sr.sim)
+parameters(sr::SimResult) = parameters(sr.sim) # TODO: check here
 measurements(sr::SimResult) = sr.scenario.measurements
 
 @inline Base.length(sr::SimResult) = length(sr.sim)
