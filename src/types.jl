@@ -145,6 +145,7 @@ abstract type AbstractScenario end
     init_func::F
     prob::P
     measurements::M
+    tags::AbstractVector{Symbol}
   end
 
   Type representing simulation conditions, i.e. model variant with updated constants and outputs.
@@ -155,6 +156,8 @@ struct Scenario{F,P,M} <: AbstractScenario
   init_func::F
   prob::P
   measurements::M
+  tags::AbstractVector{Symbol}
+  group::Union{Symbol,Nothing}
 end 
 
 tspan(scn::Scenario) = scn.prob.tspan
@@ -174,9 +177,13 @@ function Base.show(io::IO, mime::MIME"text/plain", scn::Scenario)
   time_points_str = "for tspan=$(tspan(scn))"
 
   println(io, "Scenario $time_points_str")
-  println(io, "   Time range (tspan): $(tspan(scn))")
-  println(io, "   Parameters: $(parameters_str)")
-  println(io, "   Number of measurement points: $(measurements_count)")
+  println(io, "    Time range (tspan): $(tspan(scn))")
+  println(io, "    Parameters: $(parameters_str)")
+  println(io, "    Number of measurement points: $(measurements_count)")
+  #println(io, "    Tags: $(scn.tags)")
+  if !isnothing(scn.group) 
+    println(io, "    Group: :$(scn.group)")
+  end
 end
 
 ################################## SimResult ###########################################

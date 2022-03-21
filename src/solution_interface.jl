@@ -51,6 +51,18 @@ function DataFrame(sr::SimResult; vars=observables(sr.sim), add_parameters=false
     end
   end
 
+  # XXX: experimental option, currently group column is more useful
+  if length(sr.scenario.tags) > 0
+    for tag in sr.scenario.tags
+      df[:,"tags.$tag"] .= true
+    end
+  end
+
+  # group column
+  if !isnothing(sr.scenario.group)
+    df.group .= sr.scenario.group
+  end
+
   return df
 end
 

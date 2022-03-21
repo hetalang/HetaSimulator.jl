@@ -3,10 +3,13 @@ const SWITCHER_PREFIX = "events_active"
 const SWITCHER_SAVE_PREFIX = "events_save"
 const TSPAN_HEADER = Symbol("tspan")
 const OBSERVABLES_HEADER = Symbol("observables[]")
+const TAGS_HEADER = Symbol("tags[]")
+const GROUP_HEADER = Symbol("group")
 
 # general interface
 """
-    Scenario(model::Model,
+    Scenario(
+      model::Model,
       tspan;
       measurements::Vector{AbstractMeasurementPoint}=AbstractMeasurementPoint[],
       observables::Union{Nothing,Vector{Symbol}}=nothing,
@@ -26,6 +29,8 @@ Arguments:
 - `tspan` : time span for the ODE problem
 - `measurements` : `Vector` of measurements. Default is empty `Vector{AbstractMeasurementPoint}`
 - `observables` : names of output observables. Overwrites default model's values. Default is `nothing`
+- `tags` :
+- `group` :
 - `parameters` : `Vector` of `Pair`s containing constants' names and values. Overwrites default model's values. Default is empty vector.
 - `events_active` : `Vector` of `Pair`s containing events' names and true/false values. Overwrites default model's values. Default is empty `Vector{Pair}`
 - `events_save` : `Tuple` or `Vector{Tuple}` marking whether to save solution before and after event. Default is `(true,true)` for all events
@@ -36,6 +41,8 @@ function Scenario(
   tspan;
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
   observables::Union{Nothing,Vector{Symbol}} = nothing,
+  tags::AbstractVector{Symbol} = Symbol[],
+  group::Union{Symbol, Nothing} = nothing,
   kwargs... # all arguments of build_ode_problem()
 )
   # ODE problem
@@ -46,11 +53,11 @@ function Scenario(
     kwargs...
   )
 
-  return Scenario(model.init_func, prob, measurements)
+  return Scenario(model.init_func, prob, measurements, tags, group)
 end
 
 # Scenario struct method
-function add_scenarios!(p, scen::Vector{P}) where P <: Pair 
+function add_scenarios!(p, scen::Vector{P}) where P <: Pair
   [push!(scenarios(p), s) for s in scen]
   return nothing
 end
@@ -139,13 +146,30 @@ function _add_scenario!(platform::Platform, row::Any) # maybe not any
     _observables = nothing
   end
 
+  # create tags
+  if haskey(row, TAGS_HEADER) && !ismissing(row[TAGS_HEADER])
+    tags_str = split(row[TAGS_HEADER], ";")
+    _tags = Symbol.(tags_str)
+  else
+    _tags = Symbol[]
+  end
+
+  # create group
+  if haskey(row, GROUP_HEADER) && !ismissing(row[GROUP_HEADER])
+    _group = Symbol(row[GROUP_HEADER])
+  else
+    _group = nothing
+  end
+
   scenario = Scenario(
     model,
     _tspan;
     parameters = _parameters,
     events_active = _events_active,
     events_save = _events_save,
-    observables = _observables
+    observables = _observables,
+    tags = _tags,
+    group = _group
   )
 
   push!(platform.scenarios, _id => scenario)
