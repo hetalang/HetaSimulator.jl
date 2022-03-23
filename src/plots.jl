@@ -71,19 +71,27 @@ end
   end
   nothing
 end
+
 #= XXX: do we need it?
 @recipe function plot(sim::Vector{S}) where S <:AbstractResult
   [Symbol("_$i")=>s for (i,s) in enumerate(sim)]
 end
 =#
-@recipe function plot(s::Pair{Symbol,S}) where S<:AbstractResult
+
+#= XXX: maybe a specific plot is required for ensemble summary
+@recipe function plot(es::EnsembleSummary; vars)
+
+end
+=#
+
+@recipe function plot(s::Pair{Symbol,S}) where S<:Union{AbstractResult, EnsembleSummary}
   @series begin
     title := "$(first(s))"
     last(s)
   end
 end
 
-@recipe function plot(sim::Vector{Pair{Symbol,S}}) where S<:AbstractResult
+@recipe function plot(sim::Vector{Pair{Symbol,S}}) where S<:Union{AbstractResult, EnsembleSummary}
   (m,n) = layout_choice(length(sim))
   layout := (m,n)
   size := (400*n,300*m)
@@ -105,4 +113,3 @@ end
     end
   end
 end
-

@@ -15,6 +15,7 @@ _The rest of ideas and issues are posted in https://github.com/hetalang/heta-dis
 
 ## features
 
+- add selection of variables to output: `EnsembleSummary(..., vars=[:A])` like in `plot`
 - extra columns `tags` in scenario-tables with storage in `Scenario` type
 - Additional distribution type for loss function: unified, laplace, BQL
 - sim() and mc() are compiled independently

@@ -347,16 +347,22 @@ function DiffEqBase.EnsembleAnalysis.get_timestep(mcr::MCResult, i)
   return (getindex(mcr[j],i) for j in 1:length(mcr))
 end
 
-function DiffEqBase.EnsembleAnalysis.get_timepoint(mcr::MCResult, t) 
+# XXX: maybe it's a good idea to add: vars::AbstractVector{Symbol}=observables(mcr)
+function DiffEqBase.EnsembleAnalysis.get_timepoint(mcr::MCResult, t)
   @assert has_saveat(mcr) "Solution doesn't contain single time vector, default statistics are not available."
 
-  return (mcr[j](t) for j in 1:length(mcr))
+  # indexes = indexin(vars, observables(mcr))
+
+  res = (mcr[j](t) for j in 1:length(mcr)) # mcr[1](t) # is a LabelledArray
+  
+  return res
 end
 
 function DiffEqBase.EnsembleAnalysis.EnsembleSummary(
   sim::MCResult,
   t=sim[1].t;
-  quantiles=[0.05,0.95]
+  quantiles=[0.05,0.95],
+  #vars=observables(sim)
 )
   m,v = timeseries_point_meanvar(sim,t)
   qlow = timeseries_point_quantile(sim,quantiles[1],t)
@@ -366,6 +372,22 @@ function DiffEqBase.EnsembleAnalysis.EnsembleSummary(
   trajectories = length(sim)
 
   EnsembleSummary{Float64, 2, typeof(t), typeof(m), typeof(v), typeof(med), typeof(qlow), typeof(qhigh)}(t,m,v,med,qlow,qhigh,trajectories,0.0,true)
+end
+
+function DiffEqBase.EnsembleAnalysis.EnsembleSummary(
+  sim_pair::Pair{Symbol, MCResult},
+  t=last(sim_pair)[1].t;
+  quantiles=[0.05,0.95]
+)
+  first(sim_pair) => EnsembleSummary(last(sim_pair), t; quantiles)
+end
+
+function DiffEqBase.EnsembleAnalysis.EnsembleSummary(
+  sim_vector::AbstractVector{Pair{Symbol, MCResult}};
+  # t=?
+  quantiles=[0.05,0.95]
+)
+  EnsembleSummary.(sim_vector; quantiles)
 end
 
 generate_cons(vp::AbstractVector{P},i)  where P<:Pair = NamedTuple([k=>generate_cons(v,i) for (k,v) in vp])
