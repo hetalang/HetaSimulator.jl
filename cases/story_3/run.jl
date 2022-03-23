@@ -55,6 +55,9 @@ mc_res |> plot
 # DataFrame(mc_res[:dose_1])
 # plot(mc_res[:dose_1])
 
+mc_res1 = mc(scenario1, [:kabs=>Normal(10.,5e-1), :kel=>Normal(0.2,5e-3)], 1000, saveat=0.:1.:45.)
+EnsembleSummary(mc_res) |> plot
+
 ### Monte-Carlo for DataFrame
 using DataFrames
 df2 = DataFrame(kabs=rand(Normal(10.,5e-1),1000), kel=rand(Normal(0.2,5e-3), 1000))

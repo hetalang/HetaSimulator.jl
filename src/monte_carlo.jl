@@ -341,29 +341,32 @@ end
 
 # currently median and quantile don't output LVector
 
-function DiffEqBase.EnsembleAnalysis.get_timestep(mcr::MCResult,i) 
+function DiffEqBase.EnsembleAnalysis.get_timestep(mcr::MCResult, i) 
   @assert has_saveat(mcr) "Solution doesn't contain single time vector, default statistics are not available."
+
   return (getindex(mcr[j],i) for j in 1:length(mcr))
 end
 
-function DiffEqBase.EnsembleAnalysis.get_timepoint(mcr::MCResult,t) 
+function DiffEqBase.EnsembleAnalysis.get_timepoint(mcr::MCResult, t) 
   @assert has_saveat(mcr) "Solution doesn't contain single time vector, default statistics are not available."
+
   return (mcr[j](t) for j in 1:length(mcr))
 end
 
-
-function DiffEqBase.EnsembleAnalysis.EnsembleSummary(sim::MCResult,
-  t=sim[1].t;quantiles=[0.05,0.95])
-
+function DiffEqBase.EnsembleAnalysis.EnsembleSummary(
+  sim::MCResult,
+  t=sim[1].t;
+  quantiles=[0.05,0.95]
+)
   m,v = timeseries_point_meanvar(sim,t)
   qlow = timeseries_point_quantile(sim,quantiles[1],t)
   qhigh = timeseries_point_quantile(sim,quantiles[2],t)
+  med = timeseries_point_quantile(sim,0.5,t)
 
   trajectories = length(sim)
 
-  EnsembleSummary{Float64,2,typeof(t),typeof(m),typeof(v),typeof(qlow),typeof(qhigh)}(t,m,v,qlow,qhigh,trajectories,0.0,true)
+  EnsembleSummary{Float64, 2, typeof(t), typeof(m), typeof(v), typeof(med), typeof(qlow), typeof(qhigh)}(t,m,v,med,qlow,qhigh,trajectories,0.0,true)
 end
-
 
 generate_cons(vp::AbstractVector{P},i)  where P<:Pair = NamedTuple([k=>generate_cons(v,i) for (k,v) in vp])
 generate_cons(nt::NamedTuple,i) = NamedTuple{keys(nt)}([generate_cons(v,i) for v in nt])
