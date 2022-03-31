@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.9
+
+- support `plot` for `EnsembleSummary` pairs
+- fix `EnsembleSummary` for `MCResults`
+- `add_parameters` in DataFrame method
+
 ## 0.4.8
 
 - `estimator` method to return estimator function
