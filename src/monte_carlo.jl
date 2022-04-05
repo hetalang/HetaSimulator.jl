@@ -54,7 +54,7 @@ function mc(
   kwargs...
 ) where P<:Pair
 
-  prob0 = scenario.prob
+  prob0 = !isempty(saveat) ? remake_saveat(scenario.prob, saveat) : scenario.prob
   init_func = scenario.init_func
   params_nt = NamedTuple(params)
 
@@ -64,8 +64,7 @@ function mc(
   function prob_func(prob,i,repeat)
     verbose && println("Processing iteration $i")
     progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
-    prob_i = !isempty(saveat) ? remake_saveat(prob, saveat) : prob
-    update_init_values(prob_i, init_func, generate_cons(params_nt,i))
+    update_init_values(prob, init_func, generate_cons(params_nt,i))
   end
 
   params_names = collect(keys(params_nt))
