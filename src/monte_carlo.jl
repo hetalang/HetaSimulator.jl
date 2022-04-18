@@ -205,15 +205,14 @@ function mc(
   lc = length(scenario_pairs)
   iter = collect(Iterators.product(1:lp,1:lc))
 
-
   p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled=progress_bar)
-
+  prob_vec = !isempty(saveat) ? [remake_saveat(last(sc).prob,saveat) for sc in scenario_pairs] : [last(sc).prob for sc in scenario_pairs]
+  
   function prob_func(prob,i,repeat)
     iter_i = iter[i]
     verbose && println("Processing scenario $(iter_i[2]) iteration $(iter_i[1])")
     progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
-    prob_i = last(scenario_pairs[iter_i[2]]).prob
-    prob_i = !isempty(saveat) ? remake_saveat(prob_i, saveat) : prob_i 
+    prob_i = prob_vec[iter_i[2]]
     init_i = last(scenario_pairs[iter_i[2]]).init_func
     update_init_values(prob_i, init_i, params_pregenerated[iter_i[1]])
   end
