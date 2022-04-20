@@ -2,9 +2,11 @@
 
 ## 0.4.9
 
+- fix memory issues for `mc`
 - support `plot` for `EnsembleSummary` pairs
 - fix `EnsembleSummary` for `MCResults`
 - `add_parameters` in DataFrame method
+- experimental: `tags[]` and `group` property in `Scenario` for combining Simulation results
 
 ## 0.4.8
 

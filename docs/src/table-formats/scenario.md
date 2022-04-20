@@ -55,10 +55,10 @@ Dict{Symbol, Scenario} with 4 entries:
 Loading file __scenarios.csv__ with the following content.
 
 id | model | parameters.k1 | parameters.k2 | parameters.k3 | tspan | observables[] | events_active.sw1 | events_active.sw2 | events_save.sw1
---- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
-scn1 | |  | 0.001 | 0.02 |  | | true | false | true;false
-scn2 | nameless | 0.001 |  |  | 1000 | | | true |
-scn3 | another_model | | 0.001  |  |  | | false |
+---|---|---|---|---|---|---|---|---|---
+scn1 | | | 0.001 | 0.02 | | | true | false | true;false
+scn2 | nameless | 0.001 | | | 1000 | | | true |
+scn3 | another_model | | 0.001  | | | | false | |
 
 Read as `DataFrame` object.
 
