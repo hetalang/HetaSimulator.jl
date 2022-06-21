@@ -2,7 +2,7 @@ const DEFAULT_SIMULATION_RELTOL=1e-3
 const DEFAULT_SIMULATION_ABSTOL=1e-6
 const DEFAULT_ALG = AutoTsit5(Rosenbrock23())
 
-const EMPTY_PROBLEM = ODEProblem(() -> nothing, [0.0], (0.,1.))
+const EMPTY_PROBLEM = ODEProblem((du,u,p,t) -> nothing, [0.0], (0.,1.))
 
 ### simulate scenario
 
