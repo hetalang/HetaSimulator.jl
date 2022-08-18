@@ -335,6 +335,35 @@ function mc(
   return mc(scenario_pairs,params,num_iter;kwargs...)
 end
 
+"""
+    mc(mcres::MCResult; 
+      success_status::Vector{Symbol}=[:Success,:Terminated]
+      kwargs...
+    )
+
+Re-run failed Monte-Carlo simulations with single `Scenario`. Updates `MCResult` type.
+
+Example: `mc!(mcres)`
+
+Arguments:
+
+- `mcres` : platform of [`Platform`](@ref) type
+- `success_status` : Vector of success statuses. Default is `[:Success,:Terminated]`
+- kwargs : other solver related arguments supported by `mc(scenario::Scenario, params::Vector, num_iter::Int64)`
+"""
+function mc!(mcres::MCResult; success_status::Vector{Symbol}=[:Success,:Terminated], kwargs...)
+  scen = scenario(mcres)
+  err_idxs = [i for i in 1:length(mcres) if status(mcres[i]) ∉ success_status]
+  mcvecs = DataFrame([parameters(mcres[i]) for i in err_idxs], collect(keys(parameters(mcres[i]))))
+  mcres_upd = mc(scen, mcvecs; kwargs...)
+  for i in eachindex(ids)
+    mcres.sim[err_idxs[i]] = mcres_upd[i]
+  end
+  return nothing
+end
+
+
+
 ########################################## Statistics ######################################################
 
 # currently median and quantile don't output LVector
