@@ -354,7 +354,7 @@ Arguments:
 function mc!(mcres::MCResult; success_status::Vector{Symbol}=[:Success,:Terminated], kwargs...)
   scen = scenario(mcres)
   err_idxs = [i for i in 1:length(mcres) if status(mcres[i]) ∉ success_status]
-  mcvecs = DataFrame([parameters(mcres[i]) for i in err_idxs], collect(keys(parameters(mcres[i]))))
+  mcvecs = DataFrame([parameters(mcres[i]) for i in err_idxs], collect(keys(parameters(mcres[err_idxs[1]]))))
   mcres_upd = mc(scen, mcvecs; kwargs...)
   for i in eachindex(ids)
     mcres.sim[err_idxs[i]] = mcres_upd[i]
