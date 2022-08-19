@@ -356,7 +356,7 @@ function mc!(mcres::MCResult; success_status::Vector{Symbol}=[:Success,:Terminat
   err_idxs = [i for i in 1:length(mcres) if status(mcres[i]) ∉ success_status]
   mcvecs = DataFrame([NamedTuple(parameters(mcres[i])) for i in err_idxs])
   mcres_upd = mc(scen, mcvecs; kwargs...)
-  for i in eachindex(ids)
+  for i in eachindex(err_idxs)
     mcres.sim[err_idxs[i]] = mcres_upd[i]
   end
   return nothing
