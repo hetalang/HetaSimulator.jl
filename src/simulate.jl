@@ -17,7 +17,7 @@ const EMPTY_PROBLEM = ODEProblem((du,u,p,t) -> nothing, [0.0], (0.,1.))
 
 Simulate single `Scenario`. Returns [`SimResult`](@ref) type.
 
-Example: `Scenario(model, (0., 200.)) |> sim`
+Example: `Scenario(model, (0., 200.); saveat = [0.0, 150.]) |> sim`
 
 Arguments:
 
@@ -26,7 +26,6 @@ Arguments:
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
-- `saveat` : time points to save the solution at. Default is solver stepwise saving
 - `kwargs...` : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
 function sim(
@@ -35,12 +34,10 @@ function sim(
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
-  saveat=Float64[],
   kwargs... # other solver arguments
 ) where P<:Pair
   
-  prob = !isempty(saveat) ? remake_saveat(scenario.prob, saveat) : scenario.prob 
-  prob = length(parameters_upd) > 0 ? update_init_values(prob, scenario.init_func, NamedTuple(parameters_upd)) : prob
+  prob = length(parameters_upd) > 0 ? update_init_values(scenario.prob, scenario.init_func, NamedTuple(parameters_upd)) : scenario.prob
   sol = solve(prob, alg; reltol = reltol, abstol = abstol,
     save_start = false, save_end = false, save_everystep = false, kwargs...)
   params_names = Symbol[first(x) for x in parameters_upd]
@@ -67,7 +64,6 @@ build_results(sol::SciMLBase.AbstractODESolution, scenario, params_names) = SimR
       alg=DEFAULT_ALG, 
       reltol=DEFAULT_SIMULATION_RELTOL, 
       abstol=DEFAULT_SIMULATION_ABSTOL,
-      saveat=Float64[],
       parallel_type=EnsembleSerial(),
       kwargs...) where P<:Pair
 
@@ -82,7 +78,6 @@ Arguments:
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
-- `saveat` : time points to save the solution at. Default is solver stepwise saving
 - `parallel_type` : type of multiple simulations parallelism. Default is no parallelism. See SciML docs for details
 - `kwargs...` : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
@@ -92,7 +87,6 @@ function sim(
   alg = DEFAULT_ALG, 
   reltol = DEFAULT_SIMULATION_RELTOL, 
   abstol = DEFAULT_SIMULATION_ABSTOL,
-  saveat = Float64[],
   parallel_type=EnsembleSerial(),
   kwargs... # other arguments for OrdinaryDiffEq.solve()
 ) where P<:Pair
@@ -105,7 +99,6 @@ function sim(
   function prob_func(prob,i,repeat)
     next!(p)
     prob_i = last(scenario_pairs[i]).prob
-    prob_i = !isempty(saveat) ? remake_saveat(prob_i, saveat) : prob_i 
     init_func_i = last(scenario_pairs[i]).init_func
     length(parameters_upd) > 0 ? update_init_values(prob_i, init_func_i, NamedTuple(parameters_upd)) : prob_i
   end

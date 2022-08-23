@@ -160,6 +160,7 @@ struct Scenario{F,P,M} <: AbstractScenario
   group::Union{Symbol,Nothing}
 end 
 
+saveat(scn::Scenario) = scn.prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat_cache
 tspan(scn::Scenario) = scn.prob.tspan
 parameters(scn::Scenario) = scn.prob.p.constants
 measurements(scn::Scenario) = scn.measurements
