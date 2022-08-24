@@ -329,10 +329,10 @@ function mc(
 end
 
 """
-    mc!(mcres::MCResult; 
+    mc!(mcres::M; 
       success_status::Vector{Symbol}=[:Success,:Terminated]
       kwargs...
-    )
+    ) where M <: Union{MCResult, Vector{MCResult}, Vector{Pair}}
 
 Re-run failed Monte-Carlo simulations with single `Scenario`. Updates `MCResult` type.
 
@@ -354,6 +354,14 @@ function mc!(mcres::MCResult; success_status::Vector{Symbol}=[:Success,:Terminat
   end
   return nothing
 end
+
+function mc!(mcres::Vector{M}; kwargs...) where M<:MCResult
+  for mcr in mcres
+    mc!(mcr; kwargs...)
+  end
+end
+
+mc!(mcres::Vector{P}; kwargs...) where P<:Pair = mc!(last.(mcres); kwargs...)
 
 
 
