@@ -5,10 +5,12 @@ function build_ode_problem(
   events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
   events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}} = (true,true), 
   observables_::Union{Nothing,Vector{Symbol}} = nothing,
+  saveat::Union{Nothing,AbstractVector} = nothing,
   save_scope::Bool = true,
   time_type::DataType = Float64
 )
-
+  
+  _saveat = isnothing(saveat) ? time_type[] : saveat 
   # initial values and params
   init_func = model.init_func
   parameters_nt = NamedTuple(parameters)
@@ -33,7 +35,7 @@ function build_ode_problem(
     save_scope ? Symbol[] : nothing
     )
   saving_func = model.saving_generator(merged_observables)
-  scb = saving_wrapper(saving_func, saved_values; save_scope)
+  scb = saving_wrapper(saving_func, saved_values; saveat=_saveat, save_scope)
 
   # events
   ev_on_nt = !isnothing(events_active) ? NamedTuple(events_active) : NamedTuple()

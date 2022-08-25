@@ -23,9 +23,9 @@ model = platform.models[:nameless]
 Scenario(model, (0., 200.)) |> sim |> plot
 scn0 = Scenario(model, (0., 200.))
 sim(scn0, parameters_upd = [:k1=>0.01]) |> plot
-sim(Scenario(model, (0,100)), saveat = 0:10:100) |> plot
-sim(Scenario(model, (0., 50.)), saveat = 0:10:100) |> plot
-sim(Scenario(model, (0., 500.)), saveat = 0:10:100) |> plot
+sim(Scenario(model, (0,100), saveat = 0:10:100)) |> plot
+sim(Scenario(model, (0., 50.), saveat = 0:10:100)) |> plot
+sim(Scenario(model, (0., 500.), saveat = 0:10:100)) |> plot
 Scenario( # throw error
     model, 
     (0., 500.);
@@ -44,12 +44,12 @@ Scenario(
     events_active=[:sw1=>true],
     events_save=[:sw1=>(false,false)]
     ) |> sim |> plot
-sim(Scenario(model, (0., 10.); parameters=[:k1=>1e-3]), parameter_upd = [:k1=>1e-3])
+sim(Scenario(model, (0., 10.); parameters=[:k1=>1e-3]), parameters_upd = [:k1=>1e-3])
 
 ### single scenario sim()
 scn1 = Scenario(model, (0., 200.));
-sim(scn1, saveat = [0.0, 150., 250.]) |> plot
-sim(scn1; saveat = [0.0, 150., 250.], parameters_upd=[:k1=>0.01]) |> plot
+sim(scn1) |> plot
+sim(scn1; parameters_upd=[:k1=>0.01]) |> plot
 
 scn2 = Scenario(
     model,
@@ -78,7 +78,7 @@ sim([:x => scn1, :y=>scn2, :z=>scn3]; parameters_upd=[:k1=>0.01]) |> plot
 #measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv")
 measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements_no_scope.csv")
 measurements_xlsx = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.xlsx")
-scn4 = Scenario(model, (0,250); parameters = [:k2=>0.001, :k3=>0.04]);
+scn4 = Scenario(model, (0,250); parameters = [:k2=>0.001, :k3=>0.04], saveat = [0.0, 50., 150., 250.]);
 add_measurements!(scn4, measurements_csv; subset = [:scenario => :dataone])
 
 ### fit many scenarios
@@ -87,7 +87,7 @@ res2 = fit([scn2, scn3, scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])
 sim(scn3, parameters_upd = optim(res2))
 
 # sim all scenarios
-sol = sim([:c1=>scn1, :c2=>scn2, :c3=>scn3, :c4=>scn4], saveat = [0.0, 50., 150., 250.]);
+sol = sim([:c1=>scn1, :c2=>scn2, :c3=>scn3, :c4=>scn4]);
 plot(sol)
 
 # plot selected observables
@@ -101,12 +101,14 @@ mc_scn1 = Scenario(
     model,
     (0., 200.);
     parameters = [:k1=>0.01],
+    saveat = [50., 80., 150.]
     );
 
 mc_scn2 = Scenario(
     model,
     (0., 200.);
     parameters = [:k1=>0.02],
+    saveat = [50., 100., 200.]
     );
     
 mc_scn3 = Scenario(
@@ -117,15 +119,14 @@ mc_scn3 = Scenario(
     );
 
 # single MC Simulation
-mcsim1 = mc(mc_scn1, [:k1=>Uniform(1e-3,1e-2), :k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000, saveat = [50., 80., 150.])
+mcsim1 = mc(mc_scn1, [:k1=>Uniform(1e-3,1e-2), :k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000)
 plot(mcsim1)
 
 # multi MC Simulation
 mcsim2 = mc(
     [:mc1=>mc_scn1,:mc2=>mc_scn2,:mc3=>mc_scn3],
     [:k1=>0.01, :k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)],
-    1000,
-    saveat = [50., 80., 150.]
+    1000
   )
 plot(mcsim2)
 

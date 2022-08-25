@@ -74,13 +74,15 @@ Create two scenarios as follows.
 mcscn1 = Scenario(
   model,
   (0., 200.);
-  parameters = [:k1=>0.01]
+  parameters = [:k1=>0.01],
+  saveat = [50., 80., 150.]
 )
 
 mcscn2 = Scenario(
   model,
   (0., 200.);
-  parameters = [:k1=>0.02]
+  parameters = [:k1=>0.02],
+  saveat = [50., 100., 200.]
 )
 ```
 
@@ -94,7 +96,7 @@ You can also set the `Float64` value of a parameter here and this rewrites the v
 The third argument is the number of Monte-Carlo simulations to do.
 
 ```julia
-mcsim1 = mc(mcscn1, [:k1=>Uniform(1e-3,1e-2), :k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 100,  saveat = [50., 80., 150.])
+mcsim1 = mc(mcscn1, [:k1=>Uniform(1e-3,1e-2), :k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 100)
 ```
 
 We can limit the components for visualization with `vars` argument in `plot`.
@@ -264,6 +266,6 @@ plot(ens)
 
 ## Final remarks
 
-1. If you are going to use "statistics" methods you should always set the `saveat` argument in `mc`.
+1. If you are going to use "statistics" methods you should always set the `saveat` argument in `Scenario`.
 
 1. If you run `mc` with parameters generated online, i.e. without pre-generated set currently you cannot obtain the input parameters values directly.  This will be fixed in one of future releases. Before that if you need them use pre-generation.

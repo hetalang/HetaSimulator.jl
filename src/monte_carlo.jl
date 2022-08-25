@@ -13,7 +13,6 @@ DEFAULT_OUTPUT(sol,i) = sol
       alg=DEFAULT_ALG,
       reltol=DEFAULT_SIMULATION_RELTOL,
       abstol=DEFAULT_SIMULATION_ABSTOL,
-      saveat=Float64[],
       parallel_type=EnsembleSerial(),
       kwargs...
     )
@@ -32,7 +31,6 @@ Arguments:
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
-- `saveat` : time points to save the solution at. Default is solver stepwise saving
 - `output_func` : the function determines what is saved from the solution to the output array. Defaults to saving the solution itself
 - `reduction_func` : this function determines how to reduce the data in each batch. Defaults to appending the data from the batches
 - `parallel_type` : parallel setup. See SciML docs for details. Default is no parallelism: EnsembleSerial()
@@ -47,14 +45,13 @@ function mc(
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
-  saveat=Float64[],
   output_func=DEFAULT_OUTPUT,
   reduction_func = DEFAULT_REDUCTION,
   parallel_type=EnsembleSerial(),
   kwargs...
 ) where P<:Pair
 
-  prob0 = !isempty(saveat) ? remake_saveat(scenario.prob, saveat) : scenario.prob
+  prob0 = scenario.prob
   init_func = scenario.init_func
   params_nt = NamedTuple(params)
 
@@ -109,7 +106,7 @@ function mc(
     )
   end
 
-  return MCResult(solution.u, !isempty(saveat), scenario)
+  return MCResult(solution.u, has_saveat(scenario), scenario)
 end
 
 """
@@ -158,7 +155,6 @@ end
       alg=DEFAULT_ALG,
       reltol=DEFAULT_SIMULATION_RELTOL,
       abstol=DEFAULT_SIMULATION_ABSTOL,
-      saveat=Float64[],
       parallel_type=EnsembleSerial(),
       kwargs...
     )
@@ -177,7 +173,6 @@ Arguments:
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
-- `saveat` : time points to save the solution at. Default is solver stepwise saving
 - `output_func` : the function determines what is saved from the solution to the output array. Defaults to saving the solution itself
 - `reduction_func` : this function determines how to reduce the data in each batch. Defaults to appending the data from the batches
 - `parallel_type` : parallel setup. See SciML docs for details. Default is no parallelism: EnsembleSerial()
@@ -192,7 +187,6 @@ function mc(
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
-  saveat=Float64[],
   output_func=DEFAULT_OUTPUT,
   reduction_func = DEFAULT_REDUCTION,
   parallel_type=EnsembleSerial(),
@@ -206,13 +200,12 @@ function mc(
   iter = collect(Iterators.product(1:lp,1:lc))
 
   p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled=progress_bar)
-  prob_vec = !isempty(saveat) ? [remake_saveat(last(sc).prob,saveat) for sc in scenario_pairs] : [last(sc).prob for sc in scenario_pairs]
   
   function prob_func(prob,i,repeat)
     iter_i = iter[i]
     verbose && println("Processing scenario $(iter_i[2]) iteration $(iter_i[1])")
     progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
-    prob_i = prob_vec[iter_i[2]]
+    prob_i = last(scenario_pairs[iter_i[2]]).prob
     init_i = last(scenario_pairs[iter_i[2]]).init_func
     update_init_values(prob_i, init_i, params_pregenerated[iter_i[1]])
   end
@@ -263,7 +256,7 @@ function mc(
 
   for i in 1:lc
     ret[i] = first(scenario_pairs[i]) => 
-      MCResult(solution.u[lp*(i-1)+1:i*lp], !isempty(saveat), last(scenario_pairs[i]))
+    MCResult(solution.u[lp*(i-1)+1:i*lp], has_saveat(last(scenario_pairs[i])), last(scenario_pairs[i]))
   end
   return ret
 end
@@ -335,13 +328,49 @@ function mc(
   return mc(scenario_pairs,params,num_iter;kwargs...)
 end
 
+"""
+    mc!(mcres::M; 
+      success_status::Vector{Symbol}=[:Success,:Terminated]
+      kwargs...
+    ) where M <: Union{MCResult, Vector{MCResult}, Vector{Pair}}
+
+Re-run failed Monte-Carlo simulations with single `Scenario`. Updates `MCResult` type.
+
+Example: `mc!(mcres)`
+
+Arguments:
+
+- `mcres` : Monte-Carlo result of type `MCResult`
+- `success_status` : Vector of success statuses. Default is `[:Success,:Terminated]`
+- kwargs : other solver related arguments supported by `mc(scenario::Scenario, params::Vector, num_iter::Int64)`
+"""
+function mc!(mcres::MCResult; success_status::Vector{Symbol}=[:Success,:Terminated], kwargs...)
+  scen = scenario(mcres)
+  err_idxs = [i for i in 1:length(mcres) if status(mcres[i]) ∉ success_status]
+  mcvecs = DataFrame([NamedTuple(parameters(mcres[i])) for i in err_idxs])
+  mcres_upd = mc(scen, mcvecs; kwargs...)
+  for i in eachindex(err_idxs)
+    mcres.sim[err_idxs[i]] = mcres_upd[i]
+  end
+  return nothing
+end
+
+function mc!(mcres::Vector{M}; kwargs...) where M<:MCResult
+  for mcr in mcres
+    mc!(mcr; kwargs...)
+  end
+end
+
+mc!(mcres::Vector{P}; kwargs...) where P<:Pair = mc!(last.(mcres); kwargs...)
+
+
+
 ########################################## Statistics ######################################################
 
 # currently median and quantile don't output LVector
 
-function DiffEqBase.EnsembleAnalysis.get_timestep(mcr::MCResult, i) 
+function DiffEqBase.EnsembleAnalysis.get_timestep(mcr::MCResult,i) 
   @assert has_saveat(mcr) "Solution doesn't contain single time vector, default statistics are not available."
-
   return (getindex(mcr[j],i) for j in 1:length(mcr))
 end
 

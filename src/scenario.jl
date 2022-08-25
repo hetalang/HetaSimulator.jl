@@ -1,6 +1,8 @@
 const CONSTANT_PREFIX = "parameters"
 const SWITCHER_PREFIX = "events_active"
 const SWITCHER_SAVE_PREFIX = "events_save"
+const SAVEAT_HEADER = Symbol("saveat[]")
+
 const TSPAN_HEADER = Symbol("tspan")
 const OBSERVABLES_HEADER = Symbol("observables[]")
 const TAGS_HEADER = Symbol("tags[]")
@@ -15,7 +17,9 @@ const GROUP_HEADER = Symbol("group")
       observables::Union{Nothing,Vector{Symbol}}=nothing,
       parameters::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
       events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
-      events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}} = (true,true), 
+      events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}} = (true,true),
+      saveat::Union{Nothing,AbstractVector} = nothing,
+
       save_scope::Bool = true,
     )
 
@@ -34,6 +38,8 @@ Arguments:
 - `parameters` : `Vector` of `Pair`s containing constants' names and values. Overwrites default model's values. Default is empty vector.
 - `events_active` : `Vector` of `Pair`s containing events' names and true/false values. Overwrites default model's values. Default is empty `Vector{Pair}`
 - `events_save` : `Tuple` or `Vector{Tuple}` marking whether to save solution before and after event. Default is `(true,true)` for all events
+- `saveat` : time points, where solution should be saved. Default `nothing` values stands for saving solution at timepoints reached by the solver 
+
 - `save_scope` : should scope be saved together with solution. Default is `true`
 """
 function Scenario(
@@ -133,6 +139,13 @@ function _add_scenario!(platform::Platform, row::Any) # maybe not any
     end
   end
   
+  if haskey(row, SAVEAT_HEADER) && !ismissing(row[SAVEAT_HEADER])
+    save_times = row[SAVEAT_HEADER]
+    _saveat = typeof(save_times) <: Number ? [Float64(save_times)] : parse.(Float64, split(save_times, ";"))
+  else  
+    _saveat = nothing
+  end
+  
   if haskey(row, TSPAN_HEADER) && !ismissing(row[TSPAN_HEADER])
     _tspan = (0., row[TSPAN_HEADER])
   else  
@@ -167,6 +180,7 @@ function _add_scenario!(platform::Platform, row::Any) # maybe not any
     parameters = _parameters,
     events_active = _events_active,
     events_save = _events_save,
+    saveat = _saveat,
     observables = _observables,
     tags = _tags,
     group = _group

@@ -59,11 +59,11 @@ module HetaSimulator
   export read_scenarios, add_scenarios!
   export read_measurements, add_measurements!, measurements_as_table
   export read_parameters
-  export models, scenarios, constants, records, switchers, events, parameters, events_active, events_save, observables  # variables, dynamic, static
+  export models, scenarios, scenario, constants, records, switchers, events, parameters, events_active, events_save, observables  # variables, dynamic, static
   export measurements, tspan 
   export CVODE_BDF, CVODE_Adams
   export optim, obj
-  export sim, mc
+  export sim, mc, mc!
   export fit, loss, estimator
   export HetaSimulatorDir
   export update

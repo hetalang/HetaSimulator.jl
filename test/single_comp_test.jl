@@ -12,7 +12,7 @@ model = platform.models[:nameless];
 @test_throws ErrorException("The following observables have not been found in the model: [:GG]") Scenario(model, (0,120); observables=[:r1, :GG])
 
 # Simulate default scenario
-s = sim(Scenario(model, (0., 200.), observables=[:r1]), saveat = [0.0, 150., 250.])
+s = sim(Scenario(model, (0., 200.), observables=[:r1], saveat = [0.0, 150., 250.]))
 @test test_show(s)
 @test typeof(s) <: HetaSimulator.SimResult
 @test status(s) == :Success
@@ -21,7 +21,7 @@ s = sim(Scenario(model, (0., 200.), observables=[:r1]), saveat = [0.0, 150., 250
 
 # tests related to saveat, tspan behavior
 s1 = Scenario(model, (0., 200.)) |> sim
-s2 = sim(Scenario(model, (0,250)), saveat = [150., 200.])
+s2 = sim(Scenario(model, (0,250); saveat = [150., 200.]))
 @test times(s1)[1] == 0.0
 @test times(s1)[end] == 200.0
 @test times(s2) == [150., 200.]
@@ -37,7 +37,7 @@ scn2 = Scenario(model, (0., 150.); parameters = [:k1=>0.015], observables=[:r1])
 @test parameters(scn2)[:k1] == 0.015
 
 cs1 = sim(scn1)
-cs2 = sim([:one=>scn1,:two=>scn2], parameters_upd=[:k1=>0.03], saveat= [0.,100.,120.])
+cs2 = sim([:one=>scn1,:two=>scn2], parameters_upd=[:k1=>0.03])
 @test typeof(cs1) <: HetaSimulator.SimResult
 @test typeof(cs2) <: Vector{Pair{Symbol, HetaSimulator.SimResult}}
 @test length(parameters(cs1))==0
@@ -81,7 +81,7 @@ fscn2 = Scenario(model, (0., 200.); parameters = [:k1=>0.015], observables=[:A, 
 data = read_measurements("$HetaSimulatorDir/test/examples/single_comp/single_comp_data.csv")
 add_measurements!(fscn1, data; subset = [:scenario => :one])
 add_measurements!(fscn2, data; subset = [:scenario => :two])
-fres = fit([:one=>fscn1, :two=>fscn2], [:k1=>0.01], silent=true)
+fres = fit([:one=>fscn1, :two=>fscn2], [:k1=>0.01], progress=:silent)
 
 @test typeof(fres) <: HetaSimulator.FitResult
 @test test_show(fres)

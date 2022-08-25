@@ -33,6 +33,7 @@ function _subset(
   end
 end
 
+has_saveat(c::Scenario) = has_saveat(c.prob)
 has_saveat(prob::SciMLBase.AbstractODEProblem) = !isempty(prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat_cache) 
 has_saveat(mcr::MCResult) = mcr.saveat
 
