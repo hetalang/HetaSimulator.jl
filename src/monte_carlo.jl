@@ -138,7 +138,10 @@ function mc(
   
   for pstr in names(params)
     psym = Symbol(pstr)
-    @assert (psym in cons) "$psym is not found in models constants."   
+    if !(psym in cons)
+      @warn "$psym is not found in models constants."
+    end
+    # @assert (psym in cons) "$psym is not found in models constants."   
     push!(params_pairs, psym=>params[!,psym])
   end
 
@@ -421,7 +424,7 @@ generate_cons(vp::AbstractVector{P},i)  where P<:Pair = NamedTuple([k=>generate_
 generate_cons(nt::NamedTuple,i) = NamedTuple{keys(nt)}([generate_cons(v,i) for v in nt])
 generate_cons(v::Distribution,i) = rand(v)
 generate_cons(v::Real,i) = v
-generate_cons(v::AbstractVector{R},i) where R<:Float64 = v[i]
+generate_cons(v::AbstractVector{R},i) where R<:Real = v[i]
 
 """
     read_mcvecs(filepath::String)
