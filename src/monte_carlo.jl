@@ -133,14 +133,14 @@ function mc(
   num_iter::Int = size(params)[1],
   kwargs...
 ) 
-  cons = keys(parameters(scenario))
+  #cons = keys(parameters(scenario))
   params_pairs = Pair[]
   
   for pstr in names(params)
     psym = Symbol(pstr)
-    if !(psym in cons)
-      @warn "$psym is not found in models constants."
-    end
+  #  if !(psym in cons)
+  #   @warn "$psym is not found in models constants."
+  #  end
     # @assert (psym in cons) "$psym is not found in models constants."   
     push!(params_pairs, psym=>params[!,psym])
   end

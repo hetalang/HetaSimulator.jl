@@ -9,12 +9,12 @@ function active_events(events::NamedTuple, events_active::NamedTuple, events_sav
   for k in (keys(events_active)..., keys(events_save)...)
     @assert k in ev_names "Event $k not found."
   end
-  _events_save = merge(NamedTuple{ev_names}(fill((true,true), length(events))), events_save)
+  _events_save = merge(NamedTuple{ev_names}(fill((false,false), length(events))), events_save)
 
   return Tuple(add_event(events[ev], _events_save[ev], ev) for ev in keys(events) if events_active[ev])
 end
 
-function add_event(evt::TimeEvent, events_save::Tuple{Bool, Bool}=(true,true), evt_name=nothing)
+function add_event(evt::TimeEvent, events_save::Tuple{Bool, Bool}=(false,false), evt_name=nothing)
   tstops = Float64[]
   #scn_func(u, t, integrator) = t in tstops
 
@@ -34,7 +34,7 @@ function add_event(evt::TimeEvent, events_save::Tuple{Bool, Bool}=(true,true), e
   )
 end
 
-function add_event(evt::CEvent, events_save::Tuple{Bool, Bool}=(true,true), evt_name=nothing)
+function add_event(evt::CEvent, events_save::Tuple{Bool, Bool}=(false,false), evt_name=nothing)
   ContinuousCallback(
       evt.condition_func,
       (integrator) -> evt_func_wrapper(integrator, evt.affect_func, events_save, evt_name),
@@ -43,7 +43,7 @@ function add_event(evt::CEvent, events_save::Tuple{Bool, Bool}=(true,true), evt_
   )
 end
 
-function add_event(evt::StopEvent, events_save::Tuple{Bool, Bool}=(true,false), evt_name=nothing)
+function add_event(evt::StopEvent, events_save::Tuple{Bool, Bool}=(false,false), evt_name=nothing)
   DiscreteCallback(
     evt.condition_func,
     (integrator) -> evt_func_wrapper(integrator, terminate!, events_save, evt_name),

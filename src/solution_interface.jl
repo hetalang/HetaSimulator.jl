@@ -30,26 +30,19 @@ end
 
 ############################ DataFrames ########################################
 
-function DataFrame(s::Simulation; vars=observables(s), kwargs...)
-  df = DataFrame(t=s.vals.t, kwargs...)
+function DataFrame(s::Simulation; vars=observables(s), params::Union{Vector,Nothing}=nothing, iter::Union{Int,Nothing}=nothing)
+  df = DataFrame(t=s.vals.t)
+  !isnothing(iter) && (df[!,:iter].=iter)
+  !isnothing(params) && ([df[:,p].=parameters(s)[p] for p in params])
 
   [df[!, v] = s[v,:] for v in vars[in.(vars, Ref(observables(s)))]]
-  !isnothing(s.scope) && (df[!,:scope]=s.scope)
+  !isnothing(s.scope) && (df[:,:scope]=s.scope)
   
   return df
 end
 
-function DataFrame(sr::SimResult; vars=observables(sr.sim), add_parameters=false, kwargs...)
-  df = DataFrame(sr.sim; vars, kwargs...)
-
-  if add_parameters
-    parameters_la = parameters(sr.scenario)
-    parameters_names = keys(parameters_la)
-    
-    for i in 1:length(parameters_la)
-      df[:,parameters_names[i]] .= parameters_la[i]
-    end
-  end
+function DataFrame(sr::SimResult; kwargs...)
+  df = DataFrame(sr.sim; kwargs...)
 
   # XXX: experimental option, currently group column is more useful
   if length(sr.scenario.tags) > 0
@@ -74,21 +67,26 @@ function DataFrame(sr::Pair{Symbol,S}; kwargs...) where S<:SimResult
 end
 
 function DataFrame(res::Vector{Pair{Symbol,S}}; kwargs...) where S<:SimResult
-  df_vectors = DataFrame.(res; kwargs...)
-
-  return vcat(df_vectors...; cols=:union)
+  df = DataFrame(res[1]; kwargs...)
+  lres = length(res)
+  if lres > 1 
+    for i in 2:lres
+      append!(df, DataFrame(res[i]; kwargs...))
+    end
+  end
+  return df
 end
 
-function DataFrame(mcr::MCResult; kwargs...)
+function DataFrame(mcr::MCResult; itercol=true, kwargs...)
   # df performance
-  df = DataFrame()
+  df = DataFrame(mcr[1]; iter=(itercol ? 1 : nothing), kwargs...)
+  lmcr = length(mcr)
 
-  for (i,s) in enumerate(mcr.sim)
-      dfs = DataFrame(s; kwargs...)
-      insertcols!(dfs, 1, :iter => fill(i, length(s)))
-      df = vcat(df,dfs)
+  if lmcr > 1
+    for i in 2:lmcr
+      append!(df, DataFrame(mcr[i]; iter=(itercol ? i : nothing), kwargs...))
+    end
   end
-  
   return df
 end
 
@@ -100,9 +98,14 @@ function DataFrame(mcr::Pair{Symbol,S}; kwargs...) where S<:MCResult
 end
 
 function DataFrame(res::Vector{Pair{Symbol,S}}; kwargs...) where S<:MCResult
-  df_vectors = DataFrame.(res; kwargs...)
-
-  return vcat(df_vectors...; cols=:union)
+  df = DataFrame(res[1]; kwargs...)
+  lres = length(res)
+  if lres > 1 
+    for i in 2:lres
+      append!(df, DataFrame(res[i]; kwargs...))
+    end
+  end
+  return df
 end
 
 ############################ Save Result ########################################
@@ -120,20 +123,28 @@ save_results(filepath::String, sim::AbstractResult) = save_results(filepath, Dat
 
 save_results(filepath::String, df::DataFrame) = CSV.write(filepath, df, delim=";")
 
-#=FIXME
-function save_results(path::String, mcsim::MCResult; groupby::Symbol=:observables) 
-  if groupby == :simulations
+
+function save_results(path::String, mcsim::MCResult; groupby::Symbol=:observables, kwargs...) 
+
+  if groupby == :observables
+    obs = observables(mcsim[1])
+    lmcsim = length(mcsim)
+    for ob in obs
+      df = DataFrame(mcsim[1]; vars=[ob], kwargs...)
+      if lmcsim > 1
+        for i in 2:lmcsim
+          append!(df, DataFrame(mcsim[i]; vars=[ob], kwargs...))
+        end
+      CSV.write("$path/$ob.csv", df, delim=";")
+      end
+    end
+    #=
+  elseif groupby == :simulations
     for i in 1:length(mcsim)
       save_results("$path/$i.csv", mcsim[i])
     end
-  elseif groupby == :observables
-    obs = observables(mcsim[1])
-    lobs = length(obs)
-    for ob in obs
-      df = DataFrame(t = mcsim[1].t)
-      [df[!,string(i)] = mcsim[i][ob,:] for i in 1:length(mcsim)]
-      CSV.write("$path/$ob.csv", df, delim=";")
-    end
+    =#
+  else
+    error("groupby kwarg currently supports only :observables.")
   end
 end
-=#
