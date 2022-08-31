@@ -123,7 +123,7 @@ save_results(filepath::String, sim::AbstractResult) = save_results(filepath, Dat
 
 save_results(filepath::String, df::DataFrame) = CSV.write(filepath, df, delim=";")
 
-
+#= draft 
 function save_results(path::String, mcsim::MCResult; groupby::Symbol=:observables, kwargs...) 
 
   if groupby == :observables
@@ -148,3 +148,4 @@ function save_results(path::String, mcsim::MCResult; groupby::Symbol=:observable
     error("groupby kwarg currently supports only :observables.")
   end
 end
+=#

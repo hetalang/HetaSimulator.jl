@@ -51,6 +51,13 @@ function mc(
   kwargs...
 ) where P<:Pair
 
+  cons = keys(parameters(scenario))
+  for p in first.(params)
+    if p ∉ cons
+      @warn "$p is not found in models constants."
+    end
+  end
+
   prob0 = scenario.prob
   init_func = scenario.init_func
   params_nt = NamedTuple(params)
