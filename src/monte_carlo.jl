@@ -203,6 +203,15 @@ function mc(
   kwargs...
 ) where {CP<:Pair, PP<:Pair}
 
+  for scn in scenario_pairs
+    cons = keys(parameters(last(scn)))
+    for p in first.(params)
+      if p ∉ cons
+        @warn "$p is not found in models constants."
+      end
+    end
+  end
+
   params_nt = NamedTuple(params)
   params_pregenerated = [generate_cons(params_nt,i) for i in 1:num_iter]
   lp = length(params_pregenerated)
