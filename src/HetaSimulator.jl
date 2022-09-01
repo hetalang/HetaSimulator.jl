@@ -23,6 +23,7 @@ module HetaSimulator
   using Distributed
   using RecursiveArrayTools: vecvec_to_mat, VectorOfArray
   using ProgressMeter
+  #ProgressMeter.ijulia_behavior(:clear)
   # measurements 
   using CSV
   using XLSX

@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.4.11
+
+- constant id check in `mc`
+- `mc!` method to racalculate MCResults
+- move back `saveat` into `Scenario`
+
+## 0.4.10
+
+- fix EMPTY_PROBLEM bug
+
 ## 0.4.9
 
 - fix memory issues for `mc`
