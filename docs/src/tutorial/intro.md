@@ -38,7 +38,7 @@ If you need to reinstall heta compiler it can be done with the following code.
 heta_update()
 ```
 
-To instal a specific version of the compiler you can use 
+To install a specific version of the compiler you can use 
 
 ```julia
 heta_update("0.6.9") # for heta-compiler v0.6.9

@@ -12,7 +12,6 @@ const EMPTY_PROBLEM = ODEProblem((du,u,p,t) -> nothing, [0.0], (0.,1.))
       alg=DEFAULT_ALG, 
       reltol=DEFAULT_SIMULATION_RELTOL, 
       abstol=DEFAULT_SIMULATION_ABSTOL,
-      saveat=Float64[],
       kwargs...)
 
 Simulate single `Scenario`. Returns [`SimResult`](@ref) type.
