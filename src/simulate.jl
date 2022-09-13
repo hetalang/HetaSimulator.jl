@@ -36,11 +36,24 @@ function sim(
   kwargs... # other solver arguments
 ) where P<:Pair
   
-  prob = length(parameters_upd) > 0 ? update_init_values(scenario.prob, scenario.init_func, NamedTuple(parameters_upd)) : scenario.prob
+  constant_upd = NamedTuple(parameters_upd)
+
+  prob = if length(parameters_upd) > 0
+    constants_total = merge_strict(scenario.constants, constant_upd)
+    u0, p0 = scenario.init_func(constants_total)
+  
+    remake(scenario.prob; u0=u0, p=p0)
+  else 
+    scenario.prob
+  end
   sol = solve(prob, alg; reltol = reltol, abstol = abstol,
     save_start = false, save_end = false, save_everystep = false, kwargs...)
-  params_names = Symbol[first(x) for x in parameters_upd]
-  return build_results(sol, scenario, params_names)
+  #params_names = Symbol[first(x) for x in parameters_upd]
+
+  #return build_results(sol, scenario, params_names)
+  sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
+  simulation = Simulation(sv, constant_upd, sol.retcode)
+  return SimResult(simulation, scenario)
 end
 
 function build_results(sol::SciMLBase.AbstractODESolution, params_names::Vector{Symbol})
@@ -52,7 +65,7 @@ function build_results(sol::SciMLBase.AbstractODESolution, params_names::Vector{
   sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
   return Simulation(sv, params, sol.retcode)
 end
-
+ 
 build_results(sol::SciMLBase.AbstractODESolution, scenario, params_names) = SimResult(build_results(sol, params_names), scenario)
 
 ### simulate scenario pairs
@@ -78,7 +91,8 @@ Arguments:
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
 - `parallel_type` : type of multiple simulations parallelism. Default is no parallelism. See SciML docs for details
-- `kwargs...` : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
+- `kwargs...` : other solver related arguments supported by DiffEqBase.solve. See SciML docs for de
+      #update_init_values(scn_i.prob, scn_i.init_func, constant_upd)tails
 """
 function sim(
   scenario_pairs::Vector{P};
@@ -92,20 +106,28 @@ function sim(
 
   isempty(scenario_pairs) && return SimResult[] # BRAKE
 
+  constant_upd = NamedTuple(parameters_upd)
+
   progress_on = (parallel_type == EnsembleSerial()) # tmp fix
   p = Progress(length(scenario_pairs), dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled=progress_on)
 
   function prob_func(prob,i,repeat)
     next!(p)
-    prob_i = last(scenario_pairs[i]).prob
-    init_func_i = last(scenario_pairs[i]).init_func
-    length(parameters_upd) > 0 ? update_init_values(prob_i, init_func_i, NamedTuple(parameters_upd)) : prob_i
+    scn_i = last(scenario_pairs[i])
+    constants_total_i = merge_strict(scn_i.constants, constant_upd)
+    if length(parameters_upd) > 0
+      u0, p0 = scn_i.init_func(constants_total_i)
+      remake(scn_i.prob; u0=u0, p=p0)
+    else
+      scn_i.prob
+    end
   end
 
-  params_names = Symbol[first(x) for x in parameters_upd]
-
   function _output(sol,i)
-    build_results(sol,last(scenario_pairs[i]), params_names),false
+    sv_i = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
+    simulation = Simulation(sv_i, constant_upd, sol.retcode)
+    scenario = last(scenario_pairs[i])
+    return SimResult(simulation, scenario),false
   end
   
   _reduction(u,batch,I) = (append!(u,batch),false)

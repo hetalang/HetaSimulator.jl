@@ -2,8 +2,6 @@
 # Methods to transform of heta-compiler generated files into Platform content
 ###
 
-const SUPPORTED_VERSIONS = ["0.6.5", "0.6.6"]
-
 # transformation of tuple to Platform
 function Platform(
     models::NamedTuple,
@@ -11,7 +9,7 @@ function Platform(
     version::String
 )
     # TODO: semver approach might be better
-    @assert length(indexin(version, SUPPORTED_VERSIONS)) > 0 "Heta compiler of the version \"$version\" is not supported."
+    @assert version in SUPPORTED_VERSIONS "Heta compiler of the version \"$version\" is not supported."
 
     print("Loading platform... ")
     model_pairs = [pair[1] => Model(pair[2]...) for pair in pairs(models)]
@@ -40,15 +38,15 @@ function Model(
     events = Pair[]
     ## FIXME : remove event name from heta-compiler
     for (name,event_tuple) in pairs(time_events) # time events
-        evt = name => TimeEvent(event_tuple[1], event_tuple[2], event_tuple[4])
+        evt = name => TimeEvent(event_tuple[1], event_tuple[2], event_tuple[3])
         push!(events, evt)
     end
     for (name,event_tuple) in pairs(c_events) # c events
-        evt = name => CEvent(event_tuple[1], event_tuple[2], event_tuple[4])
+        evt = name => CEvent(event_tuple[1], event_tuple[2], event_tuple[3])
         push!(events, evt)
     end
     for (name,event_tuple) in pairs(stop_events) # stop events
-        evt = name => StopEvent(event_tuple[1], event_tuple[3])
+        evt = name => StopEvent(event_tuple[1], event_tuple[2])
         push!(events, evt)
     end
 
@@ -77,7 +75,7 @@ function Model(
         saving_generator,     # saving_generator
         records_output_,       
         constants_num,        # constants :: Changed to NamedTuple
-        NamedTuple(events_active_) # events_active :: Changed to NamedTuple
+        NamedTuple(events_active_), # events_active :: Changed to NamedTuple
     )
 
     return model

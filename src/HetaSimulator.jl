@@ -1,5 +1,9 @@
 module HetaSimulator
 
+  # heta-compiler supported version
+  const HETA_COMPILER_SUPPORTED = "0.6.12"
+  const SUPPORTED_VERSIONS = ["0.6.13"]
+
   using DiffEqBase: isempty
   using Reexport
   # heta compiler support
@@ -56,7 +60,7 @@ module HetaSimulator
   heta_update()
 
   export heta_update, heta_update_dev, heta_build, load_platform, load_jlplatform, load_jlmodel
-  export Platform, Model, Scenario, Params
+  export Platform, Model, Scenario
   export read_scenarios, add_scenarios!
   export read_measurements, add_measurements!, measurements_as_table
   export read_parameters

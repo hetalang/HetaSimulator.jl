@@ -71,10 +71,8 @@ end
 constants(m::Model) = [keys(m.constants)...]
 records(m::Model) = first.(m.records_output)
 switchers(m::Model) = [keys(m.events)...]
-
-#parameters(m::Model) = collect(Pair{Symbol, Real}, pairs(m.constants))
 events_active(m::Model) = collect(Pair{Symbol, Bool}, pairs(m.events_active))
-events_save(m::Model) = [first(x) => (true,true) for x in pairs(m.events)]
+events_save(m::Model) = [first(x) => (true,true) for x in pairs(m.events)] # XXX set (false,false)
 observables(m::Model) = begin # observables
   only_true = filter((p) -> last(p), m.records_output)
   first.(only_true)
@@ -101,13 +99,6 @@ function Base.show(io::IO, mime::MIME"text/plain", m::AbstractModel)
   println(io, "   Constants: $const_str")
   println(io, "   Records: $record_str")
   println(io, "   Switchers (events): $switchers_str")
-end
-
-################################## Params ###########################################
-
-struct Params{C,S}
-  constants::C 
-  static::S
 end
 
 ################################## Measurement ###########################################
@@ -158,11 +149,13 @@ struct Scenario{F,P,M} <: AbstractScenario
   measurements::M
   tags::AbstractVector{Symbol}
   group::Union{Symbol,Nothing}
-end 
+  constants::NamedTuple
+end
 
 saveat(scn::Scenario) = scn.prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat_cache
 tspan(scn::Scenario) = scn.prob.tspan
-parameters(scn::Scenario) = scn.prob.p.constants
+parameters(scn::Scenario) = scn.prob.p
+constants(scn::Scenario) = scn.constants
 measurements(scn::Scenario) = scn.measurements
 # events_active(scn::Scenario)
 # events_save(scn::Scenario)
@@ -170,7 +163,7 @@ measurements(scn::Scenario) = scn.measurements
 
 function Base.show(io::IO, mime::MIME"text/plain", scn::Scenario)
   parameters_str = print_lim(
-    keys(parameters(scn)),
+    parameters(scn),
     10
     )
   measurements_count = length(measurements(scn))
@@ -264,7 +257,7 @@ function Base.show(io::IO, mime::MIME"text/plain", sr::SimResult)
   dimentions_str = "$(length(sr))x$dim2"
   times_str = print_lim(times(sr), 10)
   outputs_str = print_lim(observables(sr), 10)
-  parameters_str = print_lim(keys(parameters(sr)), 10)
+  parameters_str = print_lim(parameters(sr), 10)
 
   println(io, "$dimentions_str SimResult with status :$(status(sr)).")
   println(io, "    Solution status: $(status(sr))")

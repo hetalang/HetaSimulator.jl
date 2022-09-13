@@ -6,9 +6,6 @@ const NODE_DIR = dirname(nodejs_cmd().exec[1])
 const MODEL_DIR = "_julia"
 const MODEL_NAME = "model.jl"
 
-# heta-compiler supported version
-const HETA_COMPILER_SUPPORTED = "0.6.12"
-
 """
     heta_update(version::String = HETA_COMPILER_SUPPORTED)
 

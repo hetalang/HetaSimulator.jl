@@ -1,7 +1,7 @@
-function build_ode_problem(
+function build_ode_problem( # used in Scenario constructor only
   model::Model,
   tspan;
-  parameters::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
+  constants::NamedTuple,
   events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
   events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}} = (true,true), 
   observables_::Union{Nothing,Vector{Symbol}} = nothing,
@@ -9,13 +9,11 @@ function build_ode_problem(
   save_scope::Bool = true,
   time_type::DataType = Float64
 )
-  
-  _saveat = isnothing(saveat) ? time_type[] : saveat 
-  # initial values and params
-  init_func = model.init_func
-  parameters_nt = NamedTuple(parameters)
-  u0, params = init_values(init_func, merge(model.constants, parameters_nt))
+  _saveat = isnothing(saveat) ? time_type[] : saveat
 
+  # init
+  u0, p0 = model.init_func(constants)
+  
   # check observables
   if !isnothing(observables_)
     records_ind = indexin(observables_, records(model))
@@ -47,7 +45,7 @@ function build_ode_problem(
     model.ode_func, # ODE function
     u0, # u0
     tspan, # tspan
-    params; # constants and static
+    p0; # constants and static
     callback = cbs # callback
   )
 end
@@ -73,15 +71,9 @@ collect_saveat(saveat::Vector{S}) where S<:Real = Float64.(saveat)
 collect_saveat(saveat::AbstractRange{S}) where S<:Real = Float64.(saveat)
 =#
 
-function init_values(init_func, constants)
-  u0, p0 = init_func(constants)
-  lvcons = LVector(constants)
-  return (u0,Params{typeof(lvcons),typeof(p0)}(lvcons, p0))
-end
-
-function  update_init_values(prob, init_func, x)
+function update_init_values(prob, init_func, x)
   constants = merge(NamedTuple(prob.p.constants),x)
-  u0, p0 = init_values(init_func, constants)
+  u0 = init_func(constants)
 
   prob_upd = remake(prob; u0=u0, p=p0)
   

@@ -1,3 +1,12 @@
+# check keys in y before merge
+function merge_strict(x::NamedTuple, y::NamedTuple)
+  y_indexes = indexin([keys(y)...], [keys(x)...])
+  y_lost = isnothing.(y_indexes)
+  @assert !any(y_lost) "Cannot merge elements with keys $(keys(y)[y_lost]) in strict mode."
+
+  merge(x, y)
+end
+
 dictkeys(d::Dict) = (collect(keys(d))...,)
 dictvalues(d::Dict) = (collect(values(d))...,)
 

@@ -49,17 +49,21 @@ function Scenario(
   observables::Union{Nothing,Vector{Symbol}} = nothing,
   tags::AbstractVector{Symbol} = Symbol[],
   group::Union{Symbol, Nothing} = nothing,
+  parameters::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
   kwargs... # all arguments of build_ode_problem()
 )
+  constants_total = merge_strict(model.constants, NamedTuple(parameters))
+  
   # ODE problem
   prob = build_ode_problem(
     model,
     tspan;
     observables_ = observables,
+    constants = constants_total,
     kwargs...
   )
 
-  return Scenario(model.init_func, prob, measurements, tags, group)
+  return Scenario(model.init_func, prob, measurements, tags, group, constants_total)
 end
 
 # Scenario struct method
