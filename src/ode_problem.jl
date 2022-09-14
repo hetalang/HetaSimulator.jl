@@ -71,15 +71,6 @@ collect_saveat(saveat::Vector{S}) where S<:Real = Float64.(saveat)
 collect_saveat(saveat::AbstractRange{S}) where S<:Real = Float64.(saveat)
 =#
 
-function update_init_values(prob, init_func, x)
-  constants = merge(NamedTuple(prob.p.constants),x)
-  u0 = init_func(constants)
-
-  prob_upd = remake(prob; u0=u0, p=p0)
-  
-  return prob_upd
-end
-
 function remake_saveat(prob, saveat; tspan = prob.tspan)
   
   scb_orig = prob.kwargs[:callback].discrete_callbacks[1].affect!

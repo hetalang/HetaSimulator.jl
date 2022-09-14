@@ -64,20 +64,33 @@ function estimator(
   selected_prob = []
   for scn in selected_scenario_pairs
     prob_i = remake_saveat(last(scn).prob, last(scn).measurements)
-    prob_i = !isnothing(parameters_upd) ? update_init_values(prob_i, last(scn).init_func, NamedTuple(parameters_upd)) : prob_i
+    prob_i = if !isnothing(parameters_upd)
+      constants_total_i = merge_strict(last(scn).constants, NamedTuple(parameters_upd))
+      u0, p0 = last(scn).init_func(constants_total_i)
+      remake(prob_i; u0=u0, p=p0)
+    else
+      prob_i
+    end
     push!(selected_prob, prob_i)
   end
 
-  function prob_func(x)
-    function internal_prob_func(prob,i,repeat)
-      update_init_values(selected_prob[i],last(selected_scenario_pairs[i]).init_func,x)
+  function prob_func(x) # x::
+    function(prob,i,repeat) # internal_prob_func
+      #update_init_values(selected_prob[i], last(selected_scenario_pairs[i]).init_func, x)
+      scn = last(selected_scenario_pairs[i])
+      constants_total = merge_strict(scn.constants, x)
+      u0, p0 = scn.init_func(constants_total)
+      remake(selected_prob[i]; u0=u0, p=p0)
     end
   end
 
   function _output(sol, i)
     sol.retcode != :Success && error("Simulated scenario $i returned $(sol.retcode) status")
-    sim = build_results(sol,last(selected_scenario_pairs[i]), params_names)
-    loss_val = loss(sim, sim.scenario.measurements) 
+    #sim = build_results(sol, last(selected_scenario_pairs[i]), params_names)
+    sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
+    simulation = Simulation(sv, NamedTuple(params), sol.retcode)
+    result = SimResult(simulation, last(selected_scenario_pairs[i]))
+    loss_val = loss(result, result.scenario.measurements)
     (loss_val, false)
   end
 
