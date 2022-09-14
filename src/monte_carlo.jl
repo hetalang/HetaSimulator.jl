@@ -38,7 +38,7 @@ Arguments:
 """
 function mc(
   scenario::Scenario,
-  params::Vector{P},
+  params::Vector{P}, # input of `mc` level
   num_iter::Int;
   verbose=false,
   progress_bar=false,
@@ -51,15 +51,11 @@ function mc(
   kwargs...
 ) where P<:Pair
 
-  cons = keys(parameters(scenario))
-  for p in first.(params)
-    if p ∉ cons
-      @warn "$p is not found in models constants."
-    end
-  end
+  # check input names
+  y_indexes = indexin(first.(params), [keys(scenario.constants)...])
+  y_lost = isnothing.(y_indexes)
+  @assert !any(y_lost) "The following keys are not found: $(first.(params)[y_lost])."
 
-  prob0 = scenario.prob
-  init_func = scenario.init_func
   params_nt = NamedTuple(params)
 
   #(parallel_type == EnsembleSerial()) # tmp fix
@@ -68,16 +64,24 @@ function mc(
   function prob_func(prob,i,repeat)
     verbose && println("Processing iteration $i")
     progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
-    update_init_values(prob, init_func, generate_cons(params_nt,i))
+    constants_total_i = merge_strict(scenario.constants, generate_cons(params_nt, i))
+    u0, p0 = scenario.init_func(constants_total_i)
+
+    return remake(scenario.prob; u0=u0, p=p0)
   end
 
-  params_names = collect(keys(params_nt))
   function _output(sol, i)
-    sim = build_results(sol, params_names)
-    (output_func(sim, i), false)
+    # take numbers from p
+    values_i = sol.prob.p[y_indexes]
+    constants_i = NamedTuple(zip(first.(params), values_i))
+    # take simulated values from solution
+    sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
+    simulation = Simulation(sv, constants_i, sol.retcode)
+
+    return (output_func(simulation, i), false)
   end
 
-  prob = EnsembleProblem(prob0;
+  prob = EnsembleProblem(scenario.prob;
     prob_func = prob_func,
     output_func = _output,
     reduction = reduction_func
@@ -203,13 +207,11 @@ function mc(
   kwargs...
 ) where {CP<:Pair, PP<:Pair}
 
-  for scn in scenario_pairs
-    cons = keys(parameters(last(scn)))
-    for p in first.(params)
-      if p ∉ cons
-        @warn "$p is not found in models constants."
-      end
-    end
+  # check input names
+  for scenario_pair in scenario_pairs
+    y_indexes = indexin(first.(params), [keys(last(scenario_pair).constants)...])
+    y_lost = isnothing.(y_indexes)
+    @assert !any(y_lost) "The following keys are not found: $(first.(params)[y_lost])."
   end
 
   params_nt = NamedTuple(params)
@@ -224,15 +226,27 @@ function mc(
     iter_i = iter[i]
     verbose && println("Processing scenario $(iter_i[2]) iteration $(iter_i[1])")
     progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
-    prob_i = last(scenario_pairs[iter_i[2]]).prob
-    init_i = last(scenario_pairs[iter_i[2]]).init_func
-    update_init_values(prob_i, init_i, params_pregenerated[iter_i[1]])
+
+    scn_i = last(scenario_pairs[iter_i[2]])
+    params_i = params_pregenerated[iter_i[1]]
+
+    constants_total_i = merge_strict(scn_i.constants, params_i)
+    u0, p0 = scn_i.init_func(constants_total_i)
+
+    return remake(scn_i.prob; u0=u0, p=p0)
   end
 
   params_names = collect(keys(params_nt))
+
   function _output(sol, i)
-    sim = build_results(sol, params_names)
-    (output_func(sim, i), false)
+    iter_i = iter[i]
+    # takes params from pre-generated
+    constants_i = params_pregenerated[iter_i[1]]
+    # take simulated values from solution
+    sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
+    simulation = Simulation(sv, constants_i, sol.retcode)
+
+    return (output_func(simulation, i), false)
   end
 
   prob = EnsembleProblem(last(scenario_pairs[1]).prob;

@@ -10,7 +10,7 @@ const EMPTY_PROBLEM = ODEProblem((du,u,p,t) -> nothing, [0.0], (0.,1.))
     sim(scenario::Scenario; 
       parameters_upd::Vector{P}=Pair{Symbol, Float64}[],
       alg=DEFAULT_ALG, 
-      reltol=DEFAULT_SIMULATION_RELTOL, 
+      reltol=DEFAULT_SIMULATION_RELTOL,
       abstol=DEFAULT_SIMULATION_ABSTOL,
       kwargs...)
 
@@ -29,7 +29,7 @@ Arguments:
 """
 function sim(
   scenario::Scenario;
-  parameters_upd::Vector{P}=Pair{Symbol, Float64}[],
+  parameters_upd::Vector{P}=Pair{Symbol, Float64}[], # input of `sim` level
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
@@ -53,20 +53,17 @@ function sim(
   #return build_results(sol, scenario, params_names)
   sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
   simulation = Simulation(sv, constant_upd, sol.retcode)
+
   return SimResult(simulation, scenario)
 end
 
+# XXX: not the best solution
+# Takes parameters values from solution and creates NamedTuple
 function build_results(sol::SciMLBase.AbstractODESolution, params_names::Vector{Symbol})
-  params = if length(params_names) > 0 
-    @LArray sol.prob.p.constants[params_names] Tuple(params_names)
-  else
-    @LArray Float64[] ()
-  end
+  params = NamedTuple(zip(sol.prob.p.constants[params_names], params_names))
   sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
   return Simulation(sv, params, sol.retcode)
 end
- 
-build_results(sol::SciMLBase.AbstractODESolution, scenario, params_names) = SimResult(build_results(sol, params_names), scenario)
 
 ### simulate scenario pairs
 
@@ -125,9 +122,10 @@ function sim(
 
   function _output(sol,i)
     sv_i = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-    simulation = Simulation(sv_i, constant_upd, sol.retcode)
     scenario = last(scenario_pairs[i])
-    return SimResult(simulation, scenario),false
+    simulation = Simulation(sv_i, constant_upd, sol.retcode)
+
+    return (SimResult(simulation, scenario), false,)
   end
   
   _reduction(u,batch,I) = (append!(u,batch),false)
