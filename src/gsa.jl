@@ -2,13 +2,13 @@
 
 struct GSAResult
   output_names::Vector{Symbol}
-  params_names::Vector{Symbol}
+  parameters_names::Vector{Symbol}
   pearson::Matrix{Float64}
   partial::Matrix{Float64}
   standard::Matrix{Float64}
 end
 
-parameters(gsar::GSAResult) = gsar.params_names
+parameters(gsar::GSAResult) = gsar.parameters_names
 output(gsar::GSAResult) = gsar.output_names
 pearson(gsar::GSAResult) = gsar.pearson
 partial(gsar::GSAResult) = gsar.partial
@@ -47,13 +47,13 @@ function gsa(mcr::MCResult, timepoint::Number)
   outvals_mat = vecvec_to_mat(VectorOfArray([mcr[i](timepoint) for i in 1:length(mcr)]))'
 
   output_names = observables(mcr)
-  params_names = collect(keys(params[1]))
+  parameters_names = collect(keys(params[1]))
 
   pearson = _calculate_correlation_matrix(outvals_mat, params_mat)
   partial = _calculate_partial_correlation_coefficients(outvals_mat, params_mat)
   standard = _calculate_standard_regression_coefficients(outvals_mat, params_mat)
 
-  return GSAResult(output_names, params_names, pearson, partial, standard)
+  return GSAResult(output_names, parameters_names, pearson, partial, standard)
 end
 
 

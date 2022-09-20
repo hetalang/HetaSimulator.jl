@@ -79,13 +79,13 @@ fit_res = fit(p, to_fit)
 
 optim(fit_res)
 
-res_optim = sim(p, parameters_upd = optim(fit_res))
+res_optim = sim(p, parameters = optim(fit_res))
 plot(res_optim, yscale=:log, ylims=(1e-3,1e2))
 # plotd = plot(res_optim, yscale=:log, ylims=(1e-3,1e2))
 # savefig(plotd, "sim5.png")
 
 ### to check
-res_x = sim(p, parameters_upd = [:kabs => 20.0, :Q => 1.0, :kel => 5.0e-01])
+res_x = sim(p, parameters = [:kabs => 20.0, :Q => 1.0, :kel => 5.0e-01])
 plot(res_x, yscale=:log, ylims=(1e-3,1e2))
 
 ### fitting with parameters.csv table

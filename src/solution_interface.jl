@@ -3,7 +3,7 @@
 observables(sr::SimResult) = observables(sr.sim)
 observables(sim::Simulation) = collect(keys(sim.vals.u[1]))
 observables(sim::MCResult) = observables(sim[1])
-parameters(sim::SimResult) = sim.scenario.prob.p
+#parameters(sim::SimResult) = sim.scenario.prob.p
 
 @inline Base.getindex(sim::Simulation, I...) = sim.vals[I...]
 @inline Base.getindex(sim::Simulation, i::Symbol,::Colon) = [sim.vals[j][i] for j in 1:length(sim.vals)]
@@ -30,10 +30,10 @@ end
 
 ############################ DataFrames ########################################
 
-function DataFrame(s::Simulation; vars=observables(s), params::Union{Vector,Nothing}=nothing, iter::Union{Int,Nothing}=nothing)
+function DataFrame(s::Simulation; vars=observables(s), parameters_output::Vector{Symbol}=Symbol[], iter::Union{Int,Nothing}=nothing)
   df = DataFrame(t=s.vals.t)
   !isnothing(iter) && (df[!,:iter].=iter)
-  !isnothing(params) && ([df[:,p].=parameters(s)[p] for p in params])
+  length(parameters_output) > 0 && ([df[:, id] .= parameters(s)[id] for id in parameters_output])
 
   [df[!, v] = s[v,:] for v in vars[in.(vars, Ref(observables(s)))]]
   !isnothing(s.scope) && (df[:,:scope]=s.scope)

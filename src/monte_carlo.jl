@@ -7,7 +7,7 @@ DEFAULT_OUTPUT(sol,i) = sol
 
 """
     mc(scenario::Scenario,
-      params::Vector{<:Pair},
+      parameters_variation::Vector{<:Pair},
       num_iter::Int;
       verbose=false,
       alg=DEFAULT_ALG,
@@ -24,7 +24,7 @@ Example: `mc(scenario, [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 Arguments:
 
 - `scenario` : simulation scenario of type [`Scenario`](@ref)
-- `params` : parameters variation setup
+- `parameters_variation` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
 - `verbose` : print iteration progress. Default is `false`
 - `progress_bar` : show progress bar. Default is `false`
@@ -38,7 +38,7 @@ Arguments:
 """
 function mc(
   scenario::Scenario,
-  params::Vector{P}, # input of `mc` level
+  parameters_variation::Vector{P}, # input of `mc` level
   num_iter::Int;
   verbose=false,
   progress_bar=false,
@@ -52,11 +52,11 @@ function mc(
 ) where P<:Pair
 
   # check input names
-  y_indexes = indexin(first.(params), [keys(scenario.constants)...])
+  y_indexes = indexin(first.(parameters_variation), [keys(scenario.parameters)...])
   y_lost = isnothing.(y_indexes)
-  @assert !any(y_lost) "The following keys are not found: $(first.(params)[y_lost])."
+  @assert !any(y_lost) "The following keys are not found: $(first.(parameters_variation)[y_lost])."
 
-  params_nt = NamedTuple(params)
+  parameters_variation_nt = NamedTuple(parameters_variation)
 
   #(parallel_type == EnsembleSerial()) # tmp fix
   p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled = progress_bar)
@@ -64,7 +64,7 @@ function mc(
   function prob_func(prob,i,repeat)
     verbose && println("Processing iteration $i")
     progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
-    constants_total_i = merge_strict(scenario.constants, generate_cons(params_nt, i))
+    constants_total_i = merge_strict(scenario.parameters, generate_cons(parameters_variation_nt, i))
     u0, p0 = scenario.init_func(constants_total_i)
 
     return remake(scenario.prob; u0=u0, p=p0)
@@ -73,7 +73,7 @@ function mc(
   function _output(sol, i)
     # take numbers from p
     values_i = sol.prob.p[y_indexes]
-    constants_i = NamedTuple(zip(first.(params), values_i))
+    constants_i = NamedTuple(zip(first.(parameters_variation), values_i))
     # take simulated values from solution
     sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
     simulation = Simulation(sv, constants_i, sol.retcode)
@@ -122,7 +122,7 @@ end
 
 """
     mc(scenario::Scenario,
-      params::DataFrame,
+      parameters_variation::DataFrame,
       num_iter::Int;
       kwargs...
     )
@@ -134,36 +134,35 @@ Example: `mc(scn1, DataFrame(k2=rand(3),k3=rand(3)), 1000)`
 Arguments:
 
 - `scenario` : simulation scenario of type [`Scenario`](@ref)
-- `params` : DataFrame with pre-generated parameters.
+- `parameters_variation` : DataFrame with pre-generated parameters.
 - `num_iter` : number of Monte-Carlo iterations 
-- kwargs : other solver related arguments supported by `mc(scenario::Scenario, params::Vector, num_iter::Int64)`
+- kwargs : other solver related arguments supported by `mc(scenario::Scenario, parameters_variation::Vector, num_iter::Int64)`
 """
 function mc(
   scenario::Union{Scenario, Vector{Pair{Symbol,Scenario}}, Vector{Scenario}, Platform},
-  params::DataFrame;
-  num_iter::Int = size(params)[1],
+  parameters_variation::DataFrame;
+  num_iter::Int = size(parameters_variation)[1],
   kwargs...
-) 
-  #cons = keys(parameters(scenario))
-  params_pairs = Pair[]
+)
+  parameters_pairs = Pair[]
   
-  for pstr in names(params)
+  for pstr in names(parameters_variation)
     psym = Symbol(pstr)
   #  if !(psym in cons)
   #   @warn "$psym is not found in models constants."
   #  end
     # @assert (psym in cons) "$psym is not found in models constants."   
-    push!(params_pairs, psym=>params[!,psym])
+    push!(parameters_pairs, psym=>parameters_variation[!,psym])
   end
 
-  return mc(scenario, params_pairs, num_iter; kwargs...)
+  return mc(scenario, parameters_pairs, num_iter; kwargs...)
 end
 
 # multi scenario Monte-Carlo
 
 """
     mc(scenario_pairs::Vector{<:Pair},
-      params::Vector{<:Pair},
+      parameters_variation::Vector{<:Pair},
       num_iter::Int64;
       verbose=false,
       alg=DEFAULT_ALG,
@@ -180,7 +179,7 @@ Example: `mc([:c1=>scn1,:c2=>scn2], [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1
 Arguments:
 
 - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
-- `params` : parameters variation setup
+- `parameters_variation` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
 - `verbose` : print iteration progress. Default is `false`
 - `progress_bar` : show progress bar. Default is `false`
@@ -194,7 +193,7 @@ Arguments:
 """
 function mc(
   scenario_pairs::Vector{CP},
-  params::Vector{PP},
+  parameters_variation::Vector{PP},
   num_iter::Int;
   verbose=false,
   progress_bar=false,
@@ -209,14 +208,14 @@ function mc(
 
   # check input names
   for scenario_pair in scenario_pairs
-    y_indexes = indexin(first.(params), [keys(last(scenario_pair).constants)...])
+    y_indexes = indexin(first.(parameters_variation), [keys(last(scenario_pair).parameters)...])
     y_lost = isnothing.(y_indexes)
-    @assert !any(y_lost) "The following keys are not found: $(first.(params)[y_lost])."
+    @assert !any(y_lost) "The following keys are not found: $(first.(parameters_variation)[y_lost])."
   end
 
-  params_nt = NamedTuple(params)
-  params_pregenerated = [generate_cons(params_nt,i) for i in 1:num_iter]
-  lp = length(params_pregenerated)
+  parameters_variation_nt = NamedTuple(parameters_variation)
+  parameters_pregenerated = [generate_cons(parameters_variation_nt, i) for i in 1:num_iter]
+  lp = length(parameters_pregenerated)
   lc = length(scenario_pairs)
   iter = collect(Iterators.product(1:lp,1:lc))
 
@@ -228,20 +227,18 @@ function mc(
     progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
 
     scn_i = last(scenario_pairs[iter_i[2]])
-    params_i = params_pregenerated[iter_i[1]]
+    parameters_i = parameters_pregenerated[iter_i[1]]
 
-    constants_total_i = merge_strict(scn_i.constants, params_i)
+    constants_total_i = merge_strict(scn_i.parameters, parameters_i)
     u0, p0 = scn_i.init_func(constants_total_i)
 
     return remake(scn_i.prob; u0=u0, p=p0)
   end
 
-  params_names = collect(keys(params_nt))
-
   function _output(sol, i)
     iter_i = iter[i]
-    # takes params from pre-generated
-    constants_i = params_pregenerated[iter_i[1]]
+    # takes parameters_variation from pre-generated
+    constants_i = parameters_pregenerated[iter_i[1]]
     # take simulated values from solution
     sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
     simulation = Simulation(sv, constants_i, sol.retcode)
@@ -296,7 +293,7 @@ end
 
 """
     mc(scenario_pairs::Vector{<:AbstractScenario},
-      params::Vector{<:Pair},
+      parameters_variation::Vector{<:Pair},
       num_iter::Int64;
       kwargs...
     )
@@ -308,24 +305,24 @@ Example: `mc([scn1,scn2], [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 100
 Arguments:
 
 - `scenario_pairs` : vector of scenarios of type [`Scenario`](@ref)
-- `params` : parameters variation setup
+- `parameters_variation` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
-- kwargs : other solver related arguments supported by `mc(scenario_pairs::Vector{<:Pair}, params::Vector, num_iter::Int64)`
+- kwargs : other solver related arguments supported by `mc(scenario_pairs::Vector{<:Pair}, parameters_variation::Vector, num_iter::Int64)`
 """
 function mc(
   scenario_pairs::Vector{C},
-  params::Vector{P},
+  parameters_variation::Vector{P},
   num_iter::Int;
   kwargs...
 ) where {C<:AbstractScenario, P<:Pair}
 
   scenario_pairs = [(Symbol("_$i") => scn) for (i, scn) in pairs(scenario_pairs)]
-  return mc(scenario_pairs, params, num_iter; kwargs...)
+  return mc(scenario_pairs, parameters_variation, num_iter; kwargs...)
 end
 
 """
     mc(platform::Platform, 
-      params::Vector{<:Pair},
+      parameters_variation::Vector{<:Pair},
       num_iter::Int64;
       kwargs...
     )
@@ -337,13 +334,13 @@ Example: `mc(platform, [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 Arguments:
 
 - `platform` : platform of [`Platform`](@ref) type
-- `params` : parameters variation setup
+- `parameters_variation` : parameters variation setup
 - `num_iter` : number of Monte-Carlo iterations
-- kwargs : other solver related arguments supported by `mc(scenario_pairs::Vector{<:Pair}, params::Vector, num_iter::Int64)`
+- kwargs : other solver related arguments supported by `mc(scenario_pairs::Vector{<:Pair}, parameters_variation::Vector, num_iter::Int64)`
 """
 function mc(
   platform::Platform,
-  params::Vector{P},
+  parameters_variation::Vector{P},
   num_iter::Int;
   scenarios::Union{AbstractVector{Symbol}, Nothing} = nothing,
   kwargs...) where P<:Pair
@@ -358,7 +355,7 @@ function mc(
     end
   end
 
-  return mc(scenario_pairs,params,num_iter;kwargs...)
+  return mc(scenario_pairs, parameters_variation, num_iter; kwargs...)
 end
 
 """
@@ -375,12 +372,12 @@ Arguments:
 
 - `mcres` : Monte-Carlo result of type `MCResult`
 - `success_status` : Vector of success statuses. Default is `[:Success,:Terminated]`
-- kwargs : other solver related arguments supported by `mc(scenario::Scenario, params::Vector, num_iter::Int64)`
+- kwargs : other solver related arguments supported by `mc(scenario::Scenario, parameters_variation::Vector, num_iter::Int64)`
 """
 function mc!(mcres::MCResult; success_status::Vector{Symbol}=[:Success,:Terminated], kwargs...)
   scen = scenario(mcres)
   err_idxs = [i for i in 1:length(mcres) if status(mcres[i]) ∉ success_status]
-  mcvecs = DataFrame([NamedTuple(parameters(mcres[i])) for i in err_idxs])
+  mcvecs = DataFrame([NamedTuple(parameters(mcres[i])) for i in err_idxs]) # XXX: maybe NamesTuple is not required
   mcres_upd = mc(scen, mcvecs; kwargs...)
   for i in eachindex(err_idxs)
     mcres.sim[err_idxs[i]] = mcres_upd[i]

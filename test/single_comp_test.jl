@@ -37,7 +37,7 @@ scn2 = Scenario(model, (0., 150.); parameters = [:k1=>0.015], observables=[:r1])
 @test parameters(scn2)[:k1] == 0.015
 
 cs1 = sim(scn1)
-cs2 = sim([:one=>scn1,:two=>scn2], parameters_upd=[:k1=>0.03])
+cs2 = sim([:one=>scn1,:two=>scn2], parameters=[:k1=>0.03])
 @test typeof(cs1) <: HetaSimulator.SimResult
 @test typeof(cs2) <: Vector{Pair{Symbol, HetaSimulator.SimResult}}
 @test length(parameters(cs1))==0

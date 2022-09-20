@@ -6,8 +6,8 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
 """
     fit(
       scenario_pairs::AbstractVector{Pair{Symbol, C}},
-      params::Vector{Pair{Symbol,Float64}};
-      parameters_upd::Union{Nothing, Vector{P}}=nothing,
+      parameters_fitted::Vector{Pair{Symbol,Float64}};
+      parameters::Union{Nothing, Vector{P}}=nothing,
       alg=DEFAULT_ALG,
       reltol=DEFAULT_FITTING_RELTOL,
       abstol=DEFAULT_FITTING_ABSTOL,
@@ -19,9 +19,9 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
       fit_alg = :LN_NELDERMEAD,
       maxeval = 10000,
       maxtime = 0.0,
-      lbounds = fill(0.0, length(params)),
-      ubounds = fill(Inf, length(params)),
-      scale = fill(:lin, length(params)),
+      lbounds = fill(0.0, length(parameters_fitted)),
+      ubounds = fill(Inf, length(parameters_fitted)),
+      scale = fill(:lin, length(parameters_fitted)),
       progress::Symbol = :minimal,
       kwargs... 
     ) where {C<:AbstractScenario, P<:Pair}
@@ -33,8 +33,8 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
   Arguments:
 
   - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
-  - `params` : optimization parameters and their initial values
-  - `parameters_upd` : constants, which overwrite both `Model` and `Scenario` constants. Default is `nothing`
+  - `parameters_fitted` : optimization parameters and their initial values
+  - `parameters` : constants, which overwrite both `Model` and `Scenario` constants. Default is `nothing`
   - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
   - `reltol` : relative tolerance. Default is 1e-6
   - `abstol` : relative tolerance. Default is 1e-8
@@ -46,17 +46,17 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
   - `fit_alg` : fitting algorithm. See `NLopt.jl` docs for details. Default is `:LN_NELDERMEAD`
   - `maxeval` : maximum number of function evaluations. See `NLopt.jl` docs for details. Default is `1e4`
   - `maxtime` : maximum optimization time (in seconds). See `NLopt.jl` docs for details. Default is `0`
-  - `lbounds` : lower parameters bounds. See `NLopt.jl` docs for details. Default is `fill(0.0, length(params))`
-  - `ubounds` : upper parameters bounds. See `NLopt.jl` docs for details. Default is `fill(Inf, length(params))`
-  - `scale`   : scale of the parameters (supports `:lin, :direct, :log, :log10`) to be used during fitting. Default is `fill(:lin, length(params))`.
+  - `lbounds` : lower parameters bounds. See `NLopt.jl` docs for details. Default is `fill(0.0, length(parameters_fitted))`
+  - `ubounds` : upper parameters bounds. See `NLopt.jl` docs for details. Default is `fill(Inf, length(parameters_fitted))`
+  - `scale`   : scale of the parameters (supports `:lin, :direct, :log, :log10`) to be used during fitting. Default is `fill(:lin, length(parameters_fitted))`.
                 `:direct` value is a synonym of `:lin`.
   - `progress` : progress mode display. One of three values: `:silent`, `:minimal`, `:full`. Default is `:minimal`
   - `kwargs...` : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
 """
 function fit(
   scenario_pairs::AbstractVector{Pair{Symbol, C}},
-  params::Vector{Pair{Symbol,Float64}};
-  parameters_upd::Union{Nothing, Vector{P}}=nothing,
+  parameters_fitted::Vector{Pair{Symbol,Float64}};
+  parameters::Union{Nothing, Vector{P}}=nothing,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_FITTING_RELTOL,
   abstol=DEFAULT_FITTING_ABSTOL,
@@ -68,15 +68,15 @@ function fit(
   fit_alg = :LN_NELDERMEAD,
   maxeval = 10000,
   maxtime = 0.0,
-  lbounds = fill(0.0, length(params)),
-  ubounds = fill(Inf, length(params)),
-  scale = fill(:lin, length(params)),
+  lbounds = fill(0.0, length(parameters_fitted)),
+  ubounds = fill(Inf, length(parameters_fitted)),
+  scale = fill(:lin, length(parameters_fitted)),
   progress::Symbol = :minimal,
   kwargs... # other arguments to sim
 ) where {C<:AbstractScenario, P<:Pair}
 
-  # names of parameters used in fitting and saved in params field of solution
-  params_names = first.(params)
+  # names of parameters used in fitting and saved in parameters_fitted field of solution
+  parameters_names = first.(parameters_fitted)
 
   selected_scenario_pairs = Pair{Symbol,Scenario}[]
   for scenario_pair in scenario_pairs # iterate through scenarios names
@@ -91,8 +91,8 @@ function fit(
 
   estim_fun = estimator( # return function
     scenario_pairs,
-    params;
-    parameters_upd,
+    parameters_fitted;
+    parameters,
     alg,
     reltol,
     abstol,
@@ -121,7 +121,7 @@ function fit(
     values_to_display = [(:ESTIMATOR_BEST, round(estim_best; digits=2))]
     if progress == :full
       for i in 1:length(x)
-        push!(values_to_display, (params_names[i], round(x_unscaled[i], sigdigits=3)))
+        push!(values_to_display, (parameters_names[i], round(x_unscaled[i], sigdigits=3)))
       end
     end
 
@@ -129,7 +129,7 @@ function fit(
     return estim_x
   end
 
-  opt = Opt(fit_alg, length(params))
+  opt = Opt(fit_alg, length(parameters_fitted))
   opt.min_objective = obj_func
 
   opt.ftol_rel = ftol_rel
@@ -146,11 +146,11 @@ function fit(
   lower_bounds!(opt, scale_params.(lbounds, scale))
   upper_bounds!(opt, scale_params.(ubounds, scale))
 
-  params0 = scale_params.(last.(params), scale)
+  params0 = scale_params.(last.(parameters_fitted), scale)
   (minf, minx, ret) = NLopt.optimize(opt, params0)
 
   # to create pairs from Float64
-  minx_pairs = [key=>value for (key, value) in zip(first.(params), unscale_params.(minx, scale))]
+  minx_pairs = [key=>value for (key, value) in zip(first.(parameters_fitted), unscale_params.(minx, scale))]
   
   return FitResult(minf, minx_pairs, ret, opt.numevals)
 end
@@ -158,7 +158,7 @@ end
 """
     fit(
       scenario_pairs::AbstractVector{Pair{Symbol, C}},
-      params_df::DataFrame;
+      parameters_fitted::DataFrame;
       kwargs...
     ) where C<:AbstractScenario
 
@@ -167,32 +167,32 @@ end
   Arguments:
 
   - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
-  - `params` : DataFrame with optimization parameters setup and their initial values, see [`read_parameters`](@ref)
-  - `kwargs...` : other ODE solver and `fit` arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
+  - `parameters_fitted` : DataFrame with optimization parameters setup and their initial values, see [`read_parameters`](@ref)
+  - `kwargs...` : other ODE solver and `fit` arguments supported by `fit(scenario_pairs::Vector{<:Pair}, parameters_fitted::Vector{<:Pair}`
 """
 function fit(
   scenario_pairs::AbstractVector{Pair{Symbol, C}},
-  params_df::DataFrame;
+  parameters_fitted::DataFrame;
   kwargs...
 ) where C<:AbstractScenario
   
-  gdf = groupby(params_df, :estimate)
+  gdf = groupby(parameters_fitted, :estimate)
   @assert haskey(gdf, (true,)) "No parameters to estimate."
 
-  params = gdf[(true,)].parameter .=> gdf[(true,)].nominal
+  parameters_fitted_ = gdf[(true,)].parameter .=> gdf[(true,)].nominal
   lbounds = gdf[(true,)].lower
   ubounds = gdf[(true,)].upper
   scale = gdf[(true,)].scale
   # fixed parameters
-  parameters_upd = haskey(gdf, (false,)) ? gdf[(false,)].parameter .=> gdf[(false,)].nominal : nothing
+  parameters = haskey(gdf, (false,)) ? gdf[(false,)].parameter .=> gdf[(false,)].nominal : nothing
 
-  fit(scenario_pairs, params; parameters_upd, lbounds, ubounds, scale, kwargs...)
+  fit(scenario_pairs, parameters_fitted_; parameters, lbounds, ubounds, scale, kwargs...)
 end
 
 """
     fit(
       scenarios::AbstractVector{C},
-      params;
+      parameters_fitted;
       kwargs...
     ) where C<:AbstractScenario
 
@@ -205,23 +205,23 @@ end
   Arguments:
 
   - `scenarios` : vector of scenarios of type [`Scenario`](@ref)
-  - `params` : optimization parameters and their initial values
-  - `kwargs...` : other ODE solver and `fit` related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
+  - `parameters_fitted` : optimization parameters and their initial values
+  - `kwargs...` : other ODE solver and `fit` related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, parameters_fitted::Vector{<:Pair}`
 """
 function fit(
   scenarios::AbstractVector{C},
-  params; # DataFrame or Vector{Pair{Symbol,Float64}}
+  parameters_fitted; # DataFrame or Vector{Pair{Symbol,Float64}}
   kwargs... # other arguments to fit or sim
 ) where {C<:AbstractScenario}
   scenario_pairs = Pair{Symbol,AbstractScenario}[Symbol("_$i") => scn for (i, scn) in pairs(scenarios)]
-  return fit(scenario_pairs, params; kwargs...)
+  return fit(scenario_pairs, parameters_fitted; kwargs...)
 end
 
 ### fit platform ###
 
 """
     fit(platform::Platform,
-      params;
+      parameters_fitted;
       scenarios::Union{AbstractVector{Symbol}, Nothing} = nothing,
       kwargs...
     ) where C<:AbstractScenario
@@ -235,13 +235,13 @@ end
   Arguments:
 
   - `platform` : platform of [`Platform`](@ref) type
-  - `params` : optimization parameters and their initial values
+  - `parameters_fitted` : optimization parameters and their initial values
   - `scenarios` : vector of scenarios identifiers of type `Symbol`. Default is `nothing`
-  - `kwargs...` : other ODE solver and `fit` related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, params::Vector{<:Pair}`
+  - `kwargs...` : other ODE solver and `fit` related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, parameters_fitted::Vector{<:Pair}`
 """
 function fit(
   platform::Platform,
-  params; # DataFrame or Vector{Pair{Symbol,Float64}}
+  parameters_fitted; # DataFrame or Vector{Pair{Symbol,Float64}}
   scenarios::Union{AbstractVector{Symbol}, Nothing} = nothing, # all if nothing
   kwargs... # other arguments to fit or sim
 )
@@ -255,7 +255,7 @@ function fit(
     end
   end
 
-  return fit(scenario_pairs, params; kwargs...)
+  return fit(scenario_pairs, parameters_fitted; kwargs...)
 end
 
 function scale_params(x, scale::Symbol)

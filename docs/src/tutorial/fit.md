@@ -198,11 +198,11 @@ optim(res_optim)
  :sigma3 => 0.5716026958426483
 ```
 
-To display the simulations with updated parameters values we can use `parameters_upd` argument in `sim`.
+To display the simulations with updated parameters values we can use `parameters` argument in `sim`.
 
 ```julia
 # check fitting quality 
-res = sim(p, parameters_upd = optim(res_optim))
+res = sim(p, parameters = optim(res_optim))
 plot(res, yscale=:log10, vars=[:C1,:C2], ylims=(1e-3,1e2))
 ```
 

@@ -8,7 +8,7 @@ const EMPTY_PROBLEM = ODEProblem((du,u,p,t) -> nothing, [0.0], (0.,1.))
 
 """
     sim(scenario::Scenario; 
-      parameters_upd::Vector{P}=Pair{Symbol, Float64}[],
+      parameters::Vector{P}=Pair{Symbol, Float64}[],
       alg=DEFAULT_ALG, 
       reltol=DEFAULT_SIMULATION_RELTOL,
       abstol=DEFAULT_SIMULATION_ABSTOL,
@@ -21,7 +21,7 @@ Example: `Scenario(model, (0., 200.); saveat = [0.0, 150.]) |> sim`
 Arguments:
 
 - `scenario` : simulation scenario of type [`Scenario`](@ref)
-- `parameters_upd` : constants, which overwrite both `Model` and `Scenario` constants. Default is empty vector.
+- `parameters` : constants, which overwrite both `Model` and `Scenario` constants. Default is empty vector.
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -29,17 +29,17 @@ Arguments:
 """
 function sim(
   scenario::Scenario;
-  parameters_upd::Vector{P}=Pair{Symbol, Float64}[], # input of `sim` level
+  parameters::Vector{P}=Pair{Symbol, Float64}[], # input of `sim` level
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
   kwargs... # other solver arguments
 ) where P<:Pair
   
-  constant_upd = NamedTuple(parameters_upd)
+  parameters_nt = NamedTuple(parameters)
 
-  prob = if length(parameters_upd) > 0
-    constants_total = merge_strict(scenario.constants, constant_upd)
+  prob = if length(parameters_nt) > 0
+    constants_total = merge_strict(scenario.parameters, parameters_nt)
     u0, p0 = scenario.init_func(constants_total)
   
     remake(scenario.prob; u0=u0, p=p0)
@@ -48,28 +48,20 @@ function sim(
   end
   sol = solve(prob, alg; reltol = reltol, abstol = abstol,
     save_start = false, save_end = false, save_everystep = false, kwargs...)
-  #params_names = Symbol[first(x) for x in parameters_upd]
 
-  #return build_results(sol, scenario, params_names)
+  #parameters_names = Symbol[first(x) for x in parameters]
+  #return build_results(sol, scenario, parameters_names)
   sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-  simulation = Simulation(sv, constant_upd, sol.retcode)
+  simulation = Simulation(sv, parameters_nt, sol.retcode)
 
   return SimResult(simulation, scenario)
-end
-
-# XXX: not the best solution
-# Takes parameters values from solution and creates NamedTuple
-function build_results(sol::SciMLBase.AbstractODESolution, params_names::Vector{Symbol})
-  params = NamedTuple(zip(sol.prob.p.constants[params_names], params_names))
-  sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-  return Simulation(sv, params, sol.retcode)
 end
 
 ### simulate scenario pairs
 
 """
     sim(scenario_pairs::Vector{P}; 
-      parameters_upd::Vector{Pair{Symbol, Float64}}=Pair{Symbol, Float64}[],
+      parameters::Vector{Pair{Symbol, Float64}}=Pair{Symbol, Float64}[],
       alg=DEFAULT_ALG, 
       reltol=DEFAULT_SIMULATION_RELTOL, 
       abstol=DEFAULT_SIMULATION_ABSTOL,
@@ -83,17 +75,17 @@ Example: `sim([:x => scn1, :y=>scn2, :z=>scn3])`
 Arguments:
 
 - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
-- `parameters_upd` : constants, which overwrite both `Model` and `Scenario` constants. Default is empty vector.
+- `parameters` : constants, which overwrite both `Model` and `Scenario` constants. Default is empty vector.
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
 - `parallel_type` : type of multiple simulations parallelism. Default is no parallelism. See SciML docs for details
 - `kwargs...` : other solver related arguments supported by DiffEqBase.solve. See SciML docs for de
-      #update_init_values(scn_i.prob, scn_i.init_func, constant_upd)tails
+      #update_init_values(scn_i.prob, scn_i.init_func, parameters_nt) tails
 """
 function sim(
   scenario_pairs::Vector{P};
-  parameters_upd::Vector{Pair{Symbol, Float64}}=Pair{Symbol, Float64}[],
+  parameters::Vector{Pair{Symbol, Float64}}=Pair{Symbol, Float64}[],
   alg = DEFAULT_ALG, 
   reltol = DEFAULT_SIMULATION_RELTOL, 
   abstol = DEFAULT_SIMULATION_ABSTOL,
@@ -103,7 +95,7 @@ function sim(
 
   isempty(scenario_pairs) && return SimResult[] # BRAKE
 
-  constant_upd = NamedTuple(parameters_upd)
+  parameters_nt = NamedTuple(parameters)
 
   progress_on = (parallel_type == EnsembleSerial()) # tmp fix
   p = Progress(length(scenario_pairs), dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled=progress_on)
@@ -111,8 +103,8 @@ function sim(
   function prob_func(prob,i,repeat)
     next!(p)
     scn_i = last(scenario_pairs[i])
-    constants_total_i = merge_strict(scn_i.constants, constant_upd)
-    if length(parameters_upd) > 0
+    constants_total_i = merge_strict(scn_i.parameters, parameters_nt)
+    if length(parameters_nt) > 0
       u0, p0 = scn_i.init_func(constants_total_i)
       remake(scn_i.prob; u0=u0, p=p0)
     else
@@ -123,7 +115,7 @@ function sim(
   function _output(sol,i)
     sv_i = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
     scenario = last(scenario_pairs[i])
-    simulation = Simulation(sv_i, constant_upd, sol.retcode)
+    simulation = Simulation(sv_i, parameters_nt, sol.retcode)
 
     return (SimResult(simulation, scenario), false,)
   end

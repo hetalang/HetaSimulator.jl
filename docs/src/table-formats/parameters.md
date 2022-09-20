@@ -59,7 +59,7 @@ These operations are equivalent to the following.
 res = fit(
     p,
     [:sigma_K => 0.1, :sigma_P => 0.1, :Kp_K_D => 5.562383e+01];
-    parameters_upd = [:Kp_R_D => 5.562383e+01]
+    parameters = [:Kp_R_D => 5.562383e+01]
     lbounds = [1e-6, 1e-6, 1e-6],
     ubounds = [1e3, 1e3, 1e3],
     scale = [:log, :log, :log]

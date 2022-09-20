@@ -39,13 +39,13 @@ end
 abstract type AbstractModel end
 
 """
-    struct Model{IF,OF,EV,SG,C,EA} <: AbstractModel
+    struct Model{IF,OF,EV,SG,EA} <: AbstractModel
       init_func::IF
       ode_func::OF
       events::EV
       saving_generator::SG
       records_output::AbstractVector{Pair{Symbol,Bool}}
-      constants::C
+      constants::NamedTuple
       events_active::EA
     end
 
@@ -54,40 +54,55 @@ This represent the content of one namespace from a Heta platform.
 
 To get list of model content use methods: constants(model), records(model), switchers(model).
 
-To get the default model options use methods: `parameters(model)`, 
+To get the default model options use methods: 
 `events_active(model)`, `events_save(model)`, `observables(model)`.
-These options can be rewritten by a [`Scenario`]{@ref}.
+These values can be rewritten by a [`Scenario`]{@ref}.
 """
-struct Model{IF,OF,EV,SG,C,EA} <: AbstractModel
+struct Model{IF,OF,EV,SG,EA} <: AbstractModel
   init_func::IF
   ode_func::OF
   events::EV # IDEA: use (:TimeEvent, ...) instead of TimeEvent(...)
   saving_generator::SG
   records_output::AbstractVector{Pair{Symbol,Bool}}
-  constants::C # LArray{Float64,1,Array{Float64,1},(:a, :b)}
+  constants::NamedTuple
   events_active::EA
 end
 
-constants(m::Model) = [keys(m.constants)...]
-records(m::Model) = first.(m.records_output)
-switchers(m::Model) = [keys(m.events)...]
+constants(m::Model) = [keys(m.constants)...] # ids of constants
+records(m::Model) = first.(m.records_output) # ids of records
+switchers(m::Model) = [keys(m.events)...]    # ids of events
 events_active(m::Model) = collect(Pair{Symbol, Bool}, pairs(m.events_active))
-events_save(m::Model) = [first(x) => (true,true) for x in pairs(m.events)] # XXX set (false,false)
-observables(m::Model) = begin # observables
+events_save(m::Model) = [first(x) => (false,false) for x in pairs(m.events)]
+observables(m::Model) = begin                # ids of active observables
   only_true = filter((p) -> last(p), m.records_output)
   first.(only_true)
 end
 
-# auxilary function to display first n components of vector
+# auxilary function to display first n components of Vector or Tuple
 function print_lim(x::Union{Vector, Tuple}, n::Int)
   first_n = ["$y" for y in first(x, n)]
   if length(x) > n
     push!(first_n, "...")
+  elseif length(x) == 0
+    return "-"
   end
   return join(first_n, ", ")
 end
+
 function print_lim(::Nothing, n::Int)
   return "-"
+end
+
+function print_lim(x::NamedTuple, n::Int)
+  x_keys = keys(x)
+  if length(x) > n
+    string_array = ["$(x_keys[i])=$(x[i])" for i in 1:n]
+    push!(string_array, "...")
+  else
+    string_array = ["$(x_keys[i])=$(x[i])" for i in 1:length(x)]
+  end
+
+  return "(" * join(string_array, ", ") * ")"
 end
 
 function Base.show(io::IO, mime::MIME"text/plain", m::AbstractModel)
@@ -137,6 +152,8 @@ abstract type AbstractScenario end
     prob::P
     measurements::M
     tags::AbstractVector{Symbol}
+    group::Union{Symbol,Nothing}
+    parameters::NamedTuple
   end
 
   Type representing simulation conditions, i.e. model variant with updated constants and outputs.
@@ -149,13 +166,12 @@ struct Scenario{F,P,M} <: AbstractScenario
   measurements::M
   tags::AbstractVector{Symbol}
   group::Union{Symbol,Nothing}
-  constants::NamedTuple
+  parameters::NamedTuple
 end
 
 saveat(scn::Scenario) = scn.prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat_cache
 tspan(scn::Scenario) = scn.prob.tspan
-parameters(scn::Scenario) = scn.prob.p
-constants(scn::Scenario) = scn.constants
+parameters(scn::Scenario) = scn.parameters # scn.prob.p
 measurements(scn::Scenario) = scn.measurements
 # events_active(scn::Scenario)
 # events_save(scn::Scenario)
@@ -196,25 +212,25 @@ function clear_savings(sv::SavedValues)
   return nothing
 end
 
-struct Simulation{V,scopeType,P}
+struct Simulation{V,scopeType}
   vals::V
   scope::scopeType
-  params::P
+  parameters::NamedTuple
   status::Symbol
 end
 
 # copy fix is tmp needed not to rewrite SavedValues with new simulation
-Simulation(sv::SavedValues, params, status::Symbol) = Simulation(
+Simulation(sv::SavedValues, parameters::NamedTuple, status::Symbol) = Simulation(
   DiffEqBase.SciMLBase.DiffEqArray(copy(sv.u),copy(sv.t)),
   copy(sv.scope),
-  params,
+  parameters,
   status
 ) 
 
 status(s::Simulation) = s.status
 times(s::Simulation) = s.vals.t
 vals(s::Simulation) = s.vals.u
-parameters(s::Simulation) = s.params
+parameters(s::Simulation) = s.parameters
 
 @inline Base.length(S::Simulation) = length(S.vals.t)
 
@@ -247,7 +263,7 @@ end
 status(sr::SimResult) = status(sr.sim)
 times(sr::SimResult) = times(sr.sim)
 vals(sr::SimResult) = vals(sr.sim)
-parameters(sr::SimResult) = parameters(sr.sim) # TODO: check here
+parameters(sr::SimResult) = parameters(sr.sim)
 measurements(sr::SimResult) = sr.scenario.measurements
 
 @inline Base.length(sr::SimResult) = length(sr.sim)
@@ -421,7 +437,6 @@ struct FitResult{L<:Real, I}
 end
 
 function Base.show(io::IO, mime::MIME"text/plain", fr::FitResult)
-  
   println(io, "FitResult with status :$(fr.status)")
   println(io, "   Status: $(fr.status)")
   println(io, "   Optimal values: $(fr.optim)")

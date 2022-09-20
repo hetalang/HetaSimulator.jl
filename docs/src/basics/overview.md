@@ -591,7 +591,7 @@ optim(fit_res)
 You can simulate and plot results with the following code.
 
 ```julia
-res_optim = sim(p, parameters_upd = optim(fit_res))
+res_optim = sim(p, parameters = optim(fit_res))
 plot(res_optim, yscale=:log, ylims=(1e-3,1e2))
 ```
 
