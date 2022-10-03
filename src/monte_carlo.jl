@@ -65,12 +65,13 @@ function mc(
   #(parallel_type == EnsembleSerial()) # tmp fix
   p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled = progress_bar)
   
+
   function prob_func(prob,i,repeat)
     verbose && println("Processing iteration $i")
     progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
     update_init_values(prob, init_func, generate_cons(params_nt,i))
   end
-
+  
   params_names = collect(keys(params_nt))
   function _output(sol, i)
     sim = build_results(sol, params_names)
@@ -78,8 +79,8 @@ function mc(
   end
 
   prob = EnsembleProblem(prob0;
-    prob_func = prob_func,
-    output_func = _output,
+    prob_func = glob_prob_func,
+    #output_func = _output,
     reduction = reduction_func
   )
 
@@ -116,6 +117,10 @@ function mc(
   return MCResult(solution.u, has_saveat(scenario), scenario)
 end
 
+function glob_prob_func(prob,i,repeat)
+  println("Processing iteration $i")
+  prob
+end
 """
     mc(scenario::Scenario,
       params::DataFrame,
