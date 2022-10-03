@@ -68,7 +68,7 @@ function mc(
 
   function prob_func(prob,i,repeat)
     verbose && println("Processing iteration $i")
-    #progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
+    progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
     #update_init_values(prob, init_func, generate_cons(params_nt,i))
     prob
   end
