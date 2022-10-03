@@ -80,7 +80,7 @@ function mc(
 
   prob = EnsembleProblem(prob0;
     prob_func = glob_prob_func,
-    #output_func = _output,
+    output_func = _output,
     reduction = reduction_func
   )
 
