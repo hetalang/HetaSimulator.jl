@@ -224,7 +224,7 @@ function mc(
   function prob_func(prob,i,repeat)
     iter_i = iter[i]
     verbose && println("Processing scenario $(iter_i[2]) iteration $(iter_i[1])")
-    progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
+    #progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
     prob_i = last(scenario_pairs[iter_i[2]]).prob
     init_i = last(scenario_pairs[iter_i[2]]).init_func
     update_init_values(prob_i, init_i, params_pregenerated[iter_i[1]])
