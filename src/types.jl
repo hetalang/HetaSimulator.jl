@@ -220,11 +220,11 @@ struct Simulation{V,scopeType}
 end
 
 # copy fix is tmp needed not to rewrite SavedValues with new simulation
-Simulation(sv::SavedValues, parameters::NamedTuple, status::Symbol) = Simulation(
+Simulation(sv::SavedValues, params, status) = Simulation(
   DiffEqBase.SciMLBase.DiffEqArray(copy(sv.u),copy(sv.t)),
   copy(sv.scope),
-  parameters,
-  status
+  Symbol(status)
+  params,
 ) 
 
 status(s::Simulation) = s.status
