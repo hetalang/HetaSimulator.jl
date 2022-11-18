@@ -76,7 +76,7 @@ function mc(
   end
 
   function _reduction(u,data,I)
-    #progress_bar && next!(p)
+    next!(p)
     reduction_func(u,data,I)
   end
 
