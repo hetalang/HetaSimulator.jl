@@ -1,5 +1,3 @@
-# RemoteChannel used for progress monitoring in parallel setup
-const progch = RemoteChannel(()->Channel{Bool}(), 1)
 
 # as in SciMLBase
 DEFAULT_REDUCTION(u,data,I) = append!(u, data), false
@@ -68,7 +66,6 @@ function mc(
 
   function prob_func(prob,i,repeat)
     verbose && println("Processing iteration $i")
-    #progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
     update_init_values(prob, init_func, generate_cons(params_nt,i))
   end
   
@@ -78,41 +75,27 @@ function mc(
     (output_func(sim, i), false)
   end
 
+  function _reduction(u,data,I)
+    progress_bar && next!(p)
+    reduction_func(u,data,I)
+  end
+
   prob = EnsembleProblem(prob0;
     prob_func = prob_func,
     output_func = _output,
-    reduction = reduction_func
+    reduction = _reduction
   )
 
-  if progress_bar && (parallel_type == EnsembleDistributed())
-    @sync begin
-      @async while take!(progch)
-        next!(p)
-      end
-      @async begin
-        solution = solve(prob, alg, parallel_type;
-          trajectories = num_iter,
-          reltol = reltol,
-          abstol = abstol,
-          save_start = false,
-          save_end = false,
-          save_everystep = false,
-          kwargs...
-        )
-        put!(progch, false)
-      end
-    end
-  else
-    solution = solve(prob, alg, parallel_type;
-      trajectories = num_iter,
-      reltol = reltol,
-      abstol = abstol,
-      save_start = false,
-      save_end = false,
-      save_everystep = false,
-      kwargs...
-    )
-  end
+  solution = solve(prob, alg, parallel_type;
+    trajectories = num_iter,
+    reltol = reltol,
+    abstol = abstol,
+    save_start = false,
+    save_end = false,
+    save_everystep = false,
+    batch_size = progress_bar ? 1 : num_iter,
+    kwargs...
+  )
 
   return MCResult(solution.u, has_saveat(scenario), scenario)
 end
@@ -224,7 +207,6 @@ function mc(
   function prob_func(prob,i,repeat)
     iter_i = iter[i]
     verbose && println("Processing scenario $(iter_i[2]) iteration $(iter_i[1])")
-    #progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
     prob_i = last(scenario_pairs[iter_i[2]]).prob
     init_i = last(scenario_pairs[iter_i[2]]).init_func
     update_init_values(prob_i, init_i, params_pregenerated[iter_i[1]])
@@ -236,41 +218,27 @@ function mc(
     (output_func(sim, i), false)
   end
 
+  function _reduction(u,data,I)
+    progress_bar && next!(p)
+    reduction_func(u,data,I)
+  end
+
   prob = EnsembleProblem(last(scenario_pairs[1]).prob;
     prob_func = prob_func,
     output_func = _output,
-    reduction = reduction_func
+    reduction = _reduction
   )
 
-  if progress_bar && (parallel_type == EnsembleDistributed())
-    @sync begin
-      @async while take!(progch)
-        next!(p)
-      end
-      @async begin
-        solution = solve(prob, alg, parallel_type;
-          trajectories = lp*lc,
-          reltol = reltol,
-          abstol = abstol,
-          save_start = false,
-          save_end = false,
-          save_everystep = false,
-          kwargs...
-        )
-        put!(progch, false)
-      end
-    end
-  else
-    solution = solve(prob, alg, parallel_type;
-      trajectories = lp*lc,
-      reltol = reltol,
-      abstol = abstol,
-      save_start = false,
-      save_end = false,
-      save_everystep = false,
-      kwargs...
-    )
-  end
+  solution = solve(prob, alg, parallel_type;
+    trajectories = lp*lc,
+    reltol = reltol,
+    abstol = abstol,
+    save_start = false,
+    save_end = false,
+    save_everystep = false,
+    batch_size = progress_bar ? 1 : num_iter,
+    kwargs...
+  )
 
   ret = Vector{Pair{Symbol,MCResult}}(undef, lc)
 
