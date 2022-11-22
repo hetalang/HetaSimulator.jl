@@ -1,5 +1,7 @@
 _The rest of ideas and issues are posted in https://github.com/hetalang/heta-discussion/discussions and https://github.com/hetalang/HetaSimulator.jl/issues_
 
+- почему по-умолчанию events_save = (1,1)
+
 ## bugs
 
 - Big models can result in StackOverFlow because of Savings

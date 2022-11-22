@@ -11,7 +11,8 @@ using HetaSimulator, Plots
 ################################## Model Upload ###########################################
 # heta_update_dev("nan-math")
 
-platform = load_platform("$HetaSimulatorDir/cases/story_1", rm_out = false);
+#platform = load_platform("$HetaSimulatorDir/cases/story_1", rm_out = false)
+platform = load_jlplatform("$HetaSimulatorDir/cases/story_1/_julia/model2.jl")
 model = platform.models[:nameless]
 # parameters(model) # def_parameters
 # events_active(model) # def_events_active
@@ -19,10 +20,9 @@ model = platform.models[:nameless]
 # observables(model) # def_observations
 
 ################################## Single Simulation ######################################
-
 Scenario(model, (0., 200.)) |> sim |> plot
 scn0 = Scenario(model, (0., 200.))
-sim(scn0, parameters_upd = [:k1=>0.01]) |> plot
+sim(scn0, parameters = [:k1=>0.01]) |> plot
 sim(Scenario(model, (0,100), saveat = 0:10:100)) |> plot
 sim(Scenario(model, (0., 50.), saveat = 0:10:100)) |> plot
 sim(Scenario(model, (0., 500.), saveat = 0:10:100)) |> plot
@@ -44,12 +44,12 @@ Scenario(
     events_active=[:sw1=>true],
     events_save=[:sw1=>(false,false)]
     ) |> sim |> plot
-sim(Scenario(model, (0., 10.); parameters=[:k1=>1e-3]), parameters_upd = [:k1=>1e-3])
+sim(Scenario(model, (0., 10.); parameters=[:k1=>1e-3]), parameters = [:k1=>1e-3])
 
 ### single scenario sim()
 scn1 = Scenario(model, (0., 200.));
 sim(scn1) |> plot
-sim(scn1; parameters_upd=[:k1=>0.01]) |> plot
+sim(scn1; parameters=[:k1=>0.01]) |> plot
 
 scn2 = Scenario(
     model,
@@ -72,7 +72,7 @@ sim.([scn1, scn2, scn3]) .|> plot
 ### sim together
 sim([scn1, scn2, scn3]) |> plot
 sim([:x => scn1, :y=>scn2, :z=>scn3]) |> plot
-sim([:x => scn1, :y=>scn2, :z=>scn3]; parameters_upd=[:k1=>0.01]) |> plot
+x=sim([:x => scn1, :y=>scn2, :z=>scn3]; parameters=[:k1=>0.1]) |> plot
 
 ### load measurements from CSV
 #measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv")
@@ -82,9 +82,14 @@ scn4 = Scenario(model, (0,250); parameters = [:k2=>0.001, :k3=>0.04], saveat = [
 add_measurements!(scn4, measurements_csv; subset = [:scenario => :dataone])
 
 ### fit many scenarios
+estim = estimator(
+    [:x=>scn2, :y=>scn3, :z=>scn4],
+    [:k1=>0.1,:k2=>0.2,:k3=>0.3]
+)
+estim([0.01, 0.02, 0.35])
 res1 = fit([:x=>scn2, :y=>scn3, :z=>scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])
 res2 = fit([scn2, scn3, scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])
-sim(scn3, parameters_upd = optim(res2))
+sim(scn4, parameters = optim(res2)) |> plot
 
 # sim all scenarios
 sol = sim([:c1=>scn1, :c2=>scn2, :c3=>scn3, :c4=>scn4]);
@@ -119,7 +124,7 @@ mc_scn3 = Scenario(
     );
 
 # single MC Simulation
-mcsim1 = mc(mc_scn1, [:k1=>Uniform(1e-3,1e-2), :k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 1000)
+mcsim1 = mc(mc_scn1, [:k1=>Uniform(1e-3,1e-2), :k3=>Normal(1e-4,1e-5), :k2=>Normal(1e-3,1e-4)], 1000)
 plot(mcsim1)
 
 # multi MC Simulation
