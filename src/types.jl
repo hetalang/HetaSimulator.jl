@@ -381,6 +381,17 @@ function Base.getindex(V::Vector{Pair{Symbol, S}}, id::Symbol) where S<:MCResult
   end
 end
 
+################################## EnsembleSummary #####################################
+struct LabelledEnsembleSummary{E}
+  ens::E
+  vars::Vector{Symbol}
+end
+
+observables(ens::LabelledEnsembleSummary) = ens.vars
+
+Base.show(io::IO, mime::MIME"text/plain", ens::LabelledEnsembleSummary) = 
+  println(io, "Summary statistics for the following observables: $(observables(ens))")
+
 ################################## Events ##############################################
 abstract type AbstractEvent end
 
