@@ -418,8 +418,7 @@ end
 function DiffEqBase.EnsembleAnalysis.EnsembleSummary(
   sim::MCResult,
   t=sim[1].t;
-  quantiles=[0.05,0.95],
-  #vars=observables(sim)
+  quantiles=[0.05,0.95]
 )
   m,v = timeseries_point_meanvar(sim,t)
   qlow = timeseries_point_quantile(sim,quantiles[1],t)
@@ -428,7 +427,8 @@ function DiffEqBase.EnsembleAnalysis.EnsembleSummary(
 
   trajectories = length(sim)
 
-  EnsembleSummary{Float64, 2, typeof(t), typeof(m), typeof(v), typeof(med), typeof(qlow), typeof(qhigh)}(t,m,v,med,qlow,qhigh,trajectories,0.0,true)
+  ens = EnsembleSummary{Float64, 2, typeof(t), typeof(m), typeof(v), typeof(med), typeof(qlow), typeof(qhigh)}(t,m,v,med,qlow,qhigh,trajectories,0.0,true)
+  LabelledEnsembleSummary(ens,observables(sim))
 end
 
 function DiffEqBase.EnsembleAnalysis.EnsembleSummary(
@@ -446,6 +446,7 @@ function DiffEqBase.EnsembleAnalysis.EnsembleSummary(
 )
   EnsembleSummary.(sim_vector; quantiles)
 end
+
 
 generate_cons(vp::AbstractVector{P},i)  where P<:Pair = NamedTuple([k=>generate_cons(v,i) for (k,v) in vp])
 generate_cons(nt::NamedTuple,i) = NamedTuple{keys(nt)}([generate_cons(v,i) for v in nt])

@@ -113,3 +113,10 @@ end
     end
   end
 end
+
+@recipe function plot(ens::LabelledEnsembleSummary; vars=observables(ens))
+  @series begin
+    trajectories := [findfirst(x->x == v, observables(ens)) for v in vars]
+    ens.ens
+  end
+end
