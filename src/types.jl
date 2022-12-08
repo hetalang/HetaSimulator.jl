@@ -225,6 +225,7 @@ Simulation(sv::SavedValues, params, status) = Simulation(
   copy(sv.scope),
   Symbol(status)
   params,
+  Symbol(status)
 ) 
 
 status(s::Simulation) = s.status
