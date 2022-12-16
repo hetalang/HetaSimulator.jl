@@ -41,5 +41,5 @@ heta_update()
 To install a specific version of the compiler you can use 
 
 ```julia
-heta_update("0.6.9") # for heta-compiler v0.6.9
+heta_update("0.6.14") # for heta-compiler v0.6.14
 ```

@@ -11,8 +11,8 @@ using HetaSimulator, Plots
 ################################## Model Upload ###########################################
 # heta_update_dev("nan-math")
 
-#platform = load_platform("$HetaSimulatorDir/cases/story_1", rm_out = false)
-platform = load_jlplatform("$HetaSimulatorDir/cases/story_1/_julia/model2.jl")
+platform = load_platform("$HetaSimulatorDir/cases/story_1", rm_out = false)
+#platform = load_jlplatform("$HetaSimulatorDir/cases/story_1/_julia/model.jl")
 model = platform.models[:nameless]
 # parameters(model) # def_parameters
 # events_active(model) # def_events_active

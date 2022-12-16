@@ -26,7 +26,7 @@ The first row is intended for headers which clarify the columns meaning. The seq
 
 ## Loading to Platform
 
-Scenario table can be loaded into Julia environment as a `DataFrame` using `HetaSimulator.read_scenarios` method. This method reads the file, checks the content and formats the data to be used inside Platform object.
+Scenario table can be loaded into Julia environment as a `DataFrame` using `HetaSimulator.read_scenarios` method. This method reads the file, checks the content and formats the data to be used inside `Platform` object.
 
 ```julia
 scn_csv = read_scenarios("./scenarios.csv")
@@ -83,7 +83,7 @@ scn1 = Scenario(
   platform.models[:nameless],
   (0., 1000.);
   parameters = [:k2=>0.001, :k3=>0.02],
-    saveat = [0, 12, 24, 48, 72, 120, 150],
+  saveat = [0, 12, 24, 48, 72, 120, 150],
   events_active = [:sw1=>true, :sw2=>false],
   events_save = [:sw1=>(true,false)]
 )

@@ -512,9 +512,9 @@ plot(mc_res)
 
 To run optimization problem you need to do three steps:
 
-- Be sure that you measurement points are loaded in a proper way: referred `Scenario`s exists, proper error model is chosen
+- Be sure that you measurement points are loaded in a proper way: referred `Scenario`s exists, proper error model is chosen.
 - If required add parameters responsible for noise distribution into a model code, like `sigma` etc.
-- select a set of constants which will be fitted and set initial values for them.
+- Select a set of constants which will be fitted and set initial values for them.
 
 For the presented example we uses normal distribution of measurement error with unknown variance parameter `sigma1`, `sigma2`, `sigma3` for doses 1, 10 and 100.
 

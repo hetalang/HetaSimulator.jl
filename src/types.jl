@@ -223,7 +223,6 @@ end
 Simulation(sv::SavedValues, params, status) = Simulation(
   DiffEqBase.SciMLBase.DiffEqArray(copy(sv.u),copy(sv.t)),
   copy(sv.scope),
-  Symbol(status)
   params,
   Symbol(status)
 ) 

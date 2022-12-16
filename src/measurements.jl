@@ -129,7 +129,7 @@ function read_measurements_csv(filepath::String; kwargs...)
 end
 
 function read_measurements_xlsx(filepath::String, sheet=1; kwargs...)
-  df = DataFrame(XLSX.readtable(filepath, sheet,infer_eltypes=true)...)
+  df = DataFrame(XLSX.readtable(filepath, sheet,infer_eltypes=true))
   assert_measurements(df)
 
   df[!,:t] .= Float64.(df[!,:t])

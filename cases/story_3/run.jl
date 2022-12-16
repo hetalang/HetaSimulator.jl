@@ -47,7 +47,7 @@ res_df1 = DataFrame(res[1])
 ### Monte-Carlo
 
 mc_res = mc(p, [:kabs=>Normal(10.,5e-1), :kel=>Normal(0.2,5e-3)], 1000)
-mc_res |> DataFrame 
+#mc_res |> DataFrame XXX: error here 
 mc_res |> plot
 # plotd = plot(mc_res)
 # savefig(plotd, "sim3.png")
