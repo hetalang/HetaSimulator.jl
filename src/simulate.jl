@@ -44,7 +44,7 @@ function sim(
   
     remake(scenario.prob; u0=u0, p=p0)
   else 
-    scenario.prob
+    deepcopy(scenario.prob)
   end
   sol = solve(prob, alg; reltol = reltol, abstol = abstol,
     save_start = false, save_end = false, save_everystep = false, kwargs...)
