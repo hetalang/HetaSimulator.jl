@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.4.12
+
+- support of Julia 1.8
+- support heta-compiler v0.6.15
+- fix compatibility of dependences
+- selection of Ensemble summary
+- new format of `__p__` vector
+
 ## 0.4.11
 
 - constant id check in `mc`
