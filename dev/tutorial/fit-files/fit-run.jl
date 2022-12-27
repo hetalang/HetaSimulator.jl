@@ -50,7 +50,7 @@ res_optim = fit(p, to_fit) # default fitting
 optim(res_optim)
 
 # check fitting quality 
-res = sim(p, parameters_upd = optim(res_optim))
+res = sim(p, parameters = optim(res_optim))
 plot(res, yscale=:log10, ylims=(1e-3,1e2))
 # plotd = plot(res_optim, vars=[:C1,:C2], yscale=:log10, ylims=(1e-3,1e2))
 # savefig(plotd, "fig.png")
