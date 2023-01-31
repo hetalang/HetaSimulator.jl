@@ -1,8 +1,8 @@
 module HetaSimulator
 
   # heta-compiler supported version
-  const HETA_COMPILER_SUPPORTED = "0.6.15"
-  const SUPPORTED_VERSIONS = ["0.6.15"]
+  const HETA_COMPILER_SUPPORTED = "0.6.16"
+  const SUPPORTED_VERSIONS = ["0.6.16"]
 
   using DiffEqBase: isempty
   using Reexport
