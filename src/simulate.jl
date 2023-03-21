@@ -46,6 +46,15 @@ function sim(
   else 
     deepcopy(scenario.prob)
   end
+  
+  #= variant 2
+  prob = let
+    constants_total = merge_strict(scenario.parameters, parameters_nt)
+    u0, p0 = scenario.init_func(constants_total)
+    remake(scenario.prob; u0=u0, p=p0)
+  end
+  =#
+
   sol = solve(prob, alg; reltol = reltol, abstol = abstol,
     save_start = false, save_end = false, save_everystep = false, kwargs...)
 

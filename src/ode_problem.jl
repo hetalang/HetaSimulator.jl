@@ -25,7 +25,7 @@ function build_ode_problem( # used in Scenario constructor only
   end
 
   # saving setup
-  utype = eltype(u0)
+  utype = Real #tmp change to make AD work #eltype(u0)
   merged_observables = isnothing(observables_) ? observables(model) : observables_ # use default if not set
   saved_values = SavedValues(
     LArray{utype,1,Array{utype,1},Tuple(merged_observables)}[],
