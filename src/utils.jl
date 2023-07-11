@@ -1,10 +1,16 @@
 # check keys in y before merge
 function merge_strict(x::NamedTuple, y::NamedTuple)
+  #=
   kx = keys(x)
   ky = keys(y)
   for k in ky
     @assert k in kx "Can't merge elements in strict mode. Key $k not found in $kx."
   end
+  =#
+  y_indexes = indexin([keys(y)...], [keys(x)...])
+  y_lost = isnothing.(y_indexes)
+  @assert !any(y_lost) "Cannot merge elements with keys $(keys(y)[y_lost]) in strict mode."
+
   merge(x, y)
 end
 
