@@ -38,6 +38,8 @@ function sim(
   
   parameters_nt = NamedTuple(parameters)
 
+  prob = remake_prob(scenario, parameters_nt; safetycopy=true)
+  #=
   prob = if length(parameters_nt) > 0
     constants_total = merge_strict(scenario.parameters, parameters_nt)
     u0, p0 = scenario.init_func(constants_total)
@@ -46,7 +48,7 @@ function sim(
   else 
     deepcopy(scenario.prob)
   end
-  
+  =#
   #= variant 2
   prob = let
     constants_total = merge_strict(scenario.parameters, parameters_nt)
@@ -112,13 +114,17 @@ function sim(
   function prob_func(prob,i,repeat)
     next!(p)
     scn_i = last(scenario_pairs[i])
+    prob_i = remake_prob(scn_i, parameters_nt; safetycopy=true)
+    return prob_i
+    #=
     constants_total_i = merge_strict(scn_i.parameters, parameters_nt)
     if length(parameters_nt) > 0
       u0, p0 = scn_i.init_func(constants_total_i)
       remake(scn_i.prob; u0=u0, p=p0)
     else
-      scn_i.prob
+      deepcopy(scn_i.prob)
     end
+    =#
   end
 
   function _output(sol,i)
@@ -134,7 +140,8 @@ function sim(
   prob = EnsembleProblem(EMPTY_PROBLEM;
     prob_func = prob_func,
     output_func = _output,
-    reduction = _reduction
+    reduction = _reduction,
+    safetycopy = false # deepcopy scn_i.prob
   )
 
   solution = solve(prob, alg, parallel_type;

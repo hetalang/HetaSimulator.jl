@@ -39,12 +39,13 @@ function estimator(
   scenario_pairs::AbstractVector{Pair{Symbol, C}},
   parameters_fitted::Vector{Pair{Symbol,Float64}};
   parameters::Union{Nothing, Vector{P}}=nothing,
+  #parameters::Vector{Pair{Symbol, Float64}}=Pair{Symbol, Float64}[],
   alg=DEFAULT_ALG,
   reltol=DEFAULT_FITTING_RELTOL,
   abstol=DEFAULT_FITTING_ABSTOL,
   parallel_type=EnsembleSerial(),
   kwargs... # other arguments to sim
-) where {C<:AbstractScenario, P<:Pair}
+) where {C<:AbstractScenario,P<:Pair}
 
   # names of parameters used in fitting and saved in parameters field of solution
   parameters_fitted_names = first.(parameters_fitted)
@@ -62,15 +63,19 @@ function estimator(
   
   # update saveat and initial values
   selected_prob = []
-  for scn in selected_scenario_pairs
-    prob_i = remake_saveat(last(scn).prob, last(scn).measurements)
+  for scen_pair in selected_scenario_pairs
+    scen = last(scen_pair)
+    prob_i = !isnothing(parameters) ? remake_prob(scen, NamedTuple(parameters); safetycopy=true) : deepcopy(scen.prob)
+    prob_i = remake_saveat(prob_i, scen.measurements)
+    #=
     prob_i = if !isnothing(parameters)
-      constants_total_i = merge_strict(last(scn).parameters, NamedTuple(parameters))
-      u0, p0 = last(scn).init_func(constants_total_i)
+      constants_total_i = merge_strict(scen.parameters, NamedTuple(parameters))
+      u0, p0 = scen.init_func(constants_total_i)
       remake(prob_i; u0=u0, p=p0)
     else
       prob_i
     end
+    =#
     push!(selected_prob, prob_i)
   end
 
@@ -80,7 +85,7 @@ function estimator(
       scn = last(selected_scenario_pairs[i])
       constants_total = merge_strict(scn.parameters, x)
       u0, p0 = scn.init_func(constants_total)
-      remake(selected_prob[i]; u0=u0, p=p0)
+      remake(deepcopy(selected_prob[i]); u0=u0, p=p0) # tmp fix, waiting for general solution
     end
   end
 

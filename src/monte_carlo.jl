@@ -64,10 +64,15 @@ function mc(
   function prob_func(prob,i,repeat)
     verbose && println("Processing iteration $i")
     progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
+    
+    prob_i = remake_prob(scenario, generate_cons(parameters_variation_nt, i); safetycopy=true)
+    return prob_i
+    #=
     constants_total_i = merge_strict(scenario.parameters, generate_cons(parameters_variation_nt, i))
     u0, p0 = scenario.init_func(constants_total_i)
 
     return remake(scenario.prob; u0=u0, p=p0)
+    =#
   end
 
   function _output(sol, i)
@@ -84,7 +89,8 @@ function mc(
   prob = EnsembleProblem(scenario.prob;
     prob_func = prob_func,
     output_func = _output,
-    reduction = reduction_func
+    reduction = reduction_func,
+    safetycopy = false
   )
 
   if progress_bar && (parallel_type == EnsembleDistributed())
@@ -229,10 +235,14 @@ function mc(
     scn_i = last(scenario_pairs[iter_i[2]])
     parameters_i = parameters_pregenerated[iter_i[1]]
 
+    prob_i = remake_prob(scn_i, parameters_i; safetycopy=true)
+    return prob_i
+    #=
     constants_total_i = merge_strict(scn_i.parameters, parameters_i)
     u0, p0 = scn_i.init_func(constants_total_i)
 
     return remake(scn_i.prob; u0=u0, p=p0)
+    =#
   end
 
   function _output(sol, i)
@@ -249,7 +259,8 @@ function mc(
   prob = EnsembleProblem(last(scenario_pairs[1]).prob;
     prob_func = prob_func,
     output_func = _output,
-    reduction = reduction_func
+    reduction = reduction_func,
+    safetycopy = false
   )
 
   if progress_bar && (parallel_type == EnsembleDistributed())

@@ -71,8 +71,19 @@ collect_saveat(saveat::Vector{S}) where S<:Real = Float64.(saveat)
 collect_saveat(saveat::AbstractRange{S}) where S<:Real = Float64.(saveat)
 =#
 
-function remake_saveat(prob, saveat; tspan = prob.tspan)
-  
+function remake_prob(scen::Scenario, params::NamedTuple; safetycopy=true)
+  prob0 = safetycopy ? deepcopy(scen.prob) : scen.prob
+  if length(params) > 0
+    constants_total = merge_strict(scen.parameters, params)
+    u0, p0 = scen.init_func(constants_total)
+    return remake(prob0; u0=u0, p=p0)
+  else
+    return prob0
+  end
+end
+
+function remake_saveat(prob, saveat; tspan=prob.tspan)
+
   scb_orig = prob.kwargs[:callback].discrete_callbacks[1].affect!
   utype = eltype(prob.u0)
   save_scope = scb_orig.save_scope
