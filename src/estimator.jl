@@ -106,7 +106,8 @@ function estimator(
     EMPTY_PROBLEM;
     prob_func = prob_func(x),
     output_func = _output,
-    reduction = _reduction
+    reduction = _reduction,
+    safetycopy=false
   )
 
   ### function ready for fitting
