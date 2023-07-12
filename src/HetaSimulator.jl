@@ -25,7 +25,7 @@ module HetaSimulator
   @reexport using Distributions
   using LinearAlgebra: pinv, diag
   using Distributed
-  using RecursiveArrayTools: vecvec_to_mat, VectorOfArray
+  using RecursiveArrayTools: vecvec_to_mat, VectorOfArray, vecarr_to_vectors
   using ProgressMeter
   #ProgressMeter.ijulia_behavior(:clear)
   # measurements 
