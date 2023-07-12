@@ -60,19 +60,19 @@ function mc(
 
   #(parallel_type == EnsembleSerial()) # tmp fix
   p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled = progress_bar)
-  
+
+  prob0 = deepcopy(scenario.prob)
   function prob_func(prob,i,repeat)
     verbose && println("Processing iteration $i")
     progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
     
-    prob_i = remake_prob(scenario, generate_cons(parameters_variation_nt, i); safetycopy=true)
-    return prob_i
-    #=
+    #prob_i = remake_prob(scenario, generate_cons(parameters_variation_nt, i); safetycopy=true)
+    #return prob_i
+    
     constants_total_i = merge_strict(scenario.parameters, generate_cons(parameters_variation_nt, i))
     u0, p0 = scenario.init_func(constants_total_i)
 
-    return remake(scenario.prob; u0=u0, p=p0)
-    =#
+    return remake(prob; u0=u0, p=p0)
   end
 
   function _output(sol, i)
@@ -86,11 +86,11 @@ function mc(
     return (output_func(simulation, i), false)
   end
 
-  prob = EnsembleProblem(scenario.prob;
+  prob = EnsembleProblem(prob0;
     prob_func = prob_func,
     output_func = _output,
     reduction = reduction_func,
-    safetycopy = false
+    safetycopy = true
   )
 
   if progress_bar && (parallel_type == EnsembleDistributed())
