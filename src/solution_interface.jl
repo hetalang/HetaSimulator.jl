@@ -71,7 +71,7 @@ function DataFrame(res::Vector{Pair{Symbol,S}}; kwargs...) where S<:SimResult
   lres = length(res)
   if lres > 1 
     for i in 2:lres
-      append!(df, DataFrame(res[i]; kwargs...))
+      append!(df, DataFrame(res[i]; kwargs...), cols=:union)
     end
   end
   return df
@@ -102,7 +102,7 @@ function DataFrame(res::Vector{Pair{Symbol,S}}; kwargs...) where S<:MCResult
   lres = length(res)
   if lres > 1 
     for i in 2:lres
-      append!(df, DataFrame(res[i]; kwargs...))
+      append!(df, DataFrame(res[i]; kwargs...), cols=:union)
     end
   end
   return df

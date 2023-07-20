@@ -178,7 +178,11 @@ timeseries_steps_meancor(mcsim1) # Computes the correlation matrix and means at 
 
 # Ensemble Summary
 ens = EnsembleSummary(mcsim1;quantiles=[0.05,0.95])
-plot(ens)
+
+plot(ens, ci_type=:SEM, title="SEM")
+plot(ens, ci_type=:std, title="std")
+plot(ens, ci_type=:variance, vars=[:a,:b], title="variance")
+plot(ens, ci_type=:quantile, vars=[:c], title="quantile")
 
 ################################## Monte-Carlo Parallel #####################
 #= 

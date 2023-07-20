@@ -102,6 +102,7 @@ function heta_build(
   meta_dir != "meta" && push!(options_array, "--meta-dir", meta_dir)
   source != "index.heta" && push!(options_array, "--source", source)
   type != "heta" && push!(options_array, "--type", type)
+  push!(options_array, "--skip-updates")
 
   # build the dist
   #=

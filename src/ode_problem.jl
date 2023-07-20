@@ -25,7 +25,7 @@ function build_ode_problem( # used in Scenario constructor only
   end
 
   # saving setup
-  utype = eltype(u0)
+  utype = promote_type(eltype(u0), eltype(p0)) #change to make AD work
   merged_observables = isnothing(observables_) ? observables(model) : observables_ # use default if not set
   saved_values = SavedValues(
     LArray{utype,1,Array{utype,1},Tuple(merged_observables)}[],
@@ -71,8 +71,23 @@ collect_saveat(saveat::Vector{S}) where S<:Real = Float64.(saveat)
 collect_saveat(saveat::AbstractRange{S}) where S<:Real = Float64.(saveat)
 =#
 
-function remake_saveat(prob, saveat; tspan = prob.tspan)
-  
+function remake_prob(scen::Scenario, params::NamedTuple; safetycopy=true)
+  prob0 = safetycopy ? deepcopy(scen.prob) : scen.prob
+  if length(params) > 0
+    constants_total = merge_strict(scen.parameters, params)
+    u0, p0 = scen.init_func(constants_total)
+    prob0.u0 .= u0
+    prob0.p .= p0 
+    return prob0
+    #return remake(prob0; u0=u0, p=p0) 
+    #tmp. remake produces StackOverflow with EnsembleDistributed(), Julia 1.7 and SciMLBase >= 1.36.0
+  else
+    return prob0
+  end
+end
+
+function remake_saveat(prob, saveat; tspan=prob.tspan)
+
   scb_orig = prob.kwargs[:callback].discrete_callbacks[1].affect!
   utype = eltype(prob.u0)
   save_scope = scb_orig.save_scope
