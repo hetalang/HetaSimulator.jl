@@ -80,6 +80,7 @@ function remake_prob(scen::Scenario, params::NamedTuple; safetycopy=true)
     prob0.p .= p0 
     return prob0
     #return remake(prob0; u0=u0, p=p0) 
+    #tmp. remake produces StackOverflow with EnsembleDistributed(), Julia 1.7 and SciMLBase >= 1.36.0
   else
     return prob0
   end
