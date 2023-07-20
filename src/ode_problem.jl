@@ -76,7 +76,10 @@ function remake_prob(scen::Scenario, params::NamedTuple; safetycopy=true)
   if length(params) > 0
     constants_total = merge_strict(scen.parameters, params)
     u0, p0 = scen.init_func(constants_total)
-    return remake(prob0; u0=u0, p=p0)
+    prob0.u0 .= u0
+    prob0.p .= p0 
+    return prob0
+    #return remake(prob0; u0=u0, p=p0) 
   else
     return prob0
   end
