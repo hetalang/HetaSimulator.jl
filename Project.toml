@@ -40,7 +40,7 @@ RecipesBase = "1"
 RecursiveArrayTools = "2"
 Reexport = "1"
 Sundials = "4.7"
-XLSX = "0.7, 0.8"
+XLSX = "0.7, 0.8, 0.10"
 julia = "1.6"
 
 [extras]
