@@ -61,8 +61,8 @@ model = platform.models[:nameless]
 
 ```
 Model contains 3 constant(s), 8 record(s), 1 switcher(s).
-   Constants: k1, k2, k3
-   Records: comp1, comp2, a, b, c, d, r1, r2
+   Constants (model-level parameters): k1, k2, k3
+   Records (observables): comp1, comp2, a, b, c, d, r1, r2
    Switchers (events): sw1
 ```
 

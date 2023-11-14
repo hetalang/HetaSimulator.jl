@@ -7,9 +7,9 @@ The content of the table can be loaded into Julia environment as a `DataFrame` t
 
 The first row is intended for headers which clarify the columns meaning. The sequence of columns is not important.
 
-- `parameter` : a `String` representing unique identifier of constant. The corresponding constant must be declared in `Model`'s namespace (`@Const` component).
+- `parameter` : a `String` representing unique identifier of model-level parameter. The corresponding parameter must be declared in `Model`'s namespace (`@Const` component).
 
-- `nominal` (optional): a `Float64` nominal value which will be used as an initial value for the parameter. If it is skipped than the default constant value from model will be used.
+- `nominal` (optional): a `Float64` nominal value which will be used as an initial value for the parameter. If it is skipped than the default value from the model will be used.
 
 - `lower` (optional): a `Float64` value that declares the lower bound of the parameter. If skipped than the parameter value will not be limited.
 

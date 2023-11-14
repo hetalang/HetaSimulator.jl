@@ -21,7 +21,7 @@
 
   - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
   - `parameters_fitted` : parameters and their nominal values that will be used as default
-  - `parameters` : constants, which overwrite both `Model` and `Scenario` constants. Default is `nothing`
+  - `parameters` : paramters, which overwrite both `Model` and `Scenario` parameters. Default is `nothing`
   - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
   - `reltol` : relative tolerance. Default is 1e-6
   - `abstol` : relative tolerance. Default is 1e-8
@@ -69,8 +69,8 @@ function estimator(
     prob_i = remake_saveat(prob_i, scen.measurements)
     #=
     prob_i = if !isnothing(parameters)
-      constants_total_i = merge_strict(scen.parameters, NamedTuple(parameters))
-      u0, p0 = scen.init_func(constants_total_i)
+      params_total_i = merge_strict(scen.parameters, NamedTuple(parameters))
+      u0, p0 = scen.init_func(params_total_i)
       remake(prob_i; u0=u0, p=p0)
     else
       prob_i
@@ -83,8 +83,8 @@ function estimator(
     function(prob,i,repeat) # internal_prob_func
       #update_init_values(selected_prob[i], last(selected_scenario_pairs[i]).init_func, x)
       scn = last(selected_scenario_pairs[i])
-      constants_total = merge_strict(scn.parameters, x)
-      u0, p0 = scn.init_func(constants_total)
+      params_total = merge_strict(scn.parameters, x)
+      u0, p0 = scn.init_func(params_total)
       remake(deepcopy(selected_prob[i]); u0=u0, p=p0) # tmp fix, waiting for general solution
     end
   end

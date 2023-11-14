@@ -72,8 +72,8 @@ model = models(p)[:nameless]
 
 ```
 Model contains 4 constant(s), 9 record(s), 2 switcher(s).
-   Constants: dose, kabs, kel, Q
-   Records: Vol0, Vol1, Vol2, A0, C1, C2, v_abs, v_el, v_distr
+   Constants (model-level parameters): dose, kabs, kel, Q
+   Records (observables): Vol0, Vol1, Vol2, A0, C1, C2, v_abs, v_el, v_distr
    Switchers (events): sw1, sw2
 ```
 
@@ -93,7 +93,7 @@ The next code will create a `Scenario` for simulating the default model with tim
 
 - output records (observables) will be taken from records marked with `{output: true}` in heta code.
 - all switchers (events) will be active if `{active: true}` is not set.
-- constant values (parameters) will be the same as they stated in the heta file.
+- constant values (model-level parameters) will be the same as stated in the heta file.
 
 ```julia
 # minimal scenario
@@ -118,7 +118,7 @@ plot(res0)
 Creating scenario we can also update some of the model default options.
 The next example is the case when we want to update the simulation conditions:
 
-- Update value of constant `dose = 100`.
+- Update value of parameter `dose = 100`.
 - Use multiple dose event `sw2` instead of single dose.
 - simulation time is from `0` to `1000`.
 - we need to observe all species: `C1`, `C2`, and reactions `v_el`.

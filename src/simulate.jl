@@ -21,7 +21,7 @@ Example: `Scenario(model, (0., 200.); saveat = [0.0, 150.]) |> sim`
 Arguments:
 
 - `scenario` : simulation scenario of type [`Scenario`](@ref)
-- `parameters` : constants, which overwrite both `Model` and `Scenario` constants. Default is empty vector.
+- `parameters` : parameters overwrite both `Model` and `Scenario` parameters. Default is empty vector.
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -86,7 +86,7 @@ Example: `sim([:x => scn1, :y=>scn2, :z=>scn3])`
 Arguments:
 
 - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
-- `parameters` : constants, which overwrite both `Model` and `Scenario` constants. Default is empty vector.
+- `parameters` : parameters, which overwrite both `Model` and `Scenario` parameters. Default is empty vector.
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6

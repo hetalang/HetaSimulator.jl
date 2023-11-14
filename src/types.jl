@@ -111,8 +111,8 @@ function Base.show(io::IO, mime::MIME"text/plain", m::AbstractModel)
   switchers_str = print_lim(switchers(m), 10)
 
   println(io, "Model contains $(length(m.constants)) constant(s), $(length(m.records_output)) record(s), $(length(m.events)) switcher(s).")
-  println(io, "   Constants: $const_str")
-  println(io, "   Records: $record_str")
+  println(io, "   Constants (model-level parameters): $const_str")
+  println(io, "   Records (observables): $record_str")
   println(io, "   Switchers (events): $switchers_str")
 end
 
@@ -156,7 +156,7 @@ abstract type AbstractScenario end
     parameters::NamedTuple
   end
 
-  Type representing simulation conditions, i.e. model variant with updated constants and outputs.
+  Type representing simulation conditions, i.e. model variant with updated parameters and outputs.
 
   To get the internal properties use methods: `tspan(scenario)`, `parameters(scenario)`, `measurements(scenario)`
 """
@@ -173,9 +173,9 @@ saveat(scn::Scenario) = scn.prob.kwargs[:callback].discrete_callbacks[1].affect!
 tspan(scn::Scenario) = scn.prob.tspan
 parameters(scn::Scenario) = scn.parameters # scn.prob.p
 measurements(scn::Scenario) = scn.measurements
+observables(scn::Scenario) = LabelledArrays.symnames(eltype(scn.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values.u))
 # events_active(scn::Scenario)
 # events_save(scn::Scenario)
-# observables(scn::Scenario)
 
 function Base.show(io::IO, mime::MIME"text/plain", scn::Scenario)
   parameters_str = print_lim(
