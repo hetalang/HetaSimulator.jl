@@ -151,7 +151,7 @@ function _add_scenario!(platform::Platform, row::Any) # maybe not any
   end
   
   if haskey(row, TSPAN_HEADER) && !ismissing(row[TSPAN_HEADER])
-    _tspan = (0., row[TSPAN_HEADER])
+    _tspan = (0., Float64(row[TSPAN_HEADER]))
   else  
     error("'tspan' value not found in Scenario $_id")
   end

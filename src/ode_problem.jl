@@ -9,7 +9,7 @@ function build_ode_problem( # used in Scenario constructor only
   save_scope::Bool = true,
   time_type::DataType = Float64
 )
-  _saveat = isnothing(saveat) ? time_type[] : saveat
+  _saveat = isnothing(saveat) ? time_type[] : time_type.(saveat)
 
   # init
   u0, p0 = model.init_func(params)
