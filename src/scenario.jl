@@ -145,7 +145,15 @@ function _add_scenario!(platform::Platform, row::Any) # maybe not any
   
   if haskey(row, SAVEAT_HEADER) && !ismissing(row[SAVEAT_HEADER])
     save_times = row[SAVEAT_HEADER]
-    _saveat = typeof(save_times) <: Number ? [Float64(save_times)] : parse.(Float64, split(save_times, ";"))
+    if typeof(save_times) <: Number
+      _saveat = [Float64(save_times)] 
+    elseif typeof(save_times) <: AbstractString
+      _saveat = Float64[]
+      _saveat_vec = split(save_times, ";")
+      [append!(_saveat, parse_saveat(sv)) for sv in _saveat_vec]
+    else
+      @warn "saveat for Scenario $_id is not properly formatted"
+    end
   else  
     _saveat = nothing
   end
@@ -246,4 +254,17 @@ function assert_scenarios(df)
     @assert f ∈ names_df "Required column name $f is not found in measurements table."
   end
   return nothing
+end
+
+function parse_saveat(s::AbstractString)
+  ps = parse.(Float64, split(s,":"))
+  if length(ps) == 1
+    return ps
+  elseif length(ps) == 2
+    return collect(ps[1]:ps[2])
+  elseif length(ps) == 3
+    return collect(ps[1]:ps[2]:ps[3])
+  else
+    throw("Saveat should be either a Number or a StepRange")
+  end
 end
