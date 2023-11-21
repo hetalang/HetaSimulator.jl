@@ -34,7 +34,7 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
 
   - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
   - `parameters_fitted` : optimization parameters and their initial values
-  - `parameters` : constants, which overwrite both `Model` and `Scenario` constants. Default is `nothing`
+  - `parameters` : parameters, which overwrite both `Model` and `Scenario` parameters. Default is `nothing`
   - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
   - `reltol` : relative tolerance. Default is 1e-6
   - `abstol` : relative tolerance. Default is 1e-8
@@ -101,7 +101,7 @@ function fit(
   )
 
   # progress info
-  prog = ProgressUnknown("Fit counter:"; spinner=false, enabled=progress!=:silent, showspeed=true)
+  prog = ProgressUnknown(; desc ="Fit counter:", spinner=false, enabled=progress!=:silent, showspeed=true)
   count = 0
   estim_best = Inf
   function obj_func(x, grad)

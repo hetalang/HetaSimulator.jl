@@ -299,7 +299,7 @@ All measurements in the platform are used to calculate the log-likelihood functi
 
 ### Import from CSV tables
 
-User can load measurement points from one or several tables which follow [table format](./table-formats/measurement).
+User can load measurement points from one or several tables which follow [table format](@ref measurement).
 
 Create file __measurements.csv__ file inside __my\_example__ with the following structure.
 
@@ -359,7 +359,7 @@ There are three main problem types that can currently be solved with HetaSimulat
 
 - [__Simulation__](#Simulation) of time-dependence for selected observables for one or several scenarios using [`sim`](@ref) method.
 - [__Monte-Carlo__](#Monte-Carlo) type simulations that performs repeated simulations based on pre-set parameters distributions with [`mc`](@ref) method.
-- [__Fitting__](#Fitting) or parameter identification problem that optimizes values of selected model constants to reach the minimal discrepancy between simulations and experimental values which is solved by [`fit`](@ref) method.
+- [__Fitting__](#Fitting) or parameter identification problem that optimizes values of selected model-level parameters (`@Const`) to reach the minimal discrepancy between simulations and experimental values which is solved by [`fit`](@ref) method.
 
 Each method returns the solution of its specific type: `SimResult`, `MCResult` and `FitResult` or other types that include them.
 
@@ -514,7 +514,7 @@ To run optimization problem you need to do three steps:
 
 - Be sure that you measurement points are loaded in a proper way: referred `Scenario`s exists, proper error model is chosen.
 - If required add parameters responsible for noise distribution into a model code, like `sigma` etc.
-- Select a set of constants which will be fitted and set initial values for them.
+- Select a set of parameters which will be fitted and set initial values for them.
 
 For the presented example we uses normal distribution of measurement error with unknown variance parameter `sigma1`, `sigma2`, `sigma3` for doses 1, 10 and 100.
 

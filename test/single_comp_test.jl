@@ -29,6 +29,8 @@ s2 = sim(Scenario(model, (0,250); saveat = [150., 200.]))
 # Simulate scenario
 scn1 = Scenario(model, (0., 200.); parameters = [:k1=>0.02], observables=[:r1])
 scn2 = Scenario(model, (0., 150.); parameters = [:k1=>0.015], observables=[:r1])
+add_scenarios!(platform, read_scenarios("$HetaSimulatorDir/test/examples/single_comp/scenarios_table.csv"))
+
 @test typeof(scn1) <: Scenario
 @test test_show(scn1)
 @test tspan(scn1) == (0., 200.)
@@ -38,10 +40,13 @@ scn2 = Scenario(model, (0., 150.); parameters = [:k1=>0.015], observables=[:r1])
 
 cs1 = sim(scn1)
 cs2 = sim([:one=>scn1,:two=>scn2], parameters=[:k1=>0.03])
+cs3 = sim(scenarios(platform)[:scn3])
 @test typeof(cs1) <: HetaSimulator.SimResult
 @test typeof(cs2) <: Vector{Pair{Symbol, HetaSimulator.SimResult}}
 @test length(parameters(cs1))==0
 @test parameters(last(cs2[:one]))[:k1] == 0.03
+@test parameters(scenarios(platform)[:scn3])[:k1] == 0.017
+@test times(cs3) == [12.,17.,30.,40.,50.,60.,80.,100.,120.]
 
 # Monte-Carlo simulation tests
 mciter = 100

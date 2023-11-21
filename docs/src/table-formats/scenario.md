@@ -18,9 +18,9 @@ The first row is intended for headers which clarify the columns meaning. The seq
 
 - `saveat[]` (* optional) : a set of `Float64` values separated by semicolons. The values states the time points for simulated output.
 
-- `observables[]` (optional) : a set of `String` separated by semicolon. They state the model records that will be saved as simulation results. If not set the default observables will be used (`output: true` property in Heta notation).
+- `observables[]` (optional) : a set of `String` separated by semicolon. Model Records that will be saved as simulation results. If not set the default observables will be used (`output: true` property in Heta notation).
 
-- `events_active.<id>` (optional) : a `Bool` value which updates turns on and off events in model. The `id` is switcher identifier in the Heta. If it is not set the `switcher.active` state from Heta model will be used.
+- `events_active.<id>` (optional) : a `Bool` value which updates turns on and off events in model. The `id` is switcher identifier in the Heta file. If it is not set the `switcher.active` state from Heta model will be used.
 
 - `events_save.<id>` (optional, experimental) : a pair of `Bool` values divided by semicolon. This value set if it is required to save the output value before and after the event. If not set both: before and after values will be saved.
 

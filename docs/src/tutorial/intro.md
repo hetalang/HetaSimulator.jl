@@ -10,9 +10,9 @@ This object stores `Model`s, `Scenario`s and `Measurement`s.
 
 ## Architecture
 
-[`Model`](@ref) type represents one concrete namespace imported from [Heta-compiler](https://hetalang.github.io/#/heta-compiler/). It stores information about ODE system, initialization of initial values, events as well as default values of constants. The HetaSimulator approach imply multi-model usage so simulations and optimizations can be done for several models simultaneously without specific preparations.
+[`Model`](@ref) type represents one concrete namespace imported from [Heta-compiler](https://hetalang.github.io/#/heta-compiler/). It stores information about ODE system, initial values, events as well as default model-level parameters values. The HetaSimulator approach imply multi-model usage so simulations and optimizations can be done for several models simultaneously without specific preparations.
 
-[`Scenario`](@ref) type stores additional setting for running ODE solution and tasks. For example the same model can be run with or without some events, or differ by some specific constant values like doses and others, or has some specific output variables (observables). Each `Scenario` is associated with a specific `Model`. Each model may be referenced by any number of scenarios.
+[`Scenario`](@ref) type stores additional setting for running ODE solution and tasks. For example the same model can be run with or without some events, or differ by some specific parameters values like doses and others, or has some specific output variables (observables). Each `Scenario` is associated with a specific `Model`. Each model may be referenced by any number of scenarios.
 
 Additionally `Scenario` instance is a container for the `Measurement` objects which describe experimental datasets. They can be used for identification of model parameters or some specific tasks like identifiability analysis and visualization. 
 

@@ -1,4 +1,4 @@
-# Measurements tables
+# [Measurements tables](@id measurement)
 
 Measurements tables are CSV or XLSX files which store `Measurement` objects in tabular format.
 The content of the table can be loaded into Julia environment as a `DataFrame` to be included into `Platform` object.

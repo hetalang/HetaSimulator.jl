@@ -1,7 +1,7 @@
 function build_ode_problem( # used in Scenario constructor only
   model::Model,
   tspan;
-  constants::NamedTuple,
+  params::NamedTuple,
   events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
   events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}} = (true,true), 
   observables_::Union{Nothing,Vector{Symbol}} = nothing,
@@ -9,10 +9,10 @@ function build_ode_problem( # used in Scenario constructor only
   save_scope::Bool = true,
   time_type::DataType = Float64
 )
-  _saveat = isnothing(saveat) ? time_type[] : saveat
+  _saveat = isnothing(saveat) ? time_type[] : time_type.(saveat)
 
   # init
-  u0, p0 = model.init_func(constants)
+  u0, p0 = model.init_func(params)
   
   # check observables
   if !isnothing(observables_)
@@ -74,8 +74,8 @@ collect_saveat(saveat::AbstractRange{S}) where S<:Real = Float64.(saveat)
 function remake_prob(scen::Scenario, params::NamedTuple; safetycopy=true)
   prob0 = safetycopy ? deepcopy(scen.prob) : scen.prob
   if length(params) > 0
-    constants_total = merge_strict(scen.parameters, params)
-    u0, p0 = scen.init_func(constants_total)
+    params_total = merge_strict(scen.parameters, params)
+    u0, p0 = scen.init_func(params_total)
     prob0.u0 .= u0
     prob0.p .= p0 
     return prob0

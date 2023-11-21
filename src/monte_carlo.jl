@@ -65,10 +65,10 @@ function mc(
     verbose && println("Processing iteration $i")
     progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
     
-    prob_i = remake_prob(scenario, generate_cons(parameters_variation_nt, i); safetycopy=true)
+    prob_i = remake_prob(scenario, generate_params(parameters_variation_nt, i); safetycopy=true)
     return prob_i
     #=
-    constants_total_i = merge_strict(scenario.parameters, generate_cons(parameters_variation_nt, i))
+    constants_total_i = merge_strict(scenario.parameters, generate_params(parameters_variation_nt, i))
     u0, p0 = scenario.init_func(constants_total_i)
 
     return remake(scenario.prob; u0=u0, p=p0)
@@ -78,10 +78,10 @@ function mc(
   function _output(sol, i)
     # take numbers from p
     values_i = sol.prob.p[y_indexes]
-    constants_i = NamedTuple(zip(first.(parameters_variation), values_i))
+    params_i = NamedTuple(zip(first.(parameters_variation), values_i))
     # take simulated values from solution
     sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-    simulation = Simulation(sv, constants_i, sol.retcode)
+    simulation = Simulation(sv, params_i, sol.retcode)
 
     return (output_func(simulation, i), false)
   end
@@ -220,7 +220,7 @@ function mc(
   end
 
   parameters_variation_nt = NamedTuple(parameters_variation)
-  parameters_pregenerated = [generate_cons(parameters_variation_nt, i) for i in 1:num_iter]
+  parameters_pregenerated = [generate_params(parameters_variation_nt, i) for i in 1:num_iter]
   lp = length(parameters_pregenerated)
   lc = length(scenario_pairs)
   iter = collect(Iterators.product(1:lp,1:lc))
@@ -248,10 +248,10 @@ function mc(
   function _output(sol, i)
     iter_i = iter[i]
     # takes parameters_variation from pre-generated
-    constants_i = parameters_pregenerated[iter_i[1]]
+    params_i = parameters_pregenerated[iter_i[1]]
     # take simulated values from solution
     sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-    simulation = Simulation(sv, constants_i, sol.retcode)
+    simulation = Simulation(sv, params_i, sol.retcode)
 
     return (output_func(simulation, i), false)
   end
@@ -459,11 +459,11 @@ function DiffEqBase.EnsembleAnalysis.EnsembleSummary(
 end
 
 
-generate_cons(vp::AbstractVector{P},i)  where P<:Pair = NamedTuple([k=>generate_cons(v,i) for (k,v) in vp])
-generate_cons(nt::NamedTuple,i) = NamedTuple{keys(nt)}([generate_cons(v,i) for v in nt])
-generate_cons(v::Distribution,i) = rand(v)
-generate_cons(v::Real,i) = v
-generate_cons(v::AbstractVector{R},i) where R<:Real = v[i]
+generate_params(vp::AbstractVector{P},i)  where P<:Pair = NamedTuple([k=>generate_params(v,i) for (k,v) in vp])
+generate_params(nt::NamedTuple,i) = NamedTuple{keys(nt)}([generate_params(v,i) for v in nt])
+generate_params(v::Distribution,i) = rand(v)
+generate_params(v::Real,i) = v
+generate_params(v::AbstractVector{R},i) where R<:Real = v[i]
 
 """
     read_mcvecs(filepath::String)

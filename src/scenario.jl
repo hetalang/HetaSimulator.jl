@@ -1,6 +1,6 @@
-const CONSTANT_PREFIX = "parameters"
-const SWITCHER_PREFIX = "events_active"
-const SWITCHER_SAVE_PREFIX = "events_save"
+const PARAMETERS_PREFIX = "parameters"
+const EVENT_PREFIX = "events_active"
+const EVENT_SAVE_PREFIX = "events_save"
 const SAVEAT_HEADER = Symbol("saveat[]")
 
 const TSPAN_HEADER = Symbol("tspan")
@@ -35,7 +35,7 @@ Arguments:
 - `observables` : names of output observables. Overwrites default model's values. Default is `nothing`
 - `tags` :
 - `group` :
-- `parameters` : `Vector` of `Pair`s containing constants' names and values. Overwrites default model's values. Default is empty vector.
+- `parameters` : `Vector` of `Pair`s containing parameters' names and values. Overwrites default model's values. Default is empty vector.
 - `events_active` : `Vector` of `Pair`s containing events' names and true/false values. Overwrites default model's values. Default is empty `Vector{Pair}`
 - `events_save` : `Tuple` or `Vector{Tuple}` marking whether to save solution before and after event. Default is `(true,true)` for all events
 - `saveat` : time points, where solution should be saved. Default `nothing` values stands for saving solution at timepoints reached by the solver 
@@ -52,18 +52,18 @@ function Scenario(
   parameters::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
   kwargs... # all arguments of build_ode_problem()
 )
-  constants_total = merge_strict(model.constants, NamedTuple(parameters))
+  params_total = merge_strict(model.constants, NamedTuple(parameters))
   
   # ODE problem
   prob = build_ode_problem(
     model,
     tspan;
     observables_ = observables,
-    constants = constants_total,
+    params = params_total,
     kwargs...
   )
 
-  return Scenario(model.init_func, prob, measurements, tags, group, constants_total)
+  return Scenario(model.init_func, prob, measurements, tags, group, params_total)
 end
 
 # Scenario struct method
@@ -131,11 +131,11 @@ function _add_scenario!(platform::Platform, row::Any) # maybe not any
   for key in keys(row)
     if !ismissing(row[key])
       splitted_key = split(string(key), ".")
-      if splitted_key[1] == CONSTANT_PREFIX
+      if splitted_key[1] == PARAMETERS_PREFIX
         push!(_parameters, Symbol(splitted_key[2]) => row[key])
-      elseif splitted_key[1] == SWITCHER_PREFIX
+      elseif splitted_key[1] == EVENT_PREFIX
         push!(_events_active, Symbol(splitted_key[2]) => bool(row[key]))
-      elseif splitted_key[1] == SWITCHER_SAVE_PREFIX
+      elseif splitted_key[1] == EVENT_SAVE_PREFIX
         save_evt_vec = split(row[key], ";")
         @assert length(save_evt_vec) == 2 "Events saving setup accepts two values (e.g. true;false). Check the scenarios table."
         push!(_events_save, Symbol(splitted_key[2]) => (bool(save_evt_vec[1]), bool(save_evt_vec[2])))
@@ -145,13 +145,21 @@ function _add_scenario!(platform::Platform, row::Any) # maybe not any
   
   if haskey(row, SAVEAT_HEADER) && !ismissing(row[SAVEAT_HEADER])
     save_times = row[SAVEAT_HEADER]
-    _saveat = typeof(save_times) <: Number ? [Float64(save_times)] : parse.(Float64, split(save_times, ";"))
+    if typeof(save_times) <: Number
+      _saveat = [Float64(save_times)] 
+    elseif typeof(save_times) <: AbstractString
+      _saveat = Float64[]
+      _saveat_vec = split(save_times, ";")
+      [append!(_saveat, parse_saveat(sv)) for sv in _saveat_vec]
+    else
+      @warn "saveat for Scenario $_id is not properly formatted"
+    end
   else  
     _saveat = nothing
   end
   
   if haskey(row, TSPAN_HEADER) && !ismissing(row[TSPAN_HEADER])
-    _tspan = (0., row[TSPAN_HEADER])
+    _tspan = (0., Float64(row[TSPAN_HEADER]))
   else  
     error("'tspan' value not found in Scenario $_id")
   end
@@ -246,4 +254,17 @@ function assert_scenarios(df)
     @assert f ∈ names_df "Required column name $f is not found in measurements table."
   end
   return nothing
+end
+
+function parse_saveat(s::AbstractString)
+  ps = parse.(Float64, split(s,":"))
+  if length(ps) == 1
+    return ps
+  elseif length(ps) == 2
+    return collect(ps[1]:ps[2])
+  elseif length(ps) == 3
+    return collect(ps[1]:ps[2]:ps[3])
+  else
+    throw("Saveat should be either a Number or a StepRange")
+  end
 end

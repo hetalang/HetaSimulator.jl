@@ -28,7 +28,4 @@ makedocs(
     ],
 )
 
-deploydocs(
-    repo = "github.com/hetalang/HetaSimulator.jl.git",
-    target = "build",
-)
+deploydocs(repo = "github.com/hetalang/HetaSimulator.jl.git")

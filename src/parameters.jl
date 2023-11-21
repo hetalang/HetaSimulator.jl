@@ -15,7 +15,15 @@ const PARAMS_FIELDS_OPT_DICT = Base.ImmutableDict(
   :parameterName => Symbol,
 )
 
-# read parameters csv file and output DataFrame
+"""
+  read_parameters(filepath::String; kwargs...)
+
+  Reads parameters csv file and output DataFrame
+
+  Arguments:
+
+  - `filepath` : path to valid parameters csv file
+"""
 function read_parameters(filepath::String; kwargs...)
   params_df = CSV.read(
     filepath, DataFrame;
