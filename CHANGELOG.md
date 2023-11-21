@@ -1,5 +1,23 @@
 # Change Log
 
+
+## 0.4.14
+
+- support for heta-compiler v0.7.1
+- Sundials ver restricted <= 4.19.3
+- Float64 for tspan and saveat
+- saveat ranges support in Scenario tables
+- constants, records and switchers renaming
+
+## 0.4.13
+
+- support for Julia 1.9
+- support for heta-compiler v0.6.16
+- safetycopy for remake(prob)
+- unite df with different observables
+- ci_types added to EnsembleSummary
+- promote_type u0
+
 ## 0.4.12
 
 - support of Julia 1.8
