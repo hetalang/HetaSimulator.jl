@@ -1,4 +1,4 @@
-# Parameters tables
+# [Parameters tables](@id parameters)
 
 Parameters tables are CSV or XLSX files which store settings for parameter identification problems.
 The content of the table can be loaded into Julia environment as a `DataFrame` to be used inside `fit` method.

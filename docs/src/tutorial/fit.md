@@ -81,7 +81,7 @@ add_scenarios!(p, scn_df)
 ## Load measurements
 
 Experimental data can be used for both: visualizing and parameter estimation.
-To read more about measurements tables format see the [documentation](../table-formats/measurement).
+To read more about measurements tables format see the [documentation](@ref measurement).
 
 ![fig02](fit-fig02.png)
 
@@ -211,7 +211,7 @@ plot(res, yscale=:log10, vars=[:C1,:C2], ylims=(1e-3,1e2))
 ## Fitting with parameters table
 
 The parameters set that is used for `fit` can also be taken from tables.
-The description of table format can be found in [documentation](../table-formats/parameters/).
+The description of table format can be found in [documentation](@ref parameters).
 
 For example we will use the following table.
 

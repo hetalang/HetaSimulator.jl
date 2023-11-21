@@ -299,7 +299,7 @@ All measurements in the platform are used to calculate the log-likelihood functi
 
 ### Import from CSV tables
 
-User can load measurement points from one or several tables which follow [table format](./table-formats/measurement).
+User can load measurement points from one or several tables which follow [table format](@ref measurement).
 
 Create file __measurements.csv__ file inside __my\_example__ with the following structure.
 
