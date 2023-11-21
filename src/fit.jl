@@ -101,7 +101,7 @@ function fit(
   )
 
   # progress info
-  prog = ProgressUnknown("Fit counter:"; spinner=false, enabled=progress!=:silent, showspeed=true)
+  prog = ProgressUnknown(; desc ="Fit counter:", spinner=false, enabled=progress!=:silent, showspeed=true)
   count = 0
   estim_best = Inf
   function obj_func(x, grad)
