@@ -8,6 +8,7 @@
 - Float64 for tspan and saveat
 - saveat ranges support in Scenario tables
 - constants, records and switchers renaming
+- Documenter v1 support
 
 ## 0.4.13
 
