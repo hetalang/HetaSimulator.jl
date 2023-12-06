@@ -7,7 +7,7 @@ _The rest of ideas and issues are posted in https://github.com/hetalang/heta-dis
 - Big models can result in StackOverFlow because of Savings
 - `parameters` method in Scenario should get the scenario-level parameters but not the full list of constants
 - wrong get parameters from MCResults, Pair{Symbol, MCResults}, Vector{Pair{Symbol, MCResults}}
-- very slow show(::Model)
+- 
 
 ## fitting
 
@@ -18,6 +18,7 @@ _The rest of ideas and issues are posted in https://github.com/hetalang/heta-dis
 
 ## features
 
+- * create full support of `heta -v`, `heta build`, `heta update`, `heta init`
 - Storing VP ids in input and results: parameter, tags, reserved words?
 - Splitting large DataFrames into several to reduce time and file size.
 - add input arguments in Result: solving options, method, etc.

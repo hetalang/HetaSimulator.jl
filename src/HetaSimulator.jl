@@ -37,7 +37,8 @@ module HetaSimulator
   const HetaSimulatorDir = dirname(Base.@__DIR__)
 
   include("types.jl")
-  include("heta_connect.jl")
+  include("heta_cli/connect.jl")
+  include("heta_cli/heta.jl")
   include("utils.jl")
   include("events.jl")
   include("measurements.jl")
@@ -55,11 +56,11 @@ module HetaSimulator
   include("import_platform.jl")
   include("gsa.jl")
   include("save_as_heta.jl")
-
   
   heta_update()
 
-  export heta_update, heta_update_dev, heta_build, load_platform, load_jlplatform, load_jlmodel
+  export heta, heta_help, heta_init, heta_update, heta_build
+  export heta_update_dev, load_platform, load_jlplatform, load_jlmodel
   export Platform, Model, Scenario
   export read_scenarios, add_scenarios!
   export read_measurements, add_measurements!, measurements_as_table
