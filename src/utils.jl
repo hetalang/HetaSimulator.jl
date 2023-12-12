@@ -92,3 +92,5 @@ function bool(s::AbstractString)
   return parse(Bool, s)
 end
 bool(b::Bool) = b
+
+sanitizenames!(df::DataFrame) = rename!(df, strip.(names(df)))

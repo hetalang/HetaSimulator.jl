@@ -245,7 +245,7 @@ function read_scenarios(filepath::String, sheet=1; kwargs...)
   else  
     error("Extension $ext is not supported.")
   end
-  return df
+  return sanitizenames!(df)
 end
 
 function assert_scenarios(df)
