@@ -7,7 +7,9 @@ function build_ode_problem( # used in Scenario constructor only
   observables_::Union{Nothing,Vector{Symbol}} = nothing,
   saveat::Union{Nothing,AbstractVector} = nothing,
   save_scope::Bool = true,
-  time_type::DataType = Float64
+  time_type::DataType = Float64,
+  # experimental. kwargs to ODEFunction
+  kwargs...
 )
   _saveat = isnothing(saveat) ? time_type[] : time_type.(saveat)
 
@@ -40,9 +42,10 @@ function build_ode_problem( # used in Scenario constructor only
   events = active_events(model.events, merge(model.events_active, ev_on_nt), events_save)
   cbs = CallbackSet(scb, events...)
 
+  ode_func = ODEFunction(model.ode_func; kwargs...)
   # problem setup
   return ODEProblem(
-    model.ode_func, # ODE function
+    ode_func, # ODE function
     u0, # u0
     tspan, # tspan
     p0; # constants and static
