@@ -129,7 +129,7 @@ function read_measurements_csv(filepath::String; kwargs...)
 end
 
 function read_measurements_xlsx(filepath::String, sheet=1; kwargs...)
-  df = DataFrame(XLSX.readtable(filepath, sheet,infer_eltypes=true))
+  df = DataFrame(XLSX.readtable(filepath, sheet; infer_eltypes=true, kwargs...))
   assert_measurements(df)
 
   df[!,:t] .= Float64.(df[!,:t])
@@ -150,7 +150,7 @@ Arguments:
 
 - `filepath` : path to table file. Supports ".csv" and ".xlsx" files
 - `sheet` : number of sheet in case of ".xlsx" file. Default is `1`
-- kwargs : other arguments supported by `CSV.File`
+- kwargs... : other arguments supported by `CSV.File` or `XLSX.readtable`
 """
 function read_measurements(filepath::String, sheet=1; kwargs...)
   ext = splitext(filepath)[end]
@@ -158,7 +158,7 @@ function read_measurements(filepath::String, sheet=1; kwargs...)
   if ext == ".csv"
     df = read_measurements_csv(filepath; kwargs...)
   elseif ext == ".xlsx"
-    df = read_measurements_xlsx(filepath, sheet)
+    df = read_measurements_xlsx(filepath, sheet; kwargs...)
   else  
     error("Extension $ext is not supported.")
   end
