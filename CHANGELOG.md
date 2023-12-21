@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.4.15
+
+- update heta-compiler for v0.7.3
+- autoremove whitespaces in table headers: `scenario`, `measurements`, `parameters`
+- extend heta cli connector: `heta`, `heta_help`, `heta_init`, `heta`
 
 ## 0.4.14
 
