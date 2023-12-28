@@ -42,7 +42,7 @@ function build_ode_problem( # used in Scenario constructor only
   events = active_events(model.events, merge(model.events_active, ev_on_nt), events_save)
   cbs = CallbackSet(scb, events...)
 
-  ode_func = ODEFunction(model.ode_func; kwargs...)
+  ode_func = ODEFunction(model.ode_func; mass_matrix=model.mass_matrix, kwargs...)
   # problem setup
   return ODEProblem(
     ode_func, # ODE function

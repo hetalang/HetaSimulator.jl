@@ -23,7 +23,7 @@ module HetaSimulator
   # utils
   @reexport using DataFrames
   @reexport using Distributions
-  using LinearAlgebra: pinv, diag
+  using LinearAlgebra
   using Distributed
   using RecursiveArrayTools: vecvec_to_mat, VectorOfArray, vecarr_to_vectors
   using ProgressMeter

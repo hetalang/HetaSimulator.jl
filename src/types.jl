@@ -39,7 +39,7 @@ end
 abstract type AbstractModel end
 
 """
-    struct Model{IF,OF,EV,SG,EA} <: AbstractModel
+    struct Model{IF,OF,EV,SG,EA, MM} <: AbstractModel
       init_func::IF
       ode_func::OF
       events::EV
@@ -47,6 +47,7 @@ abstract type AbstractModel end
       records_output::AbstractVector{Pair{Symbol,Bool}}
       constants::NamedTuple
       events_active::EA
+      mass_matrix::MM
     end
 
 Structure storing core properties of ODE model.
@@ -58,7 +59,7 @@ To get the default model options use methods:
 `events_active(model)`, `events_save(model)`, `observables(model)`.
 These values can be rewritten by a [`Scenario`]{@ref}.
 """
-struct Model{IF,OF,EV,SG,EA} <: AbstractModel
+struct Model{IF,OF,EV,SG,EA, MM} <: AbstractModel
   init_func::IF
   ode_func::OF
   events::EV # IDEA: use (:TimeEvent, ...) instead of TimeEvent(...)
@@ -66,6 +67,7 @@ struct Model{IF,OF,EV,SG,EA} <: AbstractModel
   records_output::AbstractVector{Pair{Symbol,Bool}}
   constants::NamedTuple
   events_active::EA
+  mass_matrix::MM
 end
 
 constants(m::Model) = [keys(m.constants)...] # ids of constants

@@ -33,7 +33,8 @@ function Model(
     saving_generator::Function,
     constants_num::NamedTuple,
     events_active::NamedTuple,
-    records_output::NamedTuple
+    records_output::NamedTuple,
+    ss_vars::NamedTuple
 )
     events = Pair[]
     ## FIXME : remove event name from heta-compiler
@@ -54,6 +55,11 @@ function Model(
     #observables = Symbol[p[1] for p in observable_pairs]
     records_output_ = collect(Pair{Symbol,Bool}, pairs(records_output))
     events_active_ = collect(Pair{Symbol,Bool}, pairs(events_active))
+
+    # DAE problems
+    ss_ids = values(ss_vars)
+    isdae = false in ss_ids
+    mass_matrix = isdae ? Diagonal([Bool(s) for s in ss_ids]) : I
 
     ### fake run, disabled because it slows model loading down
     #=
@@ -76,6 +82,7 @@ function Model(
         records_output_,       
         constants_num,        # constants :: Changed to NamedTuple
         NamedTuple(events_active_), # events_active :: Changed to NamedTuple
+        mass_matrix
     )
 
     return model
