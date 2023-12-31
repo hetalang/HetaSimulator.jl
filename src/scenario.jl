@@ -49,9 +49,10 @@ function Scenario(
   observables::Union{Nothing,Vector{Symbol}} = nothing,
   tags::AbstractVector{Symbol} = Symbol[],
   group::Union{Symbol, Nothing} = nothing,
-  parameters::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
+  parameters::Vector{Pair{Symbol,N}} = Pair{Symbol,N}[],
   kwargs... # all arguments of build_ode_problem()
-)
+) where N <: Number
+
   params_total = merge_strict(model.constants, NamedTuple(parameters))
   
   # ODE problem
