@@ -49,7 +49,7 @@ function Scenario(
   observables::Union{Nothing,Vector{Symbol}} = nothing,
   tags::AbstractVector{Symbol} = Symbol[],
   group::Union{Symbol, Nothing} = nothing,
-  parameters::Vector{Pair{Symbol,N}} = Pair{Symbol,N}[],
+  parameters::Vector{Pair{Symbol,N}} = Pair{Symbol,Float64}[],
   kwargs... # all arguments of build_ode_problem()
 ) where N <: Number
 
