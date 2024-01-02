@@ -2,7 +2,7 @@ module HetaSimulator
 
   # heta-compiler supported version
   const HETA_COMPILER_SUPPORTED = "0.7.4"
-  const SUPPORTED_VERSIONS = ["0.6.16", "0.7.1", "0.7.2", "0.7.3", "0.7.4"]
+  const SUPPORTED_VERSIONS = ["0.7.4"]
 
   using DiffEqBase: isempty
   using Reexport
