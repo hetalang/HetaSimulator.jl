@@ -80,7 +80,9 @@ function remake_prob(scen::Scenario, params::NamedTuple; safetycopy=true)
     params_total = merge_strict(scen.parameters, params)
     u0, p0 = scen.init_func(params_total)
     prob0.u0 .= u0
-    prob0.p .= p0 
+    # tmp to if additional params are provided
+    length(prob0.p) == length(p0) ? prob0.p .= p0 : remake(prob0; p=p0) 
+
     return prob0
     #return remake(prob0; u0=u0, p=p0) 
     #tmp. remake produces StackOverflow with EnsembleDistributed(), Julia 1.7 and SciMLBase >= 1.36.0
