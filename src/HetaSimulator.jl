@@ -1,8 +1,8 @@
 module HetaSimulator
 
   # heta-compiler supported version
-  const HETA_COMPILER_SUPPORTED = "0.7.1"
-  const SUPPORTED_VERSIONS = ["0.6.16", "0.7.1"]
+  const HETA_COMPILER_SUPPORTED = "0.7.4"
+  const SUPPORTED_VERSIONS = ["0.7.4"]
 
   using DiffEqBase: isempty
   using Reexport
@@ -23,7 +23,7 @@ module HetaSimulator
   # utils
   @reexport using DataFrames
   @reexport using Distributions
-  using LinearAlgebra: pinv, diag
+  using LinearAlgebra
   using Distributed
   using RecursiveArrayTools: vecvec_to_mat, VectorOfArray, vecarr_to_vectors
   using ProgressMeter
@@ -37,7 +37,8 @@ module HetaSimulator
   const HetaSimulatorDir = dirname(Base.@__DIR__)
 
   include("types.jl")
-  include("heta_connect.jl")
+  include("heta_cli/connect.jl")
+  include("heta_cli/heta.jl")
   include("utils.jl")
   include("events.jl")
   include("measurements.jl")
@@ -55,11 +56,11 @@ module HetaSimulator
   include("import_platform.jl")
   include("gsa.jl")
   include("save_as_heta.jl")
-
   
   heta_update()
 
-  export heta_update, heta_update_dev, heta_build, load_platform, load_jlplatform, load_jlmodel
+  export heta, heta_help, heta_init, heta_update, heta_build
+  export heta_update_dev, load_platform, load_jlplatform, load_jlmodel
   export Platform, Model, Scenario
   export read_scenarios, add_scenarios!
   export read_measurements, add_measurements!, measurements_as_table

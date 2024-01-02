@@ -49,9 +49,10 @@ function Scenario(
   observables::Union{Nothing,Vector{Symbol}} = nothing,
   tags::AbstractVector{Symbol} = Symbol[],
   group::Union{Symbol, Nothing} = nothing,
-  parameters::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
+  parameters::Vector{Pair{Symbol,N}} = Pair{Symbol,Float64}[],
   kwargs... # all arguments of build_ode_problem()
-)
+) where N <: Number
+
   params_total = merge_strict(model.constants, NamedTuple(parameters))
   
   # ODE problem
@@ -215,7 +216,7 @@ function read_scenarios_csv(filepath::String; kwargs...)
 end
 
 function read_scenarios_xlsx(filepath::String, sheet=1; kwargs...)
-  df = DataFrame(XLSX.readtable(filepath, sheet,infer_eltypes=true)...)
+  df = DataFrame(XLSX.readtable(filepath, sheet; infer_eltypes=true, kwargs...))
   assert_scenarios(df)
 
   df[!,:id] .= Symbol.(df[!,:id])
@@ -233,7 +234,7 @@ Arguments:
 
 - `filepath` : path to table file. Supports ".csv" and ".xlsx" files
 - `sheet` : number of sheet in case of ".xlsx" file. Default is `1`
-- kwargs : other arguments supported by `CSV.File`
+- kwargs : other arguments supported by `CSV.File` or `XLSX.readtable`
 """
 function read_scenarios(filepath::String, sheet=1; kwargs...)
   ext = splitext(filepath)[end]
@@ -241,11 +242,11 @@ function read_scenarios(filepath::String, sheet=1; kwargs...)
   if ext == ".csv"
     df = read_scenarios_csv(filepath; kwargs...)
   elseif ext == ".xlsx"
-    df = read_scenarios_xlsx(filepath, sheet)
+    df = read_scenarios_xlsx(filepath, sheet; kwargs...)
   else  
     error("Extension $ext is not supported.")
   end
-  return df
+  return sanitizenames!(df)
 end
 
 function assert_scenarios(df)

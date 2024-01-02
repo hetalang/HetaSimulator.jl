@@ -46,7 +46,8 @@ cs3 = sim(scenarios(platform)[:scn3])
 @test length(parameters(cs1))==0
 @test parameters(last(cs2[:one]))[:k1] == 0.03
 @test parameters(scenarios(platform)[:scn3])[:k1] == 0.017
-@test times(cs3) == [12.,17.,30.,40.,50.,60.,80.,100.,120.]
+# tests both saveat times and sanitize whitespaces in colnames
+@test times(cs3) == [12.,17.,30.,40.,50.,60.,80.,100.,120.] 
 
 # Monte-Carlo simulation tests
 mciter = 100

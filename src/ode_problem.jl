@@ -7,7 +7,9 @@ function build_ode_problem( # used in Scenario constructor only
   observables_::Union{Nothing,Vector{Symbol}} = nothing,
   saveat::Union{Nothing,AbstractVector} = nothing,
   save_scope::Bool = true,
-  time_type::DataType = Float64
+  time_type::DataType = Float64,
+  # experimental. kwargs to ODEFunction
+  kwargs...
 )
   _saveat = isnothing(saveat) ? time_type[] : time_type.(saveat)
 
@@ -40,9 +42,10 @@ function build_ode_problem( # used in Scenario constructor only
   events = active_events(model.events, merge(model.events_active, ev_on_nt), events_save)
   cbs = CallbackSet(scb, events...)
 
+  ode_func = ODEFunction(model.ode_func; mass_matrix=model.mass_matrix, kwargs...)
   # problem setup
   return ODEProblem(
-    model.ode_func, # ODE function
+    ode_func, # ODE function
     u0, # u0
     tspan, # tspan
     p0; # constants and static
@@ -77,7 +80,9 @@ function remake_prob(scen::Scenario, params::NamedTuple; safetycopy=true)
     params_total = merge_strict(scen.parameters, params)
     u0, p0 = scen.init_func(params_total)
     prob0.u0 .= u0
-    prob0.p .= p0 
+    # tmp to if additional params are provided
+    length(prob0.p) == length(p0) ? prob0.p .= p0 : remake(prob0; p=p0) 
+
     return prob0
     #return remake(prob0; u0=u0, p=p0) 
     #tmp. remake produces StackOverflow with EnsembleDistributed(), Julia 1.7 and SciMLBase >= 1.36.0
