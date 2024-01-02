@@ -2,9 +2,12 @@
 
 ## 0.4.15
 
-- update heta-compiler for v0.7.3
+- update heta-compiler for v0.7.4
 - autoremove whitespaces in table headers: `scenario`, `measurements`, `parameters`
 - extend heta cli connector: `heta`, `heta_help`, `heta_init`, `heta`
+- Int parameters support in Scenario
+- mass_matrix support in Model type
+- allow additional parameters not present in Model
 
 ## 0.4.14
 

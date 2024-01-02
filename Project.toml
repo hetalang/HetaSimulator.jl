@@ -1,7 +1,7 @@
 name = "HetaSimulator"
 uuid = "630b40c4-2f38-41ff-bcb3-b2c7232fed0d"
 authors = ["Ivan Borisov", "Evgeny Metelkin"]
-version = "0.4.14"
+version = "0.4.15"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
