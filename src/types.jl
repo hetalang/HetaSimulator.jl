@@ -201,11 +201,16 @@ end
 ################################## SimResult ###########################################
 abstract type AbstractResult end
 
-struct SavedValues{uType,tType,scopeType}
-  u::uType
-  t::tType
-  scope::scopeType
+struct SavedValues{uType,tType}
+  u::Vector{uType}
+  t::Vector{tType}
+  scope::Vector{Symbol}
 end
+
+function SavedValues(::Type{uType}, ::Type{tType}) where {uType, tType}
+    return SavedValues{uType, tType}(Vector{uType}(), Vector{tType}(), Vector{Symbol}())
+end
+
 
 function clear_savings(sv::SavedValues)
   !isempty(sv.u) && deleteat!(sv.u,1:length(sv.u))

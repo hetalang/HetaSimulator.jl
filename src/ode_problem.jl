@@ -29,11 +29,17 @@ function build_ode_problem( # used in Scenario constructor only
   # saving setup
   utype = promote_type(eltype(u0), eltype(p0)) #change to make AD work
   merged_observables = isnothing(observables_) ? observables(model) : observables_ # use default if not set
+  #=
   saved_values = SavedValues(
     LArray{utype,1,Array{utype,1},Tuple(merged_observables)}[],
     time_type[],
     save_scope ? Symbol[] : nothing
     )
+  =#
+  saved_values = SavedValues(
+    LArray{utype,1,Array{utype,1},Tuple(merged_observables)},
+    time_type
+  )
   saving_func = model.saving_generator(merged_observables)
   scb = saving_wrapper(saving_func, saved_values; saveat=_saveat, save_scope)
 
@@ -96,12 +102,17 @@ function remake_saveat(prob, saveat; tspan=prob.tspan)
   scb_orig = prob.kwargs[:callback].discrete_callbacks[1].affect!
   utype = eltype(prob.u0)
   save_scope = scb_orig.save_scope
-
+  #=
   saved_values = SavedValues(
     LArray{utype,1,Array{utype,1},observables(prob)}[],
     eltype(tspan)[],
     save_scope ? Symbol[] : nothing
     )
+  =#
+  saved_values = SavedValues(
+    LArray{utype,1,Array{utype,1},observables(prob)},
+    eltype(tspan)
+  )
   save_func = scb_orig.save_func
   scb_new = saving_wrapper(save_func, saved_values; saveat, save_scope=save_scope)
 
