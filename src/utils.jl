@@ -17,7 +17,7 @@ to_nt(d::Dict{Symbol,T}) where {T} =
     NamedTuple{dictkeys(d)}(dictvalues(d))
 =#
 typed(v::Number) = Float64(v)
-function typed(v::String) 
+function typed(v::AbstractString) 
   v_float = tryparse(Float64,v)
   ret = isnothing(v_float) ? Symbol(v) : v_float
   ret

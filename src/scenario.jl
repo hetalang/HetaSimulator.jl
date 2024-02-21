@@ -205,11 +205,11 @@ end
 # helper to read from csv and xlsx
 
 function read_scenarios_csv(filepath::String; kwargs...)
-  df = DataFrame(CSV.File(
-    filepath,
-    types = Dict(:id => Symbol, :model=>Symbol, :tspan => Float64);
+  df = CSV.read(
+    filepath, DataFrame;
+    types = Dict(:id => Symbol, :model=>Symbol, :tspan => Float64),
+    validate = false, # don't check if all columns mentioned in types are present in df
     kwargs...)
-  )
   assert_scenarios(df)
   
   return df

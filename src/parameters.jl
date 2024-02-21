@@ -27,7 +27,9 @@ const PARAMS_FIELDS_OPT_DICT = Base.ImmutableDict(
 function read_parameters(filepath::String; kwargs...)
   params_df = CSV.read(
     filepath, DataFrame;
-    types = merge(PARAMS_FIELDS_DICT,PARAMS_FIELDS_OPT_DICT), kwargs...)
+    types = merge(PARAMS_FIELDS_DICT,PARAMS_FIELDS_OPT_DICT), 
+    validate = false, # don't check if all columns mentioned in types are present in df
+    kwargs...)
   assert_params(params_df, keys(PARAMS_FIELDS_DICT))
   return params_df
 end

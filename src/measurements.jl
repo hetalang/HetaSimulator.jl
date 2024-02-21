@@ -117,12 +117,12 @@ end
 # helper to read from csv and xlsx
 
 function read_measurements_csv(filepath::String; kwargs...)
-  df = DataFrame(CSV.File(
-    filepath;
+  df = CSV.read(
+    filepath, DataFrame;
     typemap = Dict(Int64=>Float64, Int32=>Float64),
     types = Dict(:t=>Float64, :measurement=>Float64, :scope=>Symbol, :scenario=>Symbol, Symbol("prob.type")=>Symbol),
+    validate = false, # don't check if all columns mentioned in types are present in df
     kwargs...)
-  )
   assert_measurements(df)
   
   return df

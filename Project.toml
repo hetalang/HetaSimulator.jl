@@ -25,7 +25,7 @@ Sundials = "c3572dad-4567-51f8-b174-8c6c989267f4"
 XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"
 
 [compat]
-CSV = "0.8.5"
+CSV = "0.10"
 DataFrames = "1"
 DataStructures = "0.18"
 DiffEqBase = "6.122"
