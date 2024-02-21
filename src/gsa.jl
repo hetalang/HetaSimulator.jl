@@ -43,8 +43,8 @@ Arguments:
 function gsa(mcr::MCResult, timepoint::Number)
   
   params = parameters(mcr)
-  params_mat = vecvec_to_mat(VectorOfArray(LVector.(parameters(mcr))))'
-  outvals_mat = vecvec_to_mat(VectorOfArray([mcr[i](timepoint) for i in 1:length(mcr)]))'
+  params_mat = Vector(VectorOfArray(LVector.(parameters(mcr))))'
+  outvals_mat = Vector(VectorOfArray([mcr[i](timepoint) for i in 1:length(mcr)]))'
 
   output_names = observables(mcr)
   parameters_names = collect(keys(params[1]))
