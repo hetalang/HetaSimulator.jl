@@ -41,8 +41,13 @@ function build_ode_problem( # used in Scenario constructor only
     time_type
   )
   out = zeros(utype, length(merged_observables))
-  saving_func = model.saving_generator(merged_observables)
-  scb = saving_wrapper((u,t,integrator)->saving_func(out,u,t,integrator), saved_values; saveat=_saveat, save_scope)
+  saving! = model.saving_generator(merged_observables)
+  function saving_func(u,t,integrator)
+    saving!(out,u,t,integrator)
+    return out
+  end
+
+  scb = saving_wrapper(saving_func, saved_values; saveat=_saveat, save_scope)
 
   # events
   ev_on_nt = !isnothing(events_active) ? NamedTuple(events_active) : NamedTuple()
