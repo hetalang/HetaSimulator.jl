@@ -40,9 +40,10 @@ function build_ode_problem( # used in Scenario constructor only
     LArray{utype,1,Array{utype,1},Tuple(merged_observables)},
     time_type
   )
-  out = zeros(utype, length(merged_observables))
+
   saving! = model.saving_generator(merged_observables)
   function saving_func(u,t,integrator)
+    out = zeros(eltype(u), length(merged_observables))
     saving!(out,u,t,integrator)
     return out
   end
