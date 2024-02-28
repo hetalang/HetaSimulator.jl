@@ -42,8 +42,9 @@ function build_ode_problem( # used in Scenario constructor only
   )
 
   saving! = model.saving_generator(merged_observables)
+  lobs = length(merged_observables)
   function saving_func(u,t,integrator)
-    out = zeros(eltype(u), length(merged_observables))
+    out = zeros(eltype(u), lobs)
     saving!(out,u,t,integrator)
     return out
   end
