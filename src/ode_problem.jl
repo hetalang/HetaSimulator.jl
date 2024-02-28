@@ -40,7 +40,15 @@ function build_ode_problem( # used in Scenario constructor only
     LArray{utype,1,Array{utype,1},Tuple(merged_observables)},
     time_type
   )
-  saving_func = model.saving_generator(merged_observables)
+
+  saving! = model.saving_generator(merged_observables)
+  lobs = length(merged_observables)
+  function saving_func(u,t,integrator)
+    out = zeros(eltype(u), lobs)
+    saving!(out,u,t,integrator)
+    return out
+  end
+
   scb = saving_wrapper(saving_func, saved_values; saveat=_saveat, save_scope)
 
   # events
