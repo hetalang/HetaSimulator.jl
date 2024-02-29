@@ -1,8 +1,8 @@
 module HetaSimulator
 
   # heta-compiler supported version
-  const HETA_COMPILER_SUPPORTED = "0.7.4"
-  const SUPPORTED_VERSIONS = ["0.7.4"]
+  const HETA_COMPILER_SUPPORTED = "0.8.1"
+  const SUPPORTED_VERSIONS = ["0.8.1"]
 
   using DiffEqBase: isempty
   using Reexport
@@ -57,7 +57,8 @@ module HetaSimulator
   include("gsa.jl")
   include("save_as_heta.jl")
   
-  heta_update()
+  #heta_update()
+  heta_update_dev()
 
   export heta, heta_help, heta_init, heta_update, heta_build
   export heta_update_dev, load_platform, load_jlplatform, load_jlmodel
