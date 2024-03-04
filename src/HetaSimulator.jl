@@ -56,6 +56,7 @@ module HetaSimulator
   include("import_platform.jl")
   include("gsa.jl")
   include("save_as_heta.jl")
+  include("heta_funcs.jl")
   
   heta_update()
 
@@ -78,4 +79,5 @@ module HetaSimulator
   export gsa, pearson, partial, standard
   export save_as_heta
   export scale_params, unscale_params
+  export piecewise
 end
