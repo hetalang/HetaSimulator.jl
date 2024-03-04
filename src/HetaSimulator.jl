@@ -4,16 +4,15 @@ module HetaSimulator
   const HETA_COMPILER_SUPPORTED = "0.8.1"
   const SUPPORTED_VERSIONS = ["0.8.1"]
 
-  using DiffEqBase: isempty
   using Reexport
   # heta compiler support
   using NodeJS
   # diffeq-related pkgs
   using LabelledArrays
   using DataStructures
-  using DiffEqBase
+  using SciMLBase
   @reexport using OrdinaryDiffEq
-  @reexport using DiffEqBase.EnsembleAnalysis
+  @reexport using SciMLBase.EnsembleAnalysis
   using Sundials
   @reexport using NaNMath
 
@@ -25,7 +24,7 @@ module HetaSimulator
   @reexport using Distributions
   using LinearAlgebra
   using Distributed
-  using RecursiveArrayTools: VectorOfArray, vecarr_to_vectors
+  using RecursiveArrayTools: VectorOfArray, vecarr_to_vectors, DiffEqArray
   using ProgressMeter
   #ProgressMeter.ijulia_behavior(:clear)
   # measurements 
@@ -53,12 +52,12 @@ module HetaSimulator
   include("fit.jl")
   include("estimator.jl")
   include("monte_carlo.jl")
+  include("ensemble_stats.jl")
   include("import_platform.jl")
   include("gsa.jl")
   include("save_as_heta.jl")
   
-  #heta_update()
-  heta_update_dev()
+  heta_update()
 
   export heta, heta_help, heta_init, heta_update, heta_build
   export heta_update_dev, load_platform, load_jlplatform, load_jlmodel

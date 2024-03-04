@@ -26,7 +26,7 @@
   - `reltol` : relative tolerance. Default is 1e-6
   - `abstol` : relative tolerance. Default is 1e-8
   - `parallel_type` : parallel setup. See SciML docs for details. Default is no parallelism: EnsembleSerial()
-  - `kwargs...` : other ODE solver related arguments supported by `DiffEqBase.solve`. See SciML docs for details
+  - `kwargs...` : other ODE solver related arguments supported by `SciMLBase.solve`. See SciML docs for details
 
   Returns:
 

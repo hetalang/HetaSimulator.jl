@@ -51,7 +51,7 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
   - `scale`   : scale of the parameters (supports `:lin, :direct, :log, :log10`) to be used during fitting. Default is `fill(:lin, length(parameters_fitted))`.
                 `:direct` value is a synonym of `:lin`.
   - `progress` : progress mode display. One of three values: `:silent`, `:minimal`, `:full`. Default is `:minimal`
-  - `kwargs...` : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
+  - `kwargs...` : other solver related arguments supported by SciMLBase.solve. See SciML docs for details
 """
 function fit(
   scenario_pairs::AbstractVector{Pair{Symbol, C}},

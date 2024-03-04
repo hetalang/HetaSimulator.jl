@@ -57,9 +57,9 @@ function (affect!::SavingEvent)(integrator,force_save = false; scope = :ode_)
       if curt != integrator.t # If <t, interpolate
           if typeof(integrator) <: OrdinaryDiffEq.ODEIntegrator
               # Expand lazy dense for interpolation
-              DiffEqBase.addsteps!(integrator)
+              SciMLBase.addsteps!(integrator)
           end
-          if !DiffEqBase.isinplace(integrator.sol.prob)
+          if !SciMLBase.isinplace(integrator.sol.prob)
               curu = integrator(curt)
           else
               curu = first(get_tmp_cache(integrator))
@@ -123,7 +123,7 @@ function saving_wrapper(save_func, saved_values::SavedValues;
 end
 
 # force saving at current timepoint
-function save_timepoint!(integrator::DiffEqBase.AbstractODEIntegrator, scope=:ode_)
+function save_timepoint!(integrator::SciMLBase.AbstractODEIntegrator, scope=:ode_)
 
   affect! = integrator.opts.callback.discrete_callbacks[1].affect!
   affect!.saveiter += 1
@@ -143,9 +143,9 @@ function save_after_step!(integrator, scope = :ode_)
     if curt != integrator.t # If <t, interpolate
       if typeof(integrator) <: OrdinaryDiffEq.ODEIntegrator
           # Expand lazy dense for interpolation
-          DiffEqBase.addsteps!(integrator)
+          SciMLBase.addsteps!(integrator)
       end
-      if !DiffEqBase.isinplace(integrator.sol.prob)
+      if !SciMLBase.isinplace(integrator.sol.prob)
           curu = integrator(curt)
       else
           curu = first(get_tmp_cache(integrator))

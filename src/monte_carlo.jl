@@ -34,7 +34,7 @@ Arguments:
 - `output_func` : the function determines what is saved from the solution to the output array. Defaults to saving the solution itself
 - `reduction_func` : this function determines how to reduce the data in each batch. Defaults to appending the data from the batches
 - `parallel_type` : parallel setup. See SciML docs for details. Default is no parallelism: EnsembleSerial()
-- kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
+- kwargs : other solver related arguments supported by SciMLBase.solve. See SciML docs for details
 """
 function mc(
   scenario::Scenario,
@@ -200,7 +200,7 @@ Arguments:
 - `output_func` : the function determines what is saved from the solution to the output array. Defaults to saving the solution itself
 - `reduction_func` : this function determines how to reduce the data in each batch. Defaults to appending the data from the batches
 - `parallel_type` : parallel setup. See SciML docs for details. Default is no parallelism: EnsembleSerial()
-- kwargs : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
+- kwargs : other solver related arguments supported by SciMLBase.solve. See SciML docs for details
 """
 function mc(
   scenario_pairs::Vector{CP},
@@ -408,60 +408,6 @@ function mc!(mcres::Vector{M}; kwargs...) where M<:MCResult
 end
 
 mc!(mcres::Vector{P}; kwargs...) where P<:Pair = mc!(last.(mcres); kwargs...)
-
-
-
-########################################## Statistics ######################################################
-
-# currently median and quantile don't output LVector
-
-function DiffEqBase.EnsembleAnalysis.get_timestep(mcr::MCResult,i) 
-  @assert has_saveat(mcr) "Solution doesn't contain single time vector, default statistics are not available."
-  return (getindex(mcr[j],i) for j in 1:length(mcr))
-end
-
-# XXX: maybe it's a good idea to add: vars::AbstractVector{Symbol}=observables(mcr)
-function DiffEqBase.EnsembleAnalysis.get_timepoint(mcr::MCResult, t)
-  @assert has_saveat(mcr) "Solution doesn't contain single time vector, default statistics are not available."
-
-  # indexes = indexin(vars, observables(mcr))
-
-  res = (mcr[j](t) for j in 1:length(mcr)) # mcr[1](t) # is a LabelledArray
-  
-  return res
-end
-
-function DiffEqBase.EnsembleAnalysis.EnsembleSummary(
-  sim::MCResult,
-  t=sim[1].t;
-  quantiles=[0.05,0.95]
-)
-  m,v = timeseries_point_meanvar(sim,t)
-  qlow = timeseries_point_quantile(sim,quantiles[1],t)
-  qhigh = timeseries_point_quantile(sim,quantiles[2],t)
-  med = timeseries_point_quantile(sim,0.5,t)
-
-  trajectories = length(sim)
-
-  ens = EnsembleSummary{Float64, 2, typeof(t), typeof(m), typeof(v), typeof(med), typeof(qlow), typeof(qhigh)}(t,m,v,med,qlow,qhigh,trajectories,0.0,true)
-  LabelledEnsembleSummary(ens,observables(sim))
-end
-
-function DiffEqBase.EnsembleAnalysis.EnsembleSummary(
-  sim_pair::Pair{Symbol, MCResult},
-  t=last(sim_pair)[1].t;
-  quantiles=[0.05,0.95]
-)
-  first(sim_pair) => EnsembleSummary(last(sim_pair), t; quantiles)
-end
-
-function DiffEqBase.EnsembleAnalysis.EnsembleSummary(
-  sim_vector::AbstractVector{Pair{Symbol, MCResult}};
-  # t=?
-  quantiles=[0.05,0.95]
-)
-  EnsembleSummary.(sim_vector; quantiles)
-end
 
 
 generate_params(vp::AbstractVector{P},i)  where P<:Pair = NamedTuple([k=>generate_params(v,i) for (k,v) in vp])

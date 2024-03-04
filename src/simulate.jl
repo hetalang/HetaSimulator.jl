@@ -25,7 +25,7 @@ Arguments:
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
-- `kwargs...` : other solver related arguments supported by DiffEqBase.solve. See SciML docs for details
+- `kwargs...` : other solver related arguments supported by SciMLBase.solve. See SciML docs for details
 """
 function sim(
   scenario::Scenario;
@@ -91,7 +91,7 @@ Arguments:
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
 - `parallel_type` : type of multiple simulations parallelism. Default is no parallelism. See SciML docs for details
-- `kwargs...` : other solver related arguments supported by DiffEqBase.solve. See SciML docs for de
+- `kwargs...` : other solver related arguments supported by SciMLBase.solve. See SciML docs for de
       #update_init_values(scn_i.prob, scn_i.init_func, parameters_nt) tails
 """
 function sim(

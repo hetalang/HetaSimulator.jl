@@ -62,10 +62,12 @@ function reduction_func(mcsol, sol, I)
 end
 =#
 
-mc1 = mc(Scenario(model, (0., 200.), observables=[:r1]), [:k1=>Normal(0.02,1e-3)], mciter)
+mc1 = mc(Scenario(model, (0., 200.), observables=[:r1], saveat=0:10:200), [:k1=>Normal(0.02,1e-3)], mciter)
 mc2 = mc([:one=>scn1,:two=>scn2], [:k1=>Normal(0.02,1e-3)], mciter)
 mc1_reduced = mc(Scenario(model, (0., 200.), observables=[:r1]), [:k1=>Normal(0.02,1e-3)], mciter; output_func=output_func)
 gsar = gsa(mc1, 200)
+ens = EnsembleSummary(mc1)
+@test typeof(ens) <: HetaSimulator.LabelledEnsembleSummary
 @test typeof(mc1) <: HetaSimulator.MCResult
 @test test_show(mc1)
 @test typeof(mc2) <: Vector{Pair{Symbol, HetaSimulator.MCResult}}

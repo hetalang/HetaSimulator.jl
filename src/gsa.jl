@@ -43,17 +43,19 @@ Arguments:
 function gsa(mcr::MCResult, timepoint::Number)
   
   params = parameters(mcr)
-  params_mat = Vector(VectorOfArray(LVector.(parameters(mcr))))'
-  outvals_mat = Vector(VectorOfArray([mcr[i](timepoint) for i in 1:length(mcr)]))'
+  params_mat = _vecvec_to_mat(VectorOfArray(LVector.(parameters(mcr))))'
+  outvals_mat = _vecvec_to_mat(VectorOfArray([mcr[i](timepoint) for i in 1:length(mcr)]))'
 
   output_names = observables(mcr)
   parameters_names = collect(keys(params[1]))
+  #return (outvals_mat, params_mat)
 
   pearson = _calculate_correlation_matrix(outvals_mat, params_mat)
   partial = _calculate_partial_correlation_coefficients(outvals_mat, params_mat)
   standard = _calculate_standard_regression_coefficients(outvals_mat, params_mat)
 
   return GSAResult(output_names, parameters_names, pearson, partial, standard)
+
 end
 
 
@@ -78,4 +80,13 @@ function _calculate_partial_correlation_coefficients(X, Y)
   pcc_XY = -prec ./ sqrt.(diag(prec) .* diag(prec)')
   # return partial correlation matrix relating f: X -> Y model values
   return Matrix(transpose(pcc_XY[axes(X, 1), lastindex(X, 1) .+ axes(Y, 1)]))
+end
+
+# Deprecated  https://github.com/SciML/RecursiveArrayTools.jl/blob/86e6228a33859daedada3aae306a780ac88c1843/src/utils.jl#L163C1-L170C4
+function _vecvec_to_mat(vecvec)
+  mat = Matrix{eltype(eltype(vecvec))}(undef, length(vecvec), length(vecvec[:,1]))
+  for i in 1:length(vecvec)
+      mat[i, :] = vecvec[:,i]
+  end
+  mat
 end

@@ -65,7 +65,7 @@ function reset_dt!(integrator::Sundials.AbstractSundialsIntegrator)
 # not implemented 
 end
 
-function reset_dt!(integrator::DiffEqBase.AbstractODEIntegrator)
+function reset_dt!(integrator::SciMLBase.AbstractODEIntegrator)
   if integrator.t != integrator.sol.prob.tspan[1]  # exclude events at zero
     auto_dt_reset!(integrator)
     set_proposed_dt!(integrator, integrator.dt)
