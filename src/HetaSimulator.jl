@@ -5,31 +5,35 @@ module HetaSimulator
   const SUPPORTED_VERSIONS = ["0.8.1"]
 
   using Reexport
+  
   # heta compiler support
   using NodeJS
+
   # diffeq-related pkgs
-  using LabelledArrays
-  using DataStructures
   using SciMLBase
-  @reexport using OrdinaryDiffEq
+  using SciMLBase.RecursiveArrayTools: VectorOfArray, vecarr_to_vectors, DiffEqArray
   @reexport using SciMLBase.EnsembleAnalysis
+  @reexport using OrdinaryDiffEq
   using Sundials
-  @reexport using NaNMath
 
   # fitting
   using NLopt
 
   # utils
+  using LabelledArrays
+  using DataStructures
+  @reexport using NaNMath
   @reexport using DataFrames
   @reexport using Distributions
   using LinearAlgebra
   using Distributed
-  using RecursiveArrayTools: VectorOfArray, vecarr_to_vectors, DiffEqArray
   using ProgressMeter
   #ProgressMeter.ijulia_behavior(:clear)
+
   # measurements 
   using CSV
   using XLSX
+
   #plots
   using RecipesBase
 
