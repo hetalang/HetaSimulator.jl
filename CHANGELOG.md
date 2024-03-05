@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.5.0
+
+- heta-compiler updated to v0.8.1
+- saving function optimized to solve StackOverflow problem and reduce saving time
+- DiffEqBase and RecursiveArrayTools dependencies replaced with SciMLBase
+- Julia support limited to 1.9-latest
+- support latest CSV.jl version
+- support latest Sundials.jl version
+- piecewise function support added
+- order of constants and statics changed
+
 ## 0.4.15
 
 - update heta-compiler for v0.7.4
