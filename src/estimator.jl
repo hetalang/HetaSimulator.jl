@@ -84,8 +84,7 @@ function estimator(
       #update_init_values(selected_prob[i], last(selected_scenario_pairs[i]).init_func, x)
       scn = last(selected_scenario_pairs[i])
       params_total = merge_strict(scn.parameters, x)
-      u0, p0 = scn.init_func(params_total)
-      remake(deepcopy(selected_prob[i]); u0=u0, p=p0) # tmp fix, waiting for general solution
+      remake_prob(selected_prob[i], scn.init_func, params_total; safetycopy=true) #?safetycopy=false
     end
   end
 
