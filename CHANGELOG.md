@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.5.1
+
+- statics and constants usage in events fix 
+- ArrayPartition introduced to access statics and constants  
+
 ## 0.5.0
 
 - heta-compiler updated to v0.8.1
