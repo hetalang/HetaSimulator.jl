@@ -1,0 +1,8 @@
+// heta build --source ./in_vitro_model/index.heta
+
+include ./qsp-units.heta
+// include model.heta
+
+include one-compartment.heta
+
+// #export  { format: DBSolve, filepath: dbsolve_in_vitro };
