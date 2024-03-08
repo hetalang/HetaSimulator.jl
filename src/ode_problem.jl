@@ -15,9 +15,12 @@ function build_ode_problem( # used in Scenario constructor only
 
   # init
   u0, _p0 = model.init_func(params)
+
   # !!! temporary workaround to match the order of statics and constants
-  p0 =NamedArrayPartition(statics=_p0[1:length(_p0)-length(params)], constants=collect(eltype(_p0), params))
-  
+  # ArrayPartition should be replaced with NamedArrayPartition when moving to Julia 1.10
+  #p0 =NamedArrayPartition(statics=_p0[1:length(_p0)-length(params)], constants=collect(eltype(_p0), params))
+  p0 = ArrayPartition(_p0[1:length(_p0)-length(params)], collect(eltype(_p0), params))
+
   # check observables
   if !isnothing(observables_)
     records_ind = indexin(observables_, records(model))
@@ -101,9 +104,10 @@ function remake_prob(prob::ODEProblem, init_func::Function, params::NamedTuple; 
     #u0, dep_p0 = init_func(params)
     #p0 = NamedArrayPartition(statics=dep_p0, constants=params)
     u0, _p0 = init_func(params)
-    # !!! temporary workaround to match the order of statics and constants
-    p0 = NamedArrayPartition(statics=_p0[1:length(_p0)-length(params)], constants=collect(eltype(_p0), params))
-
+  # !!! temporary workaround to match the order of statics and constants
+  # ArrayPartition should be replaced with NamedArrayPartition when moving to Julia 1.10
+  #p0 = NamedArrayPartition(statics=_p0[1:length(_p0)-length(params)], constants=collect(eltype(_p0), params))
+  p0 = ArrayPartition(_p0[1:length(_p0)-length(params)], collect(eltype(_p0), params))
     prob0.u0 .= u0
     # tmp to if additional params are provided
     length(prob0.p) == length(p0) ? prob0.p .= p0 : remake(prob0; p=p0) 

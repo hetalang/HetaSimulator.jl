@@ -78,7 +78,7 @@ function mc(
 
   function _output(sol, i)
     # take numbers from p
-    values_i = sol.prob.p.constants[cons_indexes]
+    values_i = sol.prob.p.x[2][cons_indexes]
     params_i = NamedTuple(zip(first.(parameters_variation), values_i))
     # take simulated values from solution
     sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values

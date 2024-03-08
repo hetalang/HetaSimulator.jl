@@ -92,3 +92,19 @@ end
 bool(b::Bool) = b
 
 sanitizenames!(df::DataFrame) = rename!(df, strip.(names(df)))
+
+# tmp adding methods to ArrayPartition interface to support events
+function Base.setindex!(A::ArrayPartition, X::AbstractArray, I::AbstractVector{Int})
+  Base.@_propagate_inbounds_meta
+  Base.@boundscheck Base.setindex_shape_check(X, length(I))
+  Base.require_one_based_indexing(X)
+  X′ = Base.unalias(A, X)
+  I′ = Base.unalias(A, I)
+  count = 1
+  for i in I′
+      @inbounds x = X′[count]
+      A[i] = x
+      count += 1
+  end
+  return A
+end
