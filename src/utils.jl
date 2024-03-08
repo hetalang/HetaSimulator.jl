@@ -1,12 +1,15 @@
 # check keys in y before merge
 function merge_strict(x::NamedTuple, y::NamedTuple)
+  if length(y) > 0
+    miss_keys = setdiff(keys(y), keys(x))
+    !isempty(miss_keys) && @warn "Keys $(miss_keys) not found."
+    # yidxs = findall(x->x ∉ keys(x), keys(y))
+    # @assert isempty(yidxs) "Cannot merge elements with keys $(keys(y)[yidxs]) in strict mode."
 
-  miss_keys = setdiff(keys(y), keys(x))
-  !isempty(miss_keys) && @warn "Keys $(miss_keys) not found."
-  # yidxs = findall(x->x ∉ keys(x), keys(y))
-  # @assert isempty(yidxs) "Cannot merge elements with keys $(keys(y)[yidxs]) in strict mode."
-
-  merge(x, y)
+    return merge(x, y)
+  else 
+    return x
+  end
 end
 
 dictkeys(d::Dict) = (collect(keys(d))...,)
@@ -89,3 +92,19 @@ end
 bool(b::Bool) = b
 
 sanitizenames!(df::DataFrame) = rename!(df, strip.(names(df)))
+
+# tmp adding methods to ArrayPartition interface to support events
+function Base.setindex!(A::ArrayPartition, X::AbstractArray, I::AbstractVector{Int})
+  Base.@_propagate_inbounds_meta
+  Base.@boundscheck Base.setindex_shape_check(X, length(I))
+  Base.require_one_based_indexing(X)
+  X′ = Base.unalias(A, X)
+  I′ = Base.unalias(A, I)
+  count = 1
+  for i in I′
+      @inbounds x = X′[count]
+      A[i] = x
+      count += 1
+  end
+  return A
+end

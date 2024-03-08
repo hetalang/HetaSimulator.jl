@@ -53,13 +53,9 @@ function mc(
 
   # check input names
   scn_cons_names = collect(keys(scenario.parameters))
-  y_indexes = indexin(first.(parameters_variation), scn_cons_names)
-  y_lost = isnothing.(y_indexes)
+  cons_indexes = indexin(first.(parameters_variation), scn_cons_names)
+  y_lost = isnothing.(cons_indexes)
   @assert !any(y_lost) "The following keys are not found: $(first.(parameters_variation)[y_lost])."
-
-  # changes reflecting the order of statics ans constants in params vector
-  len_statics = length(scenario.prob.p) - length(scn_cons_names)
-  cons_indexes = len_statics .+ y_indexes
 
   parameters_variation_nt = NamedTuple(parameters_variation)
 
@@ -82,7 +78,7 @@ function mc(
 
   function _output(sol, i)
     # take numbers from p
-    values_i = sol.prob.p[cons_indexes]
+    values_i = sol.prob.p.x[2][cons_indexes]
     params_i = NamedTuple(zip(first.(parameters_variation), values_i))
     # take simulated values from solution
     sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values

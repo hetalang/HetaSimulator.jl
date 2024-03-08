@@ -1,0 +1,47 @@
+//heta build --source ./in_vitro_model/index.heta
+
+t    {units: hour};
+
+F    @Const {units: UL} = 0.97;
+dose @Const {units: pg} = 10;
+kabs @Const {units: 1/h} = 1e-2;
+kel  @Const {units: 1/h} = 1.2e-3;
+
+time_start @Const  {units:  h}  = 100;
+time_end   @Const  {units:  h}  = 100.1;
+time_inj   @Const  {units:  h}  = .1;
+dose_inj   @Const  {units: pg}  = 1;
+switch     @Record {units: UL} .= 0;
+
+gut @Compartment {units: L} .= 1;
+Vd  @Compartment {units: L} .= 5;
+
+a0 @Species {
+    compartment: gut,
+    units: pg,
+    output: true,
+    isAmount: true
+};
+c1 @Species {
+    compartment: Vd,
+    units: pg/L,
+    output: true
+};
+r_inj @Reaction { actors:    > a0, units: pg/h };
+r_abs @Reaction { actors: a0 > c1, units: pg/h };
+r_el  @Reaction { actors: c1 >   , units: pg/h };
+
+a0 .= F * dose;
+c1 .= 0;
+
+r_inj := switch * dose_inj / time_inj;
+r_abs := kabs * a0;
+r_el  := kel * c1 * Vd;
+
+sw     @TimeSwitcher { start: time_start, active: false };
+switch [sw]= 1;
+
+sw_end @TimeSwitcher { start: time_end, active: false };
+switch [sw_end]= 0;
+
+// #export { format: SBML, filepath: sbml_output };

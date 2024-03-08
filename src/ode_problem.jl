@@ -14,8 +14,13 @@ function build_ode_problem( # used in Scenario constructor only
   _saveat = isnothing(saveat) ? time_type[] : time_type.(saveat)
 
   # init
-  u0, p0 = model.init_func(params)
-  
+  u0, _p0 = model.init_func(params)
+
+  # !!! temporary workaround to match the order of statics and constants
+  # ArrayPartition should be replaced with NamedArrayPartition when moving to Julia 1.10
+  #p0 =NamedArrayPartition(statics=_p0[1:length(_p0)-length(params)], constants=collect(eltype(_p0), params))
+  p0 = ArrayPartition(_p0[1:length(_p0)-length(params)], collect(eltype(_p0), params))
+
   # check observables
   if !isnothing(observables_)
     records_ind = indexin(observables_, records(model))
@@ -89,17 +94,24 @@ collect_saveat(saveat::AbstractRange{S}) where S<:Real = Float64.(saveat)
 =#
 
 function remake_prob(scen::Scenario, params::NamedTuple; safetycopy=true)
-  prob0 = safetycopy ? deepcopy(scen.prob) : scen.prob
+  params_total = merge_strict(scen.parameters, params)
+  remake_prob(scen.prob, scen.init_func, params_total; safetycopy)
+end
+
+function remake_prob(prob::ODEProblem, init_func::Function, params::NamedTuple; safetycopy=true)
+  prob0 = safetycopy ? deepcopy(prob) : prob
   if length(params) > 0
-    params_total = merge_strict(scen.parameters, params)
-    u0, p0 = scen.init_func(params_total)
+    #u0, dep_p0 = init_func(params)
+    #p0 = NamedArrayPartition(statics=dep_p0, constants=params)
+    u0, _p0 = init_func(params)
+  # !!! temporary workaround to match the order of statics and constants
+  # ArrayPartition should be replaced with NamedArrayPartition when moving to Julia 1.10
+  #p0 = NamedArrayPartition(statics=_p0[1:length(_p0)-length(params)], constants=collect(eltype(_p0), params))
+  p0 = ArrayPartition(_p0[1:length(_p0)-length(params)], collect(eltype(_p0), params))
     prob0.u0 .= u0
     # tmp to if additional params are provided
     length(prob0.p) == length(p0) ? prob0.p .= p0 : remake(prob0; p=p0) 
-
     return prob0
-    #return remake(prob0; u0=u0, p=p0) 
-    #tmp. remake produces StackOverflow with EnsembleDistributed(), Julia 1.7 and SciMLBase >= 1.36.0
   else
     return prob0
   end
