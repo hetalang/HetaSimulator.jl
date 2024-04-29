@@ -36,10 +36,10 @@ end
 
 ################################## Model ###########################################
 
-abstract type AbstractModel end
+abstract type AbstractSysBioModel end
 
 """
-    struct Model{IF,OF,EV,SG,EA, MM} <: AbstractModel
+    struct Model{IF,OF,EV,SG,EA, MM} <: AbstractSysBioModel
       init_func::IF
       ode_func::OF
       events::EV
@@ -59,7 +59,7 @@ To get the default model options use methods:
 `events_active(model)`, `events_save(model)`, `observables(model)`.
 These values can be rewritten by a [`Scenario`]{@ref}.
 """
-struct Model{IF,OF,EV,SG,EA, MM} <: AbstractModel
+struct Model{IF,OF,EV,SG,EA, MM} <: AbstractSysBioModel
   init_func::IF
   ode_func::OF
   events::EV # IDEA: use (:TimeEvent, ...) instead of TimeEvent(...)
@@ -79,6 +79,8 @@ observables(m::Model) = begin                # ids of active observables
   only_true = filter((p) -> last(p), m.records_output)
   first.(only_true)
 end
+
+_params(m::Model) = m.constants
 
 # auxilary function to display first n components of Vector or Tuple
 function print_lim(x::Union{Vector, Tuple}, n::Int)
@@ -107,7 +109,7 @@ function print_lim(x::NamedTuple, n::Int)
   return "(" * join(string_array, ", ") * ")"
 end
 
-function Base.show(io::IO, mime::MIME"text/plain", m::AbstractModel)
+function Base.show(io::IO, mime::MIME"text/plain", m::Model)
   const_str = print_lim(constants(m), 10)
   record_str = print_lim(records(m), 10)
   switchers_str = print_lim(switchers(m), 10)
@@ -118,6 +120,23 @@ function Base.show(io::IO, mime::MIME"text/plain", m::AbstractModel)
   println(io, "   Switchers (events): $switchers_str")
 end
 
+"""
+    struct MtkModel{Sys,U,P} <: AbstractSysBioModel
+      sys::Sys
+      u0map::U
+      pmap::P
+    end
+
+MtkModel stores core properties of a Systems Biology model in Symbolic format supported by ModelingToolkit.jl.
+"""
+struct MtkModel{Sys,U,P} <: AbstractSysBioModel
+  sys::Sys
+  u0map::U
+  parammap::P
+end
+
+_params(m::MtkModel) = NamedTuple(m.pmap)
+Base.show(io::IO, mime::MIME"text/plain", m::MtkModel) = show(io::IO, mime::MIME"text/plain", m.sys)
 ################################## Measurement ###########################################
 
 # abstract type AbstractMeasurement end # not used

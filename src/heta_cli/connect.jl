@@ -108,3 +108,23 @@ function load_jlmodel(model_jl::AbstractString; rm_out::Bool = false)
 
   return first_model
 end
+
+"""
+    load_mtkmodel(  
+      model_jl::AbstractString; 
+    )
+
+Loads prebuild julia MTK model 
+
+Arguments:
+
+- `model_jl` : path to Julia MTK model file
+"""
+function load_mtkmodel(
+  model_jl::AbstractString
+)
+  # load model to Main
+  Base.include(Main, model_jl)
+  
+  return Base.invokelatest(MtkModel, Main.__model__...)
+end

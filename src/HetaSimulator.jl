@@ -10,6 +10,7 @@ module HetaSimulator
   using NodeJS
 
   # diffeq-related pkgs
+  @reexport using ModelingToolkit
   using SciMLBase
   using SciMLBase.RecursiveArrayTools: VectorOfArray, vecarr_to_vectors, DiffEqArray, ArrayPartition #, NamedArrayPartition
   @reexport using SciMLBase.EnsembleAnalysis
@@ -65,7 +66,7 @@ module HetaSimulator
   heta_update()
 
   export heta, heta_help, heta_init, heta_update, heta_build
-  export heta_update_dev, load_platform, load_jlplatform, load_jlmodel
+  export heta_update_dev, load_platform, load_jlplatform, load_jlmodel, load_mtkmodel
   export Platform, Model, Scenario
   export read_scenarios, add_scenarios!
   export read_measurements, add_measurements!, measurements_as_table

@@ -11,7 +11,7 @@ const GROUP_HEADER = Symbol("group")
 # general interface
 """
     Scenario(
-      model::Model,
+      model::AbstractSysBioModel,
       tspan;
       measurements::Vector{AbstractMeasurementPoint}=AbstractMeasurementPoint[],
       observables::Union{Nothing,Vector{Symbol}}=nothing,
@@ -29,7 +29,7 @@ Example: `Scenario(model, (0., 200.))`
 
 Arguments:
 
-- `model` : model of type [`Model`](@ref)
+- `model` : model of type [`AbstractSysBioModel`](@ref)
 - `tspan` : time span for the ODE problem
 - `measurements` : `Vector` of measurements. Default is empty `Vector{AbstractMeasurementPoint}`
 - `observables` : names of output observables. Overwrites default model's values. Default is `nothing`
@@ -43,7 +43,7 @@ Arguments:
 - `save_scope` : should scope be saved together with solution. Default is `true`
 """
 function Scenario(
-  model::Model,
+  model::AbstractSysBioModel,
   tspan;
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
   observables::Union{Nothing,Vector{Symbol}} = nothing,
@@ -52,8 +52,8 @@ function Scenario(
   parameters::Vector{Pair{Symbol,N}} = Pair{Symbol,Float64}[],
   kwargs... # all arguments of build_ode_problem()
 ) where N <: Number
-
-  params_total = merge_strict(model.constants, NamedTuple(parameters))
+  
+  params_total = merge_strict(_params(model), NamedTuple(parameters))
   
   # ODE problem
   prob = build_ode_problem(
