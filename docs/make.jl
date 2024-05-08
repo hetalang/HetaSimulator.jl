@@ -1,13 +1,13 @@
 using Documenter, HetaSimulator
 
 makedocs(
-    sitename = "HetaSimulator Docs",
+    sitename = "HetaSimulator.jl",
     authors = "Ivan Borisov, Evgeny Metelkin",
     modules = [HetaSimulator],
     format = Documenter.HTML(
         analytics = "UA-149749027-1",
         #assets = ["assets/favicon.ico"],
-        canonical="https://hetalang.github.io/HetaSimulator.jl/dev/"
+        canonical="https://hetalang.github.io/HetaSimulator.jl/stable/"
     ),
     pages = [
         "Home" => "index.md", # readme

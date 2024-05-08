@@ -1,23 +1,23 @@
 # [Parameters tables](@id parameters)
 
-Parameters tables are CSV or XLSX files which store settings for parameter identification problems.
-The content of the table can be loaded into Julia environment as a `DataFrame` to be used inside `fit` method.
+Parameters tables are CSV or XLSX files which store settings for parameter estimation problem.
+The content of the table can be loaded into Julia environment as a `DataFrame` and used inside `fit` method.
 
 ## Format
 
-The first row is intended for headers which clarify the columns meaning. The sequence of columns is not important.
+The first row is the header. The sequence of the columns may vary.
 
-- `parameter` : a `String` representing unique identifier of model-level parameter. The corresponding parameter must be declared in `Model`'s namespace (`@Const` component).
+- `parameter` : a `String` representing unique identifier of model-level parameter. The corresponding parameter must be declared in the `Model`'s namespace (`@Const` component).
 
-- `nominal` (optional): a `Float64` nominal value which will be used as an initial value for the parameter. If it is skipped than the default value from the model will be used.
+- `nominal` (optional): a `Float64` nominal value which will be used as an initial value for the parameter. If it is skipped then the default value from the model will be used.
 
-- `lower` (optional): a `Float64` value that declares the lower bound of the parameter. If skipped than the parameter value will not be limited.
+- `lower` (optional): a `Float64` value that declares the lower bound of the parameter. If skipped then the the lower bound is set to `-Inf`.
 
-- `upper` (optional): a `Float64` value that declares the upper bound of the parameter. If skipped than the parameter value will not be limited.
+- `upper` (optional): a `Float64` value that declares the upper bound of the parameter. If skipped then the upper bound is set to `Inf`.
 
-- `scale` (optional): `String` which can be `lin`, `log`, `logit`. Using the option user can select the space for parameter optimization. Default value is `lin`.
+- `scale` (optional): `String` which can be `lin`, `log`, `logit`. The scale for parameter optimization. Default value is `lin`.
 
-- `estimate` (optional): a `Boolean` value: `true` or `false` or numerical values `0` or `1` which declares if the parameter should be fitted. `0` or `false` value just states the numerical value but the parameter will not be fitted. Default value is `true`.
+- `estimate` (optional): a `Boolean` value: `true` or `false` or numerical values `0` or `1`. Declares if the parameter should be fitted. `0` or `false` value sets the value for the parameter and excludes it from fitting. Default value is `true`.
 
 ## Usage
 
@@ -51,7 +51,7 @@ params = read_parameters("./parameters.csv")
 res = fit(p, params)
 ```
 
-As a result the Platform will be fitted based on all experimental data using three parameters: `sigma_K`, `sigma_P`, `Kp_K_D` in log space.
+As a result the `Platform` will be fitted based on all experimental data. The following parameter values will be estimated: `sigma_K`, `sigma_P`, `Kp_K_D`.
 
 These operations are equivalent to the following.
 

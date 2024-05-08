@@ -1,20 +1,11 @@
 # Monte-Carlo. Statistics calculation
 
 Monte-Carlo simulations in HetaSimulator can be run using the [`mc`](@ref) method.
-It can be applied for: single scenario, series of scenarios and the whole platform.
-
-_Before start be sure you have the latest __HetaSimulator.jl__ version. If you don't have it reinstall using the Julia environment.
-
-```julia
-] # switch to Pkg mode
-add HetaSimulator
-```
+It can be applied to: a single scenario, series of scenarios and the whole platform.
 
 ## Working example
 
-This lesson uses the following modeling code.
-
-File can be downloaded here: [index.heta](./mc-files/index.heta)
+This example uses the `heta` model, which can be downloaded here: [index.heta](./mc-files/index.heta)
 
 ```julia
 comp1 @Compartment .= 1.1;
@@ -47,9 +38,9 @@ a [sw1]= a + 1;
 //ss1 @StopSwitcher {trigger: t > 10};
 ```
 
-Create __index.heta__ file with the contend and place it into the working directory.
+Download the file or create __index.heta__ with VSCode in the working directory.
 
-Load the platform into the Julia environment. You should clarify the path to the modeling platform as the first argument.
+Load the platform into the Julia environment. You should provide the path to the modeling platform as the first argument to `load_platform`.
 
 ```julia
 using HetaSimulator, Plots
@@ -68,7 +59,7 @@ Model contains 3 constant(s), 8 record(s), 1 switcher(s).
 
 ## Single scenario simulations
 
-Create two scenarios as follows. 
+Create two scenarios such as: 
 
 ```julia
 mcscn1 = Scenario(
@@ -86,20 +77,20 @@ mcscn2 = Scenario(
 )
 ```
 
-The scenarios updates the parameter `k1` value (`@Const` component in model).
-The `observables` vector is not set, so outputs will be taken from default set: `a`, `b`, `c`.
+The scenarios updates the value of `k1` parameter (`@Const` component in model).
+The `observables` vector is not set, so outputs will be the default set of variables: `a`, `b`, `c`.
 
-Monte-Carlo simulations `mc` can be used to simulate single scenario `mcscn1` and plot results.
-The second argument in `mc` is the distribution for all independent parameters.
-The format of the argument is the vector of pairs where the first element is parameter id and the second one is the distribution rule.
-You can also set the `Float64` value of a parameter here and this rewrites the value in a model without putting variability.
-The third argument is the number of Monte-Carlo simulations to do.
+Monte-Carlo simulations `mc` can be applied to a single scenario `mcscn1`.
+The second argument in `mc` is the distribution of the selected independent parameters.
+The format of the argument is the vector of pairs where the first element is parameter id and the second one is the distribution.
+You can also set a `Float64` value for a parameter here and this rewrites the value in the model and leaves the parameter value fixed.
+The third argument is the number of Monte-Carlo simulations to run.
 
 ```julia
 mcsim1 = mc(mcscn1, [:k1=>Uniform(1e-3,1e-2), :k2=>Normal(1e-3,1e-4), :k3=>Normal(1e-4,1e-5)], 100)
 ```
 
-We can limit the components for visualization with `vars` argument in `plot`.
+We can limit the variables for visualization with `vars` argument in `plot`.
 
 ```julia
 plot(mcsim1, vars=[:b])
@@ -107,7 +98,7 @@ plot(mcsim1, vars=[:b])
 
 ![mc-fig01](./mc-fig01.png)
 
-Monte-Carlo results can also be transformed into DataFrame.
+Monte-Carlo results can also be transformed into `DataFrame`.
 
 ```julia
 DataFrame(mcsim1, vars=[:a, :b])
@@ -115,8 +106,8 @@ DataFrame(mcsim1, vars=[:a, :b])
 
 ## Multiple scenarios simulations
 
-In the same way as it was done for `sim` method we can also run `mc` for multiple scenarios.
-The returned object will be of type `MCResult`.
+In the same way as it was shown for `sim` method we can run `mc` with multiple scenarios.
+The returned object will be of type `Vector{Pair{Symbol,MCResult}}`.
 
 ```julia
 mcsim2 = mc(
@@ -129,21 +120,19 @@ plot(mcsim2)
 
 ![mc-fig02](./mc-fig02.png)
 
-Results of simulations can be transformed into `DataFrame` too.
+Results of MC simulations can be transformed into `DataFrame` too.
 
 ```julia
 mc_df2 = DataFrame(mcsim2)
 ```
 
-## Monte-Carlo for whole platform
+## Monte-Carlo simulations of the whole platform
 
-Scenarios for `mc` can also be loaded from CSV file.
+Simulation scenarios for `mc` can also be loaded from tabular files.
 
-Create file __scenarios.csv__ in the same directory and fill it with the data.
+Create __scenarios.csv__ file in the same directory and fill it with the data or download it here: [scenarios.csv](./mc-files/scenarios.csv)
 
 ![mc-fig03](mc-fig03.png)
-
-File can be downloaded here: [scenarios.csv](./mc-files/scenarios.csv)
 
 Load it as a scenarios table.
 
@@ -152,7 +141,7 @@ scn_csv = read_scenarios("./scenarios.csv")
 add_scenarios!(platform, scn_csv)
 ```
 
-Apply `mc` for the platform which is the same as simulations for all `Scenario`s of the platform.
+Apply `mc` to the platform to run MC simulations with all `Scenario`s in the platform.
 
 ```julia
 mcplat = mc(
@@ -165,20 +154,22 @@ plot(mcplat)
 
 ![mc-fig04](mc-fig04.png)
 
-## Using pre-generated parameter set
+## Using pre-generated parameters set
 
-In many practical cases it will be more useful to generate random parameters and run simulations in two steps.
-It is possible to do (1) creating DataFrame with parameter sets and (2) using it as an argument for `mc` method.
+In many practical cases it will be useful to pre-generate parameters values and run simulations in two steps.
+To do it one needs to
+1. Create a DataFrame with parameters values
+2. Use it as the second argument in `mc` method.
 
-Parameter set can be created using the base `DataFrame` constructor.
+Parameter sets can be created using the `DataFrame` constructor.
 
 ```julia
 mcvecs0 = DataFrame(k1=0.01, k2=rand(Normal(1e-3,1e-4), 50), k3=rand(Uniform(1e-4,1e-2), 50))
 ```
 
-Or it can be loaded from CSV file.
+Or parameters values can be loaded from CSV file.
 
-File can be downloaded here: [params.csv](./mc-files/params.csv)
+The file can be downloaded here: [params.csv](./mc-files/params.csv)
 
 ![mc-fig05](mc-fig05.png)
 
@@ -214,9 +205,9 @@ plot(mc1)
 
 Monte-Carlo results can be used to calculate some characteristics which will be called "statistics".
 
-There are some standard methods borrowed from `DiffEq.jl` package (see more here <https://diffeq.sciml.ai/stable/features/ensemble/#Summary-Statistics>).
+There are some standard methods taken from `SciMLBase.jl` (see more here <https://docs.sciml.ai/DiffEqDocs/stable/features/ensemble/#Example-4:-Using-the-Analysis-Tools>).
 
-See below several methods that calculates statistics for some particular time point.
+See below several methods that calculate statistics for some particular time point.
 
 ```julia
 timestep_mean(mcv1,2)
@@ -243,7 +234,7 @@ timestep_quantile(mcv1,0.95,2)
 timepoint_quantile(mcv1,0.95,80.)
 ```
 
-The next methods calculates statistics for all time points.
+The next methods calculate statistics for all time points.
 
 ```julia
 timeseries_steps_mean(mcv1) # Computes the mean at each time step
@@ -258,7 +249,7 @@ And finally there is an example of statistics summary and visualization.
 
 ```julia
 # Ensemble Summary
-ens = EnsembleSummary(mcsim1;quantiles=[0.05,0.95])
+ens = EnsembleSummary(mcsim1; quantiles=[0.05,0.95])
 plot(ens)
 ```
 
@@ -266,6 +257,4 @@ plot(ens)
 
 ## Final remarks
 
-1. If you are going to use "statistics" methods you should always set the `saveat` argument in `Scenario`.
-
-1. If you run `mc` with parameters generated online, i.e. without pre-generated set currently you cannot obtain the input parameters values directly.  This will be fixed in one of future releases. Before that if you need them use pre-generation.
+- If you are going to use "statistics" methods you should always set `saveat` argument in `Scenario`.

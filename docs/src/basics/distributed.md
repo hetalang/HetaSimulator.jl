@@ -26,7 +26,7 @@ f = fit([scn1, scn2, scn3], [:k1=>0.1,:k2=>0.2,:k3=>0.3], parallel_type=Ensemble
 
 We can run parallel Monte-Carlo (Ensemble) simulations with parameters taken from distributions or from a pre-generated `DataFrame`.
 Parallel setup can work both with parameters vectors and `scenarios`. 
-Let's assume  we have loaded a number of `Scenario`s: `scn1, scn2, scn3` and a `DataFrame` `df` with parameters vectors (as rows).
+Let's assume we have loaded a number of `Scenario`s: `scn1, scn2, scn3` and a `DataFrame` `df` with parameters vectors (as rows).
 ```julia
 using Distributed
 addprocs(2)

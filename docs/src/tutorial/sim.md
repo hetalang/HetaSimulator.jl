@@ -2,9 +2,9 @@
 
 ## Working example
 
-As an example we will use a model describing a simple two-compartment pharmacokinetic model stored in single __.heta__ file. It is expected that the model code will be placed into "index.heta" file located in the working directory.
+As an example we will use a simple two-compartment pharmacokinetic model stored in a single __.heta__ file. It is expected that the model code will be placed into "index.heta" file located in the working directory.
 
-File can be downloaded here: [index.heta](./sim-files/index.heta)
+The `heta` model file can be downloaded here: [index.heta](./sim-files/index.heta)
 
 ```julia
 // Compartments
@@ -37,7 +37,7 @@ sw2 @TimeSwitcher {start: 0, period: 24, active: false};
 A0 [sw2]= dose;
 ```
 
-The modeling platform includes only one namespace `nameless` which is the default one. After loading into HetaSimulator the single `Model` with id `:nameless` will be available.
+The modeling platform includes only one namespace `nameless` which is the default one. After loading the model into Julia a single `Model` with id `:nameless` is available.
 
 ```julia
 using HetaSimulator, Plots
@@ -79,21 +79,21 @@ Model contains 4 constant(s), 9 record(s), 2 switcher(s).
 
 ## Creating scenarios
 
-`Scenario` in HetaSimulator is a type storing a model together with conditions and simulation settings like time-range, output variable, updated parameter values, activate or inactivate events, etc.
+`Scenario` in HetaSimulator is a type, which stores a model together with simulation settings like time-range, output variables, parameters values, active or inactive events, etc.
 
-The scenario-based approach is used to store pre-defined model's options: dose values, experimental scenarios, data saving options, initial values and others which can be applied for one or multiple models. The `Scenario` also stores `Measurement` points which is used for parameters identification and visualization.
+The scenario-based approach is used to store pre-defined model's options: dose values, experimental measurements, data saving options, initial values etc., which can be applied to one or multiple models. The `Scenario` also stores `Measurement` points which are used for parameters estimation and visualization.
 
-`Scenario` is created from default options passed from its model and user defined options from tables or set manually.
+`Scenario` is created from default options passed from the model and user defined options coming from tabular inputs or set manually in the code.
 
 ### Manual creation of Scenario
 
-`Scenario` objects can be created and loaded directly from Julia environment.
+`Scenario` objects can be created directly in Julia code.
 
-The next code will create a `Scenario` for simulating the default model with time range from 0 to 10. The rest of options will be taken from default `:nameless` model:
+This code will create a `Scenario` for simulating the default model in time range from 0 to 10. Other options will be taken from the default `:nameless` model:
 
-- output records (observables) will be taken from records marked with `{output: true}` in heta code.
-- all switchers (events) will be active if `{active: true}` is not set.
-- constant values (model-level parameters) will be the same as stated in the heta file.
+- output records (observables) will be taken from `Record`s marked with `{output: true}` in `heta` code.
+- all switchers (events) will be active if `{active: true}` is set in `heta` code.
+- constant (model-level parameters) values will be the same as stated in the heta file.
 
 ```julia
 # minimal scenario
@@ -107,7 +107,7 @@ Scenario for tspan=(0.0, 10.0)
    Number of measurement points: 0
 ```
 
-The scenario can be simulated from the scenario and plotted.
+The results of simulation can be visualized with `plot`.
 ```julia
 res0 = sim(scenario0)
 plot(res0)
@@ -115,13 +115,13 @@ plot(res0)
 
 ![fig01](./sim-fig01.png)
 
-Creating scenario we can also update some of the model default options.
-The next example is the case when we want to update the simulation conditions:
+We can also update some of the model default options in `Scenario`.
+In the next example we update the simulation conditions stored in the `Scenario`:
 
-- Update value of parameter `dose = 100`.
-- Use multiple dose event `sw2` instead of single dose.
-- simulation time is from `0` to `1000`.
-- we need to observe all species: `C1`, `C2`, and reactions `v_el`.
+- Update the value of parameter `dose = 100`.
+- Use multiple-dose event `sw2` instead of a single dose.
+- Update simulation time span to `(0, 1000)`.
+- Output all species: `C1`, `C2`, and variable `v_el`.
 
 The `Scenario` can be created with the following code:
 
@@ -141,16 +141,16 @@ plot(res1)
 
 To read more about available options see API docs for [`Scenario`](@ref) function.
 
-It is necessary to mention that `scenario0` and `scenario1` after creation are not parts of `p` platform. To add them into storage we can use the following syntax.
+It is necessary to mention that `scenario0` and `scenario1` are not automatically loaded to the `Platform` `p`. To add them into `p` one can use the following syntax.
 
 ```julia
 # push all into `scenarios` dictionary
 add_scenarios!(p, [:scn0 => scenario0, :scn1 => scenario1])
 ```
 
-where `:scn0` and `:scn` are identifiers for the scenarios in the dictionary.
+where `:scn0` and `:scn` are identifiers of the scenarios.
 
-As it can be seen now the model includes them.
+Now the model includes both of them.
 
 ```julia
 p
@@ -164,13 +164,11 @@ Platform with 1 model(s), 2 scenario(s), 0 measurement(s)
 
 ### Import scenarios from CSV tables
 
-The most simple way to populate a platform by scenarios is to create a file with `Scenario` in [tabular CSV format](../table-formats/scenario.md).
+The most simple way to populate a platform with scenarios is to create a scenario file in [tabular CSV format](../table-formats/scenario.md).
 
-Create file __scenarios.csv__ file inside the working directory with the following content.
+Create file __scenarios.csv__ file inside the working directory with the following content or download it here: [scenarios.csv](./sim-files/scenarios.csv).
 
 ![fig03](./sim-fig03.png)
-
-File can be downloaded here: [scenarios.csv](./sim-files/scenarios.csv).
 
 The table can be created in Excel, saved as a CSV file and then loaded with the [`read_scenarios`](@ref) function as a `DataFrame`.
 
@@ -189,15 +187,15 @@ scenarios_df = read_scenarios("scenarios.csv")
    4 │ multiple_15               15              false               true
 ```
 
-The function reads the content of CSV file, checks components and stores in `scenarios_df` variable of `DataFrame` format. CSV files can be created with any other tools. User can also load tables from XLSX files using the same syntax.
+The function reads the content of CSV file, checks if all the components are present in the model and stores the content in `scenarios_df` variable of `DataFrame` type. CSV files can be created with any other tool. User can also load tables from XLSX files using the same syntax.
 
-The content of the `DataFrame` should be loaded into `Platform` object.
+The `DataFrame` describing a `Scenario` should be loaded into the `Platform` object.
 
 ```julia
 add_scenarios!(p, scenarios_df)
 ```
 
-As we can see all 4 scenarios from the table were added.
+As we can see all 4 scenarios from the table have been added.
 
 ```julia
 p
@@ -209,7 +207,7 @@ Platform with 1 model(s), 6 scenario(s), 0 measurement(s)
    Scenarios: scn0, scn1, dose_1, dose_10, dose_100, multiple_15
 ```
 
-The particular scenario loaded directly into `Platform` can be obtained using the syntax.
+The particular scenario loaded directly into `Platform` can be obtained using the following syntax.
 
 ```julia
 scenario2 = scenarios(p)[:dose_1]
@@ -226,10 +224,10 @@ See more about scenario tables in [tabular CSV format](../table-formats/scenario
 
 ## Single scenario simulations
 
-The base [`sim`](@ref) method is applied for a `Scenario` object.
-This object can be created directly using `Scenario` constructor or taken from `Platform` object.
+The base [`sim`](@ref) method is applied to a `Scenario` object.
+This object can be created directly using `Scenario` constructor or taken from the `Platform` object.
 
-The result of `sim` function execution is solution of ODE with parameters passed from (1) `Model` content and default settings, (2) settings passed from created `Scenario` object and (3) additional settings from `sim` function. 
+The result of `sim` function execution is the solution of the relevant ODE system with parameters (1) stored as defaults in the `Model`, (2) overwritten in the `Scenario` object and (3) overwritten by passing `parameters` keyword arguments to `sim` function. 
 
 ```julia
 res2 = sim(scenario2)
@@ -243,10 +241,10 @@ res2 = sim(scenario2)
     Parameters:
 ```
 
-`sim` method applied for a single `Scenario` returns object of type [`HetaSimulator.SimResult`](@ref). 
-The method has the additional arguments which can set the integration methods and other options. For more information see [`sim`](@ref)
+`sim` method applied to a single `Scenario` returns an object of [`HetaSimulator.SimResult`](@ref) type. 
+The method supports additional keyword arguments which can set the integration method, solver options, etc. For more information see [`sim`](@ref)
 
-The results can be visualized using `plot` recipe which create the default representation of `SimResult` content. 
+The results can be visualized using `plot` function. 
 
 ```julia
 # plot all
@@ -254,8 +252,8 @@ plot(res2)
 ```
 ![fig04](./sim-fig04.png)
 
-The figure displays all simulated points and all output variables declared in `observables` of the scenario.
-A user can select chosen observables for displaying. The other general `plot` arguments like `yscale`, `ylim` and others can be used.
+The figure displays all simulated points and all output variables declared in the `observables` of the scenario.
+One can select the observables to display. One can use the additional `yscale`, `ylim` and other `Plots` keyword arguments to change how the results are displayed. 
 
 ```julia
 # plot C1, C2
@@ -263,7 +261,7 @@ plot(res2, vars = [:C1, :C2])
 ```
 ![fig05](./sim-fig05.png)
 
-The results can be transformed into `DataFrame` object for further modifications and saving.
+The results can be transformed into a `DataFrame` object for further analysis and saving.
 
 ```julia
 # for all observables
@@ -287,14 +285,14 @@ res_df = DataFrame(res1)
                                                     307 rows omitted
 ```
 
-As in plot method the observables can be selected by the optional `vars` argument.
+As in `plot` method one can select what observables to put into the `DataFrame` by the optional `vars` argument.
 
 ```julia
 # for C1, C2
 res_df = DataFrame(res1, vars = [:C1, :C2])
 ```
 
-To save the table into a file the CSV file format can be used.
+To save the table the CSV format can be used.
 
 ```julia
 using CSV
@@ -305,8 +303,8 @@ CSV.write("export_df.csv", res_df)
 
 ## Multiple scenario simulations
 
-There is an approach to simulate multiple conditions simultaneously. 
-`sim` can be applied for all or selected `Scenario`s in a platform.
+One can simulate multiple scenarios simultaneously. 
+`sim` can be applied to all or selected `Scenario`s in a platform.
 
 ```julia
 # all scenarios
@@ -324,8 +322,8 @@ Progress: 100%[==================================================] Time: 0:00:01
     :multiple_15 => 227x3 SimResult with status :Success.
 ```
 
-The result of the method applied for a platform will be a vector of pairs `Symbol` identifier vs `SimResult`.
-To obtain the particular sim result a user can use numerical or symbol indexing.
+The result of `sim` method applied to a platform will be a `Vector{Pair{Symbol,SimResult}}` type with symbolic scenario identifiers corresponding to simulation results.
+To obtain the particular simulation result one can use numerical or symbol indexing.
 
 ```julia
 # to get 2d result
@@ -353,7 +351,7 @@ res_mult[:multiple_15][2]
     Parameters: 
 ```
 
-To simulate the selected scenarios one can use `scenarios` argument.
+To simulate only the selected scenarios from the `Platform` one can use `scenarios` argument.
 
 ```julia
 res_selected = sim(p, scenarios = [:dose_1, :dose_10, :dose_100])
@@ -368,9 +366,9 @@ plot(res_selected, yscale=:log10, ylims=(1e-3,1e2))
 
 ![fig07](./sim-fig07.png)
 
-The generated figure includes all condition simulations titled with scenario identifier. The additional arguments as `vars` and plot options can be used as well.
+The generated figure includes all scenarios titled with scenario identifier. The additional keyword arguments as `vars` and plot options can be used in the `plot` function as well.
 
-`sim` results applied for multiple scenario can be translated into `DataFrame`.
+`sim` results for multiple scenarios can be converted into `DataFrame`.
 
 ```julia
 # convert everything into DataFrame
@@ -380,18 +378,22 @@ CSV.write("res_selected_df.csv", res_selected_df)
 
 ## Final remarks
 
-1. The typical workflow for simulation of modeling platforms in HetaSimulator.jl consists of the following steps: (1) loading Heta-based models into a `Platform` object; (2) creating and addition scenarios using `Scenario` constructor or from CSV tables; (3) run `sim` method for the whole platform or for selected scenarios; (4) display results using `plot` or transform into `DataFrame`.
+A typical workflow for simulation of a modeling platforms in HetaSimulator.jl consists of the following steps: 
+1. Load heta-based models into the `Platform` object; 
+2. Create scenarios using `Scenario` constructor or from CSV tables and add them to the `Platform`; 
+3. Run `sim` method with the whole platform or with the selected scenarios; 
+4. Display results with `plot` or convert them into `DataFrame`.
 
-1. `Model` and `Scenario` objects are "un-mutable". This means a user cannot update their parts directly. User can only create new Scenario and use `add_scenarios!` method using the same identifiers. This replaces the previous scenarios with selected ids.
+1. `Model` and `Scenario` objects are "immutable". This means a user cannot update their parts directly. User can only create new `Scenario`s and apply `add_scenarios!` method using the same identifiers. This replaces the previously created scenarios with the same ids.
 
-1. To update a model structure one should include changes into source Heta-based model and repeat all the steps.
+1. To update a model structure one should include changes into the `heta` model code and repeat all the steps.
 
-1. In many cased the chain Julia syntax can be useful. The following code creates the default scenario, simulate and plot with one line.
+1. In many cased Julia chain syntax can be useful. The following code creates the default scenario, runs simulation and plots the result - all in one line.
 
 ```julia
 Scenario(models(p)[:nameless], (0, 100)) |> sim |> plot
 ```
 
-1. `plot` method for `SimResult` gives only a simple default representation. For extended graphics a user can transform everything into a `DataFrame` and plot manually.
+1. `plot` method for `SimResult` gives only the default visualization. For more complicated visualization one can transform results into a `DataFrame` and plot them manually.
 
 1. For multiple simulations of the Monte-Carlo type one should use `mc` method instead of `sim` method. `Scenario` is not the same as single simulation task in Monte-Carlo.

@@ -1,27 +1,27 @@
 # Quick start
 
-The general workflow for HetaSimulator is
+The general HetaSimulator workflow is:
 
-- Writing a modeling platform in the Heta format
-- Loading platform into Julia environment
-- Creating model's settings and data adding scenarios and measurements
-- Solve problems using the methods: `sim`, `mc`, `fit`
+- Write a model (modeling platform) in Heta format
+- Load the platform into Julia environment
+- Create simulation conditions by adding scenarios
+- Simulate the model and estimate the parameters with: `sim`, `mc`, `fit`
 - Analyze the results
 
-The particular workflow may be iterative, i.e. include updates to the model and re-simulation based on estimated parameters or model structure updates. It depend on the user's needs.
+The particular workflow may be iterative, i.e. the model can be re-simulated multiple times with new parameters values or structural updates. 
 
 ## Writing model in the Heta format
 
-Heta is a modeling language for quantitative systems pharmacology and systems biology.
-It is a DSL (domain-specific language) describing dynamic model or models in process-description format.
-Heta compiler converts it into variety of files including "Julia" format which can be loaded to Julia/HetaSimulator environment.
+Heta is a modeling language for quantitative systems pharmacology (QSP) and systems biology (SB).
+It is a DSL (domain-specific language) describing dynamic model or multiple models in process-description format.
+Heta compiler converts it into variety of formats including Julia code, which can be loaded to Julia/HetaSimulator environment.
 
-HetaSimulator supports all features of the [Heta language](https://hetalang.github.io/#/specifications/). So one can organize modeling project as re-used modules (files), include any number of models into single platform with the namespaces mechanism. The platform can use the declaration file __platform.json__ or can be loaded from single file. 
+HetaSimulator supports all features of the [Heta language](https://hetalang.github.io/#/specifications/). One can organize modeling project with re-used modules (files), include any number of models into a single platform with the namespaces mechanism. The platform can use the declaration file __platform.json__ or can be loaded directly from the heta file. 
 All Heta modules: Heta code, tables, SBML and JSON can be loaded as a modeling platform and compiled into ODE-based mathematical representation.
 
 To read more about Heta-based modeling platforms and Heta compiler visit the homepage <https://hetalang.github.io/#/>.
 
-As an example we will use a model describing a simple pharmacokinetic model stored in single __.heta__ file. It is expected that the model code will be placed into "index.heta" file located in a directory __my\_example__ or something like that.
+As an example we will use a simple pharmacokinetic model stored in single __.heta__ file. It is expected that the model code will be placed into "index.heta" file located in a directory __my\_example__ or something like that.
 
 ```julia
 // Compartments
@@ -96,7 +96,7 @@ HetaSimulator loads modeling platform into `Platform` type object that is a cont
 
 ### Loading with internal compiler
 
-When __HetaSimulator__ is installed and internal __Heta compiler__ is installed the platform can be loaded with the method [`load_platform`](@ref).
+When __HetaSimulator__ is installed and internal __Heta compiler__ is installed the platform can be loaded with [`load_platform`](@ref).
 
 ```julia
 using HetaSimulator, Plots
@@ -135,7 +135,7 @@ You can also load the model from another formats like SBML.
 ```julia
 p = load_platform("./another_project", source = "model.xml", type = "SBML")
 ```
-The list of additional arguments is approximately the same as [CLI options](https://hetalang.github.io/#/heta-compiler/cli-references?id=quotheta-buildquot-command) of `heta build` command of Heta compilers. For the full list see [`load_platform`](@ref) references.
+The list of additional arguments is approximately the same as [CLI options](https://hetalang.github.io/#/heta-compiler/cli-references?id=quotheta-buildquot-command) `heta build` command in Heta compiler. For the full arguments list see [`load_platform`](@ref) references.
 
 ### Loading pre-compiled platform
 
@@ -166,15 +166,15 @@ Platform with 1 model(s), 0 scenario(s), 0 measurement(s)
 ## Creating scenarios
 
 `Scenario` in HetaSimulator is an object which stores a model together with additional settings and options.
-It sets the time point, ranges, updates parameter values, activate or inactivate events, etc.
+It sets the saving time point, time span, specific parameters' values, active and inactive events, etc.
 
-The scenario-based approach is used to store pre-defined model's options: dose values, experimental scenarios, data saving options, initial values and others which can be applied for one or multiple models. The `Scenario` also stores `Measurement` points which is used for parameters identification and visualization.
+The scenario-based approach is used to store pre-defined model's options: dose values, experimental scenarios, saving options, initial values and other settings, which can be applied for one or multiple models. The `Scenario` also stores `Measurement` points which are used for parameters estimation and visualization.
 
-`Scenario` is created from default options passed from its model and user defined options from table row or set manually.
+`Scenario` is created from the default or user defined options. It can be imported from Scenario and Measurement tables or set directly in Julia code.
 
 ### Import from CSV tables
 
-The most simple way to populate a platform by scenarios is to create a separate file with `Scenario` in [tabular CSV format](../table-formats/scenario.md).
+The most simple way to populate a platform with scenarios is to create a separate `Scenario` file in [tabular CSV format](../table-formats/scenario.md).
 
 Create file __scenarios.csv__ file inside __my\_example__ with the following content.
 
@@ -201,15 +201,15 @@ scn_df = read_scenarios("./my_example/scenarios.csv")
    4 │ multiple_15               15              false               true
 ```
 
-The function reads the content of CSV file, checks components and stores in `scn_df` variable of `DataFrame` format.
+The function reads the content of CSV file, checks components present in the model and stores scenario table in `scn_df` variable of `DataFrame` format.
 
-This should be loaded into `Platform` object.
+The scenario table should be loaded into `Platform` object.
 
 ```julia
 add_scenarios!(p, scn_df)
 ```
 
-As we can see all 4 scenarios from the table were added.
+As we can see all 4 scenarios were added from the table .
 
 ```julia
 p
@@ -232,7 +232,7 @@ See more about scenario tables in [tabular CSV format](../table-formats/scenario
 
 ### Import from Excel tables
 
-Instead of using CSV tables one can fill the XSLT file and load scenario table in the same manner.
+Instead of using CSV tables one can use XLSX file and load scenario table in the same manner.
 
 ```julia
 scn_df = read_scenarios("./my_example/scenarios.xlsx")
@@ -252,7 +252,7 @@ scn_df = read_scenarios("./my_example/scenarios.xlsx")
 
 `Scenario` objects can be created and loaded without any tables.
 
-For example we need to create simulations with the default model 
+For example we need to create scenarios with the default model 
 - `dose = 100`
 - event `sw2` is active 
 - simulation time is from `0` to `1000`
@@ -280,7 +280,7 @@ Scenario for tspan=(0.0, 1000.0)
    Number of measurement points: 0
 ```
 
-See more options in API docs for [`Scenario`](@ref) function.
+See more options in API docs section for [`Scenario`](@ref) function.
 
 To load it into `Platform` container use the following syntax.
 
@@ -288,12 +288,12 @@ To load it into `Platform` container use the following syntax.
 push!(scenarios(p), :multiple_100=>new_scenario)
 ```
 
-where `multiple_100` is an identifier for the scenario in the dictionary.
+where `multiple_100` is an identifier of the scenario in the dictionary.
 
 ## Creating measurements
 
-`Measurement` in HetaSimulator is representation of experimentally measured value for parameter identification.
-Each `Measurement` is associated with some particular scenario, observable value and fixed time point.
+`Measurement` in HetaSimulator is a representation of experimentally measured values.
+Each `Measurement` is associated with some particular scenario, observable variable and fixed time point.
 
 All measurements in the platform are used to calculate the log-likelihood function when required. Measurements are stored inside `Scenario` objects.
 
@@ -301,7 +301,7 @@ All measurements in the platform are used to calculate the log-likelihood functi
 
 User can load measurement points from one or several tables which follow [table format](@ref measurement).
 
-Create file __measurements.csv__ file inside __my\_example__ with the following structure.
+Create __measurements.csv__ file inside __my\_example__ with the following structure.
 
 Full file can be downloaded from here: [measurements.csv](https://raw.githubusercontent.com/hetalang/hetasimulator/master/case/story_3/measurements.csv)
 
@@ -337,9 +337,9 @@ measurements_df = read_measurements("./cases/story_3/measurements.csv")
                                                 81 rows omitted
 ```
 
-The function reads the content of CSV file, checks components and stores in `measurements_df` variable of `DataFrame` format.
+The function reads the content of CSV file, checks components present in the model and stores the measurements in `measurements_df` variable of `DataFrame` format.
 
-To load measurements into `Platform` function [`add_measurements!`](@ref) can be used. The function converts all rows into a series of `Measurements` and associate them with scenario declared in `scenario` value.
+[`add_measurements!`](@ref) can be used to load measurements into `Platform` container. The function converts all rows into a series of `Measurements` and links them with scenarios declared in `scenario` field of the `Platform`.
 
 ```julia
 add_measurements!(p, measurements_df)
@@ -347,7 +347,7 @@ add_measurements!(p, measurements_df)
 
 ### Import from Excel tables
 
-Instead of using CSV tables one can fill the XSLT file and load measurements table in the same manner.
+Instead of using CSV tables one can fill the XLSX file and load measurements table in the same manner.
 
 ```julia
 measurements_df = read_measurements("./my_example/measurements.xlsx")
@@ -355,36 +355,36 @@ measurements_df = read_measurements("./my_example/measurements.xlsx")
 
 ## Solving problems
 
-There are three main problem types that can currently be solved with HetaSimulator:
+Three main problem types that can currently be solved with HetaSimulator:
 
 - [__Simulation__](#Simulation) of time-dependence for selected observables for one or several scenarios using [`sim`](@ref) method.
-- [__Monte-Carlo__](#Monte-Carlo) type simulations that performs repeated simulations based on pre-set parameters distributions with [`mc`](@ref) method.
-- [__Fitting__](#Fitting) or parameter identification problem that optimizes values of selected model-level parameters (`@Const`) to reach the minimal discrepancy between simulations and experimental values which is solved by [`fit`](@ref) method.
+- [__Monte-Carlo__](#Monte-Carlo) type simulations that perform repeated simulations based on pre-set parameters distributions with [`mc`](@ref) method.
+- [__Fitting__](#Fitting) or parameters estimation problem that optimizes the values of the selected model-level parameters (`@Const`) to reach the minimal discrepancy between simulations and experimental data using [`fit`](@ref) method.
 
-Each method returns the solution of its specific type: `SimResult`, `MCResult` and `FitResult` or other types that include them.
+Each method returns the solution of its specific type: `SimResult`, `MCResult` and `FitResult` or vector types that include them.
 
-The methods can be applied on different levels: `Platform`, `Scenario` or `Vector` of scenarios to allow applying all scenarios in the platform, some of them or the default one.
+The methods can be applied on different levels: `Platform`, `Scenario` or `Vector` of scenarios to select all scenarios in the platform, some of them or the default one.
 Some important "target vs method" variants are shown in the next table.
 
 Target | Method | Results | Comments
 --- | --- | --- | ---
-`Platform` | `sim` | `Vector{Pair{Symbol,SimResult}}` | All or selected list of scenarios in model will run
-`Scenario` | `sim` | `SimResult` | Only target scenario will run
-`Platform` | `mc` | `Vector{Pair{Symbol,MCResult}}` | All or selected list of scenarios in model will run multiple times.
-`Scenario` | `mc` | `MCResult` | Target scenario will run multiple times
-`Platform` | `fit` | `FitResult` | All or selected list of scenarios together their measurements will be used to optimize parameters.
+`Platform` | `sim` | `Vector{Pair{Symbol,SimResult}}` | All or selected list of scenarios in model will be simulated
+`Scenario` | `sim` | `SimResult` | Only target scenario will be simulated
+`Platform` | `mc` | `Vector{Pair{Symbol,MCResult}}` | All or selected list of scenarios in model will be simulated multiple times.
+`Scenario` | `mc` | `MCResult` | Target scenario will be simulated multiple times
+`Platform` | `fit` | `FitResult` | All or selected list of scenarios together their measurements will be used to optimize the parameters.
 
-*This page provides the example of applying methods on the `Platform` level only*
+*This page provides an example of applying these methods to the `Platform` type only*
 
-See more information for each method in tutorials: [sim](../tutorial/sim.md), [mc explanations](../tutorial/mc.md), [fit explanations](../tutorial/fit.md).
+See more information for each method in the tutorials: [sim](../tutorial/sim.md), [mc explanations](../tutorial/mc.md), [fit explanations](../tutorial/fit.md).
 
 ### Simulation
 
 See more details about `sim` method in [sim method](../tutorial/sim.md) tutorial.
 
-On the previous steps we created the platform `p` and populated it with 4 scenarios and measurement points.
+On the previous steps we have created the platform `p` and populated it with 4 scenarios and measurement points.
 
-Without additional preparations we can simulate the platform which means running all 4 scenarios and combining all results into one object.
+Without additional preparations we can simulate the platform which means running all 4 scenarios and combining all results into one output object.
 
 ```julia
 res = sim(p)
@@ -399,9 +399,9 @@ res = sim(p)
     :multiple_100 => 163x6 SimResult with status :Success.
 ```
 
-The whole solution consists of parts which corresponds to number of scenarios in Platform.
+The whole solution includes `SimResult`s for relevant `Scenario` identifiers.
 
-The results can be plotted using default `plot` method.
+The results can be visualized using default `plot` method.
 
 ```julia
 plot(res)
@@ -409,7 +409,7 @@ plot(res)
 ![sim1](./sim1.png)
 
 
-The whole solution can also be translated into `DataFrame`.
+The whole solution can also be transformed into `DataFrame`.
 
 ```julia
 res_df = DataFrame(res)
@@ -453,7 +453,7 @@ res_df1 = DataFrame(res[1])
                                                                   695 rows omitted
 ```
 
-The component can also be plotted.
+A single `SimResult` can also be selected for visualization.
 
 ```julia
 plot(res[1])
@@ -462,8 +462,8 @@ plot(res[1])
 
 ### Monte-Carlo
 
-Monte-Carlo method runs simulation many times combining all simulations into single object `MCResult`.
-You should clarify here the distribution of random parameters and number of iterations.
+Monte-Carlo method runs simulation many times combining all results into single `MCResult` object.
+You should set the distribution of parameters and the number of iterations.
 
 ```julia
 mc_res = mc(p, [:kabs=>Normal(10.,1e-1), :kel=>Normal(0.2,1e-3)], 1000)
@@ -478,7 +478,7 @@ mc_res = mc(p, [:kabs=>Normal(10.,1e-1), :kel=>Normal(0.2,1e-3)], 1000)
     :multiple_100 => 1000x?x238 MCResult with status :Success x 1000
 ```
 
-To transform everything into `DataFrame`
+To transform all results into `DataFrame`
 ```julia
 mc_df = DataFrame(mc_res)
 ```
@@ -510,15 +510,15 @@ plot(mc_res)
 
 ### Fitting
 
-To run optimization problem you need to do three steps:
+The following steps are required to run the parameters estimation problem:
 
-- Be sure that you measurement points are loaded in a proper way: referred `Scenario`s exists, proper error model is chosen.
-- If required add parameters responsible for noise distribution into a model code, like `sigma` etc.
+- Be sure that measurement points are loaded in a proper way: referred `Scenario`s exist, the proper error model is chosen.
+- If required add distribution-related noise parameters into the model code, like `sigma` etc.
 - Select a set of parameters which will be fitted and set initial values for them.
 
-For the presented example we uses normal distribution of measurement error with unknown variance parameter `sigma1`, `sigma2`, `sigma3` for doses 1, 10 and 100.
+For the presented example we use normal distribution of measurement error with unknown variance parameters `sigma1`, `sigma2`, `sigma3` for doses 1, 10 and 100.
 
-We need to add this unknown parameters into the Heta code updating the initial model:
+We need to add this unknown parameters into the Heta code and update the initial model:
 
 ```heta
 ...
@@ -542,7 +542,7 @@ measurements_df = read_measurements("$HetaSimulatorDir/cases/story_3/measurement
 add_measurements!(p, measurements_df)
 ```
 
-To check the initial simulated vs measured results the standard `plot` method can be used.
+To check simulated vs measured results the standard `plot` method can be used.
 
 ```julia
 res0 = sim(p)

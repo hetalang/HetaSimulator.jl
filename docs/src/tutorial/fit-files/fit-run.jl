@@ -13,7 +13,7 @@ add_scenarios!(p, scn_df)
 ### Load measurements
 
 # see table measurements.csv describing data with unknown variance
-# see more detales in https://hetalang.github.io/HetaSimulator.jl/dev/table-formats/measurement/
+# see more detales in https://hetalang.github.io/HetaSimulator.jl/stable/table-formats/measurement/
 measurements_df = read_measurements("./measurements.csv")
 add_measurements!(p, measurements_df)
 

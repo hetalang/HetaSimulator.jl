@@ -2,15 +2,15 @@
 [![version](https://juliahub.com/docs/HetaSimulator/version.svg)](https://juliahub.com/ui/Packages/HetaSimulator/IIE0h)
 [![GitHub issues](https://img.shields.io/github/issues/hetalang/HetaSimulator.jl.svg)](https://GitHub.com/hetalang/HetaSimulator.jl/issues/)
 [![Coverage Status](https://coveralls.io/repos/github/hetalang/HetaSimulator.jl/badge.svg?branch=master)](https://coveralls.io/github/hetalang/HetaSimulator.jl?branch=master)
-[![api-docs](https://img.shields.io/website?down_color=yellow&label=api-docs&up_color=green&url=https%3A%2F%2Fhetalang.github.io%2FHetaSimulator.jl%2Fdev%2F)](https://hetalang.github.io/HetaSimulator.jl/dev)
+[![Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://hetalang.github.io/HetaSimulator.jl/stable)
 [![GitHub license](https://img.shields.io/github/license/hetalang/HetaSimulator.jl.svg)](https://github.com/hetalang/HetaSimulator.jl/blob/master/LICENSE)
 
 # HetaSimulator
 
-**HetaSimulator** is an OpenSource simulation and parameters estimation (fitting) platform for the [Heta modeling language](https://hetalang.github.io/#/). 
+**HetaSimulator** is an open-source simulation and parameters estimation (fitting) platform for the [Heta modeling language](https://hetalang.github.io/#/). 
 The main purpose of the package is to establish the linkage between emerging [QSP frameworks](https://en.wikipedia.org/wiki/Quantitative_systems_pharmacology) and fast computational methods (parallel simulations, automatic differentiation, etc.).
 
-The latest documentation can be found here: <https://hetalang.github.io/HetaSimulator.jl/dev/>.
+The latest documentation can be found here: <https://hetalang.github.io/HetaSimulator.jl/stable/>.
 
 See the [ROAD MAP](./roadmap.md) for future implementations.
 
@@ -20,7 +20,7 @@ Heta language is a domain-specific modeling language (DSL) for dynamic models us
 
 This package provides the simulation engines for the Heta-based models and modeling platforms to be run in Julia. A QSP model can be directly run using the HetaSimulator without additional tools. The ODE system in general form can also be run with HetaSimulator.
 
-Internally HetaSimulator utilizes the facilities of OpenSource projects like [Julia](https://julialang.org/) and [SciML ecosystem](https://sciml.ai/).
+Internally HetaSimulator utilizes the facilities of open-source projects like [Julia](https://julialang.org/) and [SciML ecosystem](https://sciml.ai/).
 
 ## Installation
 
@@ -88,11 +88,11 @@ df = DataFrame(results)
    2 │    0.611077   11.9927   0.00733069   ode_
 ```
 
-*To read more about available functions, see the [documentation](https://hetalang.github.io/HetaSimulator.jl/dev/)*
+*To read more about available functions, see the [documentation](https://hetalang.github.io/HetaSimulator.jl/stable/)*
 
 ## Getting help
 
-- Read the [docs](https://hetalang.github.io/HetaSimulator.jl/dev/)
+- Read the [docs](https://hetalang.github.io/HetaSimulator.jl/stable/)
 - Use [Gitter Chatroom](https://gitter.im/hetalang/community?utm_source=readme).
 - Use [Issue Tracker](https://github.com/hetalang/HetaSimulator.jl/issues)
 
