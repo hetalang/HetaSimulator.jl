@@ -16,7 +16,8 @@ makedocs(
             "basics/distributed.md",
             "table-formats/scenario.md",
             "table-formats/measurement.md",
-            "table-formats/parameters.md"
+            "table-formats/parameters.md",
+            "basics/solvers.md"
         ],
         "Tutorial" => [ # methods
             "tutorial/intro.md",
