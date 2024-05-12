@@ -5,7 +5,7 @@
 ## ODE solver choice
 
 `HetaSimulator.jl` relies on [DifferentialEquations.jl](https://docs.sciml.ai/DiffEqDocs/stable/) packages, which provide access to 300+ ODE solvers. 
-These solvers can be used in `HetaSimulator` simulation and parameters estimation functions (`sim`, `fit`, etc.), provided via `alg` keyword argument (For example, see [`sim`](@ref)). 
+These solvers can be used in `HetaSimulator` simulation and parameters estimation functions (`sim`, `fit`, etc.), provided via `alg` keyword argument (for example, see [`sim`](@ref)). 
 One can also set relative and absolute tolerances (`reltol`, `abstol`) and other stepsize related settings via relevant keyword arguments. See [DiffEqDocs](https://docs.sciml.ai/DiffEqDocs/stable/basics/common_solver_opts/) for details.
 
 If no solver is provided the default one `AutoTsit5(Rosenbrock23())` will be used with `reltol=1e-3` and `abstol=1e-6` for simulation problems and `reltol=1e-6` and `abstol=1e-8` for parameters estimation.
@@ -17,4 +17,4 @@ For many ODE systems the following simplified guideline is sufficient:
 3. If `FBDF()` fails to solve the system check the model and try it again :)
 4. If `FBDF()` still fails to solve the system or the integration takes too long try `CVODE_BDF()`*
 
-*You should be caution with `CVODE_BDF()`. With many models it is the most fast solver, however the accuracy of the solution is often the tradeoff. You shouldn't use it with tolerances higher than ~ `reltol=1e-4` and `abstol=1e-7`.  
+*You should be cautious when using `CVODE_BDF()`. In many cases it is the fastest solver, however the accuracy of the solution is often the tradeoff. You shouldn't use it with tolerances higher than ~ `reltol=1e-4` and `abstol=1e-7`.  
