@@ -12,28 +12,28 @@ The main purpose of the package is to establish the linkage between emerging [QS
 
 The latest documentation can be found here: <https://hetalang.github.io/HetaSimulator.jl/stable/>.
 
-See the [ROAD MAP](./roadmap.md) for future implementations.
+See the [ROAD MAP](./roadmap.md) for upcoming updates.
 
 ## Introduction
 
-Heta language is a domain-specific modeling language (DSL) for dynamic models used in quantitative systems pharmacology (QSP) and systems biology (SB). The Heta code and the tables can be translated into [variety of formats](https://hetalang.github.io/#/heta-compiler/?id=supported-tools) like Simbiology, Matlab, mrgsolve, DBSolve and many others.
+Heta language is a domain-specific modeling language (DSL) for dynamic models used in quantitative systems pharmacology (QSP) and systems biology (SB). Heta models can be translated into [variety of formats](https://hetalang.github.io/#/heta-compiler/?id=supported-tools) like Simbiology, Matlab, mrgsolve, DBSolve and many others.
 
-This package provides the simulation engines for the Heta-based models and modeling platforms to be run in Julia. A QSP model can be directly run using the HetaSimulator without additional tools. The ODE system in general form can also be run with HetaSimulator.
+This package provides the Julia-based simulation engine for Heta-based models and modeling platforms. Users can simulate QSP models in heta format as well as ODE systems in general form using HetaSimulator without additional tools.
 
-Internally HetaSimulator utilizes the facilities of open-source projects like [Julia](https://julialang.org/) and [SciML ecosystem](https://sciml.ai/).
+Internally HetaSimulator utilizes the features of open-source software like [Julia](https://julialang.org/) and [SciML ecosystem](https://sciml.ai/).
 
 ## Installation
 
 It is assumed that you have **Julia** installed. The latest Julia release can be downloaded from [julialang.org](https://julialang.org/downloads/)
 
-To install or update HetaSimulator and Heta compiler run the code below in Julia environment:
+To install or update HetaSimulator and heta-compiler run the code below in Julia environment:
 
 ```julia
 julia> ]
 (@v1.10) pkg> add HetaSimulator
 ```
 
-Internally HetaSimulator uses Heta compiler. 
+Internally HetaSimulator uses heta-compiler. 
 Sometimes it is required to update the compiler's version.
 ```julia
 # update heta compiler for v0.8.1
@@ -43,7 +43,7 @@ julia> heta_update("0.8.1")
 ## Basic usage
 
 Create a model in Heta format or use your Heta-based platform.
-Here we will use the example with a simple model with two species and one reaction.
+Here we will use a simple model with two species and one reaction.
 
 ```heta
 // index.heta file in directory "my_project"
@@ -57,7 +57,7 @@ r1 @Reaction {actors: s1 => s2, output: true} := k1 * s1 * comp1;
 k1 @Const = 1e-3;
 ```
 
-*To read more about Heta code read [Heta specifications](https://hetalang.github.io/#/specifications/)*
+*To learn more about Heta DSL read [Heta specifications](https://hetalang.github.io/#/specifications/)*
 
 ```julia
 using HetaSimulator, Plots
@@ -77,7 +77,7 @@ plot(results)
 ![Plot](https://raw.githubusercontent.com/hetalang/HetaSimulator.jl/master/plot0.png)
 
 ```julia
-# transform results to data frame
+# convert results to data frame
 df = DataFrame(results)
 ...
 9×4 DataFrame
@@ -106,4 +106,4 @@ df = DataFrame(results)
 
 This package is distributed under the terms of the [MIT License](./LICENSE).
 
-Copyright 2020-2022, InSysBio LLC
+Copyright 2020-2024, InSysBio LLC
