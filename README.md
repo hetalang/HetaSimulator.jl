@@ -36,8 +36,8 @@ julia> ]
 Internally HetaSimulator uses heta-compiler. 
 Sometimes it is required to update the compiler's version.
 ```julia
-# update heta compiler for v0.8.1
-julia> heta_update("0.8.1") 
+# update heta compiler for v0.8.4
+julia> heta_update("0.8.4") 
 ```
 
 ## Basic usage

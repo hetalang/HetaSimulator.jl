@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.5.2
+
+- heta-compiler updated to v0.8.4
+
 ## 0.5.1
 
 - statics and constants usage in events fix 
