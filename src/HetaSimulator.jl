@@ -1,8 +1,8 @@
 module HetaSimulator
 
   # heta-compiler supported version
-  const HETA_COMPILER_SUPPORTED = "0.8.1"
-  const SUPPORTED_VERSIONS = ["0.8.1"]
+  const HETA_COMPILER_SUPPORTED = "0.8.4"
+  const SUPPORTED_VERSIONS = ["0.8.4"]
 
   using Reexport
   
