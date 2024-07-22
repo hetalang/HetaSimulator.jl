@@ -110,8 +110,12 @@ function remake_prob(prob::ODEProblem, init_func::Function, params::NamedTuple; 
   p0 = ArrayPartition(_p0[1:length(_p0)-length(params)], collect(eltype(_p0), params))
     prob0.u0 .= u0
     # tmp to if additional params are provided
-    length(prob0.p) == length(p0) ? prob0.p .= p0 : remake(prob0; p=p0) 
-    return prob0
+    if length(prob0.p) == length(p0) 
+      prob0.p .= p0 
+      return prob0
+    else
+      return remake(prob0; p=p0) 
+    end
   else
     return prob0
   end
