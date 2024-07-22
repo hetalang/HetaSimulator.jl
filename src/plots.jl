@@ -84,14 +84,14 @@ end
 end
 =#
 
-@recipe function plot(s::Pair{Symbol,S}) where S<:Union{AbstractResult, EnsembleSummary}
+@recipe function plot(s::Pair{Symbol,S}) where S<:Union{AbstractResult, EnsembleSummary, LabelledEnsembleSummary} 
   @series begin
     title := "$(first(s))"
     last(s)
   end
 end
 
-@recipe function plot(sim::Vector{Pair{Symbol,S}}) where S<:Union{AbstractResult, EnsembleSummary}
+@recipe function plot(sim::Vector{Pair{Symbol,S}}) where S<:Union{AbstractResult, EnsembleSummary, LabelledEnsembleSummary}
   (m,n) = layout_choice(length(sim))
   layout := (m,n)
   size := (400*n,300*m)
@@ -187,3 +187,4 @@ end
       end
   end
 end
+
