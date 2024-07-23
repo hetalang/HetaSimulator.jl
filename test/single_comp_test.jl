@@ -89,7 +89,7 @@ fscn2 = Scenario(model, (0., 200.); parameters = [:k1=>0.015], observables=[:A, 
 data = read_measurements("$HetaSimulatorDir/test/examples/single_comp/single_comp_data.csv")
 add_measurements!(fscn1, data; subset = [:scenario => :one])
 add_measurements!(fscn2, data; subset = [:scenario => :two])
-fres = fit([:one=>fscn1, :two=>fscn2], [:k1=>0.01], progress=:silent)
+fres = fit([:one=>fscn1, :two=>fscn2], [:k1=>0.01, :sigma1=>1.0], progress=:silent)
 
 @test typeof(fres) <: HetaSimulator.FitResult
 @test test_show(fres)
@@ -98,4 +98,4 @@ fres = fit([:one=>fscn1, :two=>fscn2], [:k1=>0.01], progress=:silent)
 @test status(fres) == :FTOL_REACHED
 @test obj(fres) ≈ 146.056244
 @test typeof(optim(fres)) == Vector{Pair{Symbol, Float64}}
-@test length(optim(fres)) == 1
+@test length(optim(fres)) == 2
