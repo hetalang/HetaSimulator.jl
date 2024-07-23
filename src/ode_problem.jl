@@ -121,7 +121,9 @@ function remake_prob(prob::ODEProblem, init_func::Function, params::NamedTuple; 
   end
 end
 
-function remake_saveat(prob, saveat; tspan=prob.tspan)
+function remake_saveat(prob, saveat; tspan=prob.tspan, time_type::DataType=Float64)
+
+  _saveat = isnothing(saveat) ? time_type[] : time_type.(saveat)
 
   scb_orig = prob.kwargs[:callback].discrete_callbacks[1].affect!
   utype = eltype(prob.u0)
@@ -135,10 +137,10 @@ function remake_saveat(prob, saveat; tspan=prob.tspan)
   =#
   saved_values = SavedValues(
     LArray{utype,1,Array{utype,1},observables(prob)},
-    eltype(tspan)
+    eltype(_saveat)
   )
   save_func = scb_orig.save_func
-  scb_new = saving_wrapper(save_func, saved_values; saveat, save_scope=save_scope)
+  scb_new = saving_wrapper(save_func, saved_values; saveat=_saveat, save_scope=save_scope)
 
   cbs = list_callbacks(prob)
   cb_set = CallbackSet(scb_new,cbs[1]...,cbs[2]...)
