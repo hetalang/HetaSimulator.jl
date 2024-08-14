@@ -5,7 +5,7 @@ libc = "glibc"
 os = "linux"
 
     [[heta_app.download]]
-    sha256 = "4883f831dabc2f1ed78234fa61a7cc980ca61744055b893fa3da77714252303a"
+    sha256 = "6fd9d23ac25a535e1618aecf25e217dd308ff4a650e1b9c0203a986cd9b6ad10"
     url = "https://github.com/hetalang/heta-compiler/releases/download/v0.8.6/heta-compiler-linux.tar.gz"
 [[heta_app]]
 arch = "x86_64"
@@ -21,5 +21,5 @@ git-tree-sha1 = "403687ab7168c0a246610d1bb6513d3cb1e5d549"
 os = "macos"
 
     [[heta_app.download]]
-    sha256 = "5381c78d522bd550991265f37b7699387c85bb1af49eb08c313a8b9abb732335"
+    sha256 = "08419fb3e763bc0a75697476d7721030e3f41b6e0e6dad2fa2b22715116cb74f"
     url = "https://github.com/hetalang/heta-compiler/releases/download/v0.8.6/heta-compiler-macos.tar.gz"
