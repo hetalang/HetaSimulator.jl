@@ -34,15 +34,3 @@ They use the same standards of model notation and can be used in the same projec
 Furthermore currently `heta-compiler` JS code is used internally in HetaSimulator.
 
 When a user installs HetaSimulator in Julia the most appropriate version of __heta compiler__ is installed as well.
-
-If you need to reinstall `heta-compiler` it can be done with the following code.
-
-```julia
-heta_update()
-```
-
-To install a specific version of `heta-compiler` you can use 
-
-```julia
-heta_update("0.6.14") # for heta-compiler v0.6.14
-```

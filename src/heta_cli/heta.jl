@@ -1,7 +1,3 @@
-# paths to npm.cmd and nodejs.exe
-const NPM_PATH = npm_cmd()
-const NODE_DIR = dirname(nodejs_cmd().exec[1])
-const HETA_PATH = Sys.iswindows() ? "$NODE_DIR/node_modules/heta-compiler" : "$NODE_DIR/lib/node_modules/heta-compiler"
 
 """
     heta(;version::Bool=false, help::Bool=false)
@@ -20,8 +16,19 @@ function heta(;version::Bool=false, help::Bool=false)
     version != false && push!(options_array, "--version")
     help != false && push!(options_array, "--help")
     
-    run_build = run(ignorestatus(`$NODE_DIR/node $HETA_PATH/bin/heta.js $options_array`))
+    run_build = run(ignorestatus(`$heta_exe_path $options_array`))
     return run_build.exitcode
+end
+
+"""
+    heta_version()
+
+Display heta-compiler version
+
+"""
+function heta_version()
+  run_build = run(ignorestatus(`$heta_exe_path -v`))
+  return run_build.exitcode
 end
 
 """
@@ -34,9 +41,8 @@ Arguments:
 - `command`: command to display
 
 """
-
 function heta_help(command::String)
-    run_build = run(ignorestatus(`$NODE_DIR/node $HETA_PATH/bin/heta.js help $command`))
+    run_build = run(ignorestatus(`$heta_exe_path help $command`))
     return run_build.exitcode
 end
 
@@ -49,7 +55,7 @@ Argument:
 
 - `dir`: platform directory
 - `force`: if `true` then replace files and directories
-- `silent`: if `true` create with default options without prompt
+- `silent`: if `true` use default options without prompt
 
 """
 function heta_init(dir::String; force::Bool=false, silent::Bool=false)
@@ -57,23 +63,7 @@ function heta_init(dir::String; force::Bool=false, silent::Bool=false)
     force != false && push!(options_array, "--force")
     silent != false && push!(options_array, "--silent")
 
-    run_build = run(ignorestatus(`$NODE_DIR/node $HETA_PATH/bin/heta-init.js $options_array $dir`))
-    return run_build.exitcode
-end
-
-"""
-    heta_update(version::String = HETA_COMPILER_SUPPORTED)
-
-To install or update heta-compiler from NPM.
-
-Arguments:
-
-- `version` : `heta compiler` version. If the value is not provided, `heta_update` installs
-   the latest version of `heta compiler` compartible with HetaSimulator.
-"""
-function heta_update(version::String=HETA_COMPILER_SUPPORTED)
-    # XXX: Do we need to check if version in SUPPORTED_VERSIONS
-    run_build = run(`$NPM_PATH i -g heta-compiler@$version --prefix $NODE_DIR`)
+    run_build = run(ignorestatus(`$heta_exe_path init $options_array $dir`))
     return run_build.exitcode
 end
 
@@ -125,8 +115,6 @@ function heta_build(
   type::String = "heta"
 )
 
-  !isdir(HETA_PATH) && throw("Heta compiler is not installed. Run `heta_update()` to install it.")
-
   # convert to absolute path
   _target_dir = abspath(target_dir)
 
@@ -150,16 +138,8 @@ function heta_build(
   type != "heta" && push!(options_array, "--type", type)
   push!(options_array, "--skip-updates")
 
-  # build the dist
-  #=
-  if  Sys.iswindows() 
-    heta_cmd = "heta.cmd"
-  else
-    heta_cmd = "heta" # not tested on unix
-  end
-  =#
 
-  run_build = run(ignorestatus(`$NODE_DIR/node $HETA_PATH/bin/heta-build.js $options_array $_target_dir`))
+  run_build = run(ignorestatus(`$heta_exe_path build $options_array $_target_dir`))
 
   return run_build.exitcode
 end

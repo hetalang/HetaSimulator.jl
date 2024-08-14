@@ -33,12 +33,7 @@ julia> ]
 (@v1.10) pkg> add HetaSimulator
 ```
 
-Internally HetaSimulator uses heta-compiler. 
-Sometimes it is required to update the compiler's version.
-```julia
-# update heta compiler for v0.8.4
-julia> heta_update("0.8.4") 
-```
+Internally HetaSimulator installs Heta compiler as an artifact. 
 
 ## Basic usage
 

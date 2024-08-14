@@ -1,7 +1,3 @@
-#=
-    Example from README.md file
-    use heta_update_dev()
-=#
 
 using HetaSimulator, Plots
 
