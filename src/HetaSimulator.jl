@@ -76,7 +76,7 @@ module HetaSimulator
   include("heta_funcs.jl")
 
 
-  export heta_version, heta_help, heta_init, heta_build
+  export heta, heta_version, heta_help, heta_init, heta_build
   export load_platform, load_jlplatform, load_jlmodel
   export Platform, Model, Scenario
   export read_scenarios, add_scenarios!
