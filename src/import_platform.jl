@@ -9,7 +9,7 @@ function Platform(
     version::String
 )
     # TODO: semver approach might be better
-    @assert version in SUPPORTED_VERSIONS "The model was build with Heta compiler \"$version\". This version is not supported by HetaSimulator. Please, re-build the model with HetaSimulator load_platform()"
+    # @assert version in SUPPORTED_VERSIONS "The model was build with Heta compiler \"$version\". This version is not supported by HetaSimulator. Please, re-build the model with HetaSimulator load_platform()"
 
     print("Loading platform... ")
     model_pairs = [pair[1] => Model(pair[2]...) for pair in pairs(models)]

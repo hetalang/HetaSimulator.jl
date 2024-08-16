@@ -8,7 +8,7 @@ module HetaSimulator
 
   # heta-compiler supported version
   const HETA_COMPILER_VERSION = "0.8.6"
-  const SUPPORTED_VERSIONS = ["0.8.4", "0.8.5", "0.8.6"]
+  #const SUPPORTED_VERSIONS = ["0.8.4", "0.8.5", "0.8.6"]
 
   function heta_compiler_load()
     artifact_info = artifact_meta("heta_app", joinpath(@__DIR__, "..", "Artifacts.toml"))
