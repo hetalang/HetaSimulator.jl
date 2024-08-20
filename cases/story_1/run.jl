@@ -9,7 +9,6 @@
 using HetaSimulator, Plots
 
 ################################## Model Upload ###########################################
-# heta_update_dev("nan-math")
 
 platform = load_platform("$HetaSimulatorDir/cases/story_1", rm_out = false)
 #platform = load_jlplatform("$HetaSimulatorDir/cases/story_1/_julia/model.jl")

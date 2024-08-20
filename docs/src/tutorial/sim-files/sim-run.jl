@@ -1,5 +1,4 @@
 using HetaSimulator, Plots, CSV
-# heta_update()
 
 ### creating platform
 

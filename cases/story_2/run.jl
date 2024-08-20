@@ -4,7 +4,6 @@
 using HetaSimulator, Plots
 
 ################################## Model Upload ###########################################
-# heta_update_dev()
 
 platform = load_platform("$HetaSimulatorDir/cases/story_2", rm_out=false);
 # platform.models

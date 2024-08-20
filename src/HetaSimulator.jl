@@ -1,13 +1,26 @@
 module HetaSimulator
 
-  # heta-compiler supported version
-  const HETA_COMPILER_SUPPORTED = "0.8.4"
-  const SUPPORTED_VERSIONS = ["0.8.4"]
-
   using Reexport
   
   # heta compiler support
-  using NodeJS
+  using Pkg.Artifacts
+  import Base: SHA1
+
+  # heta-compiler supported version
+  const HETA_COMPILER_VERSION = "0.8.6"
+  #const SUPPORTED_VERSIONS = ["0.8.4", "0.8.5", "0.8.6"]
+
+  function heta_compiler_load()
+    artifact_info = artifact_meta("heta_app", joinpath(@__DIR__, "..", "Artifacts.toml"))
+  
+    artifact_info === nothing && return nothing # throw?
+  
+    return artifact_path(SHA1(artifact_info["git-tree-sha1"]))
+  end
+  
+  const heta_path = heta_compiler_load()
+  const heta_exe_name = Sys.iswindows() ? "heta-compiler.exe" : "heta-compiler" 
+  const heta_exe_path = heta_path === nothing ? heta_exe_name : joinpath(heta_path, heta_exe_name)
 
   # diffeq-related pkgs
   using SciMLBase
@@ -37,7 +50,7 @@ module HetaSimulator
   #plots
   using RecipesBase
 
-  const HetaSimulatorDir = dirname(Base.@__DIR__)
+  const HetaSimulatorDir = dirname(@__DIR__)
 
   include("types.jl")
   include("heta_cli/connect.jl")
@@ -61,11 +74,10 @@ module HetaSimulator
   include("gsa.jl")
   include("save_as_heta.jl")
   include("heta_funcs.jl")
-  
-  heta_update()
 
-  export heta, heta_help, heta_init, heta_update, heta_build
-  export heta_update_dev, load_platform, load_jlplatform, load_jlmodel
+
+  export heta, heta_version, heta_help, heta_init, heta_build
+  export load_platform, load_jlplatform, load_jlmodel
   export Platform, Model, Scenario
   export read_scenarios, add_scenarios!
   export read_measurements, add_measurements!, measurements_as_table

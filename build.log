@@ -1,0 +1,8 @@
+[info]	Namespace "nameless" was set as "concrete"
+[info]	Builder initialized in directory "C:\Julia\dev\HetaSimulator".
+[info]	Compilation of module "index.heta" of type "heta"...
+[info]	Reading module of type "heta" from file "C:\Julia\dev\HetaSimulator\index.heta"...
+[error]	ENOENT: no such file or directory, open 'C:\Julia\dev\HetaSimulator\index.heta'
+[info]	Setting references in elements, total length 77
+[info]	Checking for circular references in Records.
+[warn]	Units checking and export were skipped because of errors in compilation.

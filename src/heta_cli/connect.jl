@@ -3,17 +3,6 @@ const MODEL_DIR = "_julia"
 const MODEL_NAME = "model.jl"
 
 """
-    heta_update_dev(branch::String = "master")
-
-Installs heta-compiler from GitHub's repository <https://github.com/hetalang/heta-compiler>.
-
-Arguments:
-
-- `branch` : branch to install, default is "master".  
-"""
-heta_update_dev(branch::String = "master") = run(`$NPM_PATH i -g https://github.com/hetalang/heta-compiler.git\#$branch --prefix $NODE_DIR`)
-
-"""
     load_platform(  
       target_dir::AbstractString;
       rm_out::Bool = true,

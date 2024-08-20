@@ -27,15 +27,10 @@ To install or update HetaSimulator run the code below in Julia environment:
 
 ```julia
 julia> ]
-(@v1.9) pkg> add HetaSimulator
+(@v1.10) pkg> add HetaSimulator
 ```
 
-Internally HetaSimulator uses Heta compiler. 
-Sometimes it is required to update the compiler's version.
-```julia
-# update heta compiler for v0.6.14
-julia> heta_update("0.6.14") 
-```
+Internally HetaSimulator installs Heta compiler as an artifact. 
 
 ## Basic usage
 
