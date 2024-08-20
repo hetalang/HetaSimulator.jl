@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.6.0
+
+- NodeJS dep removed. heta exe depoyed as artifact without node intallation
+- fitting issue with additional parameters fixed
+
 ## 0.5.2
 
 - heta-compiler updated to v0.8.4

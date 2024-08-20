@@ -1,10 +1,7 @@
 # How to make a release
 
-1. push everything into __develop__ branch
-1. check with `] test HetaSimulator`
-1. update changelog to new version
-1. update version in __Project.toml__
-1. push commit with title 'update version'
-1. merge to master branch
-1. go to https://juliahub.com/ => contribute
-1. 
+1. push all updates to __master__ branch
+2. update changelog to new version
+3. update version in __Project.toml__
+4. push to __master__
+5. comment on  'Register new version' issue
