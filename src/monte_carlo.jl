@@ -60,11 +60,11 @@ function mc(
   parameters_variation_nt = NamedTuple(parameters_variation)
 
   #(parallel_type == EnsembleSerial()) # tmp fix
-  p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled = progress_bar)
+  #p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled = progress_bar)
   
   function prob_func(prob,i,repeat)
     verbose && println("Processing iteration $i")
-    progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
+    #progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
     
     prob_i = remake_prob(scenario, generate_params(parameters_variation_nt, i); safetycopy=true)
     return prob_i
@@ -94,6 +94,7 @@ function mc(
     safetycopy = false
   )
 
+  #=
   if progress_bar && (parallel_type == EnsembleDistributed())
     @sync begin
       @async while take!(progch)
@@ -113,6 +114,7 @@ function mc(
       end
     end
   else
+    =#
     solution = solve(prob, alg, parallel_type;
       trajectories = num_iter,
       reltol = reltol,
@@ -122,7 +124,7 @@ function mc(
       save_everystep = false,
       kwargs...
     )
-  end
+  #end
 
   return MCResult(solution.u, has_saveat(scenario), scenario)
 end
