@@ -1,5 +1,3 @@
-# RemoteChannel used for progress monitoring in parallel setup
-const progch = RemoteChannel(()->Channel{Bool}(), 1)
 
 # as in SciMLBase
 DEFAULT_REDUCTION(u,data,I) = append!(u, data), false
@@ -59,12 +57,9 @@ function mc(
 
   parameters_variation_nt = NamedTuple(parameters_variation)
 
-  #(parallel_type == EnsembleSerial()) # tmp fix
-  #p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled = progress_bar)
   
   function prob_func(prob,i,repeat)
     verbose && println("Processing iteration $i")
-    #progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
     
     prob_i = remake_prob(scenario, generate_params(parameters_variation_nt, i); safetycopy=true)
     return prob_i
@@ -94,13 +89,6 @@ function mc(
     safetycopy = false
   )
 
-  #=
-  if progress_bar && (parallel_type == EnsembleDistributed())
-    @sync begin
-      @async while take!(progch)
-        next!(p)
-      end
-      @async begin
         solution = solve(prob, alg, parallel_type;
           trajectories = num_iter,
           reltol = reltol,
@@ -108,23 +96,9 @@ function mc(
           save_start = false,
           save_end = false,
           save_everystep = false,
+          batch_size = progress_bar ? 1 : num_iter,
           kwargs...
         )
-        put!(progch, false)
-      end
-    end
-  else
-    =#
-    solution = solve(prob, alg, parallel_type;
-      trajectories = num_iter,
-      reltol = reltol,
-      abstol = abstol,
-      save_start = false,
-      save_end = false,
-      save_everystep = false,
-      kwargs...
-    )
-  #end
 
   return MCResult(solution.u, has_saveat(scenario), scenario)
 end
@@ -228,12 +202,10 @@ function mc(
   lc = length(scenario_pairs)
   iter = collect(Iterators.product(1:lp,1:lc))
 
-  p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled=progress_bar)
   
   function prob_func(prob,i,repeat)
     iter_i = iter[i]
     verbose && println("Processing scenario $(iter_i[2]) iteration $(iter_i[1])")
-    progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
 
     scn_i = last(scenario_pairs[iter_i[2]])
     parameters_i = parameters_pregenerated[iter_i[1]]
@@ -266,12 +238,6 @@ function mc(
     safetycopy = false
   )
 
-  if progress_bar && (parallel_type == EnsembleDistributed())
-    @sync begin
-      @async while take!(progch)
-        next!(p)
-      end
-      @async begin
         solution = solve(prob, alg, parallel_type;
           trajectories = lp*lc,
           reltol = reltol,
@@ -279,22 +245,9 @@ function mc(
           save_start = false,
           save_end = false,
           save_everystep = false,
+          batch_size = progress_bar ? 1 : num_iter,
           kwargs...
         )
-        put!(progch, false)
-      end
-    end
-  else
-    solution = solve(prob, alg, parallel_type;
-      trajectories = lp*lc,
-      reltol = reltol,
-      abstol = abstol,
-      save_start = false,
-      save_end = false,
-      save_everystep = false,
-      kwargs...
-    )
-  end
 
   ret = Vector{Pair{Symbol,MCResult}}(undef, lc)
 
