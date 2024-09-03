@@ -62,8 +62,13 @@ function load_jlplatform(
   model_jl::AbstractString; 
   rm_out::Bool = false
 )
+
   # load model to Main
   Base.include(Main, model_jl)
+  
+  version = Main.__platform__[3]
+  @assert version == HETA_COMPILER_VERSION "The model was build with Heta compiler v$version, which is not supported.\n"*
+  "This HetaSimulator release includes Heta compiler v$HETA_COMPILER_VERSION. Please re-compile the model with HetaSimulator load_platform()."
 
   # remove output after model load
   rm_out && rm(dirname("$model_jl"); force=true, recursive=true)
