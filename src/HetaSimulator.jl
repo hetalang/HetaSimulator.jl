@@ -7,7 +7,7 @@ module HetaSimulator
   import Base: SHA1
 
   # heta-compiler supported version
-  const HETA_COMPILER_VERSION = "0.8.6"
+  const HETA_COMPILER_VERSION = "0.8.7"
   #const SUPPORTED_VERSIONS = ["0.8.4", "0.8.5", "0.8.6"]
 
   function heta_compiler_load()
