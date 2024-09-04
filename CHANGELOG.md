@@ -2,7 +2,7 @@
 
 ## 0.6.1
 
-- heta-compiler updated to 0.6.1
+- heta-compiler updated to 0.8.7
 
 ## 0.6.0
 
