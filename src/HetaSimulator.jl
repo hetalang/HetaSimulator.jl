@@ -71,7 +71,6 @@ module HetaSimulator
   include("monte_carlo.jl")
   include("ensemble_stats.jl")
   include("import_platform.jl")
-  include("gsa.jl")
   include("save_as_heta.jl")
   include("heta_funcs.jl")
 
@@ -92,7 +91,6 @@ module HetaSimulator
   export update
   export times, vals, status, status_summary
   export save_results, read_mcvecs
-  export gsa, pearson, partial, standard
   export save_as_heta
   export scale_params, unscale_params
   export piecewise
