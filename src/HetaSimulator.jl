@@ -13,7 +13,7 @@ module HetaSimulator
   function heta_compiler_load()
     artifact_info = artifact_meta("heta_app", joinpath(@__DIR__, "..", "Artifacts.toml"))
   
-    artifact_info === nothing && return nothing # throw?
+    artifact_info === nothing && throw("Your arch/OS is not supported by heta-compiler. Please, report this issue to Heta development team.")
   
     return artifact_path(SHA1(artifact_info["git-tree-sha1"]))
   end

@@ -19,3 +19,13 @@ for os in ("linux", "windows", "macos")
       lazy = false,
   )
 end
+
+# add aarch64 for macos
+add_artifact!(
+  artifacts_toml,
+  "heta_app",
+  "https://github.com/hetalang/heta-compiler/releases/download/$HETA_COMPILER_RELEASE/heta-compiler-macos.tar.gz";
+  platform = Artifacts.Platform("aarch64", "macos"),
+  force = true,
+  lazy = false,
+)
