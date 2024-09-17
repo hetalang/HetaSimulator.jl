@@ -23,3 +23,11 @@ os = "macos"
     [[heta_app.download]]
     sha256 = "9454cd0b5a47f5692a5a5decdf47a0e03ef18892f4be5c55d28777bf499176a3"
     url = "https://github.com/hetalang/heta-compiler/releases/download/v0.8.7/heta-compiler-macos.tar.gz"
+[[heta_app]]
+arch = "aarch64"
+git-tree-sha1 = "a741cebf5cd6872b9da78a1713e5b835f9bc919b"
+os = "macos"
+
+    [[heta_app.download]]
+    sha256 = "9454cd0b5a47f5692a5a5decdf47a0e03ef18892f4be5c55d28777bf499176a3"
+    url = "https://github.com/hetalang/heta-compiler/releases/download/v0.8.7/heta-compiler-macos.tar.gz"
