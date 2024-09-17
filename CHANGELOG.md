@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.6.2
+
+- added aarch64 macos support
+- error if arch/os is not supported by heta-compiler
+
 ## 0.6.1
 
 - heta-compiler updated to 0.8.7
