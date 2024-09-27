@@ -29,10 +29,10 @@ function load_platform(
   target_dir::AbstractString;
   rm_out::Bool = true,
   dist_dir::String = ".",
-  spaceFilter::Union{String, Vector{:Symbol}, Nothing} = nothing,
+  spaceFilter::Union{String, Vector{Symbol}, Nothing} = nothing,
   kwargs...
 )
-  if spaceFilter isa Vector{String}
+  if spaceFilter isa Vector{Symbol}
     spaceFilter = "^(" * join(spaceFilter, "|") * ")\$"
   end
 
