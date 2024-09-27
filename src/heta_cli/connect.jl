@@ -36,7 +36,7 @@ function load_platform(
     spaceFilter = "^(" * join(spaceFilter, "|") * ")\$"
   end
 
-  export_ = isnothing(spaceFilter) ? "{format:Julia, filepath:$MODEL_DIR}" : "{format:Julia, filepath:$MODEL_DIR, spaceFilter:$spaceFilter}"
+  export_ = isnothing(spaceFilter) ? "{format:Julia, filepath:$MODEL_DIR}" : "{format:Julia, filepath:$MODEL_DIR, spaceFilter:'$spaceFilter'}"
   # convert heta model to julia
   build_res = heta_build(target_dir; dist_dir = dist_dir, export_ = export_, kwargs...)
     
