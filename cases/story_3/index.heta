@@ -48,4 +48,3 @@ Vol1 = 6.000102e+00;
 kmax = 2.221855e+03;
 Km = 9.997290e+03;
 */
-#export {format: Julia, filepath: julia_platform};

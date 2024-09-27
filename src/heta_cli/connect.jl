@@ -5,8 +5,7 @@ const MODEL_NAME = "model.jl"
 """
     load_platform(  
       target_dir::AbstractString;
-      rm_out::Bool = true,
-      julia_only::Bool = true, 
+      rm_out::Bool = true, 
       dist_dir::String = ".",
       source::String = "index.heta",
       type::String = "heta",
@@ -30,10 +29,16 @@ function load_platform(
   target_dir::AbstractString;
   rm_out::Bool = true,
   dist_dir::String = ".",
+  spaceFilter::Union{String, Vector{:Symbol}, Nothing} = nothing,
   kwargs...
 )
-  # convert heta model to julia 
-  build_res = heta_build(target_dir; julia_only = true, dist_dir = dist_dir, kwargs...)
+  if spaceFilter isa Vector{String}
+    spaceFilter = "^(" * join(spaceFilter, "|") * ")\$"
+  end
+
+  export_ = isnothing(spaceFilter) ? "{format:Julia,filepath:$MODEL_DIR}" : "{format:Julia,filepath:$MODEL_DIR,spaceFilter:'$spaceFilter'}"
+  # convert heta model to julia
+  build_res = heta_build(target_dir; dist_dir = dist_dir, export_ = export_, kwargs...)
     
   # check the exitcode (0 - success, 1 - failure) 
   build_res == 1 && throw("Compilation errors. Likely there is an error in the code of the model. See logs")
@@ -42,7 +47,7 @@ function load_platform(
   _target_dir = abspath(target_dir)
 
   # load model to Main
-  return load_jlplatform("$_target_dir/$MODEL_DIR/$MODEL_NAME"; rm_out)
+  return load_jlplatform("$_target_dir/$dist_dir/$MODEL_DIR/$MODEL_NAME"; rm_out)
 end
 
 """
