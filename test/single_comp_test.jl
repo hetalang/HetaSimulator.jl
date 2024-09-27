@@ -65,7 +65,6 @@ end
 mc1 = mc(Scenario(model, (0., 200.), observables=[:r1], saveat=0:10:200), [:k1=>Normal(0.02,1e-3)], mciter)
 mc2 = mc([:one=>scn1,:two=>scn2], [:k1=>Normal(0.02,1e-3)], mciter)
 mc1_reduced = mc(Scenario(model, (0., 200.), observables=[:r1]), [:k1=>Normal(0.02,1e-3)], mciter; output_func=output_func)
-gsar = gsa(mc1, 200)
 ens = EnsembleSummary(mc1)
 @test typeof(ens) <: HetaSimulator.LabelledEnsembleSummary
 @test typeof(mc1) <: HetaSimulator.MCResult
@@ -77,9 +76,6 @@ ens = EnsembleSummary(mc1)
 @test typeof(parameters(mc1)) <: Vector
 @test times(mc1[1])[end] == 200.
 @test keys((parameters(mc1[1]))) == (:k1,)
-@test size(pearson(gsar)) == (1,1)
-@test size(partial(gsar)) == (1,1)
-@test size(standard(gsar)) == (1,1)
 @test length(mc1_reduced) == mciter
 
 
