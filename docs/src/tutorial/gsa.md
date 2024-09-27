@@ -1,6 +1,6 @@
 # Global Sensitivity Analysis
 
-This tutorial describes methods of **Global Sensitivity Analysis (GSA)** by using **HetaSimulator** together with **GlobalSensitivity** package. The content is based on [GlobalSensitivity tutorial](https://docs.sciml.ai/GlobalSensitivity/stable/tutorials/juliacon21/). Current version of the tutorial is based on **HetaSimulator v0.6.2** and **GlobalSensitivity v2.7.0**
+This tutorial describes methods of **Global Sensitivity Analysis (GSA)** by using **HetaSimulator** together with **GlobalSensitivity** package. The content is based on [GlobalSensitivity tutorial](https://docs.sciml.ai/GlobalSensitivity/stable/tutorials/juliacon21/). Current version of the tutorial is based on **HetaSimulator v0.7.0** and **GlobalSensitivity v2.7.0**
 
 In order to run GSA we need to install **GlobalSensitivity** package in addition to **HetaSimulator** and **Plots**.
 We will also use **QuasiMonteCarlo** package for sampling.

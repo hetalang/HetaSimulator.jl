@@ -4,6 +4,7 @@
 
 - heta-compiler updated to 0.9.0
 - changes in `load_platform`: add `spaceFilter`
+- GSA Tutorial added to docs
 
 ## 0.6.2
 
