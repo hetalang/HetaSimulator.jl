@@ -4,6 +4,7 @@
 
 - heta-compiler updated to 0.9.0
 - changes in `load_platform`: add `spaceFilter`
+- docker qsp-platforms-builder added to github/actions
 - GSA Tutorial added to docs
 
 ## 0.6.2
