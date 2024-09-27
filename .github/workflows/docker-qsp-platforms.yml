@@ -2,7 +2,7 @@ name: Docker QSP Platforms Builder
 on:
   push:
     tags: [v*]
-
+  workflow_dispatch:
 jobs:
   DockerIMG:
     runs-on: ubuntu-latest
