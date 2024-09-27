@@ -29,9 +29,13 @@ function load_platform(
   target_dir::AbstractString;
   rm_out::Bool = true,
   dist_dir::String = ".",
-  spaceFilter::Union{String, Nothing} = nothing,
+  spaceFilter::Union{String, Vector{:Symbol}, Nothing} = nothing,
   kwargs...
 )
+  if spaceFilter isa Vector{String}
+    spaceFilter = "^(" * join(spaceFilter, "|") * ")\$"
+  end
+
   export_ = isnothing(spaceFilter) ? "{format:Julia,filepath:$MODEL_DIR}" : "{format:Julia,filepath:$MODEL_DIR,spaceFilter:'$spaceFilter'}"
   # convert heta model to julia
   build_res = heta_build(target_dir; dist_dir = dist_dir, export_ = export_, kwargs...)

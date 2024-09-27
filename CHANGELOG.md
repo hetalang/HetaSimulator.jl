@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.7.0
+
+- heta-compiler updated to 0.9.0
+- changes in `load_platform`: add `spaceFilter`
+
 ## 0.6.2
 
 - added aarch64 macos support
