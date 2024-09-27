@@ -1,0 +1,20 @@
+name: Docker QSP Platforms Builder
+on:
+  push:
+    tags: [v*]
+
+jobs:
+  DockerIMG:
+    runs-on: ubuntu-latest
+  - name: Login to Docker Hub
+    uses: docker/login-action@v2
+    with:
+      username: ${{ secrets.DOCKERHUB_USERNAME }}
+      password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+  - name: Build and push qsp-platforms-builder
+    uses: docker/build-push-action@v3
+    with:
+      push: true
+      file: ./dockerfiles/qsp-platforms-builder/Dockerfile
+      tags: ${{ secrets.DOCKERHUB_USERNAME }}/qsp-platforms-builder:latest
