@@ -71,15 +71,14 @@ end
     heta_build(
       target_dir::AbstractString;
       declaration::String = "platform",
-      skip_export::Bool = false,
       units_check::Bool = false,
       log_mode::String = "error",
-      debug::Bool = false,
-      julia_only::Bool = false,
+      debug::Bool = false
       dist_dir::String = "dist",
       meta_dir::String = "meta",
       source::String = "index.heta",
       type::String = "heta"
+      export::String = nothing
     )
 
 Builds the models from Heta-based platform
@@ -91,53 +90,44 @@ Arguments:
 
 - `target_dir` : path to a Heta platform directory
 - `declaration` : path to declaration file. Default is `"platform"`
-- `skip_export` : if set to `true` no files will be created. Default is `false`
 - `units_check` : if set to `true` units will be checked for the consistancy
 - `log_mode` : log mode. Default is `"error"`
 - `debug` : turn on debug mode. Default is `false`
-- `julia_only` : export only julia-based model. Default is `false`
 - `dist_dir` : directory path, where to write distributives to. Default is `"dist"`
 - `meta_dir` : meta directory path. Default is `"meta"`
 - `source` : path to the main heta module. Default is `"index.heta"`
 - `type` : type of the source file. Default is `"heta"`
+- `export` : export the model to the specified format: `Julia,JSON`, `{format:SBML,version:L3V1},JSON`
 """
 function heta_build(
   target_dir::AbstractString;
   declaration::String = "platform",
-  skip_export::Bool = false,
   units_check::Bool = false,
   log_mode::String = "error",
   debug::Bool = false,
-  julia_only::Bool = false,
   dist_dir::String = "dist",
   meta_dir::String = "meta",
   source::String = "index.heta",
-  type::String = "heta"
+  type::String = "heta",
+  export_::Union{String, Nothing} = nothing,
 )
 
   # convert to absolute path
   _target_dir = abspath(target_dir)
 
-  # check if the dir contains src, index.heta, platform.json
-  #isdir("$_target_dir/src") && throw("src directory not found in $_target_dir")
-  #!isfile("$_target_dir/index.heta") && throw("index.heta file not found in $_target_dir")
-  #!isfile("$_target_dir/platform.json") && throw("platform.json file not found in $_target_dir")
-
   # cmd options supported by heta-compiler
   options_array = String[]
 
   declaration != "platform" && push!(options_array, "--declaration", declaration)
-  skip_export && push!(options_array, "--skip-export")
   units_check && push!(options_array, "--units-check")
   log_mode != "error" && push!(options_array, "--log-mode", log_mode)
   debug && push!(options_array, "--debug")
-  julia_only && push!(options_array, "--julia-only")
   dist_dir != "dist" && push!(options_array, "--dist-dir", dist_dir)
   meta_dir != "meta" && push!(options_array, "--meta-dir", meta_dir)
   source != "index.heta" && push!(options_array, "--source", source)
   type != "heta" && push!(options_array, "--type", type)
   push!(options_array, "--skip-updates")
-
+  !isnothing(export_) && push!(options_array, "--export", export_)
 
   run_build = run(ignorestatus(`$heta_exe_path build $options_array $_target_dir`))
 

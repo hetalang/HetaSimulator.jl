@@ -16,7 +16,7 @@ Heta is a modeling language for quantitative systems pharmacology (QSP) and syst
 It is a DSL (domain-specific language) describing dynamic model or multiple models in process-description format.
 Heta compiler converts it into variety of formats including Julia code, which can be loaded to Julia/HetaSimulator environment.
 
-HetaSimulator supports all features of the [Heta language](https://hetalang.github.io/#/specifications/). One can organize modeling project with re-used modules (files), include any number of models into a single platform with the namespaces mechanism. The platform can use the declaration file __platform.json__ or can be loaded directly from the heta file. 
+HetaSimulator supports all features of the [Heta language](https://hetalang.github.io/#/specifications/). One can organize modeling project with re-used modules (files), include any number of models into a single platform with the namespaces mechanism. The platform can use the declaration file __platform.yml__ or can be loaded directly from the heta file. 
 All Heta modules: Heta code, tables, SBML and JSON can be loaded as a modeling platform and compiled into ODE-based mathematical representation.
 
 To read more about Heta-based modeling platforms and Heta compiler visit the homepage <https://hetalang.github.io/#/>.
@@ -141,20 +141,18 @@ The list of additional arguments is approximately the same as [CLI options](http
 
 Alternatively you can use files generated with stand-alone [Heta compiler](https://hetalang.github.io/#/heta-compiler/).
 
-To do so the model code should be updated with the `#export` statement.
+To do so the model code should be build with `--export Julia` options.
 
 ```heta
 ...
 sw2 @TimeSwitcher {start: 0, period: 24, active: false};
 A0 [sw2]= dose;
-
-#export {format: Julia, filepath: julia_platform};
 ```
 
-Running the code with the console command `heta build my_project` produces the file __my\_example/dist/julia\_platform/model.jl__ which can be loaded with [`load_jlplatform`](@ref) method.
+Running the code with the console command `heta build --export Julia my_project` produces the file __my\_example/dist/julia/model.jl__ which can be loaded with [`load_jlplatform`](@ref) method.
 
 ```julia
-p = load_jlplatform("./my_example/dist/julia_platform/model.jl")
+p = load_jlplatform("./my_example/dist/julia/model.jl")
 ```
 ```julia
 Loading platform... OK!
