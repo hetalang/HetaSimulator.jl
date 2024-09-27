@@ -33,5 +33,3 @@ A0 [sw2]= dose;
 sigma1 @Const = 0.1;
 sigma2 @Const = 0.1;
 sigma3 @Const = 0.1;
-
-#export {format: Julia, filepath: julia_platform};
