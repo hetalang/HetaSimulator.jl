@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.7.1
+
+- `spaceFilter` fixed
+- docker qsp-platforms-builder after TagBot
+
 ## 0.7.0
 
 - heta-compiler updated to 0.9.0
