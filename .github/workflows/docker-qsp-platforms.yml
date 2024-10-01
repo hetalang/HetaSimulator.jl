@@ -1,7 +1,9 @@
 name: Docker QSP Platforms Builder
 on:
-  push:
-    tags: [v*]
+  workflow_run:
+    workflows: ["TagBot"]
+    types: 
+      - completed
   workflow_dispatch:
 jobs:
   DockerIMG:
