@@ -73,6 +73,7 @@ module HetaSimulator
   include("import_platform.jl")
   include("save_as_heta.jl")
   include("heta_funcs.jl")
+  include("write.jl")
 
 
   export heta, heta_version, heta_help, heta_init, heta_build
@@ -90,8 +91,10 @@ module HetaSimulator
   export HetaSimulatorDir
   export update
   export times, vals, status, status_summary
-  export save_results, read_mcvecs
+  export read_mcvecs
   export save_as_heta
   export scale_params, unscale_params
   export piecewise
+
+  export write
 end

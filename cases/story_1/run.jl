@@ -10,7 +10,7 @@ using HetaSimulator, Plots
 
 ################################## Model Upload ###########################################
 
-platform = load_platform("$HetaSimulatorDir/cases/story_1", rm_out = false)
+platform = load_platform("$HetaSimulatorDir/cases/story_1", rm_out = true)
 #platform = load_jlplatform("$HetaSimulatorDir/cases/story_1/_julia/model.jl")
 model = platform.models[:nameless]
 # parameters(model) # def_parameters
@@ -72,7 +72,7 @@ sim.([scn1, scn2, scn3]) .|> plot .|> display
 ### sim together
 sim([scn1, scn2, scn3]) |> plot
 sim([:x => scn1, :y=>scn2, :z=>scn3]) |> plot
-x=sim([:x => scn1, :y=>scn2, :z=>scn3]; parameters=[:k1=>0.1]) |> plot
+x = sim([:x => scn1, :y=>scn2, :z=>scn3]; parameters=[:k1=>0.1]) |> plot
 
 ### load measurements from CSV
 #measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv")
@@ -135,6 +135,8 @@ mcsim2 = mc(
   )
 plot(mcsim2)
 
+write("zzz.mcresult.tar.gz", mcsim2) # experimental
+
 mcsim3 = mc(
     [mc_scn1, mc_scn2, mc_scn3],
     [:k1=>0.01, :k2=>LogNormal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)],
@@ -170,7 +172,7 @@ timepoint_quantile(mcsim1,0.95,80.)
 
 # full time steps statistics
 timeseries_steps_mean(mcsim1) # Computes the mean at each time step
-timeseries_steps_median(mcsim1) # Computes the median at each time step
+timeseries_steps_median(mcsim1) # Computes thef median at each time step
 timeseries_steps_quantile(mcsim1,0.95) # Computes the quantile q at each time step
 timeseries_steps_meanvar(mcsim1) # Computes the mean and variance at each time step
 timeseries_steps_meancov(mcsim1) # Computes the covariance matrix and means at each time step
