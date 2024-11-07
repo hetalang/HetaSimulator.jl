@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.7.2
+
+- heta-compiler updated to 0.9.2
+- lts added to ci
+
 ## 0.7.1
 
 - `spaceFilter` fixed

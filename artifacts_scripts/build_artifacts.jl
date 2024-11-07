@@ -1,7 +1,7 @@
 using ArtifactUtils
 using Pkg.Artifacts
 
-const HETA_COMPILER_RELEASE = "v0.9.0"
+const HETA_COMPILER_RELEASE = "0.9.1"
 
 const artifacts_toml = joinpath(@__DIR__, "..", "Artifacts.toml")
 
