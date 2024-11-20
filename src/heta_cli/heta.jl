@@ -78,13 +78,13 @@ end
       meta_dir::String = "meta",
       source::String = "index.heta",
       type::String = "heta"
-      export::String = nothing
+      export_::String = nothing
     )
 
 Builds the models from Heta-based platform
 
-See `heta comiler` docs for details:
-https://hetalang.github.io/#/heta-compiler/cli-references?id=running-build-with-cli-options
+See `heta compiler` docs for details:
+<https://hetalang.github.io/#/heta-compiler/cli-references?id=running-build-with-cli-options>
 
 Arguments:
 
@@ -97,7 +97,7 @@ Arguments:
 - `meta_dir` : meta directory path. Default is `"meta"`
 - `source` : path to the main heta module. Default is `"index.heta"`
 - `type` : type of the source file. Default is `"heta"`
-- `export` : export the model to the specified format: `Julia,JSON`, `{format:SBML,version:L3V1},JSON`
+- `export_` : export the model to the specified format: `Julia,JSON`, `{format:SBML,version:L3V1},JSON`
 """
 function heta_build(
   target_dir::AbstractString;

@@ -67,7 +67,8 @@ scn3 = Scenario(
 sim(scn3) |> plot
 
 ### sim sequentially 
-sim.([scn1, scn2, scn3]) .|> plot
+sim.([scn1, scn2, scn3]) .|> plot .|> display
+
 ### sim together
 sim([scn1, scn2, scn3]) |> plot
 sim([:x => scn1, :y=>scn2, :z=>scn3]) |> plot
@@ -77,7 +78,7 @@ x=sim([:x => scn1, :y=>scn2, :z=>scn3]; parameters=[:k1=>0.1]) |> plot
 #measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.csv")
 measurements_csv = read_measurements("$HetaSimulatorDir/cases/story_1/measurements_no_scope.csv")
 measurements_xlsx = read_measurements("$HetaSimulatorDir/cases/story_1/measurements.xlsx")
-scn4 = Scenario(model, (0,250); parameters = [:k2=>0.001, :k3=>0.04], saveat = [0.0, 50., 150., 250.]);
+scn4 = Scenario(model, (0,250); parameters = [:k2=>0.001, :k3=>0.04]);
 add_measurements!(scn4, measurements_csv; subset = [:scenario => :dataone])
 
 ### fit many scenarios
@@ -85,9 +86,9 @@ estim = estimator(
     [:x=>scn2, :y=>scn3, :z=>scn4],
     [:k1=>0.1,:k2=>0.2,:k3=>0.3]
 )
-estim([0.01, 0.02, 0.35])
-res1 = fit([:x=>scn2, :y=>scn3, :z=>scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])
-res2 = fit([scn2, scn3, scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])
+estim([0.01, 0.02, 0.35]) # 172.18
+res1 = fit([:x=>scn2, :y=>scn3, :z=>scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3]) # 51.59
+res2 = fit([scn2, scn3, scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3]) # 51.59
 sim(scn4, parameters = optim(res2)) |> plot
 
 # sim all scenarios
@@ -163,7 +164,7 @@ timepoint_meancov(mcsim1,80.,150.)
 timestep_meancor(mcsim1,2,3)
 timepoint_meancor(mcsim1,80.,150.)
 
-# !!!quantile
+# quantile
 timestep_quantile(mcsim1,0.95,2)
 timepoint_quantile(mcsim1,0.95,80.)
 

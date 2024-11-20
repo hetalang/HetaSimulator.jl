@@ -30,10 +30,11 @@ To install or update HetaSimulator and heta-compiler run the code below in Julia
 
 ```julia
 julia> ]
-(@v1.10) pkg> add HetaSimulator
+pkg> add HetaSimulator
 ```
-
-Internally HetaSimulator installs Heta compiler as an artifact. 
+Notes:
+ - Internally HetaSimulator installs Heta compiler as an artifact. 
+ - In some MacOS versions, the installation of the package may require Rosetta, use `softwareupdate --install-rosetta` in terminal.
 
 ## Basic usage
 
