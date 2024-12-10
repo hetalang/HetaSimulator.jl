@@ -24,7 +24,8 @@ makedocs(
             "tutorial/sim.md",
             "tutorial/mc.md",
             "tutorial/fit.md",
-            "tutorial/gsa.md"
+            "tutorial/gsa.md",
+            "tutorial/plots.md"
         ],
         "API" => "api.md"
     ],
