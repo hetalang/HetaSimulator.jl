@@ -5,8 +5,7 @@ const MODEL_NAME = "model.jl"
 """
     load_platform(  
       target_dir::AbstractString;
-      rm_out::Bool = true, 
-      dist_dir::String = ".",
+      rm_out::Bool = true,
       source::String = "index.heta",
       type::String = "heta",
       kwargs...
@@ -21,14 +20,12 @@ Arguments:
 
 - `target_dir` : path to a Heta platform directory
 - `rm_out` : should the file with Julia model be removed after the model is loaded. Default is `true`
-- `dist_dir` : directory path, where to write distributives to. Default is `"."`
 - kwargs : other arguments supported by `heta_build`
 
 """
 function load_platform(
   target_dir::AbstractString;
   rm_out::Bool = true,
-  dist_dir::String = ".",
   spaceFilter::Union{String, Vector{Symbol}, Nothing} = nothing,
   kwargs...
 )
@@ -38,22 +35,25 @@ function load_platform(
 
   export_ = isnothing(spaceFilter) ? "{format:Julia, filepath:$MODEL_DIR}" : "{format:Julia, filepath:$MODEL_DIR, spaceFilter:'$spaceFilter'}"
   # convert heta model to julia
+  dist_dir = rm_out ? mktempdir() : abspath(target_dir) # absolute
   build_res = heta_build(target_dir; dist_dir = dist_dir, export_ = export_, kwargs...)
     
   # check the exitcode (0 - success, 1 - failure) 
   build_res == 1 && throw("Compilation errors. Likely there is an error in the code of the model. See logs")
-    
-  #convert to absolute path
-  _target_dir = abspath(target_dir)
 
   # load model to Main
-  return load_jlplatform("$_target_dir/$dist_dir/$MODEL_DIR/$MODEL_NAME"; rm_out)
+  res = load_jlplatform("$dist_dir/$MODEL_DIR/$MODEL_NAME")
+
+  if rm_out
+    rm(dist_dir; force=true, recursive=true)
+  end
+    
+  return res
 end
 
 """
     load_jlplatform(  
-      model_jl::AbstractString; 
-      rm_out::Bool = false
+      model_jl::AbstractString
     )
 
 Loads prebuild julia model as part of `Platform`
@@ -61,11 +61,9 @@ Loads prebuild julia model as part of `Platform`
 Arguments:
 
 - `model_jl` : path to Julia model file
-- `rm_out` : should the file with Julia model be removed after the model is loaded. Default is `false`
 """
 function load_jlplatform(
-  model_jl::AbstractString; 
-  rm_out::Bool = false
+  model_jl::AbstractString
 )
 
   # load model to Main
@@ -74,9 +72,6 @@ function load_jlplatform(
   version = Main.__platform__[3]
   @assert version == HETA_COMPILER_VERSION "The model was build with Heta compiler v$version, which is not supported.\n"*
   "This HetaSimulator release includes Heta compiler v$HETA_COMPILER_VERSION. Please re-compile the model with HetaSimulator load_platform()."
-
-  # remove output after model load
-  rm_out && rm(dirname("$model_jl"); force=true, recursive=true)
   
   # tmp fix to output model without task
   # (models, tasks,) = Base.invokelatest(Main.Platform)
@@ -89,8 +84,7 @@ end
 # tmp solution to add model only
 """
     load_jlmodel(  
-      model_jl::AbstractString; 
-      rm_out::Bool = false
+      model_jl::AbstractString
     )
 
 Loads prebuild julia model without `Platform`
@@ -98,10 +92,9 @@ Loads prebuild julia model without `Platform`
 Arguments:
 
 - `model_jl` : path to Julia model file
-- `rm_out` : should the file with Julia model be removed after the model is loaded. Default is `false`
 """
-function load_jlmodel(model_jl::AbstractString; rm_out::Bool = false)
-  platform = load_jlplatform(model_jl; rm_out = rm_out)
+function load_jlmodel(model_jl::AbstractString)
+  platform = load_jlplatform(model_jl)
   
   first_model = [values(platform.models)...][1]
 
