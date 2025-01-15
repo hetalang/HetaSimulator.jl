@@ -73,12 +73,14 @@ end
       declaration::String = "platform",
       units_check::Bool = false,
       log_mode::String = "error",
-      debug::Bool = false
+      log_path::String = "build.log",
+      log_level::String = "info",
+      debug::Bool = false,
       dist_dir::String = "dist",
       meta_dir::String = "meta",
       source::String = "index.heta",
-      type::String = "heta"
-      export_::String = nothing
+      type::String = "heta",
+      export_::Union{String, Nothing} = nothing,
     )
 
 Builds the models from Heta-based platform
@@ -92,6 +94,8 @@ Arguments:
 - `declaration` : path to declaration file. Default is `"platform"`
 - `units_check` : if set to `true` units will be checked for the consistancy
 - `log_mode` : log mode. Default is `"error"`
+- `log_path` : path to the log file. Default is `"build.log"`
+- `log_level` : log level to display. Default is `"info"`
 - `debug` : turn on debug mode. Default is `false`
 - `dist_dir` : directory path, where to write distributives to. Default is `"dist"`
 - `meta_dir` : meta directory path. Default is `"meta"`
@@ -104,6 +108,8 @@ function heta_build(
   declaration::String = "platform",
   units_check::Bool = false,
   log_mode::String = "error",
+  log_path::String = "build.log",
+  log_level::String = "info",
   debug::Bool = false,
   dist_dir::String = "dist",
   meta_dir::String = "meta",
@@ -121,6 +127,8 @@ function heta_build(
   declaration != "platform" && push!(options_array, "--declaration", declaration)
   units_check && push!(options_array, "--units-check")
   log_mode != "error" && push!(options_array, "--log-mode", log_mode)
+  log_path != "build.log" && push!(options_array, "--log-path", log_path)
+  log_level != "info" && push!(options_array, "--log-level", log_level)
   debug && push!(options_array, "--debug")
   dist_dir != "dist" && push!(options_array, "--dist-dir", dist_dir)
   meta_dir != "meta" && push!(options_array, "--meta-dir", meta_dir)
