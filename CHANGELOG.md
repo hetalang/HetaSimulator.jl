@@ -3,6 +3,8 @@
 ## 0.7.3
 
 - heta-compiler updated to 0.9.3
+- _julia tmpdir rm fix
+- plots tutorial added
 
 ## 0.7.2
 
