@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.7.3
+
+- heta-compiler updated to 0.9.3
+
 ## 0.7.2
 
 - heta-compiler updated to 0.9.2
