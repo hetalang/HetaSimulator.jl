@@ -48,6 +48,7 @@ function mc(
   output_func=DEFAULT_OUTPUT,
   reduction_func = DEFAULT_REDUCTION,
   parallel_type=EnsembleSerial(),
+  safetycopy=true,
   kwargs...
 ) where P<:Pair
 
@@ -66,7 +67,7 @@ function mc(
     verbose && println("Processing iteration $i")
     progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
     
-    prob_i = remake_prob(scenario, generate_params(parameters_variation_nt, i); safetycopy=true)
+    prob_i = remake_prob(scenario, generate_params(parameters_variation_nt, i); safetycopy)
     return prob_i
     #=
     constants_total_i = merge_strict(scenario.parameters, generate_params(parameters_variation_nt, i))
@@ -210,6 +211,7 @@ function mc(
   output_func=DEFAULT_OUTPUT,
   reduction_func = DEFAULT_REDUCTION,
   parallel_type=EnsembleSerial(),
+  safetycopy=true,
   kwargs...
 ) where {CP<:Pair, PP<:Pair}
 
@@ -236,7 +238,7 @@ function mc(
     scn_i = last(scenario_pairs[iter_i[2]])
     parameters_i = parameters_pregenerated[iter_i[1]]
 
-    prob_i = remake_prob(scn_i, parameters_i; safetycopy=true)
+    prob_i = remake_prob(scn_i, parameters_i; safetycopy)
     return prob_i
     #=
     constants_total_i = merge_strict(scn_i.parameters, parameters_i)
