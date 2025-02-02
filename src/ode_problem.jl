@@ -114,7 +114,9 @@ function remake_prob(prob::ODEProblem, init_func::Function, params::NamedTuple; 
       prob0.p .= p0 
       return prob0
     else
-      return remake(prob0; p=p0) 
+      prob1 = remake(prob0; p=p0) 
+      prob0 = nothing
+      return prob1
     end
   else
     return prob0
