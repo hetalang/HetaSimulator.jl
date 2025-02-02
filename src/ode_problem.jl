@@ -95,6 +95,7 @@ collect_saveat(saveat::AbstractRange{S}) where S<:Real = Float64.(saveat)
 
 function remake_prob(scen::Scenario, params::NamedTuple; safetycopy=true)
   params_total = merge_strict(scen.parameters, params)
+  params = nothing
   remake_prob(scen.prob, scen.init_func, params_total; safetycopy)
 end
 
@@ -109,12 +110,15 @@ function remake_prob(prob::ODEProblem, init_func::Function, params::NamedTuple; 
   #p0 = NamedArrayPartition(statics=_p0[1:length(_p0)-length(params)], constants=collect(eltype(_p0), params))
   p0 = ArrayPartition(_p0[1:length(_p0)-length(params)], collect(eltype(_p0), params))
     prob0.u0 .= u0
+    u0 = nothing
     # tmp to if additional params are provided
     if length(prob0.p) == length(p0) 
       prob0.p .= p0 
+      p0 = nothing
       return prob0
     else
       prob1 = remake(prob0; p=p0) 
+      p0 = nothing
       prob0 = nothing
       return prob1
     end
