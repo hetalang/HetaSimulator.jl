@@ -85,6 +85,7 @@ function mc(
     sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
     simulation = Simulation(sv, params_i, sol.retcode)
     sol = nothing
+    GC.gc()
     return (output_func(simulation, i), false)
   end
 
