@@ -67,8 +67,13 @@ function mc(
     verbose && println("Processing iteration $i")
     #progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
     
+    params_total = merge_strict(scenario.parameters, generate_params(parameters_variation_nt, i))
+    remake_prob(prob, scenario.init_func, params_total; safetycopy)
+    #=
+    prev version
     prob_i = remake_prob(scenario, generate_params(parameters_variation_nt, i); safetycopy)
     return prob_i
+    =#
     #=
     constants_total_i = merge_strict(scenario.parameters, generate_params(parameters_variation_nt, i))
     u0, p0 = scenario.init_func(constants_total_i)
@@ -84,8 +89,8 @@ function mc(
     # take simulated values from solution
     sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
     simulation = Simulation(sv, params_i, sol.retcode)
-    sol = nothing
-    GC.gc()
+    #sol = nothing
+    #GC.gc()
     return (output_func(simulation, i), false)
   end
 

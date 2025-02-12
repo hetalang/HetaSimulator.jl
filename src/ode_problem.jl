@@ -114,12 +114,12 @@ function remake_prob(prob::ODEProblem, init_func::Function, params::NamedTuple; 
     # tmp to if additional params are provided
     if length(prob0.p) == length(p0) 
       prob0.p .= p0 
-      p0 = nothing
+      #p0 = nothing
       return prob0
     else
       prob1 = remake(prob0; p=p0) 
-      p0 = nothing
-      prob0 = nothing
+      #p0 = nothing
+      #prob0 = nothing
       return prob1
     end
   else
