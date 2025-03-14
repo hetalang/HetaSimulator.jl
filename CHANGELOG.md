@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.4
+
+- safetycopy added to `mc`
+- teams release added
+- Documenter workflow updated
+
 ## 0.7.3
 
 - heta-compiler updated to 0.9.3
