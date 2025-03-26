@@ -26,19 +26,6 @@ Sundials = "c3572dad-4567-51f8-b174-8c6c989267f4"
 XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"
 
 [compat]
-ArtifactUtils = "0.2.4"
-CSV = "0.10"
-DataFrames = "1"
-DataStructures = "0.18"
-Distributions = "0.25"
-LabelledArrays = "1.6.1"
-NLopt = "1.0.3"
-NLopt_jll = "=2.8.0"
-NaNMath = "1"
-ProgressMeter = "1"
-RecipesBase = "1"
-Reexport = "1"
-XLSX = "0.7, 0.8"
 julia = "1.9"
 
 [extras]
