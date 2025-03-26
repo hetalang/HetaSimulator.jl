@@ -53,11 +53,12 @@ end
 
 function evt_func_wrapper(integrator, evt_func, events_save, evt_name)
   # check saveat values before applying a callback
-  save_after_step!(integrator)
+  has_saving = integrator.opts.callback.discrete_callbacks[1].affect! isa HetaSimulator.SavingEvent
+  has_saving && save_after_step!(integrator)
   # save timepoint before and after applying a callback
-  first(events_save) && save_timepoint!(integrator, :ode_) #affect_func!(integrator, true)
+  has_saving && first(events_save) && save_timepoint!(integrator, :ode_) #affect_func!(integrator, true)
   evt_func(integrator)
-  last(events_save) && save_timepoint!(integrator, evt_name)
+  has_saving && last(events_save) && save_timepoint!(integrator, evt_name)
   reset_dt!(integrator)
 end
 
