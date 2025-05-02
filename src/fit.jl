@@ -81,7 +81,7 @@ function fit(
   selected_scenario_pairs = Pair{Symbol,Scenario}[]
   for scenario_pair in scenario_pairs # iterate through scenarios names
     if isempty(last(scenario_pair).measurements)
-      @warn "Scenario \":$(first(scenario_pair))\" has no measurements. It will be excluded from fitting."
+      @info "Scenario \":$(first(scenario_pair))\" has no measurements. It will be excluded from fitting."
     else
       push!(selected_scenario_pairs, scenario_pair)
     end

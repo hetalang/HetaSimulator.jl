@@ -170,7 +170,7 @@ res_optim = fit(p, to_fit) # default fitting
 ```
 
 ```
-┌ Warning: Scenario ":multiple_15" has no measurements. It will be excluded from fitting.
+┌ Info: Scenario ":multiple_15" has no measurements. It will be excluded from fitting.
 └ @ HetaSimulator y:\HetaSimulator.jl\src\fit.jl:77
 FitResult with status :XTOL_REACHED
    Status: XTOL_REACHED
@@ -244,7 +244,7 @@ res_optim = fit(p, params_df)
 ```
 
 ```
-┌ Warning: Scenario ":multiple_15" has no measurements. It will be excluded from fitting.
+┌ Info: Scenario ":multiple_15" has no measurements. It will be excluded from fitting.
 └ @ HetaSimulator 
 FitResult with status :FTOL_REACHED
    Status: FTOL_REACHED
