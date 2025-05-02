@@ -8,7 +8,7 @@ const EMPTY_PROBLEM = ODEProblem((du,u,p,t) -> nothing, [0.0], (0.,1.))
 
 """
     sim(scenario::Scenario; 
-      parameters::Vector{P}=Pair{Symbol, Float64}[],
+      parameters::AbstractVector{<:Pair{Symbol,<:Real}}=Pair{Symbol, Float64}[],
       alg=DEFAULT_ALG, 
       reltol=DEFAULT_SIMULATION_RELTOL,
       abstol=DEFAULT_SIMULATION_ABSTOL,
@@ -29,14 +29,14 @@ Arguments:
 """
 function sim(
   scenario::Scenario;
-  parameters::Vector{P}=Pair{Symbol, Float64}[], # input of `sim` level
+  parameters::AbstractVector{<:Pair{Symbol,<:Real}}=Pair{Symbol, Float64}[], # input of `sim` level
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
   kwargs... # other solver arguments
-) where P<:Pair
-  
-  parameters_nt = NamedTuple(parameters)
+)
+  parameters_norm = normalize_params(parameters)
+  parameters_nt = NamedTuple(parameters_norm)
 
   prob = remake_prob(scenario, parameters_nt; safetycopy=true)
   #=
@@ -72,7 +72,7 @@ end
 
 """
     sim(scenario_pairs::Vector{P}; 
-      parameters::Vector{Pair{Symbol, Float64}}=Pair{Symbol, Float64}[],
+      parameters::AbstractVector{<:Pair{Symbol, <:Real}}=Pair{Symbol, Float64}[],
       alg=DEFAULT_ALG, 
       reltol=DEFAULT_SIMULATION_RELTOL, 
       abstol=DEFAULT_SIMULATION_ABSTOL,
@@ -96,7 +96,7 @@ Arguments:
 """
 function sim(
   scenario_pairs::Vector{P};
-  parameters::Vector{Pair{Symbol, Float64}}=Pair{Symbol, Float64}[],
+  parameters::AbstractVector{<:Pair{Symbol, <:Real}}=Pair{Symbol, Float64}[],
   alg = DEFAULT_ALG, 
   reltol = DEFAULT_SIMULATION_RELTOL, 
   abstol = DEFAULT_SIMULATION_ABSTOL,
@@ -106,7 +106,8 @@ function sim(
 
   isempty(scenario_pairs) && return SimResult[] # BRAKE
 
-  parameters_nt = NamedTuple(parameters)
+  parameters_norm = normalize_params(parameters)
+  parameters_nt = NamedTuple(parameters_norm)
 
   progress_on = (parallel_type == EnsembleSerial()) # tmp fix
   p = Progress(length(scenario_pairs), dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled=progress_on)

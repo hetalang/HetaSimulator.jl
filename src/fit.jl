@@ -6,7 +6,7 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
 """
     fit(
       scenario_pairs::AbstractVector{Pair{Symbol, C}},
-      parameters_fitted::Vector{Pair{Symbol,Float64}};
+      parameters_fitted::AbstractVector{<:Pair{Symbol,<:Real}};
       parameters::Union{Nothing, Vector{P}}=nothing,
       alg=DEFAULT_ALG,
       reltol=DEFAULT_FITTING_RELTOL,
@@ -55,7 +55,7 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
 """
 function fit(
   scenario_pairs::AbstractVector{Pair{Symbol, C}},
-  parameters_fitted::Vector{Pair{Symbol,Float64}};
+  parameters_fitted::AbstractVector{<:Pair{Symbol,<:Real}};
   parameters::Union{Nothing, Vector{P}}=nothing,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_FITTING_RELTOL,
@@ -145,8 +145,8 @@ function fit(
 
   lower_bounds!(opt, scale_params.(lbounds, scale))
   upper_bounds!(opt, scale_params.(ubounds, scale))
-
-  params0 = scale_params.(last.(parameters_fitted), scale)
+  
+  params0 = scale_params.(parameters_fitted .|> last .|> Float64, scale) # force convert to Float64
   (minf, minx, ret) = NLopt.optimize(opt, params0)
 
   # to create pairs from Float64

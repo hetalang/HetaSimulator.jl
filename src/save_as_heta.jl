@@ -25,7 +25,7 @@ function save_as_heta(io::IO, fr::FitResult)
   save_as_heta(io, optim(fr))
 end
 
-function save_as_heta(io::IO, parameters::Vector{Pair{Symbol,Float64}})
+function save_as_heta(io::IO, parameters::AbstractVector{<:Pair{Symbol,<:Real}})
   for op in parameters
     println(io, "$(first(op)) = $(last(op));")
   end

@@ -1,9 +1,14 @@
 # likelihood estimator generator
 
+# aux function to allow user write both `Pair{Symbol,Float64}` and `Pair{Symbol,Real}`
+# convert to regular `Vector{Pair{Symbol,Float64}}` for further processing
+normalize_params(v::AbstractVector{<:Pair{Symbol,<:Real}}) =
+    [k => Float64(val) for (k,val) in v]
+
 """
     function estimator(
       scenario_pairs::AbstractVector{Pair{Symbol, C}},
-      parameters_fitted::Vector{Pair{Symbol,Float64}};
+      parameters_fitted::AbstractVector{<:Pair{Symbol,<:Real}};
       parameters::Union{Nothing, Vector{P}}=nothing,
       alg=DEFAULT_ALG,
       reltol=DEFAULT_FITTING_RELTOL,
@@ -37,7 +42,7 @@
 """
 function estimator(
   scenario_pairs::AbstractVector{Pair{Symbol, C}},
-  parameters_fitted::Vector{Pair{Symbol,Float64}};
+  parameters_fitted::AbstractVector{<:Pair{Symbol,<:Real}};
   parameters::Union{Nothing, Vector{P}}=nothing,
   #parameters::Vector{Pair{Symbol, Float64}}=Pair{Symbol, Float64}[],
   alg=DEFAULT_ALG,
@@ -46,6 +51,8 @@ function estimator(
   parallel_type=EnsembleSerial(),
   kwargs... # other arguments to sim
 ) where {C<:AbstractScenario,P<:Pair}
+
+  parameters_fitted_norm = normalize_params(parameters_fitted)
 
   # names of parameters used in fitting and saved in parameters field of solution
   parameters_fitted_names = first.(parameters_fitted)
@@ -91,7 +98,7 @@ function estimator(
   function _output(sol, i)
     sol.retcode != :Success && error("Simulated scenario $i returned $(sol.retcode) status")
     sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-    simulation = Simulation(sv, NamedTuple(parameters_fitted), sol.retcode)
+    simulation = Simulation(sv, NamedTuple(parameters_fitted_norm), sol.retcode)
     result = SimResult(simulation, last(selected_scenario_pairs[i]))
     loss_val = loss(result, result.scenario.measurements)
     (loss_val, false)
@@ -111,7 +118,7 @@ function estimator(
 
   ### function ready for fitting
 
-  function out(x::Vector{Float64}=last.(parameters_fitted))
+  function out(x::Vector{Float64}=last.(parameters_fitted_norm))
     x_nt = NamedTuple{Tuple(parameters_fitted_names)}(x)
     solution = solve(
       prob(x_nt),

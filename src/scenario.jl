@@ -15,7 +15,7 @@ const GROUP_HEADER = Symbol("group")
       tspan;
       measurements::Vector{AbstractMeasurementPoint}=AbstractMeasurementPoint[],
       observables::Union{Nothing,Vector{Symbol}}=nothing,
-      parameters::Vector{Pair{Symbol,Float64}} = Pair{Symbol,Float64}[],
+      parameters::AbstractVector{<:Pair{Symbol,<:Real}} = Pair{Symbol,Float64}[],
       events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
       events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}} = (true,true),
       saveat::Union{Nothing,AbstractVector} = nothing,
@@ -49,11 +49,11 @@ function Scenario(
   observables::Union{Nothing,Vector{Symbol}} = nothing,
   tags::AbstractVector{Symbol} = Symbol[],
   group::Union{Symbol, Nothing} = nothing,
-  parameters::Vector{Pair{Symbol,N}} = Pair{Symbol,Float64}[],
+  parameters::AbstractVector{<:Pair{Symbol,<:Real}} = Pair{Symbol,Float64}[],
   kwargs... # all arguments of build_ode_problem()
-) where N <: Number
-
-  params_total = merge_strict(model.constants, NamedTuple(parameters))
+)
+  parameters_norm = normalize_params(parameters)
+  params_total = merge_strict(model.constants, NamedTuple(parameters_norm))
   
   # ODE problem
   prob = build_ode_problem(
