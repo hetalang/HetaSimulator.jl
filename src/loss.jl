@@ -31,6 +31,8 @@ function _param_value(sim, p::Symbol, dp)
     val = parameters(sim)[p]
   elseif p ∈ observables(sim)
     val = sim(dp.t, p, dp.scope)
+  elseif p ∈ keys(scenario_parameters(sim))  
+    val = scenario_parameters(sim)[p]
   else 
     error("$p not found in simulated results.")
   end
