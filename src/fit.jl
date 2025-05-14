@@ -37,7 +37,7 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
   - `parameters` : parameters, which overwrite both `Model` and `Scenario` parameters. Default is `nothing`
   - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
   - `reltol` : relative tolerance. Default is 1e-6
-  - `abstol` : relative tolerance. Default is 1e-8
+  - `abstol` : absolute tolerance. Default is 1e-8
   - `parallel_type` : parallel setup. See SciML docs for details. Default is no parallelism: EnsembleSerial()
   - `ftol_abs` : absolute tolerance on function value. See `NLopt.jl` docs for details. Default is `0.0`
   - `ftol_rel` : relative tolerance on function value. See `NLopt.jl` docs for details. Default is `1e-4`
