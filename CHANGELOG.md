@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.5
+
+- scenario_parameters added to loss func
+- heta-compiler updated to 0.9.4
+- docs fixes
+
 ## 0.7.4
 
 - safetycopy added to `mc`
