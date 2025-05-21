@@ -424,6 +424,12 @@ struct CEvent{F1,F2} <: AbstractEvent
   atStart::Bool
 end
 
+struct DEvent{F1,F2} <: AbstractEvent
+  condition_func::F1
+  affect_func::F2
+  atStart::Bool
+end
+
 struct StopEvent{F1} <: AbstractEvent
   condition_func::F1
   atStart::Bool

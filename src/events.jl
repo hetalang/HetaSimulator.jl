@@ -43,6 +43,14 @@ function add_event(evt::CEvent, events_save::Tuple{Bool, Bool}=(false,false), ev
   )
 end
 
+function add_event(evt::DEvent, events_save::Tuple{Bool, Bool}=(false,false), evt_name=nothing)
+  DiscreteCallback(
+      evt.condition_func,
+      (integrator) -> evt_func_wrapper(integrator, evt.affect_func, events_save, evt_name),
+      save_positions=(false,false)
+  )
+end
+
 function add_event(evt::StopEvent, events_save::Tuple{Bool, Bool}=(false,false), evt_name=nothing)
   DiscreteCallback(
     evt.condition_func,

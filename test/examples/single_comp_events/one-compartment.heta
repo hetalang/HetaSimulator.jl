@@ -43,3 +43,6 @@ switch [sw]= 1;
 
 sw_end @TimeSwitcher { start: time_end, active: false };
 switch [sw_end]= 0;
+
+//dsw     @DSwitcher { trigger: a0 <= 2, active: false };
+//a0 [dsw]= a0 + 2;
