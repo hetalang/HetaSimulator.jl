@@ -1,7 +1,7 @@
 using ArtifactUtils
 using Pkg.Artifacts
 
-const HETA_COMPILER_RELEASE = "draft-tswitcher"
+const HETA_COMPILER_RELEASE = "v0.9.5"
 
 const artifacts_toml = joinpath(@__DIR__, "..", "Artifacts.toml")
 

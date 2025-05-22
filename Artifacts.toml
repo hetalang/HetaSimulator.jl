@@ -1,33 +1,33 @@
 [[heta_app]]
 arch = "x86_64"
-git-tree-sha1 = "ab9376e9291f631fe099983ef088d36b1d667305"
+git-tree-sha1 = "6e3f16d8f9af9d6ab174cc077a27229cf9b2fc61"
 libc = "glibc"
 os = "linux"
 
     [[heta_app.download]]
-    sha256 = "6b2a29ba8d82390f79cb5d8f88482ffc83f27b89c73aef16e053015aec5da94b"
-    url = "https://github.com/hetalang/heta-compiler/releases/download/draft-tswitcher/heta-compiler-linux.tar.gz"
+    sha256 = "4317a49f1b398827ed2bec6c7ccf755dd8cc4ac03e3e1d8db80e0f433fa86299"
+    url = "https://github.com/hetalang/heta-compiler/releases/download/v0.9.5/heta-compiler-linux.tar.gz"
 [[heta_app]]
 arch = "x86_64"
-git-tree-sha1 = "f6a25bd7e2fbe296daff9724581bfe5ba42fed6d"
+git-tree-sha1 = "80840a3fb1ca317ecd8e1957a1763d7e85cf56a0"
 os = "windows"
 
     [[heta_app.download]]
-    sha256 = "0748d24c6b0ba5923915717ad3bd5058e189026b54b455780e63e1d7bbc61152"
-    url = "https://github.com/hetalang/heta-compiler/releases/download/draft-tswitcher/heta-compiler-windows.tar.gz"
+    sha256 = "8a8f009fc51226edf2a18a9d59b860045dc661644ba2cfb9a168d9c52d31cb30"
+    url = "https://github.com/hetalang/heta-compiler/releases/download/v0.9.5/heta-compiler-windows.tar.gz"
 [[heta_app]]
 arch = "x86_64"
-git-tree-sha1 = "24ec3692913611b2691d62334ff87eca26cb9dce"
+git-tree-sha1 = "7e34067aad15bdf1bff33d9c57cb0f8c840ba4be"
 os = "macos"
 
     [[heta_app.download]]
-    sha256 = "0e83043a6e8c5e2382dab2bc3550c08305141fb5ed0e1adfa0926f8be7c759ec"
-    url = "https://github.com/hetalang/heta-compiler/releases/download/draft-tswitcher/heta-compiler-macos.tar.gz"
+    sha256 = "382dd05da46002f6d7d76b561b219fe79f964f11bc064f73c73060ed9a48d099"
+    url = "https://github.com/hetalang/heta-compiler/releases/download/v0.9.5/heta-compiler-macos.tar.gz"
 [[heta_app]]
 arch = "aarch64"
-git-tree-sha1 = "24ec3692913611b2691d62334ff87eca26cb9dce"
+git-tree-sha1 = "7e34067aad15bdf1bff33d9c57cb0f8c840ba4be"
 os = "macos"
 
     [[heta_app.download]]
-    sha256 = "0e83043a6e8c5e2382dab2bc3550c08305141fb5ed0e1adfa0926f8be7c759ec"
-    url = "https://github.com/hetalang/heta-compiler/releases/download/draft-tswitcher/heta-compiler-macos.tar.gz"
+    sha256 = "382dd05da46002f6d7d76b561b219fe79f964f11bc064f73c73060ed9a48d099"
+    url = "https://github.com/hetalang/heta-compiler/releases/download/v0.9.5/heta-compiler-macos.tar.gz"
