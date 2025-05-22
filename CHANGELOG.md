@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.7.6
+
+- DEvents added
+- heta-compiler updated to 0.9.5
+
 ## 0.7.5
 
 - scenario_parameters added to loss func
