@@ -26,7 +26,7 @@ a [sw1]= a + 1;
 //sw2 @TimeSwitcher {start: 100};
 //b [sw2]= 0;
 
-//sw3 @DSwitcher {trigger: a <= 9};
-//a [sw3]= a + 2;
+sw3 @DSwitcher {trigger: a <= 9, active: false};
+a [sw3]= a + 2;
 
 //ss1 @StopSwitcher {trigger: t > 10};

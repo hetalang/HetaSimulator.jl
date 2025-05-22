@@ -25,6 +25,7 @@ function Model(
     init_func::Function,
     ode_func::Function,
     time_events::NamedTuple,
+    d_events::NamedTuple,
     c_events::NamedTuple,
     stop_events::NamedTuple,
     saving_generator::Function,
@@ -37,6 +38,10 @@ function Model(
     ## FIXME : remove event name from heta-compiler
     for (name,event_tuple) in pairs(time_events) # time events
         evt = name => TimeEvent(event_tuple[1], event_tuple[2], event_tuple[3])
+        push!(events, evt)
+    end
+    for (name,event_tuple) in pairs(d_events) # d events
+        evt = name => DEvent(event_tuple[1], event_tuple[2], event_tuple[3])
         push!(events, evt)
     end
     for (name,event_tuple) in pairs(c_events) # c events
