@@ -296,6 +296,9 @@ function mc(
     )
   end
 
+  # E.g. if reduction was applied, then solution.u can be empty
+  isempty(solution.u) && return Vector{Pair{Symbol,MCResult}}()
+  
   ret = Vector{Pair{Symbol,MCResult}}(undef, lc)
 
   for i in 1:lc
