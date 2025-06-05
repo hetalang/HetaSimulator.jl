@@ -167,7 +167,7 @@ function sim(
   # E.g. if reduction was applied, then solution.u can be empty
   isempty(solution.u) && return Vector{Pair{Symbol,SimResult}}()
   
-  return [first(sp) => u for (sp,u) in zip(scenario_pairs, solution.u)]
+  return [Pair{Symbol,SimResult}(first(cp), u) for (cp,u) in zip(scenario_pairs, solution.u)]
 end
 
 ### simulate scenario array, XXX: do we need it?
