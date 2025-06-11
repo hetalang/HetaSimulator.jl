@@ -2,8 +2,8 @@
 const progch = RemoteChannel(()->Channel{Bool}(), 1)
 
 # as in SciMLBase
-DEFAULT_REDUCTION(u,data,I) = append!(u, data), false
-DEFAULT_OUTPUT(sol,i) = sol
+DEFAULT_MC_REDUCTION(u,data,I) = append!(u, data), false
+DEFAULT_MC_OUTPUT(sol,i) = sol
 
 """
     mc(scenario::Scenario,
@@ -45,8 +45,8 @@ function mc(
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
-  output_func=DEFAULT_OUTPUT,
-  reduction_func = DEFAULT_REDUCTION,
+  output_func=DEFAULT_MC_OUTPUT,
+  reduction_func = DEFAULT_MC_REDUCTION,
   parallel_type=EnsembleSerial(),
   safetycopy=true,
   kwargs...
@@ -208,8 +208,8 @@ function mc(
   alg=DEFAULT_ALG,
   reltol=DEFAULT_SIMULATION_RELTOL,
   abstol=DEFAULT_SIMULATION_ABSTOL,
-  output_func=DEFAULT_OUTPUT,
-  reduction_func = DEFAULT_REDUCTION,
+  output_func=DEFAULT_MC_OUTPUT,
+  reduction_func = DEFAULT_MC_REDUCTION,
   parallel_type=EnsembleSerial(),
   safetycopy=true,
   kwargs...
@@ -296,6 +296,9 @@ function mc(
     )
   end
 
+  # E.g. if reduction was applied, then solution.u can be empty
+  isempty(solution.u) && return Vector{Pair{Symbol,MCResult}}()
+  
   ret = Vector{Pair{Symbol,MCResult}}(undef, lc)
 
   for i in 1:lc
