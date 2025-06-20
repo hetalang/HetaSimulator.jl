@@ -14,12 +14,14 @@ function build_ode_problem( # used in Scenario constructor only
   _saveat = isnothing(saveat) ? time_type[] : time_type.(saveat)
 
   # init
-  u0, _p0 = model.init_func(params)
+  u0 = zeros(model.nstates)
+  statics = zeros(model.nstatics)
+  model.init_func(u0, statics, params)
 
   # !!! temporary workaround to match the order of statics and constants
   # ArrayPartition should be replaced with NamedArrayPartition when moving to Julia 1.10
   #p0 =NamedArrayPartition(statics=_p0[1:length(_p0)-length(params)], constants=collect(eltype(_p0), params))
-  p0 = ArrayPartition(_p0[1:length(_p0)-length(params)], collect(eltype(_p0), params))
+  p0 = ArrayPartition(statics, collect(eltype(statics), params))
 
   # check observables
   if !isnothing(observables_)
@@ -100,25 +102,20 @@ end
 
 function remake_prob(prob::ODEProblem, init_func::Function, params::NamedTuple; safetycopy=true)
   prob0 = safetycopy ? deepcopy(prob) : prob
-  if length(params) > 0
+  nparams = length(params)
+  if nparams > 0
     #u0, dep_p0 = init_func(params)
     #p0 = NamedArrayPartition(statics=dep_p0, constants=params)
-    u0, _p0 = init_func(params)
-  # !!! temporary workaround to match the order of statics and constants
-  # ArrayPartition should be replaced with NamedArrayPartition when moving to Julia 1.10
-  #p0 = NamedArrayPartition(statics=_p0[1:length(_p0)-length(params)], constants=collect(eltype(_p0), params))
-  p0 = ArrayPartition(_p0[1:length(_p0)-length(params)], collect(eltype(_p0), params))
-    prob0.u0 .= u0
-    # tmp to if additional params are provided
-    if length(prob0.p) == length(p0) 
-      prob0.p .= p0 
-      return prob0
-    else
-      return remake(prob0; p=p0) 
+    init_func(prob0.u0, prob0.p.x[1], params)
+    # if additional params are provided
+    # we shouldn't allow adding parameters, which are not in the model or scenario
+    (length(prob0.p.x[2]) != nparams) && resize!(prob0.p.x[2], nparams)
+    # update parameters
+    @inbounds for i in 1:nparams
+      prob0.p.x[2][i] = params[i]
     end
-  else
-    return prob0
   end
+  return prob0
 end
 
 function remake_saveat(prob, saveat; tspan=prob.tspan, time_type::DataType=Float64)
