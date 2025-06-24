@@ -30,7 +30,7 @@ function Model(
     stop_events::NamedTuple,
     saving_generator::Function,
     constants_num::NamedTuple,
-    statics_num::NamedTuple,
+    statics_ids::Tuple,
     events_active::NamedTuple,
     records_output::NamedTuple,
     ss_vars::NamedTuple
@@ -84,7 +84,7 @@ function Model(
         saving_generator,     # saving_generator
         records_output_,       
         constants_num,        # constants :: Changed to NamedTuple
-        length(statics_num),  # statics_num
+        length(statics_ids),  # statics_num
         length(ss_vars),      # ss_vars_num
         NamedTuple(events_active_), # events_active :: Changed to NamedTuple
         mass_matrix
