@@ -46,6 +46,7 @@ abstract type AbstractModel end
       saving_generator::SG
       records_output::AbstractVector{Pair{Symbol,Bool}}
       constants::NamedTuple
+      statics::NamedTuple
       events_active::EA
       mass_matrix::MM
     end
@@ -66,6 +67,8 @@ struct Model{IF,OF,EV,SG,EA, MM} <: AbstractModel
   saving_generator::SG
   records_output::AbstractVector{Pair{Symbol,Bool}}
   constants::NamedTuple
+  nstatics::Int
+  nstates::Int
   events_active::EA
   mass_matrix::MM
 end
