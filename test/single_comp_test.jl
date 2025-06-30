@@ -52,19 +52,8 @@ cs3 = sim(scenarios(platform)[:scn3])
 # Monte-Carlo simulation tests
 mciter = 100
 
-function output_func(sol, i)
-  last(vals(sol))
-end
-
-#=
-function reduction_func(mcsol, sol, I)
-  (last.(vals.(sol)), false)
-end
-=#
-
 mc1 = mc(Scenario(model, (0., 200.), observables=[:r1], saveat=0:10:200), [:k1=>Normal(0.02,1e-3)], mciter)
 mc2 = mc([:one=>scn1,:two=>scn2], [:k1=>Normal(0.02,1e-3)], mciter)
-mc1_reduced = mc(Scenario(model, (0., 200.), observables=[:r1]), [:k1=>Normal(0.02,1e-3)], mciter; output_func=output_func)
 ens = EnsembleSummary(mc1)
 @test typeof(ens) <: HetaSimulator.LabelledEnsembleSummary
 @test typeof(mc1) <: HetaSimulator.MCResult
@@ -76,7 +65,30 @@ ens = EnsembleSummary(mc1)
 @test typeof(parameters(mc1)) <: Vector
 @test times(mc1[1])[end] == 200.
 @test keys((parameters(mc1[1]))) == (:k1,)
-@test length(mc1_reduced) == mciter
+
+#=
+function reduction_func(mcsol, sol, I)
+  (last.(vals.(sol)), false)
+end
+=#
+
+mcvecs = [:k1 => [0.020783602070669163, 0.01847900966763524, 0.019406029840389655, 0.0200093097396787, 0.02124418652960589, 0.020423641771795314, 0.02005492267203665, 0.020021743479121643, 0.022069617799266517, 0.019389545481448302]]
+
+function reduction_func1(u, batch, i)
+  for s in batch
+    t1 = 200.
+    var = :r1
+    if s(t1, var) > 0.004
+      push!(u, s)
+    end
+  end
+  (u,false)
+end
+
+sc1 = Scenario(model, (0., 200.), observables=[:r1])
+mc1_reduced = mc(sc1, mcvecs, 10; reduction_func=reduction_func1)
+
+@test length(mc1_reduced) == 3
 
 
 # Fitting tests
