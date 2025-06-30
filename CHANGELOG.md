@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.7.7
+
+- In-place iniе function version
+- heta-compiler updated to 0.9.6
+- Julia 1.9 removed from CI
+- Reduction and output function docs added
+
 ## 0.7.6
 
 - DEvents added
