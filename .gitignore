@@ -1,7 +1,10 @@
+# user-specific files
+/drafts
 /cases/*/dist
 /cases/*/_julia
-Manifest.toml
-/.vscode
+/cases/story_3/st3_tests.jl
 
-/drafts
-cases/story_3/st3_tests.jl
+# Julia environment files
+/.vscode
+Manifest.toml
+.log
