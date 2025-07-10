@@ -8,6 +8,15 @@ os = "linux"
     sha256 = "bd52c9b9e4e989870deb473a39a97ec71bd75e57266234a56ba046d2fc0bb98a"
     url = "https://github.com/hetalang/heta-compiler/releases/download/arm5/heta-compiler-linux-x64.tar.gz"
 [[heta_app]]
+arch = "aarch64"
+git-tree-sha1 = "9d8231986f2eba868d5bb28ea423b740d8eb4b65"
+libc = "glibc"
+os = "linux"
+
+    [[heta_app.download]]
+    sha256 = "be2398c730618d082d2258bc55c7260150d9bd4a9ef64346d6476c522a2e1ff8"
+    url = "https://github.com/hetalang/heta-compiler/releases/download/arm5/heta-compiler-linux-arm64.tar.gz"
+[[heta_app]]
 arch = "x86_64"
 git-tree-sha1 = "44fa50a0aaf8ba437d0ab6e3658eba4eef2148d1"
 os = "windows"
