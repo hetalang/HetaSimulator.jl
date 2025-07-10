@@ -5,7 +5,7 @@ makedocs(
     authors = "Ivan Borisov, Evgeny Metelkin",
     modules = [HetaSimulator],
     format = Documenter.HTML(
-        analytics = "UA-149749027-1",
+        analytics = "G-SSNKYMLHTQ", # Google Analytics ID
         #assets = ["assets/favicon.ico"],
         canonical="https://hetalang.github.io/HetaSimulator.jl/stable/"
     ),
