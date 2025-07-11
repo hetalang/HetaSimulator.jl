@@ -1,7 +1,7 @@
 using ArtifactUtils
 using Pkg.Artifacts
 
-const HETA_COMPILER_RELEASE = "arm5"
+const HETA_COMPILER_RELEASE = "v0.9.7"
 
 const artifacts_toml = joinpath(@__DIR__, "..", "Artifacts.toml")
 
@@ -16,9 +16,7 @@ platforms = [
 for platform in platforms
 
   os  = platform.tags["os"]
-  if os == "windows"
-    os = "win"
-  end
+
   arch = platform.tags["arch"]
   if arch == "x86_64"
     arch = "x64"
