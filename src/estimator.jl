@@ -3,7 +3,7 @@
 # aux function to allow user write both `Pair{Symbol,Float64}` and `Pair{Symbol,Real}`
 # convert to regular `Vector{Pair{Symbol,Float64}}` for further processing
 normalize_params(v::AbstractVector{<:Pair{Symbol,<:Real}}) =
-    [k => Float64(val) for (k,val) in v]
+    [k => float(val) for (k,val) in v]
 
 """
     function estimator(
@@ -35,7 +35,7 @@ normalize_params(v::AbstractVector{<:Pair{Symbol,<:Real}}) =
 
   Returns:
 
-    function(x:Vector{Float64}=last.(parameters_fitted))
+    function(x=last.(parameters_fitted))
   
   The method returns anonimous function which depends on parameters vector in the same order as in `parameters_fitted`.
   This function is ready to be passed to optimizer routine or identifiability analysis.
@@ -118,7 +118,7 @@ function estimator(
 
   ### function ready for fitting
 
-  function out(x::Vector{Float64}=last.(parameters_fitted_norm))
+  function out(x=last.(parameters_fitted_norm))
     x_nt = NamedTuple{Tuple(parameters_fitted_names)}(x)
     solution = solve(
       prob(x_nt),
