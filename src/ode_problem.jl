@@ -104,21 +104,21 @@ function remake_prob(prob::ODEProblem, init_func::Function, params::NamedTuple; 
   prob0 = safetycopy ? deepcopy(prob) : prob
   nparams = length(params)
   if nparams > 0
+      
+    # if additional params are provided
+    # we shouldn't allow adding parameters, which are not in the model or scenario
+    (length(prob0.p.x[2]) != nparams) && resize!(prob0.p.x[2], nparams)
+    params_vec = collect(params)
+    if eltype(prob0.p.x[2]) != eltype(params_vec)
+      T = promote_type(eltype(prob0.p.x[2]), eltype(params_vec))
+      prob0 = remake(prob0, u0 = T.(prob0.u0), p = ArrayPartition(T.(prob0.p.x[1]), T.(prob0.p.x[2])))
+    end
+    # update parameters
     #u0, dep_p0 = init_func(params)
     #p0 = NamedArrayPartition(statics=dep_p0, constants=params)
     init_func(prob0.u0, prob0.p.x[1], params)
-
-    # update parameters
-    if eltype(prob0.p.x[2]) == eltype(params) 
-      # if additional params are provided
-      # we shouldn't allow adding parameters, which are not in the model or scenario
-      (length(prob0.p.x[2]) != nparams) && resize!(prob0.p.x[2], nparams)
-      @inbounds for i in 1:nparams
-        prob0.p.x[2][i] = params[i]
-      end
-    else # Dual ?
-      T = promote_type(eltype(prob0.p.x[2]), eltype(params))
-      return remake(prob0, u0 = T.(prob0.u0), p = ArrayPartition(T.(prob0.p.x[1]), T.(collect(params))))
+    @inbounds for i in 1:nparams
+      prob0.p.x[2][i] = params[i]
     end
   end
   return prob0
