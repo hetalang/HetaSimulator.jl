@@ -110,14 +110,14 @@ function remake_prob(prob::ODEProblem, init_func::Function, params::NamedTuple; 
 
     # update parameters
     if eltype(prob0.p.x[2]) == eltype(params) 
-    # if additional params are provided
-    # we shouldn't allow adding parameters, which are not in the model or scenario
-    (length(prob0.p.x[2]) != nparams) && resize!(prob0.p.x[2], nparams)
+      # if additional params are provided
+      # we shouldn't allow adding parameters, which are not in the model or scenario
+      (length(prob0.p.x[2]) != nparams) && resize!(prob0.p.x[2], nparams)
       @inbounds for i in 1:nparams
         prob0.p.x[2][i] = params[i]
       end
     else # Dual ?
-      prob0.p = ArrayPartition(prob0.p.x[1], params)
+      return remake(prob0, p = ArrayPartition(prob0.p.x[1], params))
     end
   end
   return prob0
