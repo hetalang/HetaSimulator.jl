@@ -117,7 +117,8 @@ function remake_prob(prob::ODEProblem, init_func::Function, params::NamedTuple; 
         prob0.p.x[2][i] = params[i]
       end
     else # Dual ?
-      return remake(prob0, p = ArrayPartition(prob0.p.x[1], params))
+      T = promote_type(eltype(prob0.p.x[2]), eltype(params))
+      return remake(prob0, p = ArrayPartition(T.(prob0.p.x[1]), T.(params)))
     end
   end
   return prob0
