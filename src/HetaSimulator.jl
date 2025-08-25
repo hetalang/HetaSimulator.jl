@@ -28,7 +28,7 @@ module HetaSimulator
   @reexport using SciMLBase.EnsembleAnalysis
   @reexport using OrdinaryDiffEq
   using Sundials
-
+  using ForwardDiff
   # fitting
   using NLopt
 

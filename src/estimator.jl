@@ -90,7 +90,8 @@ function estimator(
     function(prob,i,repeat) # internal_prob_func
       #update_init_values(selected_prob[i], last(selected_scenario_pairs[i]).init_func, x)
       scn = last(selected_scenario_pairs[i])
-      params_total = merge_strict(scn.parameters, x)
+      T = eltype(x)
+      params_total = (T <: ForwardDiff.Dual) ? merge_strict(NamedTuple{keys(scn.parameters)}(T.(collect(scn.parameters))), x) : merge_strict(scn.parameters, x)
       remake_prob(selected_prob[i], scn.init_func, params_total; safetycopy=true) #?safetycopy=false
     end
   end
