@@ -24,7 +24,7 @@ module HetaSimulator
 
   # diffeq-related pkgs
   using SciMLBase
-  using SciMLBase.RecursiveArrayTools: VectorOfArray, vecarr_to_vectors, DiffEqArray, ArrayPartition #, NamedArrayPartition
+  using SciMLBase.RecursiveArrayTools: VectorOfArray, vecarr_to_vectors, DiffEqArray, ArrayPartition, copyat_or_push! #, NamedArrayPartition
   @reexport using SciMLBase.EnsembleAnalysis
   @reexport using OrdinaryDiffEq
   using Sundials
