@@ -1,8 +1,14 @@
 # Change Log
 
+## 0.7.8
+
+- imports `copyat_or_push!`
+- uses `AbstractODEIntegrator`
+- fixes `coveralls` bug
+
 ## 0.7.7
 
-- In-place iniе function version
+- In-place init function version
 - heta-compiler updated to 0.9.6
 - Julia 1.9 removed from CI
 - Reduction and output function docs added
