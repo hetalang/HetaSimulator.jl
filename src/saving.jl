@@ -55,7 +55,7 @@ function (affect!::SavingEvent)(integrator,force_save = false; scope = :ode_)
       curt = pop!(affect!.saveat) # current time
 
       if curt != integrator.t # If <t, interpolate
-          if typeof(integrator) <: OrdinaryDiffEq.ODEIntegrator
+          if typeof(integrator) <: SciMLBase.AbstractODEIntegrator
               # Expand lazy dense for interpolation
               SciMLBase.addsteps!(integrator)
           end
@@ -141,7 +141,7 @@ function save_after_step!(integrator, scope = :ode_)
     curu = integrator(curt)
 
     if curt != integrator.t # If <t, interpolate
-      if typeof(integrator) <: OrdinaryDiffEq.ODEIntegrator
+      if typeof(integrator) <: SciMLBase.AbstractODEIntegrator
           # Expand lazy dense for interpolation
           SciMLBase.addsteps!(integrator)
       end
