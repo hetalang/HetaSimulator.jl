@@ -564,8 +564,8 @@ fit_res = fit(p, to_fit)
 ```
 
 ```julia
-FitResult with status :XTOL_REACHED
-   Status: XTOL_REACHED
+FitResult with status :Success
+   Status: Success
    Optimal values: [:kabs => 18.868605026704916, :Q => 4.043662480774219, :kel => 0.17104243648378176, :sigma1 => 0.020347955494158528, :sigma2 => 0.31561050699802246, :sigma3 => 0.5716026958426483]
    OF value: 140.96503722972034
    OF count: 8612

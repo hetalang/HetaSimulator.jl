@@ -30,7 +30,7 @@ module HetaSimulator
   using Sundials
   using ForwardDiff
   # fitting
-  using NLopt
+  @reexport using OptimizationNLopt
 
   # utils
   using LabelledArrays

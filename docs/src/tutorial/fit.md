@@ -172,8 +172,8 @@ res_optim = fit(p, to_fit) # default fitting
 ```
 ┌ Info: Scenario ":multiple_15" has no measurements. It will be excluded from fitting.
 └ @ HetaSimulator y:\HetaSimulator.jl\src\fit.jl:77
-FitResult with status :XTOL_REACHED
-   Status: XTOL_REACHED
+FitResult with status :Success
+   Status: Success
    Optimal values: [:kabs => 18.868605026704916, :Q => 4.043662480774219, :kel => 0.17104243648378176, :sigma1 => 0.020347955494158528, :sigma2 => 0.31561050699802246, :sigma3 => 0.5716026958426483]
    OF value: 140.96503722971997
    OF count: 8612
@@ -246,8 +246,8 @@ res_optim = fit(p, params_df)
 ```
 ┌ Info: Scenario ":multiple_15" has no measurements. It will be excluded from fitting.
 └ @ HetaSimulator 
-FitResult with status :FTOL_REACHED
-   Status: FTOL_REACHED
+FitResult with status :Success
+   Status: Success
    Optimal values: [:kabs => 8.669590504032879, :kel => 0.2299120380231296, :Q => 3.386457652767808, :sigma1 => 0.010105725225267037, :sigma2 => 0.09951673713071268, :sigma3 => 0.6024808584834973]
    OF value: -101.7645013649068
    OF count: 417
@@ -255,7 +255,7 @@ FitResult with status :FTOL_REACHED
 
 ## Additional optimization-specific options
 
-Internally `HetaSimulator` uses `NLopt` library. One can choose the optimization algorithm as well as additional options.
+Internally, `HetaSimulator` uses the `Optimization.jl` interface, which supports various optimization packages. By default, `HetaSimulator` includes the NLopt library, allowing you to choose an NLopt-based optimization algorithm without installing additional packages. To access more optimizers, you can add any optimization package supported by `Optimization.jl` and use the preferred optimizer algorithm in `fit()`.
 
 Read more about NLopt algorithms choice: <https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/>
  
@@ -263,10 +263,10 @@ Read more about NLopt algorithms choice: <https://nlopt.readthedocs.io/en/latest
 res_optim = fit(
     p, 
     params_df, 
-    fit_alg = :LN_SBPLX, 
+    fit_alg = NLopt.LN_SBPLX(), 
     ftol_abs = 1e-5, 
     ftol_rel = 0, 
-    maxeval = 10^6
+    maxiters = 10^6
 )
 optim(res_optim)
 ```
@@ -274,10 +274,8 @@ optim(res_optim)
 There are several optimization related arguments, which are available for a user. 
 To learn more read about [`fit`](@ref) method in API documentation.
 
-- `fit_alg` : fitting algorithm. Default is `:LN_NELDERMEAD`
-- `ftol_abs` : absolute tolerance on function value. Default is `0.0`
-- `ftol_rel` : relative tolerance on function value. Default is `1e-4`
-- `xtol_rel` : relative tolerance on optimization parameters. Default is `0.0`
-- `xtol_rel` : absolute tolerance on optimization parameters. Default is `0.0`
-- `maxeval` : maximum number of function evaluations. Default is `1e4`
+- `fit_alg` : fitting algorithm. Default is `NLopt.LN_NELDERMEAD()`
+- `ftol_abs` : absolute tolerance on objective value. Default is `0.0`
+- `ftol_rel` : relative tolerance on objective value. Default is `1e-4`
+- `maxiters` : maximum number of objective evaluations. Default is `1e4`
 - `maxtime` : maximum optimization time (in seconds). Default is `0`

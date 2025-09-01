@@ -12,13 +12,12 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
       reltol=DEFAULT_FITTING_RELTOL,
       abstol=DEFAULT_FITTING_ABSTOL,
       parallel_type=EnsembleSerial(),
+      adtype=AutoForwardDiff(),
       ftol_abs = 0.0,
-      ftol_rel = 1e-4, 
-      xtol_rel = 0.0,
-      xtol_abs = 0.0, 
-      fit_alg = :LN_NELDERMEAD,
-      maxeval = 10000,
-      maxtime = 0.0,
+      ftol_rel = 1e-4,
+      fit_alg = NLopt.LN_NELDERMEAD(),
+      maxiters = 10000,
+      maxtime = nothing,
       lbounds = fill(0.0, length(parameters_fitted)),
       ubounds = fill(Inf, length(parameters_fitted)),
       scale = fill(:lin, length(parameters_fitted)),
@@ -39,15 +38,14 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
   - `reltol` : relative tolerance. Default is 1e-6
   - `abstol` : absolute tolerance. Default is 1e-8
   - `parallel_type` : parallel setup. See SciML docs for details. Default is no parallelism: EnsembleSerial()
-  - `ftol_abs` : absolute tolerance on function value. See `NLopt.jl` docs for details. Default is `0.0`
-  - `ftol_rel` : relative tolerance on function value. See `NLopt.jl` docs for details. Default is `1e-4`
-  - `xtol_rel` : relative tolerance on optimization parameters. See `NLopt.jl` docs for details. Default is `0.0`
-  - `xtol_abs` : absolute tolerance on optimization parameters. See `NLopt.jl` docs for details. Default is `0.0`
-  - `fit_alg` : fitting algorithm. See `NLopt.jl` docs for details. Default is `:LN_NELDERMEAD`
-  - `maxeval` : maximum number of function evaluations. See `NLopt.jl` docs for details. Default is `1e4`
-  - `maxtime` : maximum optimization time (in seconds). See `NLopt.jl` docs for details. Default is `0`
-  - `lbounds` : lower parameters bounds. See `NLopt.jl` docs for details. Default is `fill(0.0, length(parameters_fitted))`
-  - `ubounds` : upper parameters bounds. See `NLopt.jl` docs for details. Default is `fill(Inf, length(parameters_fitted))`
+  - `adtype` : automatic differentiation type. See SciML docs for details. Default is `AutoForwardDiff()`
+  - `ftol_abs` : absolute tolerance on objective value. See `Optimization.jl` docs for details. Default is `0.0`
+  - `ftol_rel` : relative tolerance on objective value. See `Optimization.jl` docs for details. Default is `1e-4`
+  - `fit_alg` : fitting algorithm. See `Optimization.jl` docs for details. Default is `NLopt.LN_NELDERMEAD()`
+  - `maxiters` : maximum number of objective evaluations. See `Optimization.jl` docs for details. Default is `1e4`
+  - `maxtime` : maximum optimization time (in seconds). See `Optimization.jl` docs for details. Default is `nothing`
+  - `lbounds` : lower parameters bounds. See `Optimization.jl` docs for details. Default is `fill(0.0, length(parameters_fitted))`
+  - `ubounds` : upper parameters bounds. See `Optimization.jl` docs for details. Default is `fill(Inf, length(parameters_fitted))`
   - `scale`   : scale of the parameters (supports `:lin, :direct, :log, :log10`) to be used during fitting. Default is `fill(:lin, length(parameters_fitted))`.
                 `:direct` value is a synonym of `:lin`.
   - `progress` : progress mode display. One of three values: `:silent`, `:minimal`, `:full`. Default is `:minimal`
@@ -61,13 +59,12 @@ function fit(
   reltol=DEFAULT_FITTING_RELTOL,
   abstol=DEFAULT_FITTING_ABSTOL,
   parallel_type=EnsembleSerial(),
+  adtype=AutoForwardDiff(),
   ftol_abs = 0.0,
-  ftol_rel = 1e-4, 
-  xtol_rel = 0.0,
-  xtol_abs = 0.0, 
-  fit_alg = :LN_NELDERMEAD,
-  maxeval = 10000,
-  maxtime = 0.0,
+  ftol_rel = 1e-4,
+  fit_alg = NLopt.LN_NELDERMEAD(),
+  maxiters = 10000,
+  maxtime = nothing,
   lbounds = fill(0.0, length(parameters_fitted)),
   ubounds = fill(Inf, length(parameters_fitted)),
   scale = fill(:lin, length(parameters_fitted)),
@@ -104,18 +101,18 @@ function fit(
   prog = ProgressUnknown(; desc ="Fit counter:", spinner=false, enabled=progress!=:silent, showspeed=true)
   count = 0
   estim_best = Inf
-  function obj_func(x, grad)
+  function obj_func(x, hyper_params)
     count+=1
     # try - catch is a tmp solution for NLopt 
     x_unscaled = unscale_params.(x, scale)
-    estim_x = try
+    estim_obj = try
       estim_fun(x_unscaled)
     catch e
         @warn "Error when calling loss_func($x): $e"
     end
-    
-    if estim_x < estim_best
-      estim_best = estim_x
+
+    if !isa(estim_obj, ForwardDiff.Dual) && (estim_obj < estim_best)
+      estim_best = estim_obj
     end
 
     values_to_display = [(:ESTIMATOR_BEST, round(estim_best; digits=2))]
@@ -126,33 +123,25 @@ function fit(
     end
 
     ProgressMeter.update!(prog, count, spinner="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"; showvalues = values_to_display)
-    return estim_x
+    return estim_obj
   end
 
-  opt = Opt(fit_alg, length(parameters_fitted))
-  opt.min_objective = obj_func
-
-  opt.ftol_rel = ftol_rel
-  #opt.ftol_abs = ftol_abs
-  ftol_abs!(opt, ftol_abs)
-
-  opt.xtol_rel = xtol_rel
-  opt.xtol_abs = xtol_abs
-
-  #opt.maxeval = maxeval
-  maxeval!(opt, maxeval)
-  opt.maxtime = maxtime
-
-  lower_bounds!(opt, scale_params.(lbounds, scale))
-  upper_bounds!(opt, scale_params.(ubounds, scale))
-  
+  optf = OptimizationFunction(obj_func, adtype)
   params0 = scale_params.(parameters_fitted .|> last .|> Float64, scale) # force convert to Float64
-  (minf, minx, ret) = NLopt.optimize(opt, params0)
+  lb = scale_params.(lbounds, scale)
+  ub = scale_params.(ubounds, scale)
 
+  optprob = OptimizationProblem(optf, params0; lb=lb, ub=ub)
+  optsol = solve(optprob, fit_alg; reltol=ftol_rel, abstol=ftol_abs, maxiters=maxiters, maxtime=maxtime)
+
+  minx = optsol.u
+  minf = optsol.objective
+  ret = Symbol(optsol.retcode)
+  numiters = optsol.stats.iterations
   # to create pairs from Float64
   minx_pairs = [key=>value for (key, value) in zip(first.(parameters_fitted), unscale_params.(minx, scale))]
-  
-  return FitResult(minf, minx_pairs, ret, opt.numevals)
+
+  return FitResult(minf, minx_pairs, ret, numiters)
 end
 
 """
