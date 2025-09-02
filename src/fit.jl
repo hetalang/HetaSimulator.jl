@@ -111,7 +111,7 @@ function fit(
         @warn "Error when calling loss_func($x): $e"
     end
 
-    if !isa(estim_obj, ForwardDiff.Dual) && (estim_obj < estim_best)
+    if !isnothing(estim_obj) && !isa(estim_obj, ForwardDiff.Dual) && (estim_obj < estim_best)
       estim_best = estim_obj
     end
 
