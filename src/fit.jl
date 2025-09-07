@@ -31,10 +31,10 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
 
   Arguments:
 
-  - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
-  - `parameters_fitted` : optimization parameters and their initial values
+  - `scenario_pairs` : can be a `Platform`, a vector of scenarios, or a vector of pairs (`Vector{Pair{Symbol,Scenario}}`), matching the accepted types of the `estimator` function.
+  - `parameters_fitted` : can be a vector of pairs (`Vector{Pair{Symbol,<:Real}}`) or a `DataFrame` with parameter setup, as accepted by `estimator`.
   - `parameters` : parameters, which overwrite both `Model` and `Scenario` parameters. Default is `nothing`
-  - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
+  - `alg` : ODE solver. See SciML docs for details. Default is `AutoTsit5(Rosenbrock23())`
   - `reltol` : relative tolerance. Default is 1e-6
   - `abstol` : absolute tolerance. Default is 1e-8
   - `parallel_type` : parallel setup. See SciML docs for details. Default is no parallelism: EnsembleSerial()
@@ -52,8 +52,8 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
   - `kwargs...` : other solver related arguments supported by SciMLBase.solve. See SciML docs for details
 """
 function fit(
-  scenario_pairs::AbstractVector{Pair{Symbol, C}},
-  parameters_fitted::AbstractVector{<:Pair{Symbol,<:Real}};
+  scenario_pairs,
+  parameters_fitted;
   parameters::Union{Nothing, Vector{P}}=nothing,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_FITTING_RELTOL,
@@ -72,201 +72,46 @@ function fit(
   kwargs... # other arguments to sim
 ) where {C<:AbstractScenario, P<:Pair}
 
-  # names of parameters used in fitting and saved in parameters_fitted field of solution
-  parameters_names = first.(parameters_fitted)
-
-  selected_scenario_pairs = Pair{Symbol,Scenario}[]
-  for scenario_pair in scenario_pairs # iterate through scenarios names
-    if isempty(last(scenario_pair).measurements)
-      @info "Scenario \":$(first(scenario_pair))\" has no measurements. It will be excluded from fitting."
-    else
-      push!(selected_scenario_pairs, scenario_pair)
-    end
-  end
-  
-  isempty(selected_scenario_pairs) && throw("No measurements points included in scenarios.")
-
-  estim_fun = estimator( # return function
+  optprob = generate_optimization_problem(
     scenario_pairs,
     parameters_fitted;
-    parameters,
-    alg,
-    reltol,
-    abstol,
-    parallel_type,
-    kwargs...
+    parameters=parameters,
+    alg=alg,
+    reltol=reltol,
+    abstol=abstol,
+    parallel_type=parallel_type,
+    adtype=adtype,
+    lbounds=lbounds,
+    ubounds=ubounds,
+    scale=scale,
+    progress=progress,
+    kwargs... # other arguments to sim
   )
 
-  # progress info
-  prog = ProgressUnknown(; desc ="Fit counter:", spinner=false, enabled=progress!=:silent, showspeed=true)
-  count = 0
-  estim_best = Inf
-  function obj_func(x, hyper_params)
-    count+=1
-    # try - catch is a tmp solution for NLopt 
-    x_unscaled = unscale_params.(x, scale)
-    estim_obj = try
-      estim_fun(x_unscaled)
-    catch e
-        @warn "Error when calling loss_func($x): $e"
-    end
-
-    if !isnothing(estim_obj) && !isa(estim_obj, ForwardDiff.Dual) && (estim_obj < estim_best)
-      estim_best = estim_obj
-    end
-
-    values_to_display = [(:ESTIMATOR_BEST, round(estim_best; digits=2))]
-    if progress == :full
-      for i in 1:length(x)
-        push!(values_to_display, (parameters_names[i], round(x_unscaled[i], sigdigits=3)))
-      end
-    end
-
-    ProgressMeter.update!(prog, count, spinner="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"; showvalues = values_to_display)
-    return estim_obj
-  end
-
-  optf = OptimizationFunction(obj_func, adtype)
-  params0 = scale_params.(parameters_fitted .|> last .|> Float64, scale) # force convert to Float64
-  lb = scale_params.(lbounds, scale)
-  ub = scale_params.(ubounds, scale)
-
-  optprob = OptimizationProblem(optf, params0; lb=lb, ub=ub)
-  optsol = solve(optprob, fit_alg; reltol=ftol_rel, abstol=ftol_abs, maxiters=maxiters, maxtime=maxtime)
+  optsol = solve(optprob, fit_alg; 
+    reltol=ftol_rel, 
+    abstol=ftol_abs, 
+    maxiters=maxiters, 
+    maxtime=maxtime)
 
   minx = optsol.u
   minf = optsol.objective
   ret = Symbol(optsol.retcode)
-  numiters = optsol.stats.iterations
+  numiters = 0 # TODO callback to save iters
   # to create pairs from Float64
-  minx_pairs = [key=>value for (key, value) in zip(first.(parameters_fitted), unscale_params.(minx, scale))]
+  parameter_names = _extract_parameter_names(parameters_fitted)
+  minx_pairs = [key=>value for (key, value) in zip(parameter_names, unscale_params.(minx, scale))]
 
   return FitResult(minf, minx_pairs, ret, numiters)
 end
 
-"""
-    fit(
-      scenario_pairs::AbstractVector{Pair{Symbol, C}},
-      parameters_fitted::DataFrame;
-      kwargs...
-    ) where C<:AbstractScenario
+function _extract_parameter_names(params::AbstractVector{<:Pair{Symbol,<:Real}})
+  return first.(params)
+end
 
-  Fit parameters to experimental measurements. Returns `FitResult` type.
-
-  Arguments:
-
-  - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
-  - `parameters_fitted` : DataFrame with optimization parameters setup and their initial values, see [`read_parameters`](@ref)
-  - `kwargs...` : other ODE solver and `fit` arguments supported by `fit(scenario_pairs::Vector{<:Pair}, parameters_fitted::Vector{<:Pair}`
-"""
-function fit(
-  scenario_pairs::AbstractVector{Pair{Symbol, C}},
-  parameters_fitted::DataFrame;
-  kwargs...
-) where C<:AbstractScenario
-  
-  gdf = groupby(parameters_fitted, :estimate)
+function _extract_parameter_names(params::DataFrame)
+  gdf = groupby(params, :estimate)
   @assert haskey(gdf, (true,)) "No parameters to estimate."
 
-  parameters_fitted_ = gdf[(true,)].parameter .=> gdf[(true,)].nominal
-  lbounds = gdf[(true,)].lower
-  ubounds = gdf[(true,)].upper
-  scale = gdf[(true,)].scale
-  # fixed parameters
-  parameters = haskey(gdf, (false,)) ? gdf[(false,)].parameter .=> gdf[(false,)].nominal : nothing
-
-  fit(scenario_pairs, parameters_fitted_; parameters, lbounds, ubounds, scale, kwargs...)
-end
-
-"""
-    fit(
-      scenarios::AbstractVector{C},
-      parameters_fitted;
-      kwargs...
-    ) where C<:AbstractScenario
-
-  Fit parameters to experimental measurements. Returns `FitResult` type.
-
-  Example:
-  
-  `fit([scn2, scn3, scn4], [:k1=>0.1,:k2=>0.2,:k3=>0.3])`
-
-  Arguments:
-
-  - `scenarios` : vector of scenarios of type [`Scenario`](@ref)
-  - `parameters_fitted` : optimization parameters and their initial values
-  - `kwargs...` : other ODE solver and `fit` related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, parameters_fitted::Vector{<:Pair}`
-"""
-function fit(
-  scenarios::AbstractVector{C},
-  parameters_fitted; # DataFrame or Vector{Pair{Symbol,Float64}}
-  kwargs... # other arguments to fit or sim
-) where {C<:AbstractScenario}
-  scenario_pairs = Pair{Symbol,AbstractScenario}[Symbol("_$i") => scn for (i, scn) in pairs(scenarios)]
-  return fit(scenario_pairs, parameters_fitted; kwargs...)
-end
-
-### fit platform ###
-
-"""
-    fit(platform::Platform,
-      parameters_fitted;
-      scenarios::Union{AbstractVector{Symbol}, Nothing} = nothing,
-      kwargs...
-    ) where C<:AbstractScenario
-
-  Fit parameters to experimental measurements. Returns `FitResult` type.
-
-  Example:
-  
-  `fit(platform, [:k1=>0.1,:k2=>0.2,:k3=>0.3];scenarios=[:scn2,:scn3])`
-
-  Arguments:
-
-  - `platform` : platform of [`Platform`](@ref) type
-  - `parameters_fitted` : optimization parameters and their initial values
-  - `scenarios` : vector of scenarios identifiers of type `Symbol`. Default is `nothing`
-  - `kwargs...` : other ODE solver and `fit` related arguments supported by `fit(scenario_pairs::Vector{<:Pair}, parameters_fitted::Vector{<:Pair}`
-"""
-function fit(
-  platform::Platform,
-  parameters_fitted; # DataFrame or Vector{Pair{Symbol,Float64}}
-  scenarios::Union{AbstractVector{Symbol}, Nothing} = nothing, # all if nothing
-  kwargs... # other arguments to fit or sim
-)
-  if isnothing(scenarios)
-    scenario_pairs = [platform.scenarios...]
-  else
-    scenario_pairs = Pair{Symbol,AbstractScenario}[]
-    for scn_name in scenarios
-      @assert haskey(platform.scenarios, scn_name) "No scenario :$scn_name found in the platform."
-      push!(scenario_pairs, scn_name=>platform.scenarios[scn_name])
-    end
-  end
-
-  return fit(scenario_pairs, parameters_fitted; kwargs...)
-end
-
-function scale_params(x, scale::Symbol)
-  if scale == :lin || scale == :direct
-    return x
-  elseif scale == :log
-    return log(x)
-  elseif scale == :log10
-    return log10(x)
-  else
-    throw("Scale \"$scale\" is not supported.")
-  end
-end
-
-function unscale_params(x, scale::Symbol)
-  if scale == :lin || scale == :direct
-    return x
-  elseif scale == :log
-    return exp(x)
-  elseif scale == :log10
-    return exp10(x)
-  else
-    throw("Scale \"$scale\" is not supported.")
-  end
+  return gdf[(true,)].parameter
 end
