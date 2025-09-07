@@ -53,7 +53,7 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
 """
 function fit(
   scenario_pairs,
-  parameters_fitted;
+  parameters_fitted::AbstractVector{<:Pair{Symbol,<:Real}};
   parameters::Union{Nothing, Vector{P}}=nothing,
   alg=DEFAULT_ALG,
   reltol=DEFAULT_FITTING_RELTOL,
@@ -104,6 +104,26 @@ function fit(
 
   return FitResult(minf, minx_pairs, ret, numiters)
 end
+
+function fit(
+  scenario_pairs,
+  parameters_fitted::DataFrame;
+  kwargs...
+)
+  
+  gdf = groupby(parameters_fitted, :estimate)
+  @assert haskey(gdf, (true,)) "No parameters to estimate."
+
+  parameters_fitted_ = gdf[(true,)].parameter .=> gdf[(true,)].nominal
+  lbounds = gdf[(true,)].lower
+  ubounds = gdf[(true,)].upper
+  scale = gdf[(true,)].scale
+  # fixed parameters
+  parameters = haskey(gdf, (false,)) ? gdf[(false,)].parameter .=> gdf[(false,)].nominal : nothing
+
+  fit(scenario_pairs, parameters_fitted_; parameters, lbounds, ubounds, scale, kwargs...)
+end
+
 
 function _extract_parameter_names(params::AbstractVector{<:Pair{Symbol,<:Real}})
   return first.(params)
