@@ -101,7 +101,7 @@ function generate_optimization_problem(
     end
 
     values_to_display = [(:ESTIMATOR_BEST, round(estim_best; digits=2))]
-    if progress == :full
+    if progress == :full && !(eltype(x_unscaled) <: ForwardDiff.Dual)
       for i in 1:length(x)
         push!(values_to_display, (parameters_names[i], round(x_unscaled[i], sigdigits=3)))
       end

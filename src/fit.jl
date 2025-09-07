@@ -101,8 +101,9 @@ function fit(
   # to create pairs from Float64
   parameter_names = _extract_parameter_names(parameters_fitted)
   minx_pairs = [key=>value for (key, value) in zip(parameter_names, unscale_params.(minx, scale))]
+  minx_scaled_pairs = [key=>value for (key, value) in zip(parameter_names, minx)]
 
-  return FitResult(minf, minx_pairs, ret, numiters)
+  return FitResult(minf, minx_pairs, minx_scaled_pairs, ret, numiters)
 end
 
 function fit(
