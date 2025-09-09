@@ -98,7 +98,9 @@ function DataFrame(mcr::MCResult; itercol=true, kwargs...)
 
   if lmcr > 1
     for i in 2:lmcr
-      append!(df, DataFrame(mcr[i]; iter=(itercol ? i : nothing), kwargs...))
+      if mcr[i].status == Symbol(SciMLBase.ReturnCode.Success)
+        append!(df, DataFrame(mcr[i]; iter=(itercol ? i : nothing), kwargs...))
+      end
     end
   end
   return df

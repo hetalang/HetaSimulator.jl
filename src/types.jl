@@ -237,6 +237,13 @@ Simulation(sv::SavedValues, params, status) = Simulation(
   Symbol(status)
 ) 
 
+# copy fix is tmp needed not to rewrite SavedValues with new simulation
+Simulation( params, status) = Simulation(
+  DiffEqArray([0],[0]),
+  Symbol("error"),
+  params,
+  Symbol(status)
+) 
 status(s::Simulation) = s.status
 times(s::Simulation) = s.vals.t
 vals(s::Simulation) = s.vals.u

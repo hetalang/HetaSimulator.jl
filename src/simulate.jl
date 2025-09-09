@@ -65,7 +65,13 @@ function sim(
   #parameters_names = Symbol[first(x) for x in parameters]
   #return build_results(sol, scenario, parameters_names)
   sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-  simulation = Simulation(sv, parameters_nt, sol.retcode)
+  if SciMLBase.successful_retcode(sol)
+    println("Iteration is successful, val $(size(sv.u))") 
+    simulation = Simulation(sv, parameters_nt, sol.retcode)
+  else
+    println("Iteration is failed with code $(sol.retcode), val $(size(sv.u))")
+    simulation = Simulation( parameters_nt, sol.retcode)
+end
 
   return SimResult(simulation, scenario)
 end

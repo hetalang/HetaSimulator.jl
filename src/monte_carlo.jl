@@ -83,8 +83,14 @@ function mc(
     params_i = NamedTuple(zip(first.(parameters_variation), values_i))
     # take simulated values from solution
     sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-    simulation = Simulation(sv, params_i, sol.retcode)
-
+    #simulation = Simulation(sv, params_i, sol.retcode)
+    if SciMLBase.successful_retcode(sol)
+      #println("Iteration is successful, val $(size(sv.u))") 
+      simulation = Simulation(sv, params_i, sol.retcode)
+    else
+      #println("Iteration is failed with code $(sol.retcode), val $(size(sv.u))")
+      simulation = Simulation( params_i, sol.retcode)
+    end
     return (output_func(simulation, i), false)
   end
 
@@ -254,7 +260,14 @@ function mc(
     params_i = parameters_pregenerated[iter_i[1]]
     # take simulated values from solution
     sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-    simulation = Simulation(sv, params_i, sol.retcode)
+    #simulation = Simulation(sv, params_i, sol.retcode)
+    if SciMLBase.successful_retcode(sol)
+      #println("Iteration is successful, val $(size(sv.u))") 
+      simulation = Simulation(sv, params_i, sol.retcode)
+    else
+      #println("Iteration is failed with code $(sol.retcode), val $(size(sv.u))")
+      simulation = Simulation( params_i, sol.retcode)
+    end
 
     return (output_func(simulation, i), false)
   end
