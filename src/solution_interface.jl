@@ -93,11 +93,15 @@ end
 
 function DataFrame(mcr::MCResult; itercol=true, kwargs...)
   # df performance
-  df = DataFrame(mcr[1]; iter=(itercol ? 1 : nothing), kwargs...)
+  j = 1
   lmcr = length(mcr)
-
+  while mcr[j].status != Symbol(SciMLBase.ReturnCode.Success)
+    j+=1
+  end
+  df = DataFrame(mcr[j]; iter=(itercol ? 1 : nothing), kwargs...)
+  j+=1
   if lmcr > 1
-    for i in 2:lmcr
+    for i in j:lmcr
       if mcr[i].status == Symbol(SciMLBase.ReturnCode.Success)
         append!(df, DataFrame(mcr[i]; iter=(itercol ? i : nothing), kwargs...))
       end
