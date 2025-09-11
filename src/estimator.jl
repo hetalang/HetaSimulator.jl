@@ -97,7 +97,10 @@ function estimator(
   end
 
   function _output(sol, i)
-    !SciMLBase.successful_retcode(sol.retcode) && error("Simulated scenario $i returned $(sol.retcode) status")
+    if !SciMLBase.successful_retcode(sol.retcode)
+      @warn "Simulated scenario $i returned $(sol.retcode) status"
+      return (Inf, false)
+    end
     sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
     simulation = Simulation(sv, NamedTuple(parameters_fitted_norm), sol.retcode)
     result = SimResult(simulation, last(selected_scenario_pairs[i]))
