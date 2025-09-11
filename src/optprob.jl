@@ -90,11 +90,7 @@ function generate_optimization_problem(
     count+=1
     # try - catch is a tmp solution for NLopt 
     x_unscaled = unscale_params.(x, scale)
-    estim_obj = try
-      estim_fun(x_unscaled)
-    catch e
-        @warn "Error when calling loss_func($x): $e"
-    end
+    estim_obj = estim_fun(x_unscaled)
 
     if !isnothing(estim_obj) && !isa(estim_obj, ForwardDiff.Dual) && (estim_obj < estim_best)
       estim_best = estim_obj
