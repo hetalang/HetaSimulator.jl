@@ -103,7 +103,7 @@ fres = fit([:one=>fscn1, :two=>fscn2], [:k1=>0.01, :sigma1=>1.0], progress=:sile
 @test test_show(fres)
 @test length(measurements(fscn1)) == 24
 @test length(measurements(fscn2)) == 24
-@test status(fres) == :FTOL_REACHED
+@test status(fres) == :Success
 @test isapprox(obj(fres), 146.05; atol=1e-2)
 @test typeof(optim(fres)) == Vector{Pair{Symbol, Float64}}
 @test length(optim(fres)) == 2

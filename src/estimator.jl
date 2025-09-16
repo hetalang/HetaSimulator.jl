@@ -3,7 +3,7 @@
 # aux function to allow user write both `Pair{Symbol,Float64}` and `Pair{Symbol,Real}`
 # convert to regular `Vector{Pair{Symbol,Float64}}` for further processing
 normalize_params(v::AbstractVector{<:Pair{Symbol,<:Real}}) =
-    [k => Float64(val) for (k,val) in v]
+    [k => float(val) for (k,val) in v]
 
 """
     function estimator(
@@ -35,7 +35,7 @@ normalize_params(v::AbstractVector{<:Pair{Symbol,<:Real}}) =
 
   Returns:
 
-    function(x:Vector{Float64}=last.(parameters_fitted))
+    function(x=last.(parameters_fitted))
   
   The method returns anonimous function which depends on parameters vector in the same order as in `parameters_fitted`.
   This function is ready to be passed to optimizer routine or identifiability analysis.
@@ -90,13 +90,17 @@ function estimator(
     function(prob,i,repeat) # internal_prob_func
       #update_init_values(selected_prob[i], last(selected_scenario_pairs[i]).init_func, x)
       scn = last(selected_scenario_pairs[i])
-      params_total = merge_strict(scn.parameters, x)
+      T = eltype(x)
+      params_total = (T <: ForwardDiff.Dual) ? merge_strict(NamedTuple{keys(scn.parameters)}(T.(collect(scn.parameters))), x) : merge_strict(scn.parameters, x)
       remake_prob(selected_prob[i], scn.init_func, params_total; safetycopy=true) #?safetycopy=false
     end
   end
 
   function _output(sol, i)
-    sol.retcode != :Success && error("Simulated scenario $i returned $(sol.retcode) status")
+    if !SciMLBase.successful_retcode(sol.retcode)
+      @warn "Simulated scenario $i returned $(sol.retcode) status"
+      return (Inf, false)
+    end
     sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
     simulation = Simulation(sv, NamedTuple(parameters_fitted_norm), sol.retcode)
     result = SimResult(simulation, last(selected_scenario_pairs[i]))
@@ -118,7 +122,7 @@ function estimator(
 
   ### function ready for fitting
 
-  function out(x::Vector{Float64}=last.(parameters_fitted_norm))
+  function out(x=last.(parameters_fitted_norm))
     x_nt = NamedTuple{Tuple(parameters_fitted_names)}(x)
     solution = solve(
       prob(x_nt),
@@ -234,3 +238,4 @@ function estimator(
 
   return estimator(scenario_pairs, parameters_fitted; kwargs...)
 end
+

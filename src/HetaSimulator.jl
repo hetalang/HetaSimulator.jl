@@ -28,9 +28,9 @@ module HetaSimulator
   @reexport using SciMLBase.EnsembleAnalysis
   @reexport using OrdinaryDiffEq
   using Sundials
-
+  using ForwardDiff
   # fitting
-  using NLopt
+  @reexport using OptimizationNLopt
 
   # utils
   using LabelledArrays
@@ -66,6 +66,7 @@ module HetaSimulator
   include("solution_interface.jl")
   include("plots.jl")
   include("loss.jl")
+  include("optprob.jl")
   include("fit.jl")
   include("estimator.jl")
   include("monte_carlo.jl")
@@ -86,7 +87,7 @@ module HetaSimulator
   export CVODE_BDF, CVODE_Adams
   export optim, obj
   export sim, mc, mc!
-  export fit, loss, estimator
+  export fit, loss, estimator, generate_optimization_problem
   export HetaSimulatorDir
   export update
   export times, vals, status, status_summary

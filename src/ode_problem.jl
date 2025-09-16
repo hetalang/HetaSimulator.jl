@@ -34,7 +34,7 @@ function build_ode_problem( # used in Scenario constructor only
   end
 
   # saving setup
-  utype = promote_type(eltype(u0), eltype(p0)) #change to make AD work
+  utype = Real #promote_type(eltype(u0), eltype(p0)) #change to make AD work
   merged_observables = isnothing(observables_) ? observables(model) : observables_ # use default if not set
   #=
   saved_values = SavedValues(
@@ -104,18 +104,42 @@ function remake_prob(prob::ODEProblem, init_func::Function, params::NamedTuple; 
   prob0 = safetycopy ? deepcopy(prob) : prob
   nparams = length(params)
   if nparams > 0
-    #u0, dep_p0 = init_func(params)
-    #p0 = NamedArrayPartition(statics=dep_p0, constants=params)
-    init_func(prob0.u0, prob0.p.x[1], params)
     # if additional params are provided
     # we shouldn't allow adding parameters, which are not in the model or scenario
     (length(prob0.p.x[2]) != nparams) && resize!(prob0.p.x[2], nparams)
+    if eltype(params) <: ForwardDiff.Dual
+      prob0 = remake_prob_types(prob0, params)
+    end
     # update parameters
+    #u0, dep_p0 = init_func(params)
+    #p0 = NamedArrayPartition(statics=dep_p0, constants=params)
+    init_func(prob0.u0, prob0.p.x[1], params)
     @inbounds for i in 1:nparams
       prob0.p.x[2][i] = params[i]
     end
   end
   return prob0
+end
+
+function remake_prob_types(prob::ODEProblem, params::NamedTuple) 
+  T = eltype(params)
+  time_type = Float64
+  
+  scb_orig = prob.kwargs[:callback].discrete_callbacks[1].affect!
+  utype = promote_type(eltype(prob.u0), T)
+
+  saved_values = SavedValues(
+    LArray{utype,1,Array{utype,1},observables(prob)},
+    time_type
+  )
+  save_func = scb_orig.save_func
+  save_scope = scb_orig.save_scope
+  saveat = scb_orig.saveat_cache
+  scb_new = saving_wrapper(save_func, saved_values; saveat=saveat, save_scope=save_scope)
+
+  cbs = list_callbacks(prob)
+  cb_set = CallbackSet(scb_new,cbs[1]...,cbs[2]...)
+  remake(prob; callback=cb_set, u0=T.(prob.u0), p=ArrayPartition(T.(prob.p.x[1]), T.(prob.p.x[2])))
 end
 
 function remake_saveat(prob, saveat; tspan=prob.tspan, time_type::DataType=Float64)

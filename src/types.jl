@@ -471,6 +471,7 @@ The optimal parameters can be saved in heta file, see [`save_as_heta`](@ref) met
 struct FitResult{L<:Real, I}
   obj::L
   optim::Vector{Pair{Symbol,Float64}}
+  optim_scaled::Vector{Pair{Symbol,Float64}}
   status::Symbol
   numevals::I
 end
