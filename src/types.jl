@@ -231,11 +231,22 @@ end
 
 # copy fix is tmp needed not to rewrite SavedValues with new simulation
 Simulation(sv::SavedValues, params, status) = Simulation(
-  DiffEqArray(copy(sv.u),copy(sv.t)),
+  SciMLBase.RecursiveArrayTools.DiffEqArray(sv),
   copy(sv.scope),
   params,
   Symbol(status)
 ) 
+
+function SciMLBase.RecursiveArrayTools.DiffEqArray(sv::SavedValues, p=nothing; safetycopy=true)
+  vec = sv.u
+  ts = sv.t
+  vars = !isempty(vec) ? collect(symbols(vec[1])) : []
+  if safetycopy
+    return SciMLBase.RecursiveArrayTools.DiffEqArray(copy(vec), copy(ts), p; variables = vars)
+  else
+    return SciMLBase.RecursiveArrayTools.DiffEqArray(vec, ts, p; variables = vars)
+  end
+end
 
 status(s::Simulation) = s.status
 times(s::Simulation) = s.vals.t

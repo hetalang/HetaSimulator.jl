@@ -1,7 +1,7 @@
 ############################ Accessing Solution Values #####################
 
 observables(sr::SimResult) = observables(sr.sim)
-observables(sim::Simulation) = collect(keys(sim.vals.u[1]))
+observables(sim::Simulation) = collect(LabelledArrays.symnames(eltype(sim.vals.u)))
 observables(sim::MCResult) = observables(sim[1])
 #parameters(sim::SimResult) = sim.scenario.prob.p
 
