@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Fitting. Measurements · HetaSimulator.jl</title><meta name="title" content="Fitting. Measurements · HetaSimulator.jl"/><meta property="og:title" content="Fitting. Measurements · HetaSimulator.jl"/><meta property="twitter:title" content="Fitting. Measurements · HetaSimulator.jl"/><meta name="description" content="Documentation for HetaSimulator.jl."/><meta property="og:description" content="Documentation for HetaSimulator.jl."/><meta property="twitter:description" content="Documentation for HetaSimulator.jl."/><meta property="og:url" content="https://hetalang.github.io/HetaSimulator.jl/stable/tutorial/fit/"/><meta property="twitter:url" content="https://hetalang.github.io/HetaSimulator.jl/stable/tutorial/fit/"/><link rel="canonical" href="https://hetalang.github.io/HetaSimulator.jl/stable/tutorial/fit/"/><script async src="https://www.googletagmanager.com/gtag/js?id=G-SSNKYMLHTQ"></script><script>  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-SSNKYMLHTQ', {'page_path': location.pathname + location.search + location.hash});
+</script><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">HetaSimulator.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Basics</span><ul><li><a class="tocitem" href="../../basics/overview/">Quick start</a></li><li><a class="tocitem" href="../../basics/distributed/">Parallel simulations</a></li><li><a class="tocitem" href="../../table-formats/scenario/">Scenarios tables</a></li><li><a class="tocitem" href="../../table-formats/measurement/">Measurements tables</a></li><li><a class="tocitem" href="../../table-formats/parameters/">Parameters tables</a></li><li><a class="tocitem" href="../../basics/solvers/">Solver choice</a></li><li><a class="tocitem" href="../../basics/reduction/">Using <code>reduction_func</code> and <code>output_func</code></a></li></ul></li><li><span class="tocitem">Tutorial</span><ul><li><a class="tocitem" href="../intro/">Introduction</a></li><li><a class="tocitem" href="../sim/">Scenario. Simulation</a></li><li><a class="tocitem" href="../mc/">Monte-Carlo. Statistics calculation</a></li><li class="is-active"><a class="tocitem" href>Fitting. Measurements</a><ul class="internal"><li><a class="tocitem" href="#Working-example"><span>Working example</span></a></li><li><a class="tocitem" href="#Load-measurements"><span>Load measurements</span></a></li><li><a class="tocitem" href="#Fitting"><span>Fitting</span></a></li><li><a class="tocitem" href="#Fitting-with-parameters-table"><span>Fitting with parameters table</span></a></li><li><a class="tocitem" href="#Additional-optimization-specific-options"><span>Additional optimization-specific options</span></a></li></ul></li><li><a class="tocitem" href="../gsa/">Global Sensitivity Analysis</a></li><li><a class="tocitem" href="../plots/">Plots</a></li></ul></li><li><a class="tocitem" href="../../api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorial</a></li><li class="is-active"><a href>Fitting. Measurements</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Fitting. Measurements</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/hetalang/HetaSimulator.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/hetalang/HetaSimulator.jl/blob/master/docs/src/tutorial/fit.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Fitting.-Measurements"><a class="docs-heading-anchor" href="#Fitting.-Measurements">Fitting. Measurements</a><a id="Fitting.-Measurements-1"></a><a class="docs-heading-anchor-permalink" href="#Fitting.-Measurements" title="Permalink"></a></h1><h3 id="Under-development!-Be-sure-you-have-the-latest-**HetaSimulator.jl**-version."><a class="docs-heading-anchor" href="#Under-development!-Be-sure-you-have-the-latest-**HetaSimulator.jl**-version.">Under development! Be sure you have the latest <strong>HetaSimulator.jl</strong> version.</a><a id="Under-development!-Be-sure-you-have-the-latest-**HetaSimulator.jl**-version.-1"></a><a class="docs-heading-anchor-permalink" href="#Under-development!-Be-sure-you-have-the-latest-**HetaSimulator.jl**-version." title="Permalink"></a></h3><p><a href="../../api/#HetaSimulator.fit-Union{Tuple{P}, Tuple{C}, Tuple{Any, AbstractVector{&lt;:Pair{Symbol, &lt;:Real}}}} where {C&lt;:HetaSimulator.AbstractScenario, P&lt;:Pair}"><code>fit</code></a> method can be used to estimate model parameters based on experimental data. Typically the method is applied to the whole <code>Platform</code> but it can also be used with the selected <code>Scenario</code>s.</p><p>Be sure you have the latest <strong>HetaSimulator.jl</strong> version.</p><pre><code class="language-julia hljs">] # switch to Pkg mode
+add HetaSimulator</code></pre><h2 id="Working-example"><a class="docs-heading-anchor" href="#Working-example">Working example</a><a id="Working-example-1"></a><a class="docs-heading-anchor-permalink" href="#Working-example" title="Permalink"></a></h2><p>This example uses the <code>heta</code> model, which can be downloaded here: <a href="../fit-files/index.heta">index.heta</a></p><pre><code class="language-heta hljs">// Compartments
+Vol0 @Compartment .= 1;
+Vol1 @Compartment .= 6.3;
+Vol2 @Compartment .= 10.6;
+
+// Species
+A0 @Species {compartment: Vol0, isAmount: true, output: true} .= 0;
+C1 @Species {compartment: Vol1, output: true} .= 0;
+C2 @Species {compartment: Vol2, output: true} .= 0;
+
+// Reactions
+v_abs @Reaction {actors: A0 = C1} := kabs * A0;
+v_el @Reaction {actors: C1 =} := Vol1 * (kel * C1); // Vol1 * (kmax * C1 / (Km + C1));
+v_distr @Reaction {actors: C1 = C2} := Q * (C1 - C2);
+
+// Parameters
+dose @Const = 20;
+kabs @Const = 20;
+kel @Const = 0.5;
+Q @Const = 1.0;
+// kmax @Const = 3e3;
+// Km @Const = 9e3;
+
+// single dose event
+sw1 @TimeSwitcher {start: 0};
+A0 [sw1]= dose;
+
+// multiple dose event, default off
+sw2 @TimeSwitcher {start: 0, period: 24, active: false};
+A0 [sw2]= dose;
+
+// parameters for fitting
+sigma1 @Const = 0.1;
+sigma2 @Const = 0.1;
+sigma3 @Const = 0.1;</code></pre><p>Download the file or create  <strong>index.heta</strong> with VSCode in the working directory.</p><p>Load the platform into the Julia environment. You should provide the path to the modeling platform as the first argument to <code>load_platform</code>. We will use the same working directory where the <code>index.heta</code> file is located.</p><pre><code class="language-julia hljs">using HetaSimulator, Plots
+
+p = load_platform(&quot;.&quot;)</code></pre><p>The following table describes 4 scenarios.</p><p><img src="../fit-fig01.png" alt="fig01"/></p><p>The file can be downloaded here: <a href="../fit-files/scenarios.csv">scenarios.csv</a></p><p>Load scenarios into the platform.</p><pre><code class="language-julia hljs">scn_df = read_scenarios(&quot;./scenarios.csv&quot;)
+add_scenarios!(p, scn_df)</code></pre><h2 id="Load-measurements"><a class="docs-heading-anchor" href="#Load-measurements">Load measurements</a><a id="Load-measurements-1"></a><a class="docs-heading-anchor-permalink" href="#Load-measurements" title="Permalink"></a></h2><p>Experimental data can be used for both visualization and parameters estimation. To read more about measurements tables format see the <a href="../../table-formats/measurement/#measurement">documentation</a>.</p><p><img src="../fit-fig02.png" alt="fig02"/></p><p>The measurements file can be downloaded here: <a href="../fit-files/measurements.csv">measurements.csv</a>. The dataset includes <code>C1</code> observable measurements with unknown variance.</p><p>The measurement table can be loaded into the <code>Platform</code> using <code>read_measurements</code> and <code>add_measurements!</code> functions.</p><pre><code class="language-julia hljs">measurements_df = read_measurements(&quot;./measurements.csv&quot;)</code></pre><pre><code class="nohighlight hljs">90×5 DataFrame
+ Row │ t         measurement  prob.mean  prob.sigma  scenario 
+     │ Float64   Float64      String     String      Symbol   
+─────┼────────────────────────────────────────────────────────
+   1 │  0.08333    0.0686283  C1         sigma1      dose_1
+   2 │  0.08333    0.0684679  C1         sigma1      dose_1
+  ⋮  │    ⋮           ⋮           ⋮          ⋮          ⋮
+  89 │ 24.0        1.036      C1         sigma3      dose_100
+  90 │ 24.0        0.724612   C1         sigma3      dose_100
+                                               86 rows omitted</code></pre><pre><code class="language-julia hljs">add_measurements!(p, measurements_df)
+
+# display platform content
+p</code></pre><pre><code class="nohighlight hljs">Platform with 1 model(s), 4 scenario(s), 90 measurement(s)
+   Models: nameless
+   Scenarios: dose_1, dose_10, dose_100, multiple_15</code></pre><p>We can plot simulation results together with measured values.</p><pre><code class="language-julia hljs"># simulate all
+res = sim(p)</code></pre><pre><code class="nohighlight hljs">4-element Vector{Pair{Symbol, SimResult}}
+    :dose_1 =&gt; 80x3 SimResult with status :Success.
+    :dose_10 =&gt; 100x3 SimResult with status :Success.
+    :dose_100 =&gt; 124x3 SimResult with status :Success.
+    :multiple_15 =&gt; 668x3 SimResult with status :Success.</code></pre><pre><code class="language-julia hljs"># plot all default
+plot(res)</code></pre><p><img src="../fit-fig03.png" alt="fit-fig03"/></p><p>One can use the additional <code>yscale</code>, <code>ylim</code> and other <code>Plots</code> keyword arguments to change how the results are displayed. </p><pre><code class="language-julia hljs"># plot C1, C2 in log scale
+plot(res, vars=[:C1,:C2], yscale=:log10, ylim=(1e-3, 1e3))</code></pre><p><img src="../fit-fig04.png" alt="fit-fig04"/></p><h2 id="Fitting"><a class="docs-heading-anchor" href="#Fitting">Fitting</a><a id="Fitting-1"></a><a class="docs-heading-anchor-permalink" href="#Fitting" title="Permalink"></a></h2><p>Before we run the optimization procedure we set the initial (nominal) values for the parameters selected for fitting.</p><p><code>sigma1</code>, <code>sigma2</code>, <code>sigma3</code> parameters are not included in the model code. They describe the variability of measurement error for the scenarios: <code>dose_1</code>, <code>dose_10</code> and <code>dose_100</code>.</p><pre><code class="language-julia hljs"># fitted parameters
+to_fit = [
+    :kabs =&gt; 8.0,
+    :Q =&gt; 4.0,
+    :kel =&gt; 2.2,
+    :sigma1 =&gt; 0.1,
+    :sigma2 =&gt; 0.1,
+    :sigma3 =&gt; 0.1,
+]
+res_optim = fit(p, to_fit) # default fitting</code></pre><pre><code class="nohighlight hljs">┌ Info: Scenario &quot;:multiple_15&quot; has no measurements. It will be excluded from fitting.
+└ @ HetaSimulator y:\HetaSimulator.jl\src\fit.jl:77
+FitResult with status :Success
+   Status: Success
+   Optimal values: [:kabs =&gt; 18.868605026704916, :Q =&gt; 4.043662480774219, :kel =&gt; 0.17104243648378176, :sigma1 =&gt; 0.020347955494158528, :sigma2 =&gt; 0.31561050699802246, :sigma3 =&gt; 0.5716026958426483]
+   OF value: 140.96503722971997
+   OF count: 8612</code></pre><p>The scenario <code>multiple_15</code> does not include any measurement. That&#39;s why we see the warning message here. This is not an error.</p><p>The optimal value of the parameters can be obtained with <code>optim</code> method applied to <code>FitResult</code>.</p><pre><code class="language-julia hljs"># optimal parameters
+optim(res_optim)</code></pre><pre><code class="nohighlight hljs"> 6-element Vector{Pair{Symbol, Float64}}:
+   :kabs =&gt; 18.868605026704916
+      :Q =&gt; 4.043662480774219
+    :kel =&gt; 0.17104243648378176
+ :sigma1 =&gt; 0.020347955494158528
+ :sigma2 =&gt; 0.31561050699802246
+ :sigma3 =&gt; 0.5716026958426483</code></pre><p>To display the simulations with the updated parameters values we can use <code>parameters</code> argument in <code>sim</code>.</p><pre><code class="language-julia hljs"># check fitting quality 
+res = sim(p, parameters = optim(res_optim))
+plot(res, yscale=:log10, vars=[:C1,:C2], ylims=(1e-3,1e2))</code></pre><p><img src="../fit-fig05.png" alt="fig05"/></p><h2 id="Fitting-with-parameters-table"><a class="docs-heading-anchor" href="#Fitting-with-parameters-table">Fitting with parameters table</a><a id="Fitting-with-parameters-table-1"></a><a class="docs-heading-anchor-permalink" href="#Fitting-with-parameters-table" title="Permalink"></a></h2><p>The parameters setup that is used in <code>fit</code> can also be loaded from tabular format. The description of tabular format can be found in <a href="../../table-formats/parameters/#parameters">documentation</a>.</p><p>For example we will use the following table. It can be downloaded here: <a href="../fit-files/parameters.csv">parameters.csv</a></p><p><img src="../fit-fig06.png" alt="fig06"/></p><p>The table can be loaded with <code>read_parameters</code> method.</p><pre><code class="language-julia hljs"># read parameters from table
+params_df = read_parameters(&quot;./parameters.csv&quot;)</code></pre><pre><code class="nohighlight hljs">6×6 DataFrame
+ Row │ parameter  scale   lower    upper    nominal  estimate 
+     │ Symbol     Symbol  Float64  Float64  Float64  Bool     
+─────┼────────────────────────────────────────────────────────
+   1 │ kabs       lin         1.0    100.0      8.0      true
+   2 │ kel        log         0.0     60.0      2.2      true
+   3 │ Q          log10       1.0     80.0      4.0      true
+   4 │ sigma1     lin         0.0     10.0      0.1      true
+   5 │ sigma2     lin         0.0     10.0      0.1      true
+   6 │ sigma3     lin         0.0     10.0      0.1      true</code></pre><p>As before we can use this as a setup <code>DataFrame</code> for parameters estimation.</p><pre><code class="language-julia hljs">res_optim = fit(p, params_df)</code></pre><pre><code class="nohighlight hljs">┌ Info: Scenario &quot;:multiple_15&quot; has no measurements. It will be excluded from fitting.
+└ @ HetaSimulator 
+FitResult with status :Success
+   Status: Success
+   Optimal values: [:kabs =&gt; 8.669590504032879, :kel =&gt; 0.2299120380231296, :Q =&gt; 3.386457652767808, :sigma1 =&gt; 0.010105725225267037, :sigma2 =&gt; 0.09951673713071268, :sigma3 =&gt; 0.6024808584834973]
+   OF value: -101.7645013649068
+   OF count: 417</code></pre><h2 id="Additional-optimization-specific-options"><a class="docs-heading-anchor" href="#Additional-optimization-specific-options">Additional optimization-specific options</a><a id="Additional-optimization-specific-options-1"></a><a class="docs-heading-anchor-permalink" href="#Additional-optimization-specific-options" title="Permalink"></a></h2><p>Internally, <code>HetaSimulator</code> uses the <code>Optimization.jl</code> interface, which supports various optimization packages. By default, <code>HetaSimulator</code> includes the NLopt library, allowing you to choose an NLopt-based optimization algorithm without installing additional packages. To access more optimizers, you can add any optimization package supported by <code>Optimization.jl</code> and use the preferred optimizer algorithm in <code>fit()</code>.</p><p>Read more about NLopt algorithms choice: <a href="https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/">https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/</a></p><pre><code class="language-julia hljs">res_optim = fit(
+    p, 
+    params_df, 
+    fit_alg = NLopt.LN_SBPLX(), 
+    ftol_abs = 1e-5, 
+    ftol_rel = 0, 
+    maxiters = 10^6
+)
+optim(res_optim)</code></pre><p>There are several optimization related arguments, which are available for a user.  To learn more read about <a href="../../api/#HetaSimulator.fit-Union{Tuple{P}, Tuple{C}, Tuple{Any, AbstractVector{&lt;:Pair{Symbol, &lt;:Real}}}} where {C&lt;:HetaSimulator.AbstractScenario, P&lt;:Pair}"><code>fit</code></a> method in API documentation.</p><ul><li><code>fit_alg</code> : fitting algorithm. Default is <code>NLopt.LN_NELDERMEAD()</code></li><li><code>ftol_abs</code> : absolute tolerance on objective value. Default is <code>0.0</code></li><li><code>ftol_rel</code> : relative tolerance on objective value. Default is <code>1e-4</code></li><li><code>maxiters</code> : maximum number of objective evaluations. Default is <code>1e4</code></li><li><code>maxtime</code> : maximum optimization time (in seconds). Default is <code>0</code></li></ul></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../mc/">« Monte-Carlo. Statistics calculation</a><a class="docs-footer-nextpage" href="../gsa/">Global Sensitivity Analysis »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Tuesday 16 September 2025 14:39">Tuesday 16 September 2025</span>. Using Julia version 1.11.7.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
