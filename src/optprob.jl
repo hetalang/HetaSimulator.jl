@@ -53,12 +53,8 @@ function generate_optimization_problem(
   lbounds = fill(0.0, length(parameters_fitted)),
   ubounds = fill(Inf, length(parameters_fitted)),
   scale = fill(:lin, length(parameters_fitted)),
-  progress::Symbol = :minimal,
   kwargs... # other arguments to sim
 ) where {C<:AbstractScenario, P<:Pair}
-
-  # names of parameters used in fitting and saved in parameters_fitted field of solution
-  parameters_names = first.(parameters_fitted)
 
   selected_scenario_pairs = Pair{Symbol,Scenario}[]
   for scenario_pair in scenario_pairs # iterate through scenarios names
@@ -82,28 +78,9 @@ function generate_optimization_problem(
     kwargs...
   )
 
-  # progress info
-  prog = ProgressUnknown(; desc ="Fit counter:", spinner=false, enabled=progress!=:silent, showspeed=true)
-  count = 0
-  estim_best = Inf
   function obj_func(x, hyper_params)
-    count+=1
-    # try - catch is a tmp solution for NLopt 
     x_unscaled = unscale_params.(x, scale)
     estim_obj = estim_fun(x_unscaled)
-
-    if !isnothing(estim_obj) && !isa(estim_obj, ForwardDiff.Dual) && (estim_obj < estim_best)
-      estim_best = estim_obj
-    end
-
-    values_to_display = [(:ESTIMATOR_BEST, round(estim_best; digits=2))]
-    if progress == :full && !(eltype(x_unscaled) <: ForwardDiff.Dual)
-      for i in 1:length(x)
-        push!(values_to_display, (parameters_names[i], round(x_unscaled[i], sigdigits=3)))
-      end
-    end
-
-    ProgressMeter.update!(prog, count, spinner="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"; showvalues = values_to_display)
     return estim_obj
   end
 

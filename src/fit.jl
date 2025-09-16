@@ -84,20 +84,44 @@ function fit(
     lbounds=lbounds,
     ubounds=ubounds,
     scale=scale,
-    progress=progress,
     kwargs... # other arguments to sim
   )
+
+  parameters_names = first.(parameters_fitted)
+  prog = ProgressUnknown(; desc ="Fit counter:", spinner=false, enabled=progress!=:silent, showspeed=true)
+  numiters = 0
+  estim_best = Inf
+  function counter_callback(state, estim_obj)
+    numiters +=1
+
+    x_unscaled = unscale_params.(state.u, scale)
+    if !isnothing(estim_obj) && !isa(estim_obj, ForwardDiff.Dual) && (estim_obj < estim_best)
+      estim_best = estim_obj
+    end
+
+    values_to_display = [(:ESTIMATOR_BEST, round(estim_best; digits=2))]
+    if progress == :full && !(eltype(x_unscaled) <: ForwardDiff.Dual)
+      for i in eachindex(x_unscaled)
+        push!(values_to_display, (parameters_names[i], round(x_unscaled[i], sigdigits=3)))
+      end
+    end
+
+    ProgressMeter.update!(prog, numiters, spinner="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"; showvalues = values_to_display)
+
+    return false
+  end
 
   optsol = solve(optprob, fit_alg; 
     reltol=ftol_rel, 
     abstol=ftol_abs, 
     maxiters=maxiters, 
-    maxtime=maxtime)
+    maxtime=maxtime,
+    callback=counter_callback)
 
   minx = optsol.u
   minf = optsol.objective
   ret = Symbol(optsol.retcode)
-  numiters = 0 # TODO callback to save iters
+
   # to create pairs from Float64
   parameter_names = _extract_parameter_names(parameters_fitted)
   minx_pairs = [key=>value for (key, value) in zip(parameter_names, unscale_params.(minx, scale))]
