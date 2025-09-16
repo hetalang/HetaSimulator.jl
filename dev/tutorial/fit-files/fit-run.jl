@@ -67,19 +67,17 @@ res_optim = fit(p, params_df)
 res_optim = fit(
     p, 
     params_df, 
-    fit_alg = :LN_SBPLX, 
+    fit_alg = NLopt.LN_SBPLX(), 
     ftol_abs = 1e-5, 
     ftol_rel = 0, 
-    maxeval = 10^6
+    maxiters = 10^6
 )
 optim(res_optim)
 
 #= see API docs
 fit_alg : fitting algorithm. Default is :LN_NELDERMEAD
-ftol_abs : absolute tolerance on function value. Default is 0.0
-ftol_rel : relative tolerance on function value. Default is 1e-4
-xtol_rel : relative tolerance on optimization parameters. Default is 0.0
-xtol_rel : absolute tolerance on optimization parameters. Default is 0.0
-maxeval : maximum number of function evaluations. Default is 1e4
+ftol_abs : absolute tolerance on objective value. Default is 0.0
+ftol_rel : relative tolerance on objective value. Default is 1e-4
+maxiters : maximum number of objective evaluations. Default is 1e4
 maxtime : maximum optimization time (in seconds). Default is 0
 =#
