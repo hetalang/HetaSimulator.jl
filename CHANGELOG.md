@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.8.0
+
+### Breaking changes
+- `OptimizationProblem` interface added
+- fit arguments changed, docs updated
+- `generate_optimization_problem` func added to export
+### Other changes
+- heta-compiler v0.9.8
+- Julia 1.9 removed from tests
+- Fixed empty simulation results vector
+- Solver choice docs updated
+
 ## 0.7.8
 
 - imports `copyat_or_push!`

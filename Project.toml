@@ -1,7 +1,7 @@
 name = "HetaSimulator"
 uuid = "630b40c4-2f38-41ff-bcb3-b2c7232fed0d"
 authors = ["Ivan Borisov", "Evgeny Metelkin"]
-version = "0.7.8"
+version = "0.8.0"
 
 [deps]
 ArtifactUtils = "8b73e784-e7d8-4ea5-973d-377fed4e3bce"
