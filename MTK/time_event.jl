@@ -1,0 +1,85 @@
+using ModelingToolkit, OrdinaryDiffEq, Plots
+
+
+function __get_mtk_model__()
+
+    ### Define independent variables ###
+    @independent_variables t
+
+    ### Define parameters (constants and statics) ###
+    __const_parameters__ = @parameters begin 
+        k1_factor = 1.0
+        comp1_factor = 1.0
+        dose = 1.0
+    end
+
+    __discrete_parameters__ = @parameters begin 
+        p1(t) = 1.0
+    end
+
+    __dependent_parameters__ = @parameters begin 
+        k1 = 1e-2 * k1_factor
+        comp1 = 1.0 * comp1_factor
+    end
+
+    ### Define dependent variables ###
+
+    __states__ = @variables begin
+        _x1_(t)  = 1.0 * comp1
+        _x2_(t)  = 0.0 * comp1
+    end
+
+    __rules__ = @variables begin 
+        x1(t) 
+        x2(t)
+        r1(t) 
+        cond1(t)
+        p1_dep_var(t)
+    end
+
+    ### Define potential algebraic variables ###
+
+
+    ### Define an operator for the differentiation w.r.t. time ###
+    __D__ = Differential(t)
+
+    ### ODE Equations ###
+    __eqs__ = [
+        # rules
+        x1 ~ _x1_/ comp1,
+        x2 ~ _x2_/ comp1,
+        r1 ~ k1 * x1 * comp1,
+        cond1 ~ 6e-1 - x1,
+        p1_dep_var ~ p1 + 100.0,
+
+        # ODEs
+        __D__(_x1_) ~ -r1, # dx1/dt
+        __D__(_x2_) ~ r1, # dx2/dt
+    ]
+
+    ### TIME EVENTS ###
+   function dose_func(u, p, ctx, integrator) 
+       x1 = u._x1_/ p.comp1 + p.dose
+       _x1_ = x1 * p.comp1
+       (; _x1_ )
+   end
+    __sw1_event__ = [1.0, 5.0, 50.0] => (dose_func, (; _x1_), (; comp1, dose))
+
+    ### STOP EVENTS ###
+
+    ### ODESystem definition ###
+    __sys__ = ODESystem(__eqs__, t, [__states__; __rules__], [__const_parameters__; __dependent_parameters__; __discrete_parameters__],;
+        name = :nameless,
+        discrete_events = [__sw1_event__]
+    )
+
+    return structural_simplify(__sys__)
+end
+
+__model__ = __get_mtk_model__()
+
+prob = ODEProblem(__model__, Dict(), (0.0, 100.0))
+sol = solve(prob, Tsit5(), saveat=1.0)
+
+# states
+sol([0.0, 1.0, 2.0 , 5.0, 6.0, 50.0, 51.0], idxs=[:_x1_])
