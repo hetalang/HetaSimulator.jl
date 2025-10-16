@@ -14,6 +14,7 @@ function __get_mtk_model__()
 
     __discrete_parameters__ = @parameters begin 
         p1(t) = 1.0
+        p2(t) = p1
     end
 
     __dependent_parameters__ = @parameters begin 
@@ -59,7 +60,7 @@ function __get_mtk_model__()
     ### TIME EVENTS ###
 
     ### C EVENTS ###
-    __sw1_event__ = ModelingToolkit.SymbolicContinuousCallback([cond1 ~ 0.0] => [p1 ~ 2*Pre(p1)], discrete_parameters = [p1], iv = t)
+    __sw1_event__ = ModelingToolkit.SymbolicContinuousCallback([cond1 ~ 0.0] => [p1 ~ 2*Pre(p1)], discrete_parameters = [p1, p2], iv = t)
 
     ### STOP EVENTS ###
 
@@ -92,4 +93,4 @@ sol.ps[:k1]
 
 # discrete parameters
 sol[__model__.p1]
-sol(sol.t, idxs=[__model__.p1, :r1, :p1_dep_var])
+sol([3.0, 12.003, 52.95], idxs=[__model__.p1, :r1, :p1_dep_var])

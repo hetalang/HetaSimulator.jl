@@ -63,7 +63,7 @@ function __get_mtk_model__()
        _x1_ = x1 * p.comp1
        (; _x1_ )
    end
-    __sw1_event__ = [1.0, 5.0, 50.0] => (dose_func, (; _x1_), (; comp1, dose))
+    __sw1_event__ = collect(12.0:24.0:Inf) => (dose_func, (; _x1_), (; comp1, dose))
 
     ### STOP EVENTS ###
 

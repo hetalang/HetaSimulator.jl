@@ -72,4 +72,4 @@ end
 __model__ = __get_mtk_model__()
 
 prob = ODEProblem(__model__, Dict(), (0.0, 100.0))
-sol = solve(prob, Rodas5P(), saveat=1.0)
+sol = solve(prob, FBDF(), saveat=1.0)
