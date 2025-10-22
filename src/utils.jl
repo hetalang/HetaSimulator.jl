@@ -108,3 +108,11 @@ function Base.setindex!(A::ArrayPartition, X::AbstractArray, I::AbstractVector{I
   end
   return A
 end
+
+function _to_float(x::Real)
+    return float(x)
+end
+
+function _to_float(x::ForwardDiff.Dual)
+    return float(x.value)
+end
