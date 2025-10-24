@@ -65,19 +65,16 @@ Arguments:
 function load_jlplatform(
   model_jl::AbstractString
 )
+  # include and CAPTURE the returned tuple (models, tasks, version)
+  args = Base.invokelatest(() -> Base.include(Main, model_jl))
 
-  # load model to Main
-  Base.include(Main, model_jl)
-  
-  version = Main.__platform__[3]
-  @assert version == HETA_COMPILER_VERSION "The model was build with Heta compiler v$version, which is not supported.\n"*
-  "This HetaSimulator release includes Heta compiler v$HETA_COMPILER_VERSION. Please re-compile the model with HetaSimulator load_platform()."
-  
-  # tmp fix to output model without task
-  # (models, tasks,) = Base.invokelatest(Main.Platform)
+  # version check
+  version = args[3]
+  @assert version == HETA_COMPILER_VERSION "The model was built with Heta compiler v$version, which is not supported.\n" *
+      "This HetaSimulator release includes Heta compiler v$HETA_COMPILER_VERSION. Please re-compile the model with HetaSimulator load_platform()."
 
-  platform = Base.invokelatest(Platform, Main.__platform__...)
-
+  # build the Platform using the returned tuple
+  platform = Base.invokelatest(Platform, args...)
   return platform
 end
 
