@@ -70,8 +70,8 @@ function load_jlplatform(
 
   # version check
   version = args[3]
-  @assert version == HETA_COMPILER_VERSION "The model was built with Heta compiler v$version, which is not supported.\n" *
-      "This HetaSimulator release includes Heta compiler v$HETA_COMPILER_VERSION. Please re-compile the model with HetaSimulator load_platform()."
+  @assert version == HETA_COMPILER_VERSION "The model was build with Heta compiler v$version, which is not supported.\n"*
+  "This HetaSimulator release includes Heta compiler v$HETA_COMPILER_VERSION. Please re-compile the model with HetaSimulator load_platform()."
 
   # build the Platform using the returned tuple
   platform = Base.invokelatest(Platform, args...)
