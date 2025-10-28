@@ -52,7 +52,7 @@ function build_ode_problem( # used in Scenario constructor only
   lobs = length(merged_observables)
   function saving_func(u,t,integrator)
     out = zeros(eltype(u), lobs)
-    saving!(out,u,t,integrator)
+    Base.invokelatest(saving!,out,u,t,integrator)
     return out
   end
 
