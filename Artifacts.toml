@@ -1,42 +1,42 @@
 [[heta_app]]
 arch = "x86_64"
-git-tree-sha1 = "e530e6e50018fedbd2794d38962bf2f24175b549"
+git-tree-sha1 = "d53e55032f2d0aebc09fd816076fe0565a860614"
 libc = "glibc"
 os = "linux"
 
     [[heta_app.download]]
-    sha256 = "9554fd987cbebfb6931146d405f4bbd2fa83bbfa54a734e3a7132ca2097f5f37"
-    url = "https://github.com/hetalang/heta-compiler/releases/download/julia_test/heta-compiler-linux-x64.tar.gz"
+    sha256 = "53b74d935349390ecb8e08885b4a0a41112b491e01aa899d2ef882059350c892"
+    url = "https://github.com/hetalang/heta-compiler/releases/download/v0.10.0/heta-compiler-linux-x64.tar.gz"
 [[heta_app]]
 arch = "aarch64"
-git-tree-sha1 = "f34543c21e5ad720160846bb20f0f781c24639a4"
+git-tree-sha1 = "f5fd8098f0b6f5dcf9e12ea85762308b7b4f16f2"
 libc = "glibc"
 os = "linux"
 
     [[heta_app.download]]
-    sha256 = "757f49e33b2374b2860f64ff5b2c84a4db79868060028ec5cd64a2d6a0604db2"
-    url = "https://github.com/hetalang/heta-compiler/releases/download/julia_test/heta-compiler-linux-arm64.tar.gz"
+    sha256 = "ac4c7bc4f193b49249304d1c526d2a450363324096a501f8591577db56849c3e"
+    url = "https://github.com/hetalang/heta-compiler/releases/download/v0.10.0/heta-compiler-linux-arm64.tar.gz"
 [[heta_app]]
 arch = "x86_64"
-git-tree-sha1 = "15a782eb9031844464595a7be6b322562800e639"
+git-tree-sha1 = "9f0f36d98ae3ad587b1a7eb708f2cf4ba747f4b0"
 os = "windows"
 
     [[heta_app.download]]
-    sha256 = "b456fad956a49e344da76ed9205039f188657a7080794494504263b085d255ec"
-    url = "https://github.com/hetalang/heta-compiler/releases/download/julia_test/heta-compiler-windows-x64.tar.gz"
+    sha256 = "c47e89c1a97a46910a1fa884540e3f84f6080f7d5844aa2a570164a141b2beff"
+    url = "https://github.com/hetalang/heta-compiler/releases/download/v0.10.0/heta-compiler-windows-x64.tar.gz"
 [[heta_app]]
 arch = "x86_64"
-git-tree-sha1 = "d725ada463c13af8ced3e5a3a572674c0270be7a"
+git-tree-sha1 = "f4868fa87fa18c3672b9e744f95b1c404153741e"
 os = "macos"
 
     [[heta_app.download]]
-    sha256 = "65064ad1a7862ccd3c98c57c1209dc1149714f3cd5acc45940d6bebf6f917bd4"
-    url = "https://github.com/hetalang/heta-compiler/releases/download/julia_test/heta-compiler-macos-x64.tar.gz"
+    sha256 = "822aa5de6f438ae7f1bf7b64243275e942e396e7cc95e6a2111401224ce2af03"
+    url = "https://github.com/hetalang/heta-compiler/releases/download/v0.10.0/heta-compiler-macos-x64.tar.gz"
 [[heta_app]]
 arch = "aarch64"
-git-tree-sha1 = "0c247da01e1af1de0a8a986737cd41201d7b4d17"
+git-tree-sha1 = "949269e6117de92477167fd00077adc749c78570"
 os = "macos"
 
     [[heta_app.download]]
-    sha256 = "556a82bd878d32da3f743284b99f8d9d5160d6ab2acad982581ff7e1343f7e8f"
-    url = "https://github.com/hetalang/heta-compiler/releases/download/julia_test/heta-compiler-macos-arm64.tar.gz"
+    sha256 = "e611e9afc46c7ad7820386c6f4a2ddb70efbea039a93d7fde582998f81bd30c3"
+    url = "https://github.com/hetalang/heta-compiler/releases/download/v0.10.0/heta-compiler-macos-arm64.tar.gz"
