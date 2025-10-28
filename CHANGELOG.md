@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.8.1
+
+- `Julia 1.12` support added
+- Model format changed (`__platfrom__` removed)
+- added `invokelatest` to `saving_func` calls
+- Fixed AD in `TimeEvent`
+- Heta-compiler v0.10.0
+
 ## 0.8.0
 
 ### Breaking changes
