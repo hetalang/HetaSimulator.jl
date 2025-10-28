@@ -19,7 +19,8 @@ function add_event(evt::TimeEvent, events_save::Tuple{Bool, Bool}=(false,false),
   #scn_func(u, t, integrator) = t in tstops
 
   function init_time_event(cb,u,t,integrator)
-      append!(tstops, evt.condition_func(integrator.sol.prob.p.x[2], integrator.sol.prob.tspan))
+      ts = evt.condition_func(integrator.sol.prob.p.x[2], integrator.sol.prob.tspan)
+      append!(tstops, _to_float.(ts)) # fix for Dual numbers
       tf = integrator.sol.prob.tspan[2]
       [add_tstop!(integrator, tstop) for tstop in tstops if tstop <= tf]
       #[add_tstop!(integrator, tstop) for tstop in tstops]
