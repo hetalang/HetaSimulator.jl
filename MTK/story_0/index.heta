@@ -1,0 +1,15 @@
+/*
+    Example from README.md file
+*/
+
+// index.heta file in directory "my_project"
+comp1 @Compartment .= 1.5;
+
+s1 @Species {compartment: comp1, output: true} .= 12;
+s2 @Species {compartment: comp1, output: true} .= 0;
+
+r1 @Reaction {actors: s1 => s2, output: true} := k1 * s1 * comp1;
+
+k1 @Const = 1e-3;
+
+#export { format: MT, filepath: story_0 };
