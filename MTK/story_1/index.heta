@@ -30,3 +30,5 @@ a [sw1]= a + 1;
 //a [sw3]= a + 2;
 
 //ss1 @StopSwitcher {trigger: t > 10};
+
+#export { format: MT, filepath: story_0 };
