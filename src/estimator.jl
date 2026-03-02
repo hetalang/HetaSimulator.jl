@@ -96,16 +96,18 @@ function estimator(
     end
   end
 
-  function _output(sol, i)
-    if !SciMLBase.successful_retcode(sol.retcode)
-      @warn "Simulated scenario $i returned $(sol.retcode) status"
-      return (Inf, false)
+  function output_func(x)
+    function(sol, i)
+      if !SciMLBase.successful_retcode(sol.retcode)
+        @warn "Simulated scenario $i returned $(sol.retcode) status"
+        return (Inf, false)
+      end
+      sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
+      simulation = Simulation(sv, NamedTuple{Tuple(parameters_fitted_names)}(x), sol.retcode)
+      result = SimResult(simulation, last(selected_scenario_pairs[i]))
+      loss_val = loss(result, result.scenario.measurements)
+      (loss_val, false)
     end
-    sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-    simulation = Simulation(sv, NamedTuple(parameters_fitted_norm), sol.retcode)
-    result = SimResult(simulation, last(selected_scenario_pairs[i]))
-    loss_val = loss(result, result.scenario.measurements)
-    (loss_val, false)
   end
 
   function _reduction(u, batch, I)
@@ -115,7 +117,7 @@ function estimator(
   prob(x) = EnsembleProblem(
     EMPTY_PROBLEM;
     prob_func = prob_func(x),
-    output_func = _output,
+    output_func = output_func(x),
     reduction = _reduction,
     safetycopy=false
   )
