@@ -5,7 +5,7 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
 
 """
     fit(
-      scenario_pairs::AbstractVector{Pair{Symbol, C}},
+      scenario_pairs,
       parameters_fitted::AbstractVector{<:Pair{Symbol,<:Real}};
       parameters::Union{Nothing, Vector{P}}=nothing,
       alg=DEFAULT_ALG,
@@ -23,7 +23,7 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
       scale = fill(:lin, length(parameters_fitted)),
       progress::Symbol = :minimal,
       kwargs... 
-    ) where {C<:AbstractScenario, P<:Pair}
+    ) where {P<:Pair}
 
   Fit parameters to experimental measurements. Returns `FitResult` type.
 
@@ -70,7 +70,7 @@ function fit(
   scale = fill(:lin, length(parameters_fitted)),
   progress::Symbol = :minimal,
   kwargs... # other arguments to sim
-) where {C<:AbstractScenario, P<:Pair}
+) where {P<:Pair}
 
   optprob = generate_optimization_problem(
     scenario_pairs,
