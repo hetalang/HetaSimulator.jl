@@ -5,7 +5,7 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
 
 """
     fit(
-      scenario_pairs,
+      target,
       parameters_fitted::AbstractVector{<:Pair{Symbol,<:Real}};
       parameters::Union{Nothing, Vector{P}}=nothing,
       alg=DEFAULT_ALG,
@@ -31,7 +31,7 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
 
   Arguments:
 
-  - `scenario_pairs` : can be a `Platform`, a vector of scenarios, or a vector of pairs (`Vector{Pair{Symbol,Scenario}}`), matching the accepted types of the `estimator` function.
+  - `target` : can be a `Platform`, a vector of scenarios, or a vector of pairs (`Vector{Pair{Symbol,Scenario}}`), matching the accepted types of the `estimator` function.
   - `parameters_fitted` : can be a vector of pairs (`Vector{Pair{Symbol,<:Real}}`) or a `DataFrame` with parameter setup, as accepted by `estimator`.
   - `parameters` : parameters, which overwrite both `Model` and `Scenario` parameters. Default is `nothing`
   - `alg` : ODE solver. See SciML docs for details. Default is `AutoTsit5(Rosenbrock23())`
@@ -52,7 +52,7 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
   - `kwargs...` : other solver related arguments supported by SciMLBase.solve. See SciML docs for details
 """
 function fit(
-  scenario_pairs,
+  target,
   parameters_fitted::AbstractVector{<:Pair{Symbol,<:Real}};
   parameters::Union{Nothing, Vector{P}}=nothing,
   alg=DEFAULT_ALG,
@@ -73,7 +73,7 @@ function fit(
 ) where {P<:Pair}
 
   optprob = generate_optimization_problem(
-    scenario_pairs,
+    target,
     parameters_fitted;
     parameters=parameters,
     alg=alg,
@@ -131,7 +131,7 @@ function fit(
 end
 
 function fit(
-  scenario_pairs,
+  target,
   parameters_fitted::DataFrame;
   kwargs...
 )
@@ -146,7 +146,7 @@ function fit(
   # fixed parameters
   parameters = haskey(gdf, (false,)) ? gdf[(false,)].parameter .=> gdf[(false,)].nominal : nothing
 
-  fit(scenario_pairs, parameters_fitted_; parameters, lbounds, ubounds, scale, kwargs...)
+  fit(target, parameters_fitted_; parameters, lbounds, ubounds, scale, kwargs...)
 end
 
 
