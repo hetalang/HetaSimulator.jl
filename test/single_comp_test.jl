@@ -107,3 +107,4 @@ fres = fit([:one=>fscn1, :two=>fscn2], [:k1=>0.01, :sigma1=>1.0], progress=:sile
 @test isapprox(obj(fres), 88.57; atol=1e-2)
 @test typeof(optim(fres)) == Vector{Pair{Symbol, Float64}}
 @test length(optim(fres)) == 2
+@test isapprox(last(optim(fres))[2], 0.002; atol=1e-3)
