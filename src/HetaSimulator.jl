@@ -37,6 +37,7 @@ module HetaSimulator
   using DataStructures
   @reexport using NaNMath
   @reexport using DataFrames
+  import DataFrames: DataFrame
   @reexport using Distributions
   using LinearAlgebra
   using Distributed
