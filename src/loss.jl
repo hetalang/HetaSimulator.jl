@@ -11,8 +11,9 @@ function loss_point(sim::SimResult, dp::NormalMeasurementPoint{MU,S}) where {MU,
   measurements_val = dp.val
   sigma = _param_value(sim, dp.σ, dp)
   sigma_sq = (sigma)^2
+  weight = dp.weight
 
-  log(2π) + log(sigma_sq) + (sim_val - measurements_val)^2 / sigma_sq
+  weight * (log(2π) + log(sigma_sq) + (sim_val - measurements_val)^2 / sigma_sq)
 end
 
 function loss_point(sim::SimResult, dp::LogNormalMeasurementPoint{MU,S}) where {MU,S}
@@ -20,8 +21,10 @@ function loss_point(sim::SimResult, dp::LogNormalMeasurementPoint{MU,S}) where {
   measurements_val = dp.val
   sigma = _param_value(sim, dp.σ, dp)
   sigma_sq = (sigma)^2
+  weight = dp.weight
 
-  log(2π) + log(sigma_sq) + log((measurements_val)^2) + (log(sim_val) - log(measurements_val))^2 / sigma_sq
+  # TODO: check the formula ??? log((measurements_val)^2)
+  weight * (log(2π) + log(sigma_sq) + log((measurements_val)^2) + (log(sim_val) - log(measurements_val))^2 / sigma_sq)
 end
 
 _param_value(sim, p::Float64, dp) = p

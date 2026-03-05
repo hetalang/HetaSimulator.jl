@@ -1,7 +1,5 @@
 const NORMAL = :normal
 const LOGNORMAL = :lognormal
-const SIGMA = :sigma
-const MEAN = :mean
 
 # CSV methods
 
@@ -97,18 +95,21 @@ end
 function _add_measurement!(scenario::Scenario, row::Any) # maybe not any
   _t = row[:t]
   _val = row[:measurement]
-  _scope = haskey(row, :scope) ? row[:scope] : missing
 
-  _type = haskey(row, Symbol("prob.type")) ? row[Symbol("prob.type")] : missing
-  type = ismissing(_type) ? NORMAL : _type
+  # defaults
+  _scope = get(row, :scope, :ode_)
+  _weight = get(row, Symbol("prob.weight"), 1.)
+  _type = get(row, Symbol("prob.type"), :normal)
 
-  if type in [NORMAL, LOGNORMAL]
-    _mean = typed(row[Symbol("prob.$MEAN")])
-    _sigma = typed(row[Symbol("prob.$SIGMA")])
+  _mean = typed(row[Symbol("prob.mean")])
+  _sigma = typed(row[Symbol("prob.sigma")])
 
-    point = (type == LOGNORMAL) ? LogNormalMeasurementPoint(_t, _val, _scope, _mean, _sigma) : NormalMeasurementPoint(_t, _val, _scope, _mean, _sigma)
-  else 
-    error("Distribution value $type is wrong or not supported. Supported distributions are: $Normal, $Lognormal")
+  point = if _type == LOGNORMAL
+    LogNormalMeasurementPoint(_t, _val, _scope, _mean, _sigma, _weight)
+  elseif _type == NORMAL
+    NormalMeasurementPoint(_t, _val, _scope, _mean, _sigma, _weight)
+  else
+    error("Distribution value $_type is wrong or not supported. Supported distributions are: $NORMAL, $LOGNORMAL")
   end
 
   push!(scenario.measurements, point)

@@ -15,18 +15,15 @@ end
 dictkeys(d::Dict) = (collect(keys(d))...,)
 dictvalues(d::Dict) = (collect(values(d))...,)
 
-#=
-to_nt(d::Dict{Symbol,T}) where {T} =
-    NamedTuple{dictkeys(d)}(dictvalues(d))
-=#
+# normalize values from DataFrame cells to correct types
+# all Numbers to Float64
 typed(v::Number) = Float64(v)
-function typed(v::AbstractString) 
-  v_float = tryparse(Float64,v)
-  ret = isnothing(v_float) ? Symbol(v) : v_float
-  ret
-end
-
+# all strings to Float64 if possible, otherwise to Symbol
+typed(v::AbstractString) = something(tryparse(Float64, v), Symbol(v))
+# all symbols to symbols
 typed(v::Symbol) = v
+# missing values to missing
+typed(::Missing) = missing
 
 function _subset(
   vector::AbstractVector,

@@ -132,9 +132,8 @@ struct NormalMeasurementPoint{M,SD} <: AbstractMeasurementPoint
   scope::Symbol
   μ::M
   σ::SD
+  weight::Float64
 end
-
-NormalMeasurementPoint(t,val,scope::Missing,μ,σ) = NormalMeasurementPoint(t,val,:ode_,μ,σ)
 
 struct LogNormalMeasurementPoint{M,SD} <: AbstractMeasurementPoint
   t::Float64
@@ -142,9 +141,8 @@ struct LogNormalMeasurementPoint{M,SD} <: AbstractMeasurementPoint
   scope::Symbol
   μ::M
   σ::SD
+  weight::Float64
 end
-
-LogNormalMeasurementPoint(t,val,scope::Missing,μ,σ) = LogNormalMeasurementPoint(t,val,:ode_,μ,σ)
 
 const MeasurementVector{P} = AbstractVector{P} where P<:AbstractMeasurementPoint
 
