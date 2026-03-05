@@ -66,7 +66,7 @@ results = Scenario(model, (0., 1200.)) |> sim
 plot(results)
 ```
 
-![Plot](https://raw.githubusercontent.com/hetalang/HetaSimulator.jl/master/plot0.png)
+![Plot](./plot0.png)
 
 ```julia
 # transform results to data frame
@@ -97,14 +97,13 @@ See documentation for detailed overview of **HetaSimulator** types and functions
 ## Getting help
 
 - Read the [docs](https://hetalang.github.io/HetaSimulator.jl/stable/)
-- Use [Gitter Chatroom](https://gitter.im/hetalang/community?utm_source=readme).
 - Use [Issue Tracker](https://github.com/hetalang/HetaSimulator.jl/issues)
 
 ## License
 
 This package is distributed under the terms of the **MIT License**.
 
-Copyright 2020-2024, InSysBio LLC
+Copyright 2020-2026, InSysBio LLC
 
 ## Authors and history
 
