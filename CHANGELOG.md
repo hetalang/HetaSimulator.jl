@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.8.2
+
+- Fix bug in fitting when sigma is unknown
+- Fix warnings with Julia 1.12
+- Add support for weights in measurement points
+- Update documentation and README
+
 ## 0.8.1
 
 - `Julia 1.12` support added
