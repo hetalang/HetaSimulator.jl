@@ -98,7 +98,7 @@ function _add_measurement!(scenario::Scenario, row::Any) # maybe not any
 
   # defaults
   _scope = get(row, :scope, :ode_)
-  _weight = get(row, Symbol("prob.weight"), 1.)
+  _weight = get(row, :weight, 1.)
   _type = get(row, Symbol("prob.type"), :normal)
 
   _mean = typed(row[Symbol("prob.mean")])

@@ -16,6 +16,7 @@ The first row is the header. The sequence of columns may vary.
     - `prob.type` (optional) : a `String` declaring probability type. `normal` is default.
     - `prob.mean` : `Float64` value or `String` representing `@Const` or `@Record` id in the model. The value represents mean parameter in normal distribution.
     - `prob.sigma` : `Float64` value or `String` representing `@Const` or `@Record` id in the model. The value represents sigma (standard deviation) parameter in normal distribution.
+- `weight` (optional): a `Float64` value representing the weight of the measurement. Default value is 1.
 
 Currently two probability types are available: `normal`, `lognormal`. This distributions can be used for the relevant types of error models.
 
@@ -24,7 +25,7 @@ Currently two probability types are available: `normal`, `lognormal`. This distr
 Each row in the table will be transformed into the corresponding component of log-likelihood function $-2ln(L)$.
 
 ```math
-\Lambda = \sum_i \left( ln(<prob.sigma>_i^2) + \frac{(<prob.mean>_i - <measurement>_i)^2}{<prob.sigma>_i^2}\right)
+\Lambda = \sum_i \left\{ \left( ln(<prob.sigma>_i^2) + \frac{(<prob.mean>_i - <measurement>_i)^2}{<prob.sigma>_i^2}\right) weight_i \right\}
 ```
 
 ### prob.type: lognormal
@@ -32,7 +33,7 @@ Each row in the table will be transformed into the corresponding component of lo
 Each row in the table will be transformed into the corresponding component of log-likelihood function $-2ln(L)$.
 
 ```math
-\Lambda = \sum_i \left( ln(<prob.sigma>_i^2) + \frac{(ln(<prob.mean>_i) - ln(<measurement>_i))^2}{<prob.sigma>_i^2}\right)
+\Lambda = \sum_i \left\{ \left( ln(<prob.sigma>_i^2) + \frac{(ln(<prob.mean>_i) - ln(<measurement>_i))^2}{<prob.sigma>_i^2}\right) weight_i \right\}
 ```
 
 ## Loading to Platform
