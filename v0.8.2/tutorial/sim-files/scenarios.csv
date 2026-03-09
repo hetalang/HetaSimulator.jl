@@ -1,0 +1,5 @@
+id,parameters.dose,events_active.sw1,events_active.sw2,tspan
+dose_1,1,true,false,50
+dose_10,10,true,false,50
+dose_100,100,true,false,50
+multiple_15,15,false,true,50
