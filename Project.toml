@@ -40,7 +40,7 @@ ProgressMeter = "1"
 RecipesBase = "1"
 Reexport = "1"
 SciMLBase = "2.15"
-Sundials = "4.24"
+Sundials = "4.24, 5"
 XLSX = "0.7, 0.8"
 julia = "1.10"
 
