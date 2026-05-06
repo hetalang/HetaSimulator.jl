@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.8.3
+
+- Heta compiler updated to 0.11.1
+
 ## 0.8.2
 
 - Fix bug in fitting when sigma is unknown
