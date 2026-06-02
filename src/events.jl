@@ -44,7 +44,7 @@ function add_event(evt::CEvent, events_save::Tuple{Bool, Bool}=(false,false), ev
   function init_time_event(cb::ContinuousCallback, u, t, integrator)
     val = cb.condition(u, t, integrator)
 
-    if abs(val) <= cb.abstol
+    if evt.atStart && abs(val) <= cb.abstol
         cb.affect!(integrator)
         u_modified!(integrator, true)
     end
