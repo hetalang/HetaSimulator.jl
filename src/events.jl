@@ -24,38 +24,75 @@ function add_event(evt::TimeEvent, events_save::Tuple{Bool, Bool}=(false,false),
       tf = integrator.sol.prob.tspan[2]
       [add_tstop!(integrator, tstop) for tstop in tstops if tstop <= tf]
       #[add_tstop!(integrator, tstop) for tstop in tstops]
-      cb.condition(u,t,integrator) ? cb.affect!(integrator) : nothing
+      if evt.atStart && cb.condition(u, t, integrator)
+        cb.affect!(integrator)
+        u_modified!(integrator, true)
+      end
+    return nothing
   end
 
   DiscreteCallback(
         (u,t,integrator) -> t in tstops,
-        (integrator) -> evt_func_wrapper(integrator, evt.affect_func, events_save, evt_name),
+        (integrator) -> evt_func_wrapper(integrator, evt.affect_func, events_save, evt_name);
         initialize = init_time_event,
         save_positions=(false,false)
   )
 end
 
 function add_event(evt::CEvent, events_save::Tuple{Bool, Bool}=(false,false), evt_name=nothing)
+
+  function init_time_event(cb::ContinuousCallback, u, t, integrator)
+    val = cb.condition(u, t, integrator)
+
+    if abs(val) <= cb.abstol
+        cb.affect!(integrator)
+        u_modified!(integrator, true)
+    end
+
+    return nothing
+  end
+
   ContinuousCallback(
       evt.condition_func,
       (integrator) -> evt_func_wrapper(integrator, evt.affect_func, events_save, evt_name),
-      (integrator) -> nothing,
+      (integrator) -> nothing;
+      initialize = init_time_event,
       save_positions=(false,false)
   )
 end
 
 function add_event(evt::DEvent, events_save::Tuple{Bool, Bool}=(false,false), evt_name=nothing)
+
+  function init_time_event(cb,u,t,integrator) 
+    if evt.atStart && cb.condition(u, t, integrator)
+      cb.affect!(integrator)
+      u_modified!(integrator, true)
+    end
+    return nothing
+  end
+
   DiscreteCallback(
       evt.condition_func,
-      (integrator) -> evt_func_wrapper(integrator, evt.affect_func, events_save, evt_name),
+      (integrator) -> evt_func_wrapper(integrator, evt.affect_func, events_save, evt_name);
+      initialize = init_time_event,
       save_positions=(false,false)
   )
 end
 
 function add_event(evt::StopEvent, events_save::Tuple{Bool, Bool}=(false,false), evt_name=nothing)
+
+  function init_time_event(cb,u,t,integrator)
+    if evt.atStart && cb.condition(u,t,integrator)
+      cb.affect!(integrator)
+      u_modified!(integrator, true)
+    end
+    return nothing
+  end
+    
   DiscreteCallback(
     evt.condition_func,
-    (integrator) -> evt_func_wrapper(integrator, terminate!, events_save, evt_name),
+    (integrator) -> evt_func_wrapper(integrator, terminate!, events_save, evt_name);
+    initialize = init_time_event,
     save_positions=(false,false)
   )
 end
