@@ -5,6 +5,9 @@
 normalize_params(v::AbstractVector{<:Pair{Symbol,<:Real}}) =
     [k => float(val) for (k,val) in v]
 
+_convert_namedtuple_values(::Type{T}, nt::NamedTuple) where {T} =
+  NamedTuple{keys(nt)}(T.(Tuple(nt)))
+
 """
     function estimator(
       scenario_pairs::AbstractVector{Pair{Symbol, C}},
@@ -53,6 +56,8 @@ function estimator(
 ) where {C<:AbstractScenario,P<:Pair}
 
   parameters_fitted_norm = normalize_params(parameters_fitted)
+  parameters_norm = isnothing(parameters) ? Pair{Symbol,Float64}[] : normalize_params(parameters)
+  fixed_parameters = NamedTuple(parameters_norm)
 
   # names of parameters used in fitting and saved in parameters field of solution
   parameters_fitted_names = first.(parameters_fitted)
@@ -72,7 +77,7 @@ function estimator(
   selected_prob = []
   for scen_pair in selected_scenario_pairs
     scen = last(scen_pair)
-    prob_i = !isnothing(parameters) ? remake_prob(scen, NamedTuple(parameters); safetycopy=true) : deepcopy(scen.prob)
+    prob_i = !isempty(parameters_norm) ? remake_prob(scen, fixed_parameters; safetycopy=true) : deepcopy(scen.prob)
     prob_i = remake_saveat(prob_i, scen.measurements)
     #=
     prob_i = if !isnothing(parameters)
@@ -91,7 +96,9 @@ function estimator(
       #update_init_values(selected_prob[i], last(selected_scenario_pairs[i]).init_func, x)
       scn = last(selected_scenario_pairs[i])
       T = eltype(x)
-      params_total = (T <: ForwardDiff.Dual) ? merge_strict(NamedTuple{keys(scn.parameters)}(T.(collect(scn.parameters))), x) : merge_strict(scn.parameters, x)
+      base_parameters = (T <: ForwardDiff.Dual) ? _convert_namedtuple_values(T, scn.parameters) : scn.parameters
+      fixed_parameters_i = (T <: ForwardDiff.Dual) ? _convert_namedtuple_values(T, fixed_parameters) : fixed_parameters
+      params_total = merge_strict(merge_strict(base_parameters, fixed_parameters_i), x)
       remake_prob(selected_prob[i], scn.init_func, params_total; safetycopy=true) #?safetycopy=false
     end
   end
@@ -103,7 +110,7 @@ function estimator(
         return (Inf, false)
       end
       sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-      simulation = Simulation(sv, NamedTuple{Tuple(parameters_fitted_names)}(x), sol.retcode)
+      simulation = Simulation(sv, merge(fixed_parameters, NamedTuple{Tuple(parameters_fitted_names)}(x)), sol.retcode)
       result = SimResult(simulation, last(selected_scenario_pairs[i]))
       loss_val = loss(result, result.scenario.measurements)
       (loss_val, false)
