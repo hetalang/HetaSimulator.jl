@@ -11,7 +11,20 @@ function active_events(events::NamedTuple, events_active::NamedTuple, events_sav
   end
   _events_save = merge(NamedTuple{ev_names}(fill((false,false), length(events))), events_save)
 
-  return Tuple(add_event(events[ev], _events_save[ev], ev) for ev in keys(events) if events_active[ev])
+  callbacks = Tuple(
+    add_event(events[ev], _events_save[ev], ev)
+    for ev in keys(events)
+    if events_active[ev] && !(events[ev] isa CEvent)
+  )
+  c_events = Tuple(
+    ev => events[ev]
+    for ev in keys(events)
+    if events_active[ev] && events[ev] isa CEvent
+  )
+  c_events_save = Tuple(_events_save[first(evt)] for evt in c_events)
+  c_callback = add_continuous_events(c_events, c_events_save)
+
+  isnothing(c_callback) ? callbacks : (callbacks..., c_callback)
 end
 
 function add_event(evt::TimeEvent, events_save::Tuple{Bool, Bool}=(false,false), evt_name=nothing)
@@ -40,29 +53,70 @@ function add_event(evt::TimeEvent, events_save::Tuple{Bool, Bool}=(false,false),
 end
 
 function add_event(evt::CEvent, events_save::Tuple{Bool, Bool}=(false,false), evt_name=nothing)
+  add_continuous_events((evt_name => evt,), (events_save,))
+end
 
-  function init_time_event(cb::ContinuousCallback, u, t, integrator)
-    val = cb.condition(u, t, integrator)
+function add_continuous_events(events::Tuple, events_save::Tuple)
+  isempty(events) && return nothing
 
-    if evt.atStart && abs(val) <= cb.abstol
-        cb.affect!(integrator)
-        u_modified!(integrator, true)
+  ev_names = first.(events)
+  evts = last.(events)
+  len = length(evts)
+
+  function condition(out, u, t, integrator)
+    @inbounds for i in 1:len
+      out[i] = evts[i].condition_func(u, t, integrator)
+    end
+    return nothing
+  end
+
+  function affect!(integrator, simultaneous_events)
+    for event_idx in eachindex(simultaneous_events)
+      s = simultaneous_events[event_idx]
+      #=
+      | `0`  | condition did not trigger this step |
+      | `-1` | upcrossing (condition went from negative to positive) |
+      | `+1` | downcrossing (condition went from positive to negative) |
+      =#
+      if s != 0 
+        evt = evts[event_idx]
+        evt_func_wrapper(integrator, evt.affect_func, events_save[event_idx], ev_names[event_idx])
+      end
+    end
+  end
+
+  function init_continuous_events(cb, u, t, integrator)
+    simultaneous_events = zeros(Int8, len)
+
+    @inbounds for i in 1:len
+      evt = evts[i]
+      val = evt.condition_func(u, t, integrator)
+
+      if evt.atStart && abs(val) <= cb.abstol
+        simultaneous_events[i] = Int8(-1)
+      end
+    end
+
+    if any(!iszero, simultaneous_events)
+      cb.affect!(integrator, simultaneous_events)
+      u_modified!(integrator, true)
     end
 
     return nothing
   end
 
-  ContinuousCallback(
-      evt.condition_func,
-      (integrator) -> evt_func_wrapper(integrator, evt.affect_func, events_save, evt_name),
-      (integrator) -> nothing;
-      initialize = init_time_event,
+  VectorContinuousCallback(
+      condition,
+      affect!,
+      len;
+      initialize = init_continuous_events,
       save_positions=(false,false)
   )
 end
 
 function add_event(evt::DEvent, events_save::Tuple{Bool, Bool}=(false,false), evt_name=nothing)
-
+  println("DEvent added: $evt_name")
+  @show events_save
   function init_time_event(cb,u,t,integrator) 
     if evt.atStart && cb.condition(u, t, integrator)
       cb.affect!(integrator)
@@ -107,13 +161,13 @@ function evt_func_wrapper(integrator, evt_func, events_save, evt_name)
   reset_dt!(integrator)
 end
 
-function reset_dt!(integrator::Sundials.AbstractSundialsIntegrator)
-# not implemented 
-end
-
 function reset_dt!(integrator::SciMLBase.AbstractODEIntegrator)
   if integrator.t != integrator.sol.prob.tspan[1]  # exclude events at zero
     auto_dt_reset!(integrator)
     set_proposed_dt!(integrator, integrator.dt)
   end
+end
+
+function reset_dt!(integrator)
+# not implemented for other integrators, but should be added if needed
 end

@@ -1,7 +1,7 @@
 name = "HetaSimulator"
 uuid = "630b40c4-2f38-41ff-bcb3-b2c7232fed0d"
-authors = ["Ivan Borisov", "Evgeny Metelkin"]
 version = "0.8.3"
+authors = ["Ivan Borisov", "Evgeny Metelkin"]
 
 [deps]
 ArtifactUtils = "8b73e784-e7d8-4ea5-973d-377fed4e3bce"
@@ -22,25 +22,23 @@ ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
 RecipesBase = "3cdcf5f2-1ef4-517c-9805-6587b60abb01"
 Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 SciMLBase = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
-Sundials = "c3572dad-4567-51f8-b174-8c6c989267f4"
 XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"
 
 [compat]
 ArtifactUtils = "0.2.4"
 CSV = "0.10"
 DataFrames = "1"
-DataStructures = "0.18"
+DataStructures = "0.19"
 Distributions = "0.25"
 ForwardDiff = "0.10.38, 1.0.1"
 LabelledArrays = "1.6.1"
 NaNMath = "1"
 OptimizationNLopt = "0.2.2, 0.3.2"
-OrdinaryDiffEq = "6"
+OrdinaryDiffEq = "7"
 ProgressMeter = "1"
 RecipesBase = "1"
 Reexport = "1"
-SciMLBase = "2.15"
-Sundials = "4.24"
+SciMLBase = "3"
 XLSX = "0.7, 0.8"
 julia = "1.10"
 
