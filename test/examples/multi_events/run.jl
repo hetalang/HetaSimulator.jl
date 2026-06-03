@@ -1,7 +1,7 @@
 using HetaSimulator
 using Plots, DataFrames
 
-p = load_jlplatform("model.jl")
+p = load_jlplatform("$HetaSimulatorDir/test/examples/multi_events/model.jl")
 m = models(p)[:nameless]
 
 # threeshold: 2.5 - wrong, 1.5 - wrong, 0.5 - wrong

@@ -98,6 +98,7 @@ function add_continuous_events(events::Tuple, events_save::Tuple)
     end
 
     if any(!iszero, simultaneous_events)
+      ensure_saving_initialized!(integrator)
       cb.affect!(integrator, simultaneous_events)
       u_modified!(integrator, true)
     end
