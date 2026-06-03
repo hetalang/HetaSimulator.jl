@@ -121,7 +121,8 @@ function sim(
   progress_on = (parallel_type == EnsembleSerial()) # tmp fix
   p = Progress(length(scenario_pairs), dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled=progress_on)
 
-  function prob_func(prob,i,repeat)
+  function prob_func(prob, ctx)
+    i = ctx.sim_id
     next!(p)
     verbose && println("Processing scenario $i")
     scn_i = last(scenario_pairs[i])
@@ -138,7 +139,8 @@ function sim(
     =#
   end
 
-  function _output(sol,i)
+  function _output(sol, ctx)
+    i = ctx.sim_id
     sv_i = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
     scenario = last(scenario_pairs[i])
     simulation = Simulation(sv_i, parameters_nt, sol.retcode)

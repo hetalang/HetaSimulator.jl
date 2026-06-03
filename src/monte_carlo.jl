@@ -3,7 +3,7 @@ const progch = RemoteChannel(()->Channel{Bool}(), 1)
 
 # as in SciMLBase
 DEFAULT_MC_REDUCTION(u,data,I) = append!(u, data), false
-DEFAULT_MC_OUTPUT(sol,i) = sol
+DEFAULT_MC_OUTPUT(sol,ctx) = sol
 
 """
     mc(scenario::Scenario,
@@ -63,7 +63,8 @@ function mc(
   #(parallel_type == EnsembleSerial()) # tmp fix
   p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled = progress_bar)
   
-  function prob_func(prob,i,repeat)
+  function prob_func(prob, ctx)
+    i = ctx.sim_id
     verbose && println("Processing iteration $i")
     progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
     
@@ -77,7 +78,8 @@ function mc(
     =#
   end
 
-  function _output(sol, i)
+  function _output(sol, ctx)
+    i = ctx.sim_id
     # take numbers from p
     values_i = sol.prob.p.x[2][cons_indexes]
     params_i = NamedTuple(zip(first.(parameters_variation), values_i))
@@ -85,7 +87,7 @@ function mc(
     sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
     simulation = Simulation(sv, params_i, sol.retcode)
 
-    return (output_func(simulation, i), false)
+    return (output_func(simulation, ctx), false)
   end
 
   prob = EnsembleProblem(scenario.prob;
@@ -230,7 +232,8 @@ function mc(
 
   p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled=progress_bar)
   
-  function prob_func(prob,i,repeat)
+  function prob_func(prob, ctx)
+    i = ctx.sim_id
     iter_i = iter[i]
     verbose && println("Processing scenario $(iter_i[2]) iteration $(iter_i[1])")
     progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
@@ -248,7 +251,8 @@ function mc(
     =#
   end
 
-  function _output(sol, i)
+  function _output(sol, ctx)
+    i = ctx.sim_id
     iter_i = iter[i]
     # takes parameters_variation from pre-generated
     params_i = parameters_pregenerated[iter_i[1]]

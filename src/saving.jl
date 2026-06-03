@@ -86,7 +86,7 @@ function (affect!::SavingEvent)(integrator,force_save = false; scope = :ode_)
       affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope)
       copyat_or_push!(affect!.saved_values.u, affect!.saveiter, affect!.save_func(integrator.u, integrator.t, integrator),Val{false})
   end
-  u_modified!(integrator, false)
+  derivative_discontinuity!(integrator, false)
 end
 
 function initialize_saving!(cb, u, t, integrator)

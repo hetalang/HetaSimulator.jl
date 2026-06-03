@@ -39,7 +39,7 @@ function add_event(evt::TimeEvent, events_save::Tuple{Bool, Bool}=(false,false),
       #[add_tstop!(integrator, tstop) for tstop in tstops]
       if evt.atStart && cb.condition(u, t, integrator)
         cb.affect!(integrator)
-        u_modified!(integrator, true)
+        derivative_discontinuity!(integrator, true)
       end
     return nothing
   end
@@ -100,7 +100,7 @@ function add_continuous_events(events::Tuple, events_save::Tuple)
     if any(!iszero, simultaneous_events)
       ensure_saving_initialized!(integrator)
       cb.affect!(integrator, simultaneous_events)
-      u_modified!(integrator, true)
+      derivative_discontinuity!(integrator, true)
     end
 
     return nothing
@@ -116,12 +116,10 @@ function add_continuous_events(events::Tuple, events_save::Tuple)
 end
 
 function add_event(evt::DEvent, events_save::Tuple{Bool, Bool}=(false,false), evt_name=nothing)
-  println("DEvent added: $evt_name")
-  @show events_save
   function init_time_event(cb,u,t,integrator) 
     if evt.atStart && cb.condition(u, t, integrator)
       cb.affect!(integrator)
-      u_modified!(integrator, true)
+      derivative_discontinuity!(integrator, true)
     end
     return nothing
   end
@@ -139,7 +137,7 @@ function add_event(evt::StopEvent, events_save::Tuple{Bool, Bool}=(false,false),
   function init_time_event(cb,u,t,integrator)
     if evt.atStart && cb.condition(u,t,integrator)
       cb.affect!(integrator)
-      u_modified!(integrator, true)
+      derivative_discontinuity!(integrator, true)
     end
     return nothing
   end
