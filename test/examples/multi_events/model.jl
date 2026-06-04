@@ -390,7 +390,7 @@ nameless_model_ = (
     :sw4,
   )}([
     (nameless_sw3_condition_func_, nameless_sw3_affect_func_, true),
-    (nameless_sw4_condition_func_, nameless_sw4_affect_func_, true),
+    (nameless_sw4_condition_func_, nameless_sw4_affect_func_, false),
   ]),
   NamedTuple{(
   )}([

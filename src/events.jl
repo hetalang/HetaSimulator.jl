@@ -37,7 +37,7 @@ function add_event(evt::TimeEvent, events_save::Tuple{Bool, Bool}=(false,false),
       tf = integrator.sol.prob.tspan[2]
       [add_tstop!(integrator, tstop) for tstop in tstops if tstop <= tf]
       #[add_tstop!(integrator, tstop) for tstop in tstops]
-      if evt.atStart && cb.condition(u, t, integrator)
+      if cb.condition(u, t, integrator)
         cb.affect!(integrator)
         derivative_discontinuity!(integrator, true)
       end
@@ -64,6 +64,7 @@ function add_continuous_events(events::Tuple, events_save::Tuple)
   len = length(evts)
 
   function condition(out, u, t, integrator)
+
     @inbounds for i in 1:len
       out[i] = evts[i].condition_func(u, t, integrator)
     end
@@ -78,7 +79,7 @@ function add_continuous_events(events::Tuple, events_save::Tuple)
       | `-1` | upcrossing (condition went from negative to positive) |
       | `+1` | downcrossing (condition went from positive to negative) |
       =#
-      if s != 0 
+      if s == 1  
         evt = evts[event_idx]
         evt_func_wrapper(integrator, evt.affect_func, events_save[event_idx], ev_names[event_idx])
       end
@@ -92,12 +93,12 @@ function add_continuous_events(events::Tuple, events_save::Tuple)
       evt = evts[i]
       val = evt.condition_func(u, t, integrator)
 
-      if evt.atStart && abs(val) <= cb.abstol
-        simultaneous_events[i] = Int8(-1)
+      if evt.atStart && val >= 0 #abs(val) <= cb.abstol
+        simultaneous_events[i] = Int8(1)
       end
     end
 
-    if any(!iszero, simultaneous_events)
+    if any(isone, simultaneous_events)
       ensure_saving_initialized!(integrator)
       cb.affect!(integrator, simultaneous_events)
       derivative_discontinuity!(integrator, true)
