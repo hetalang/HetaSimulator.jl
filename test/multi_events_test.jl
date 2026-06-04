@@ -16,8 +16,6 @@ t_sw4 = filter(:scope => x -> x == :sw4, df1).t[1]
 scn2 = Scenario(m, (0., 1200.); parameters = [:threeshold => 1.5])
 res2 = sim(scn2)
 df2 = DataFrame(res2)
-plot(res2; vars = [:s3, :s4])
-plot(res2; vars = [:s5, :s6])
 t_sw3 = filter(:scope => x -> x == :sw3, df2).t
 
 @test res2.(t_sw3, :s3, :sw3) == [2.0, 2.5, 2.5]
