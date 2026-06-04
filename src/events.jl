@@ -76,8 +76,8 @@ function add_continuous_events(events::Tuple, events_save::Tuple)
       s = simultaneous_events[event_idx]
       #=
       | `0`  | condition did not trigger this step |
-      | `-1` | upcrossing (condition went from negative to positive) |
-      | `+1` | downcrossing (condition went from positive to negative) |
+      | `+1` | upcrossing (condition went from negative to positive) |
+      | `-1` | downcrossing (condition went from positive to negative) |
       =#
       if s == 1  
         evt = evts[event_idx]
