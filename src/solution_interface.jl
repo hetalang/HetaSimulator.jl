@@ -5,8 +5,11 @@ observables(sim::Simulation) = collect(LabelledArrays.symnames(eltype(sim.vals.u
 observables(sim::MCResult) = observables(sim[1])
 #parameters(sim::SimResult) = sim.scenario.prob.p
 
-@inline Base.getindex(sim::Simulation, I...) = Base.getindex(sim.vals, :, I...)
-@inline Base.getindex(sim::Simulation, i::Symbol,::Colon) = [sim.vals[j][i] for j in 1:length(sim.vals)]
+@inline Base.getindex(sim::Simulation, i::Integer) = vals(sim)[i]
+@inline Base.getindex(sim::Simulation, I::AbstractVector{<:Integer}) = vals(sim)[I]
+@inline Base.getindex(sim::Simulation, ::Colon, i::Integer) = vals(sim)[i]
+@inline Base.getindex(sim::Simulation, I...) = Base.getindex(sim.vals, I...)
+@inline Base.getindex(sim::Simulation, i::Symbol,::Colon) = [vals(sim)[j][i] for j in 1:length(sim)]
 @inline Base.getindex(sr::SimResult, I...) = sr.sim[I...]
 @inline Base.getindex(mc::MCResult, I...) = mc.sim[I...]
 

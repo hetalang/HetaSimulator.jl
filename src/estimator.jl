@@ -87,7 +87,8 @@ function estimator(
   end
 
   function prob_func(x) # x::
-    function(prob,i,repeat) # internal_prob_func
+    function(prob, ctx) # internal_prob_func
+      i = ctx.sim_id
       #update_init_values(selected_prob[i], last(selected_scenario_pairs[i]).init_func, x)
       scn = last(selected_scenario_pairs[i])
       T = eltype(x)
@@ -97,7 +98,8 @@ function estimator(
   end
 
   function output_func(x)
-    function(sol, i)
+    function(sol, ctx)
+      i = ctx.sim_id
       if !SciMLBase.successful_retcode(sol.retcode)
         @warn "Simulated scenario $i returned $(sol.retcode) status"
         return (Inf, false)

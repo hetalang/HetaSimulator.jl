@@ -44,6 +44,7 @@ mutable struct SavingEvent{SaveFunc, SavedValues, saveatType, saveatCacheType}
   save_end::Bool
   save_scope::Bool
   saveiter::Int
+  initialized::Bool
 end
 
 function (affect!::SavingEvent)(integrator,force_save = false; scope = :ode_)
@@ -85,20 +86,45 @@ function (affect!::SavingEvent)(integrator,force_save = false; scope = :ode_)
       affect!.save_scope && copyat_or_push!(affect!.saved_values.scope, affect!.saveiter, scope)
       copyat_or_push!(affect!.saved_values.u, affect!.saveiter, affect!.save_func(integrator.u, integrator.t, integrator),Val{false})
   end
-  u_modified!(integrator, false)
+  derivative_discontinuity!(integrator, false)
+end
+
+function initialize_saving!(cb, u, t, integrator)
+  cb.affect!.initialized && return nothing
+
+  if cb.affect!.saveiter != 0
+    if integrator.tdir > 0
+      cb.affect!.saveat = BinaryMinHeap(cb.affect!.saveat_cache)
+    else
+      cb.affect!.saveat = BinaryMaxHeap(cb.affect!.saveat_cache)
+    end
+    cb.affect!.saveiter = 0
+  end
+
+  clear_savings(cb.affect!.saved_values)
+  cb.affect!.initialized = true
+  cb.affect!.save_start && save_timepoint!(integrator, :start_)
+
+  return nothing
 end
 
 function saving_initialize(cb, u, t, integrator)
-  if cb.affect!.saveiter != 0
-      if integrator.tdir > 0
-          cb.affect!.saveat = BinaryMinHeap(cb.affect!.saveat_cache)
-      else
-          cb.affect!.saveat = BinaryMaxHeap(cb.affect!.saveat_cache)
-      end
-      cb.affect!.saveiter = 0
-  end
-  clear_savings(cb.affect!.saved_values)
-  cb.affect!.save_start && save_timepoint!(integrator, :start_)
+  initialize_saving!(cb, u, t, integrator)
+end
+
+function saving_finalize(cb, u, t, integrator)
+  cb.affect!.initialized = false
+  return nothing
+end
+
+function ensure_saving_initialized!(integrator)
+  cbs = integrator.opts.callback.discrete_callbacks
+  isempty(cbs) && return nothing
+
+  cb = first(cbs)
+  cb.affect! isa SavingEvent && initialize_saving!(cb, integrator.u, integrator.t, integrator)
+
+  return nothing
 end
 
 function saving_wrapper(save_func, saved_values::SavedValues;
@@ -115,10 +141,11 @@ function saving_wrapper(save_func, saved_values::SavedValues;
   else
       saveat_internal = BinaryMaxHeap(saveat_vec)
   end
-  affect! = SavingEvent(save_func, saved_values, saveat_internal, saveat_vec, save_everystep, save_start, save_end, save_scope, 0)
+  affect! = SavingEvent(save_func, saved_values, saveat_internal, saveat_vec, save_everystep, save_start, save_end, save_scope, 0, false)
   condtion = (u, t, integrator) -> true
   DiscreteCallback(condtion, affect!;
                    initialize = saving_initialize,
+                   finalize = saving_finalize,
                    save_positions=(false,false))
 end
 

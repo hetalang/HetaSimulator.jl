@@ -27,7 +27,6 @@ module HetaSimulator
   using SciMLBase.RecursiveArrayTools: VectorOfArray, vecarr_to_vectors, DiffEqArray, ArrayPartition, copyat_or_push! #, NamedArrayPartition
   @reexport using SciMLBase.EnsembleAnalysis
   @reexport using OrdinaryDiffEq
-  using Sundials
   using ForwardDiff
   # fitting
   @reexport using OptimizationNLopt
@@ -85,7 +84,6 @@ module HetaSimulator
   export read_parameters
   export models, scenarios, scenario, constants, records, switchers, events, parameters, events_active, events_save, observables  # variables, dynamic, static
   export measurements, tspan 
-  export CVODE_BDF, CVODE_Adams
   export optim, obj
   export sim, mc, mc!
   export fit, loss, estimator, generate_optimization_problem

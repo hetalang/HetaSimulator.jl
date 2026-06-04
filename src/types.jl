@@ -251,7 +251,7 @@ times(s::Simulation) = s.vals.t
 vals(s::Simulation) = s.vals.u
 parameters(s::Simulation) = s.parameters
 
-@inline Base.length(S::Simulation) = length(S.vals.t)
+@inline Base.length(s::Simulation) = length(s.vals.t)
 
 # tmp fix to support https://github.com/SciML/SciMLBase.jl/blob/ccaba96f4d7e29e9980cd4cd7270086fc5e542d6/src/ensemble/ensemble_analysis.jl#L56
 function Base.getproperty(s::Simulation, sym::Symbol)
