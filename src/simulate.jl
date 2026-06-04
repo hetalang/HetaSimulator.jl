@@ -109,7 +109,7 @@ function sim(
   parallel_type=EnsembleSerial(),
   verbose = false,
   safetycopy=true,
-  kwargs... # other arguments for OrdinaryDiffEq.solve()
+  kwargs... # other arguments for SciMLBase.solve()
 ) where P<:Pair
 
   isempty(scenario_pairs) && return SimResult[] # BRAKE

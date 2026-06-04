@@ -26,7 +26,11 @@ module HetaSimulator
   using SciMLBase
   using SciMLBase.RecursiveArrayTools: VectorOfArray, vecarr_to_vectors, DiffEqArray, ArrayPartition, copyat_or_push! #, NamedArrayPartition
   @reexport using SciMLBase.EnsembleAnalysis
-  @reexport using OrdinaryDiffEq
+  @reexport using OrdinaryDiffEqBDF
+  @reexport using OrdinaryDiffEqRosenbrock
+  @reexport using OrdinaryDiffEqSDIRK
+  @reexport using OrdinaryDiffEqTsit5
+  using ADTypes: AutoForwardDiff, AutoFiniteDiff, AutoSparse
   using ForwardDiff
   # fitting
   @reexport using OptimizationNLopt
@@ -93,5 +97,6 @@ module HetaSimulator
   export save_results, read_mcvecs
   export save_as_heta
   export scale_params, unscale_params
+  export AutoForwardDiff, AutoFiniteDiff, AutoSparse
   export piecewise
 end
