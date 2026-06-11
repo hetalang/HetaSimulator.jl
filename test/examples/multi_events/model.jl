@@ -410,7 +410,7 @@ return (
     nameless = nameless_model_,
   ),
   (),
-  "0.11.1"
+  "0.12.0"
 )
 
 end
