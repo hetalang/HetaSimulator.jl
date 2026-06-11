@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.8.4
+
+- Heta compiler updated to 0.12.0
+- `atStart` option added to events
+- `VectorContinuousCallback` used to support simultaneous `CEvent` execution
+- `SciMLBase` updated to v3
+- `OrdinaryDiffEq` updated to v7
+- `OrdinaryDiffEq` dep replaced with certain solvers (docs updated)
+- `Sundials` dep removed
+
 ## 0.8.3
 
 - Heta compiler updated to 0.11.1
