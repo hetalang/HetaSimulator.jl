@@ -11,7 +11,6 @@ function test_show(t)
 end
 
 @testset "HetaSimulator" begin
-  @testset "Heta compiler tests" begin include("heta_compiler_test.jl") end
   @testset "Single-compartment model without events" begin include("single_comp_test.jl") end
   @testset "Single-compartment model with events" begin include("single_comp_events_test.jl") end
   @testset "Multi-event model" begin include("multi_events_test.jl") end

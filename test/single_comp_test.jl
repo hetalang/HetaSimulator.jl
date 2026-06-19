@@ -1,4 +1,4 @@
-platform = load_platform("$HetaSimulatorDir/test/examples/single_comp", rm_out = false);
+platform = load_platform("$HetaSimulatorDir/test/examples/single_comp", ir_format=:dynms, rm_out = false);
 model = platform.models[:nameless];
 @test test_show(platform)
 @test test_show(model)
