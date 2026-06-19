@@ -1,10 +1,6 @@
-# default path and model file name
-const MODEL_DIR = "_julia"
-const MODEL_NAME = "model.jl"
-
 """
     load_platform(  
-      target_dir::AbstractString;
+      heta_dir::AbstractString;
       rm_out::Bool = true,
       source::String = "index.heta",
       type::String = "heta",
@@ -18,37 +14,39 @@ https://hetalang.github.io/#/heta-compiler/cli-references?id=running-build-with-
 
 Arguments:
 
-- `target_dir` : path to a Heta platform directory
+- `heta_dir` : path to a Heta platform directory
 - `rm_out` : should the file with Julia model be removed after the model is loaded. Default is `true`
+- `ir_format` : format of the intermediate representation of the model. Default is `:julia`
+- `spaceFilter` : filter for namespaces in the Heta model. Can be a string, a vector of symbols, or `nothing`. Default is `nothing`
 - kwargs : other arguments supported by `heta_build`
 
 """
 function load_platform(
-  target_dir::AbstractString;
+  heta_dir::AbstractString;
   rm_out::Bool = true,
+  ir_format::Symbol = :julia,
   spaceFilter::Union{String, Vector{Symbol}, Nothing} = nothing,
   kwargs...
 )
-  if spaceFilter isa Vector{Symbol}
-    spaceFilter = "^(" * join(spaceFilter, "|") * ")\$"
+  build_dir = rm_out ? mktempdir() : abspath(heta_dir)
+  try
+    julia_path = HetaImporter.build_julia_file(
+      heta_dir;
+      ir_format,
+      build_dir,
+      spaceFilter,
+      kwargs...
+    )
+
+    return load_jlplatform(julia_path)
+  finally
+    _cleanup_build_dir(rm_out, build_dir)
   end
+end
 
-  export_ = isnothing(spaceFilter) ? "{format:Julia, filepath:$MODEL_DIR}" : "{format:Julia, filepath:$MODEL_DIR, spaceFilter:'$spaceFilter'}"
-  # convert heta model to julia
-  dist_dir = rm_out ? mktempdir() : abspath(target_dir) # absolute
-  build_res = heta_build(target_dir; dist_dir = dist_dir, export_ = export_, kwargs...)
-    
-  # check the exitcode (0 - success, 1 - failure) 
-  build_res == 1 && throw("Compilation errors. Likely there is an error in the code of the model. See logs")
-
-  # load model to Main
-  res = load_jlplatform("$dist_dir/$MODEL_DIR/$MODEL_NAME")
-
-  if rm_out
-    rm(dist_dir; force=true, recursive=true)
-  end
-    
-  return res
+function _cleanup_build_dir(rm_out::Bool, build_dir::AbstractString)
+  rm_out && !isempty(build_dir) && rm(build_dir; force=true, recursive=true)
+  return nothing
 end
 
 """
