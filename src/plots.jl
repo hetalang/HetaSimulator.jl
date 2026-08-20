@@ -131,21 +131,21 @@ end
   trajectories = [findfirst(x->x == v, observables(ens)) for v in vars]
   sim = ens.ens
   if ci_type in [:SEM, :std, :variance]
-      if typeof(sim.u[1]) <: AbstractArray
+      if typeof(sim.u.u[1]) <: AbstractArray
           u = vecarr_to_vectors(sim.u)
       else
           u = [sim.u.u]
       end
 
       if ci_type==:SEM 
-        val = [sqrt.(sim.v[i] / sim.num_monte) .* 1.96 for i in 1:length(sim.v)] 
+        val = [sqrt.(sim.v.u[i] / sim.num_monte) .* 1.96 for i in 1:length(sim.v.u)] 
       elseif ci_type==:std 
-        val = [sqrt.(sim.v[i]) for i in 1:length(sim.v)]
+        val = [sqrt.(sim.v.u[i]) for i in 1:length(sim.v.u)]
       elseif ci_type==:variance
-        val = [sim.v[i] for i in 1:length(sim.v)]
+        val = [sim.v.u[i] for i in 1:length(sim.v.u)]
       end
 
-      if typeof(sim.u[1]) <: AbstractArray
+      if typeof(sim.u.u[1]) <: AbstractArray
           ci_low = vecarr_to_vectors(VectorOfArray(val))
           ci_high = ci_low
       else
@@ -153,12 +153,12 @@ end
           ci_high = ci_low
       end
   elseif ci_type == :quantile
-      if typeof(sim.med[1]) <: AbstractArray
+      if typeof(sim.med.u[1]) <: AbstractArray
           u = vecarr_to_vectors(sim.med)
       else
           u = [sim.med.u]
       end
-      if typeof(sim.u[1]) <: AbstractArray
+      if typeof(sim.u.u[1]) <: AbstractArray
           ci_low = u - vecarr_to_vectors(sim.qlow)
           ci_high = vecarr_to_vectors(sim.qhigh) - u
       else

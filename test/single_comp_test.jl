@@ -1,9 +1,9 @@
-platform = load_platform("$HetaSimulatorDir/test/examples/single_comp", rm_out = false);
+platform = load_platform("$HetaSimulatorDir/test/examples/single_comp", ir_format=:dynms, rm_out = false);
 model = platform.models[:nameless];
 @test test_show(platform)
 @test test_show(model)
 
-@test isfile("$HetaSimulatorDir/test/examples/single_comp/_julia/model.jl")
+@test isfile("$HetaSimulatorDir/test/examples/single_comp/julia/model.jl")
 
 # Wrong input tests
 ## no saveat or tspan

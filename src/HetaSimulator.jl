@@ -2,27 +2,8 @@ module HetaSimulator
 
   using Reexport
   
-  # heta compiler support
-  using Pkg.Artifacts
-  import Base: SHA1
-
-  # heta-compiler supported version
-  const HETA_COMPILER_VERSION = "0.12.0"
-  #const SUPPORTED_VERSIONS = ["0.8.4", "0.8.5", "0.8.6"]
-
-  function heta_compiler_load()
-    artifact_info = artifact_meta("heta_app", joinpath(@__DIR__, "..", "Artifacts.toml"))
-  
-    artifact_info === nothing && throw("Your arch/OS is not supported by heta-compiler. Please, report this issue to Heta development team.")
-  
-    return artifact_path(SHA1(artifact_info["git-tree-sha1"]))
-  end
-  
-  const heta_path = heta_compiler_load()
-  const heta_exe_name = Sys.iswindows() ? "heta-compiler.exe" : "heta-compiler" 
-  const heta_exe_path = heta_path === nothing ? heta_exe_name : joinpath(heta_path, heta_exe_name)
-
   # diffeq-related pkgs
+  @reexport using HetaImporter
   using SciMLBase
   using SciMLBase.RecursiveArrayTools: VectorOfArray, vecarr_to_vectors, DiffEqArray, ArrayPartition, copyat_or_push! #, NamedArrayPartition
   @reexport using SciMLBase.EnsembleAnalysis
@@ -57,8 +38,7 @@ module HetaSimulator
   const HetaSimulatorDir = dirname(@__DIR__)
 
   include("types.jl")
-  include("heta_cli/connect.jl")
-  include("heta_cli/heta.jl")
+  include("load_platform.jl")
   include("utils.jl")
   include("events.jl")
   include("measurements.jl")
