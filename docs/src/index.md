@@ -23,11 +23,41 @@ __The main features__ of the package are
 It is assumed that you have **Julia** installed. 
 The latest Julia release can be downloaded from [julialang.org](https://julialang.org/downloads/)
 
-To install or update HetaSimulator run the code below in Julia environment:
+It is recommended to use a dedicated Julia environment for each project rather
+than installing HetaSimulator in the default environment. Project-specific
+environments keep dependencies isolated and make it possible for different
+projects to use compatible package versions.
+
+From your project directory, activate its environment and install
+HetaSimulator with:
 
 ```julia
 julia> ]
-(@v1.10) pkg> add HetaSimulator
+(my_project) pkg> activate .
+(my_project) pkg> add HetaSimulator
+```
+
+If the project does not yet have an environment, `activate .` selects the
+project directory and `add HetaSimulator` creates the environment files. You
+can also activate an environment at an explicit path with
+`activate /path/to/my_project`.
+
+To update HetaSimulator, activate the project environment where it is
+installed and run:
+
+```julia
+julia> ]
+(my_project) pkg> update HetaSimulator
+```
+
+The update command resolves HetaSimulator together with every other package in
+the active environment. If the update fails, another package in the environment
+may have incompatible dependency requirements. To check the packages and their
+versions in the environment, use
+
+```julia
+julia> ]
+(my_project) pkg> status
 ```
 
 Internally HetaSimulator installs Heta compiler as an artifact. 
