@@ -1,5 +1,5 @@
 #=
-    This code was generated from DynMS JSON by HetaImporter 0.1.0
+    This code was generated from DynMS JSON by HetaImporter 0.1.1
 =#
 
 (function()
@@ -106,7 +106,7 @@ return (
     nameless = nameless_model_,
   ),
   (),
-  "0.12.0"
+  "0.12.1"
 )
 
 end)()

@@ -45,6 +45,7 @@ abstract type AbstractModel end
       events::EV
       saving_generator::SG
       records_output::AbstractVector{Pair{Symbol,Bool}}
+      states::AbstractVector{Symbol}
       constants::NamedTuple
       statics::NamedTuple
       events_active::EA
@@ -66,6 +67,7 @@ struct Model{IF,OF,EV,SG,EA, MM} <: AbstractModel
   events::EV # IDEA: use (:TimeEvent, ...) instead of TimeEvent(...)
   saving_generator::SG
   records_output::AbstractVector{Pair{Symbol,Bool}}
+  states::AbstractVector{Symbol}
   constants::NamedTuple
   nstatics::Int
   nstates::Int
@@ -75,6 +77,7 @@ end
 
 constants(m::Model) = [keys(m.constants)...] # ids of constants
 records(m::Model) = first.(m.records_output) # ids of records
+states(m::Model) = m.states                 # ids of states
 switchers(m::Model) = [keys(m.events)...]    # ids of events
 events_active(m::Model) = collect(Pair{Symbol, Bool}, pairs(m.events_active))
 events_save(m::Model) = [first(x) => (false,false) for x in pairs(m.events)]
@@ -112,11 +115,13 @@ end
 
 function Base.show(io::IO, mime::MIME"text/plain", m::AbstractModel)
   const_str = print_lim(constants(m), 10)
+  states_str = print_lim(states(m), 10)
   record_str = print_lim(records(m), 10)
   switchers_str = print_lim(switchers(m), 10)
 
-  println(io, "Model contains $(length(m.constants)) constant(s), $(length(m.records_output)) record(s), $(length(m.events)) switcher(s).")
+  println(io, "Model contains $(length(m.constants)) constant(s), $(length(m.states)) state(s), $(length(m.records_output)) record(s), $(length(m.events)) switcher(s).")
   println(io, "   Constants (model-level parameters): $const_str")
+  println(io, "   States: $states_str")
   println(io, "   Records (observables): $record_str")
   println(io, "   Switchers (events): $switchers_str")
 end

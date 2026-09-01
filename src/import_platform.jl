@@ -57,6 +57,7 @@ function Model(
     #observable_pairs = filter((p) -> p[2], pairs(records_output)) # from records_output
     #observables = Symbol[p[1] for p in observable_pairs]
     records_output_ = collect(Pair{Symbol,Bool}, pairs(records_output))
+    states_ = collect(Symbol, keys(ss_vars))
     events_active_ = collect(Pair{Symbol,Bool}, pairs(events_active))
 
     # DAE problems
@@ -83,6 +84,7 @@ function Model(
         NamedTuple(events),   # events :: Changed to NamedTuple
         saving_generator,     # saving_generator
         records_output_,       
+        states_,
         constants_num,        # constants :: Changed to NamedTuple
         length(statics_ids),  # statics_num
         length(ss_vars),      # ss_vars_num
