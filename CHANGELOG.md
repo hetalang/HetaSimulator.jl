@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.8.6
+
+- Update Installation section of the docs
+- Add `states` field to `Model` struct
+
+## 0.8.5
+
+- Add `HetaImporter` as a dependency and reexport it from `HetaSimulator`.
+- Delegate Heta model compilation to `HetaImporter.build_julia_file`.
+
 ## 0.8.4
 
 - Heta compiler updated to 0.12.0
