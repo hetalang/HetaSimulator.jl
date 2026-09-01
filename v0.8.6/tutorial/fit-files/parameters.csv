@@ -1,0 +1,7 @@
+parameter,scale,lower,upper,nominal,estimate
+kabs,lin,1,100,8,1
+kel,log,0,60,2.2,1
+Q,log10,1,80,4,1
+sigma1,lin,0,10,0.1,1
+sigma2,lin,0,10,0.1,1
+sigma3,lin,0,10,0.1,1
