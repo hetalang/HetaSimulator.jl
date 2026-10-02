@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.8.7
+
+- HetaImporter compat changed to 0.2
+- heta-compiler updated to v0.12.2
+
 ## 0.8.6
 
 - Update Installation section of the docs
