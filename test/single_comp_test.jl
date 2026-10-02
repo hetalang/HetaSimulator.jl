@@ -1,8 +1,8 @@
-platform = load_platform("$HetaSimulatorDir/test/examples/single_comp", ir_format=:dynms, rm_out = false);
+platform = load_platform("$HetaSimulatorDir/test/examples/single_comp", ir_format=:julia, rm_out = false);
 model = platform.models[:nameless];
 @test test_show(platform)
 @test test_show(model)
-@test states(model) == [:A_amt_, :B_amt_]
+@test states(model) == [:A, :B]
 
 @test isfile("$HetaSimulatorDir/test/examples/single_comp/julia/model.jl")
 

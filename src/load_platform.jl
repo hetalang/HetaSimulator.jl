@@ -16,7 +16,7 @@ Arguments:
 
 - `heta_dir` : path to a Heta platform directory
 - `rm_out` : should the file with Julia model be removed after the model is loaded. Default is `true`
-- `ir_format` : format of the intermediate representation of the model. Default is `:julia`
+- `ir_format` : compiler export format. Only `:julia` is supported.
 - `spaceFilter` : filter for namespaces in the Heta model. Can be a string, a vector of symbols, or `nothing`. Default is `nothing`
 - kwargs : other arguments supported by `heta_build`
 

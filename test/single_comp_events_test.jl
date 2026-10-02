@@ -1,4 +1,4 @@
-platform = load_platform("$HetaSimulatorDir/test/examples/single_comp_events"; ir_format=:dynms);
+platform = load_platform("$HetaSimulatorDir/test/examples/single_comp_events"; ir_format=:julia);
 model = platform.models[:nameless];
 
 scn0 = Scenario(model, (0.,4000.); observables=[:a0,:c1])
