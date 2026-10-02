@@ -27,6 +27,9 @@ Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 SciMLBase = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
 XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"
 
+[sources]
+HetaImporter = {url = "https://github.com/hetalang/HetaImporter.jl", rev = "ode_problem"}
+
 [compat]
 ADTypes = "1"
 CSV = "0.10"
@@ -34,7 +37,7 @@ DataFrames = "1"
 DataStructures = "0.19"
 Distributions = "0.25"
 ForwardDiff = "0.10.38, 1.0.1"
-HetaImporter = "0.1.1"
+HetaImporter = "0.2"
 LabelledArrays = "1.6.1"
 NaNMath = "1"
 OptimizationNLopt = "0.2.2, 0.3.2"

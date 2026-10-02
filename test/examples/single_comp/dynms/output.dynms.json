@@ -1,11 +1,11 @@
 {
-  "$schema": "https://raw.githubusercontent.com/hetalang/heta-compiler/v0.12.1/src/dynms/dynms.schema.json",
-  "dynms": "0.2.0",
+  "$schema": "https://raw.githubusercontent.com/hetalang/heta-compiler/v0.12.2/src/dynms/dynms.schema.json",
+  "dynms": "0.2.1",
   "generator": {
     "name": "heta-compiler",
-    "version": "0.12.1"
+    "version": "0.12.2"
   },
-  "created": "2026-09-01T10:27:54.259Z",
+  "created": "2026-09-25T15:59:43.472Z",
   "license": "UNLICENSED",
   "models": [
     {
