@@ -26,7 +26,7 @@ jobs:
           - {version: 'lts', os: ubuntu-22.04-arm, arch: aarch64, allow_failure: true}
     steps:
       - uses: actions/checkout@v4
-      - uses: julia-actions/setup-julia@v2
+      - uses: julia-actions/setup-julia@v3
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
