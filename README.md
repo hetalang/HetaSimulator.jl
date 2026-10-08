@@ -92,10 +92,21 @@ analyzing these models.
 -   Documentation: <https://hetalang.github.io>
 -   Issue tracker: <https://github.com/hetalang/HetaSimulator.jl/issues>
 
+## Reproducibility reports
+
+This section presents automated HetaSimulator.jl simulation checks for the
+`master` branch. Each selected SBML Semantic Test Suite case is loaded by
+HetaSimulator.jl and compared with its reference time course.
+
+| Test set | Simulation check | Latest `master` |
+| --- | --- | --- |
+| sbmlteam/sbml-test-suite | SBML L2V5 → model.jl → HetaSimulator.jl | [![SBML L2V5 HetaSimulator simulation](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fhetalang%2FHetaSimulator.jl%2Freports%2Fhetasimulator-simulation%2Fbranches%2Fmaster%2Fl2v5%2Fbadge.json)](https://hetalang.github.io/format-conversion-test-suite/report/?ref=https%3A%2F%2Fraw.githubusercontent.com%2Fhetalang%2FHetaSimulator.jl%2Freports%2Fhetasimulator-simulation%2Fbranches%2Fmaster%2Fl2v5%2Freport.json) |
+| sbmlteam/sbml-test-suite | SBML L3V1 → model.jl → HetaSimulator.jl | [![SBML L3V1 HetaSimulator simulation](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fhetalang%2FHetaSimulator.jl%2Freports%2Fhetasimulator-simulation%2Fbranches%2Fmaster%2Fl3v1%2Fbadge.json)](https://hetalang.github.io/format-conversion-test-suite/report/?ref=https%3A%2F%2Fraw.githubusercontent.com%2Fhetalang%2FHetaSimulator.jl%2Freports%2Fhetasimulator-simulation%2Fbranches%2Fmaster%2Fl3v1%2Freport.json) |
+
 ## License
 
 This project is distributed under the terms of the **MIT License**.
 
 _This software is provided "as is", without any warranties or guarantees. Use it at your own risk. The author is not responsible for any issues, data loss, or damages resulting from its use._
 
-Copyright © 2020-2026 InSysBio LLC
+Copyright © 2020-2026 Heta project
