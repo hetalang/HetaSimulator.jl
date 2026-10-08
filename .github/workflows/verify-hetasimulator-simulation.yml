@@ -1,0 +1,178 @@
+name: Verify HetaSimulator simulation
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fcts-reports-publication
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      FCTS_ROOT: ${{ github.workspace }}/fcts-run/node_modules/@hetalang/format-conversion-test-suite
+      FCTS_JULIA_PROJECT: ${{ github.workspace }}/fcts-julia
+
+    steps:
+      - name: Checkout HetaSimulator.jl
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.release.tag_name || github.sha }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: Set up Julia
+        uses: julia-actions/setup-julia@v2
+        with:
+          version: '1.12'
+
+      - name: Install Format Conversion Test Suite
+        shell: bash
+        run: |
+          npm install --prefix fcts-run git+https://github.com/hetalang/format-conversion-test-suite.git#v0.3.0
+          test -x "$FCTS_ROOT/bin/fcts.js"
+
+      - name: Install HetaSimulator simulation environment
+        shell: bash
+        run: |
+          julia -e 'using Pkg; Pkg.activate(ENV["FCTS_JULIA_PROJECT"]); Pkg.develop(path = ENV["GITHUB_WORKSPACE"]); Pkg.add(["CSV", "DataFrames", "JSON", "Plots"]); Pkg.instantiate()'
+
+      - name: Download and index SBML cases
+        shell: bash
+        run: |
+          npm --prefix "$FCTS_ROOT" run fetch:sbml
+          npm --prefix "$FCTS_ROOT" run index:sbml
+
+      - name: Simulate SBML L2V5 HetaSimulator models
+        shell: bash
+        env:
+          JULIA_PROJECT: ${{ env.FCTS_JULIA_PROJECT }}
+        run: |
+          cd fcts-run
+          npx --no-install fcts sbml-hetasimulator-simulation \
+            --source=cases/index \
+            --input-field=sbmlL2V5Path \
+            --target=results/l2v5 \
+            --skip-component-tags=StoichiometryMath,CSymbolDelay,EventWithDelay,AlgebraicRule \
+            --skip-test-tags=FastReaction,VolumeConcentrationRates \
+            --concurrency=4
+
+      - name: Simulate SBML L3V1 HetaSimulator models
+        shell: bash
+        env:
+          JULIA_PROJECT: ${{ env.FCTS_JULIA_PROJECT }}
+        run: |
+          cd fcts-run
+          npx --no-install fcts sbml-hetasimulator-simulation \
+            --source=cases/index \
+            --input-field=sbmlL3V1Path \
+            --target=results/l3v1 \
+            --concurrency=4 \
+            --skip-component-tags=CSymbolDelay,EventWithDelay,AlgebraicRule,CSymbolRateOf,comp:Deletion,comp:ModelDefinition,comp:Port,comp:ReplacedBy,comp:ReplacedElement,comp:SBaseRef,comp:Submodel,fbc:FluxBound,fbc:FluxObjective,fbc:Objective,EventPriority \
+            --skip-test-tags=AssignedVariableStoichiometry,AssignedConstantStoichiometry,SpeciesReferenceInMath,NoMathML,comp:SubmodelOutput,fbc:BoundEqual,fbc:BoundGreaterEqual,fbc:BoundLessEqual,fbc:MaximizeObjective,fbc:MinimizeObjective,fbc:NonStrict,FastReaction,VolumeConcentrationRates
+
+      - name: Summarize simulation report
+        if: always()
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+
+          const lines = [
+            '| Report | Successful | Failed | Not evaluated |',
+            '| --- | ---: | ---: | ---: |',
+          ];
+
+          let missingReport = false;
+          for (const [label, directory] of [['SBML L2V5', 'l2v5'], ['SBML L3V1', 'l3v1']]) {
+            const reportPath = path.join(process.env.FCTS_ROOT, 'results', directory, 'report.json');
+            if (!fs.existsSync(reportPath)) {
+              lines.push(`| ${label} | — | — | — |`);
+              missingReport = true;
+              continue;
+            }
+            const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+            const counts = { success: 0, failed: 0, notEvaluated: 0 };
+            for (const caseResult of report.cases) {
+              if (caseResult.status === 'success') counts.success += 1;
+              else if (caseResult.status === 'failed') counts.failed += 1;
+              else if (caseResult.status === 'not-evaluated') counts.notEvaluated += 1;
+            }
+            lines.push(`| ${label} | ${counts.success} | ${counts.failed} | ${counts.notEvaluated} |`);
+          }
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join('\n')}\n`);
+          process.exitCode = missingReport ? 1 : 0;
+          NODE
+
+      - name: Checkout reports publication branch
+        if: always()
+        uses: actions/checkout@v6
+        with:
+          ref: reports
+          path: reports-publication
+
+      - name: Publish simulation report
+        if: always()
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          PRERELEASE: ${{ github.event.release.prerelease }}
+        run: |
+          publication_root="$GITHUB_WORKSPACE/reports-publication/hetasimulator-simulation"
+          if [[ "$GITHUB_EVENT_NAME" == 'release' ]]; then
+            destination="$publication_root/releases/$RELEASE_TAG"
+          else
+            destination="$publication_root/branches/$GITHUB_REF_NAME"
+          fi
+
+          for report_name in l2v5 l3v1; do
+            if [[ ! -f "$FCTS_ROOT/results/$report_name/report.json" ]]; then
+              echo "HetaSimulator simulation $report_name report is unavailable; preserving previously published reports."
+              exit 0
+            fi
+          done
+
+          rm -rf "$destination"
+          mkdir -p "$destination"
+          for report_name in l2v5 l3v1; do
+            cp -a "$FCTS_ROOT/results/$report_name" "$destination/$report_name"
+          done
+
+          if [[ "$GITHUB_EVENT_NAME" == 'release' && "$PRERELEASE" == 'false' ]]; then
+            latest="$publication_root/releases/latest"
+            rm -rf "$latest"
+            mkdir -p "$latest"
+            for report_name in l2v5 l3v1; do
+              cp -a "$FCTS_ROOT/results/$report_name" "$latest/$report_name"
+            done
+          fi
+
+          git -C "$GITHUB_WORKSPACE/reports-publication" config user.name 'github-actions[bot]'
+          git -C "$GITHUB_WORKSPACE/reports-publication" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C "$GITHUB_WORKSPACE/reports-publication" add "hetasimulator-simulation"
+          if git -C "$GITHUB_WORKSPACE/reports-publication" diff --cached --quiet; then
+            echo 'Published report is unchanged.'
+            exit 0
+          fi
+          git -C "$GITHUB_WORKSPACE/reports-publication" commit -m "Publish HetaSimulator simulation report from $GITHUB_SHA"
+          git -C "$GITHUB_WORKSPACE/reports-publication" push origin HEAD:reports
+
+      - name: Upload HetaSimulator simulation report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: fcts-hetasimulator-simulation-${{ github.run_id }}
+          path: |
+            ${{ env.FCTS_ROOT }}/results/l2v5
+            ${{ env.FCTS_ROOT }}/results/l3v1
+          if-no-files-found: warn
