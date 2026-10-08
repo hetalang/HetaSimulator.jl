@@ -1,5 +1,5 @@
 [![Heta project](https://img.shields.io/badge/%CD%B1-Heta_project-blue)](https://hetalang.github.io/)
-[![version](https://img.shields.io/github/v/tag/hetalang/HetaSimulator.jl?label=version)](https://juliahub.com/ui/Packages/HetaSimulator/IIE0h)
+[![version](https://img.shields.io/github/v/release/hetalang/HetaSimulator.jl?label=version)](https://platform.juliahub.com/ui/Packages/General/HetaSimulator)
 [![GitHub issues](https://img.shields.io/github/issues/hetalang/HetaSimulator.jl.svg)](https://GitHub.com/hetalang/HetaSimulator.jl/issues/)
 [![Coverage Status](https://coveralls.io/repos/github/hetalang/HetaSimulator.jl/badge.svg?branch=master)](https://coveralls.io/github/hetalang/HetaSimulator.jl?branch=master)
 [![Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://hetalang.github.io/HetaSimulator.jl/stable)
@@ -95,5 +95,7 @@ analyzing these models.
 ## License
 
 This project is distributed under the terms of the **MIT License**.
+
+_This software is provided "as is", without any warranties or guarantees. Use it at your own risk. The author is not responsible for any issues, data loss, or damages resulting from its use._
 
 Copyright © 2020-2026 InSysBio LLC
