@@ -1,0 +1,747 @@
+{
+  "sourceSettingsPath": "semantic/01565/01565-settings.txt",
+  "referenceResultsPath": "semantic/01565/01565-results.csv",
+  "variables": [
+    "S0",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6",
+    "S7",
+    "S8",
+    "S9",
+    "S10",
+    "S11",
+    "S12",
+    "S13",
+    "S14",
+    "S15",
+    "S16",
+    "S17",
+    "S18",
+    "S19",
+    "S20",
+    "S21",
+    "S22",
+    "S23",
+    "S24",
+    "S25",
+    "S26",
+    "S27",
+    "S28",
+    "S29",
+    "S30",
+    "S31",
+    "S32",
+    "S33",
+    "S34",
+    "S35",
+    "S36",
+    "S37",
+    "S38",
+    "S39",
+    "S40",
+    "S41",
+    "S42",
+    "S43",
+    "S44",
+    "S45",
+    "S46",
+    "S47",
+    "S48",
+    "S49",
+    "S50",
+    "S51",
+    "S0b",
+    "S1b",
+    "S2b",
+    "S3b",
+    "S4b",
+    "S5b",
+    "S6b",
+    "S7b",
+    "S8b",
+    "S9b",
+    "S10b",
+    "S11b",
+    "S12b",
+    "S13b",
+    "S14b",
+    "S15b",
+    "S16b",
+    "S17b",
+    "S18b",
+    "S19b",
+    "S20b",
+    "S21b",
+    "S22b",
+    "S23b",
+    "S24b",
+    "S25b",
+    "S26b",
+    "S27b",
+    "S28b",
+    "S29b",
+    "S30b",
+    "S31b",
+    "S32b",
+    "S33b",
+    "S34b",
+    "S35b",
+    "S36b",
+    "S37b",
+    "S38b",
+    "S39b",
+    "S40b",
+    "S41b",
+    "S42b",
+    "S43b",
+    "S44b",
+    "S45b",
+    "S46b",
+    "S47b",
+    "S48b",
+    "S49b",
+    "S50b",
+    "S51b",
+    "C"
+  ],
+  "absoluteTolerance": 0.0001,
+  "relativeTolerance": 0.0001,
+  "amountVariables": [
+    "S0",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6",
+    "S7",
+    "S8",
+    "S9",
+    "S10",
+    "S11",
+    "S12",
+    "S13",
+    "S14",
+    "S15",
+    "S16",
+    "S17",
+    "S18",
+    "S19",
+    "S20",
+    "S21",
+    "S22",
+    "S23",
+    "S24",
+    "S25",
+    "S26",
+    "S27",
+    "S28",
+    "S29",
+    "S30",
+    "S31",
+    "S32",
+    "S33",
+    "S34",
+    "S35",
+    "S36",
+    "S37",
+    "S38",
+    "S39",
+    "S40",
+    "S41",
+    "S42",
+    "S43",
+    "S44",
+    "S45",
+    "S46",
+    "S47",
+    "S48",
+    "S49",
+    "S50",
+    "S51",
+    "S0b",
+    "S1b",
+    "S2b",
+    "S3b",
+    "S4b",
+    "S5b",
+    "S6b",
+    "S7b",
+    "S8b",
+    "S9b",
+    "S10b",
+    "S11b",
+    "S12b",
+    "S13b",
+    "S14b",
+    "S15b",
+    "S16b",
+    "S17b",
+    "S18b",
+    "S19b",
+    "S20b",
+    "S21b",
+    "S22b",
+    "S23b",
+    "S24b",
+    "S25b",
+    "S26b",
+    "S27b",
+    "S28b",
+    "S29b",
+    "S30b",
+    "S31b",
+    "S32b",
+    "S33b",
+    "S34b",
+    "S35b",
+    "S36b",
+    "S37b",
+    "S38b",
+    "S39b",
+    "S40b",
+    "S41b",
+    "S42b",
+    "S43b",
+    "S44b",
+    "S45b",
+    "S46b",
+    "S47b",
+    "S48b",
+    "S49b",
+    "S50b",
+    "S51b"
+  ],
+  "concentrationVariables": [],
+  "timeCourse": {
+    "start": 0,
+    "duration": 10,
+    "steps": 10
+  },
+  "speciesOutputs": {
+    "S0": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S1": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S2": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S3": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S4": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S5": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S6": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S7": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S8": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S9": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S10": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S11": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S12": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S13": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S14": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S15": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S16": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S17": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S18": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S19": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S20": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S21": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S22": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S23": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S24": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S25": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S26": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S27": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S28": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S29": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S30": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S31": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S32": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S33": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S34": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S35": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S36": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S37": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S38": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S39": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S40": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S41": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S42": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S43": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S44": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S45": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S46": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S47": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S48": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S49": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S50": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S51": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S0b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S1b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S2b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S3b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S4b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S5b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S6b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S7b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S8b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S9b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S10b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S11b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S12b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S13b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S14b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S15b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S16b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S17b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S18b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S19b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S20b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S21b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S22b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S23b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S24b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S25b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S26b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S27b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S28b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S29b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S30b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S31b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S32b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S33b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S34b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S35b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S36b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S37b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S38b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S39b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S40b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S41b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S42b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S43b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S44b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S45b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S46b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S47b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S48b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S49b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S50b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S51b": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    }
+  }
+}

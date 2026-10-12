@@ -1,0 +1,33 @@
+{
+  "sourceSettingsPath": "semantic/01164/01164-settings.txt",
+  "referenceResultsPath": "semantic/01164/01164-results.csv",
+  "variables": [
+    "submod1__S",
+    "submod1__E",
+    "submod1__D",
+    "submod1__ES",
+    "submod2__S",
+    "submod2__E",
+    "submod2__D",
+    "submod2__ES"
+  ],
+  "absoluteTolerance": 0.0001,
+  "relativeTolerance": 0.0001,
+  "amountVariables": [
+    "submod1__S",
+    "submod1__E",
+    "submod1__D",
+    "submod1__ES",
+    "submod2__S",
+    "submod2__E",
+    "submod2__D",
+    "submod2__ES"
+  ],
+  "concentrationVariables": [],
+  "timeCourse": {
+    "start": 0,
+    "duration": 1,
+    "steps": 10
+  },
+  "speciesOutputs": {}
+}
