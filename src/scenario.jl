@@ -46,6 +46,8 @@ Arguments:
 
 `group` and `tags` label results without changing the simulated dynamics.
 Access them directly as `scenario.group` and `scenario.tags`.
+The same metadata columns are included in `DataFrame(mc(scenario, ...))`
+for every Monte-Carlo iteration and in CSV output from `save_results`.
 """
 function Scenario(
   model::Model,
