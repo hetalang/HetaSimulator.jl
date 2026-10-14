@@ -52,6 +52,12 @@ Converts simulation results of type `SimResult`, `MCResult`, etc  to `DataFrame`
 
 Example: `DataFrame(s)`
 
+For `SimResult`, scenario metadata is included on every row: a non-`nothing`
+`group` adds a `group` column of symbols, and each tag adds a Boolean
+`tags.<tag>` column containing `true`. Unset metadata adds no columns.
+When combining results from multiple scenarios, absent metadata columns are
+filled with `missing` (including absent tags, which are not filled with `false`).
+
 Arguments:
 
 - `s` : simulation results of type [`SimResult`](@ref), [`MCResult`](@ref) or `Vector` containing them

@@ -11,6 +11,7 @@ function test_show(t)
 end
 
 @testset "HetaSimulator" begin
+  @testset "Scenario group and tags" begin include("scenario_metadata_test.jl") end
   @testset "Single-compartment model without events" begin include("single_comp_test.jl") end
   @testset "Single-compartment model with events" begin include("single_comp_events_test.jl") end
   @testset "Multi-event model" begin include("multi_events_test.jl") end
