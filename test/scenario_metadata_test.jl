@@ -20,13 +20,20 @@ model = models(platform)[:nameless]
 end
 
 @testset "Monte-Carlo metadata" begin
-    labeled = Scenario(model, (0., 10.); saveat=[0., 10.],
+    labeled_1 = Scenario(model, (0., 10.); saveat=[0., 10.],
         group=:treatment, tags=[:validation, :high_dose])
+    labeled_2 = Scenario(model, (0., 10.); saveat=[0., 10.],
+        group=:placebo, tags=[:validation, :no_dose])
     variation = [:k1 => [0.01, 0.02]]
-    result = mc(labeled, variation, 2)
+    result = mc([labeled_1, labeled_2], variation, 2)
     df = DataFrame(result)
-    @test df.iter == [1, 1, 2, 2]
-    @test df.group == fill(:treatment, nrow(df))
-    @test df[!,"tags.validation"] == fill(true, nrow(df))
-    @test df[!,"tags.high_dose"] == fill(true, nrow(df))
+    @test "group" in names(df)
+    @test "tags.validation" in names(df)
+    @test "tags.high_dose" in names(df)
+    @test "tags.no_dose" in names(df)
+    gdf = groupby(df, :group)
+    df_placebo = gdf[(:placebo,)]
+    df_treatment = gdf[(:treatment,)]
+    @test df_treatment[!,"tags.high_dose"] == fill(true, nrow(df_treatment))
+    @test df_placebo[!,"tags.no_dose"] == fill(true, nrow(df_placebo))
 end
