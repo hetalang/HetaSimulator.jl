@@ -118,7 +118,7 @@ end
 
 function add_event(evt::DEvent, events_save::Tuple{Bool, Bool}=(false,false), evt_name=nothing)
 
-  condition_func_wrapper(u, t, integrator) -> evt.condition_func(u, t, integrator) ? 1 : -1
+  condition_func_wrapper(u, t, integrator) = evt.condition_func(u, t, integrator) ? 1 : -1
 
   function init_time_event(cb,u,t,integrator) 
     if evt.atStart && evt.condition_func(u, t, integrator)
