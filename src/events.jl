@@ -122,6 +122,7 @@ function add_event(evt::DEvent, events_save::Tuple{Bool, Bool}=(false,false), ev
 
   function init_time_event(cb,u,t,integrator) 
     if evt.atStart && evt.condition_func(u, t, integrator)
+      ensure_saving_initialized!(integrator)
       cb.affect!(integrator)
       derivative_discontinuity!(integrator, true)
     end
