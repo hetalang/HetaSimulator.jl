@@ -38,7 +38,7 @@ jobs:
       - name: Install Format Conversion Test Suite
         shell: bash
         run: |
-          npm install --prefix fcts-run git+https://github.com/hetalang/format-conversion-test-suite.git#v0.3.0
+          npm install --prefix fcts-run git+https://github.com/hetalang/format-conversion-test-suite.git#v0.3.2
           test -x "$FCTS_ROOT/bin/fcts.js"
 
       - name: Install HetaSimulator simulation environment
@@ -64,7 +64,8 @@ jobs:
             --target=results/l2v5 \
             --skip-component-tags=StoichiometryMath,CSymbolDelay,EventWithDelay,AlgebraicRule \
             --skip-test-tags=FastReaction,VolumeConcentrationRates \
-            --concurrency=4
+            --concurrency=4 \
+            --useCSwitcher
 
       - name: Simulate SBML L3V1 HetaSimulator models
         shell: bash
