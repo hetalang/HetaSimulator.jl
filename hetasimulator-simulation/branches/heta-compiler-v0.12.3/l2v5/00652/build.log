@@ -1,0 +1,16 @@
+Running compilation in directory "/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00652"...
+
+No declaration file, running with defaults...
+
+[info]	Heta compiler v0.12.3 is initialized for the platform "undefined"
+[info]	Reading module of type "heta" from file "input.heta"...
+[info]	Reading module of type "sbml" from file "../../../cases/semantic/00652/00652-sbml-l2v5.xml"...
+[warn]	SBML <rateRule variable="S2"> targets concentration species "S2" in compartment "C". It is imported as Process "S2_proc"; exported simulations may differ from SBML semantics, especially when the compartment changes.
+[error]	CSwitcher trigger "undefined::event1" should be a numeric expression.
+[info]	Platform hash: 2da0f5e931c5a427d243a5bb611e43c053ab7bfd9aaa0ed8e2e2cfedfb2604cd
+[info]	Setting references in elements, total length 107
+[error]	No required "trigger" property for "event1" of CSwitcher.
+[info]	Checking for circular references in Records.
+[warn]	Units checking and export were skipped because of errors in compilation.
+Compilation ERROR! See logs.
+

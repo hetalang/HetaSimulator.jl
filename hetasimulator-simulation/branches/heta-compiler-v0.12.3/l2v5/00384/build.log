@@ -1,0 +1,15 @@
+Running compilation in directory "/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00384"...
+
+No declaration file, running with defaults...
+
+[info]	Heta compiler v0.12.3 is initialized for the platform "undefined"
+[info]	Reading module of type "heta" from file "input.heta"...
+[info]	Reading module of type "sbml" from file "../../../cases/semantic/00384/00384-sbml-l2v5.xml"...
+[error]	CSwitcher trigger "undefined::event1" should be a numeric expression.
+[info]	Platform hash: 25cfb36d0b76a191b6924ef47929c4a45d14e41d9f9d1be4e7c92fee2da7e6bf
+[info]	Setting references in elements, total length 105
+[error]	No required "trigger" property for "event1" of CSwitcher.
+[info]	Checking for circular references in Records.
+[warn]	Units checking and export were skipped because of errors in compilation.
+Compilation ERROR! See logs.
+

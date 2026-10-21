@@ -3,16 +3,17 @@
   "generator": {
     "type": "sbml-hetasimulator-simulation",
     "packageName": "@hetalang/format-conversion-test-suite",
-    "packageVersion": "0.1.1"
+    "packageVersion": "0.3.1"
   },
   "status": "completed-with-errors",
-  "startedAt": "2026-10-20T17:16:31.023Z",
-  "completedAt": "2026-10-20T18:04:41.081Z",
+  "startedAt": "2026-10-21T19:20:31.750Z",
+  "completedAt": "2026-10-21T19:49:22.114Z",
   "command": {
     "source": "cases/index.json",
     "target": "results/l3v1",
     "inputField": "sbmlL3V1Path",
     "concurrency": 4,
+    "useCSwitcher": false,
     "skipComponentTags": [
       "CSymbolDelay",
       "EventWithDelay",
@@ -47,6 +48,7 @@
     ]
   },
   "environment": {
+    "hetaVersion": "0.12.3",
     "hetaSimulatorVersion": "0.8.7",
     "testSuite": {
       "version": "3.5.0",
@@ -12114,8 +12116,8 @@
             "time": 0.2,
             "variable": "S1",
             "expected": 0.06196212273334437,
-            "actual": 0.06608653409101609,
-            "absoluteError": 0.004124411357671713,
+            "actual": 0.06608653409101607,
+            "absoluteError": 0.004124411357671699,
             "tolerance": 0.00010619621227333445
           },
           {
@@ -59639,7 +59641,7 @@
       "simulationInputPath": "01814/simulation-input.json",
       "error": {
         "phase": "heta-load-simulation",
-        "message": "LoadError: TypeError: in NamedTuple, in name, expected Symbol, got a value of type Bool\nin expression starting at /tmp/jl_OBBY9T/julia/model.jl:5",
+        "message": "LoadError: TypeError: in NamedTuple, in name, expected Symbol, got a value of type Bool\nin expression starting at /tmp/jl_86RqTl/julia/model.jl:5",
         "exitCode": 0
       }
     },
@@ -59665,7 +59667,7 @@
       "simulationInputPath": "01816/simulation-input.json",
       "error": {
         "phase": "heta-load-simulation",
-        "message": "LoadError: TypeError: in NamedTuple, in name, expected Symbol, got a value of type Bool\nin expression starting at /tmp/jl_zErfQp/julia/model.jl:5",
+        "message": "LoadError: TypeError: in NamedTuple, in name, expected Symbol, got a value of type Bool\nin expression starting at /tmp/jl_b2DQFN/julia/model.jl:5",
         "exitCode": 0
       }
     },
