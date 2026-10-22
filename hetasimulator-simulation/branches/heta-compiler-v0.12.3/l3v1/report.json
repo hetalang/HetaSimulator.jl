@@ -6,8 +6,8 @@
     "packageVersion": "0.3.1"
   },
   "status": "completed-with-errors",
-  "startedAt": "2026-10-21T19:20:31.750Z",
-  "completedAt": "2026-10-21T19:49:22.114Z",
+  "startedAt": "2026-10-22T14:20:32.034Z",
+  "completedAt": "2026-10-22T14:55:23.038Z",
   "command": {
     "source": "cases/index.json",
     "target": "results/l3v1",
@@ -12116,8 +12116,8 @@
             "time": 0.2,
             "variable": "S1",
             "expected": 0.06196212273334437,
-            "actual": 0.06608653409101607,
-            "absoluteError": 0.004124411357671699,
+            "actual": 0.06608653409101609,
+            "absoluteError": 0.004124411357671713,
             "tolerance": 0.00010619621227333445
           },
           {
@@ -32072,177 +32072,6 @@
             "actual": 0,
             "absoluteError": 0.00015,
             "tolerance": 1.15e-7
-          },
-          {
-            "row": 2,
-            "time": 0.1,
-            "variable": "S1",
-            "expected": 0.0001357256127053939,
-            "actual": 0,
-            "absoluteError": 0.0001357256127053939,
-            "tolerance": 1.1357256127053939e-7
-          },
-          {
-            "row": 2,
-            "time": 0.1,
-            "variable": "S2",
-            "expected": 0.00001427438729460607,
-            "actual": 0,
-            "absoluteError": 0.00001427438729460607,
-            "tolerance": 1.014274387294606e-7
-          },
-          {
-            "row": 3,
-            "time": 0.2,
-            "variable": "S1",
-            "expected": 0.0001228096129616973,
-            "actual": 0,
-            "absoluteError": 0.0001228096129616973,
-            "tolerance": 1.1228096129616973e-7
-          },
-          {
-            "row": 3,
-            "time": 0.2,
-            "variable": "S2",
-            "expected": 0.00002719038703830272,
-            "actual": 0,
-            "absoluteError": 0.00002719038703830272,
-            "tolerance": 1.0271903870383026e-7
-          },
-          {
-            "row": 4,
-            "time": 0.3,
-            "variable": "S1",
-            "expected": 0.0001111227331022577,
-            "actual": 0,
-            "absoluteError": 0.0001111227331022577,
-            "tolerance": 1.1111227331022577e-7
-          },
-          {
-            "row": 4,
-            "time": 0.3,
-            "variable": "S2",
-            "expected": 0.00003887726689774233,
-            "actual": 0,
-            "absoluteError": 0.00003887726689774233,
-            "tolerance": 1.0388772668977424e-7
-          },
-          {
-            "row": 5,
-            "time": 0.4,
-            "variable": "S1",
-            "expected": 0.0001005480069053459,
-            "actual": 0,
-            "absoluteError": 0.0001005480069053459,
-            "tolerance": 1.1005480069053459e-7
-          },
-          {
-            "row": 5,
-            "time": 0.4,
-            "variable": "S2",
-            "expected": 0.00004945199309465411,
-            "actual": 0,
-            "absoluteError": 0.00004945199309465411,
-            "tolerance": 1.049451993094654e-7
-          },
-          {
-            "row": 6,
-            "time": 0.5,
-            "variable": "S1",
-            "expected": 0.00009097959895689501,
-            "actual": 0,
-            "absoluteError": 0.00009097959895689501,
-            "tolerance": 1.090979598956895e-7
-          },
-          {
-            "row": 6,
-            "time": 0.5,
-            "variable": "S2",
-            "expected": 0.00005902040104310499,
-            "actual": 0,
-            "absoluteError": 0.00005902040104310499,
-            "tolerance": 1.059020401043105e-7
-          },
-          {
-            "row": 7,
-            "time": 0.6,
-            "variable": "S1",
-            "expected": 0.00008232174541410396,
-            "actual": 0,
-            "absoluteError": 0.00008232174541410396,
-            "tolerance": 1.0823217454141039e-7
-          },
-          {
-            "row": 7,
-            "time": 0.6,
-            "variable": "S2",
-            "expected": 0.00006767825458589604,
-            "actual": 0,
-            "absoluteError": 0.00006767825458589604,
-            "tolerance": 1.067678254585896e-7
-          },
-          {
-            "row": 8,
-            "time": 0.7,
-            "variable": "S1",
-            "expected": 0.00007448779556871142,
-            "actual": 0,
-            "absoluteError": 0.00007448779556871142,
-            "tolerance": 1.0744877955687113e-7
-          },
-          {
-            "row": 8,
-            "time": 0.7,
-            "variable": "S2",
-            "expected": 0.00007551220443128858,
-            "actual": 0,
-            "absoluteError": 0.00007551220443128858,
-            "tolerance": 1.0755122044312886e-7
-          },
-          {
-            "row": 9,
-            "time": 0.8,
-            "variable": "S1",
-            "expected": 0.00006739934461758323,
-            "actual": 0,
-            "absoluteError": 0.00006739934461758323,
-            "tolerance": 1.0673993446175832e-7
-          },
-          {
-            "row": 9,
-            "time": 0.8,
-            "variable": "S2",
-            "expected": 0.00008260065538241677,
-            "actual": 0,
-            "absoluteError": 0.00008260065538241677,
-            "tolerance": 1.0826006553824168e-7
-          },
-          {
-            "row": 10,
-            "time": 0.9,
-            "variable": "S1",
-            "expected": 0.00006098544896108986,
-            "actual": 0,
-            "absoluteError": 0.00006098544896108986,
-            "tolerance": 1.0609854489610898e-7
-          },
-          {
-            "row": 10,
-            "time": 0.9,
-            "variable": "S2",
-            "expected": 0.00008901455103891014,
-            "actual": 0,
-            "absoluteError": 0.00008901455103891014,
-            "tolerance": 1.0890145510389101e-7
-          },
-          {
-            "row": 11,
-            "time": 1,
-            "variable": "S1",
-            "expected": 0.00005518191617571635,
-            "actual": 0,
-            "absoluteError": 0.00005518191617571635,
-            "tolerance": 1.0551819161757163e-7
           }
         ]
       },
@@ -37474,51 +37303,6 @@
             "actual": 0,
             "absoluteError": 1,
             "tolerance": 0.0002
-          },
-          {
-            "row": 2,
-            "time": 0.2,
-            "variable": "p2",
-            "expected": 1,
-            "actual": 0,
-            "absoluteError": 1,
-            "tolerance": 0.0002
-          },
-          {
-            "row": 3,
-            "time": 0.4,
-            "variable": "p2",
-            "expected": 1,
-            "actual": 0,
-            "absoluteError": 1,
-            "tolerance": 0.0002
-          },
-          {
-            "row": 4,
-            "time": 0.6,
-            "variable": "p2",
-            "expected": 1,
-            "actual": 0,
-            "absoluteError": 1,
-            "tolerance": 0.0002
-          },
-          {
-            "row": 5,
-            "time": 0.8,
-            "variable": "p2",
-            "expected": 1,
-            "actual": 0,
-            "absoluteError": 1,
-            "tolerance": 0.0002
-          },
-          {
-            "row": 6,
-            "time": 1,
-            "variable": "p2",
-            "expected": 1,
-            "actual": 0,
-            "absoluteError": 1,
-            "tolerance": 0.0002
           }
         ]
       },
@@ -37559,96 +37343,6 @@
           {
             "row": 1,
             "time": 0,
-            "variable": "p2",
-            "expected": 1,
-            "actual": 0,
-            "absoluteError": 1,
-            "tolerance": 0.0002
-          },
-          {
-            "row": 2,
-            "time": 0.2,
-            "variable": "p1",
-            "expected": 0,
-            "actual": 1,
-            "absoluteError": 1,
-            "tolerance": 0.0001
-          },
-          {
-            "row": 2,
-            "time": 0.2,
-            "variable": "p2",
-            "expected": 1,
-            "actual": 0,
-            "absoluteError": 1,
-            "tolerance": 0.0002
-          },
-          {
-            "row": 3,
-            "time": 0.4,
-            "variable": "p1",
-            "expected": 0,
-            "actual": 1,
-            "absoluteError": 1,
-            "tolerance": 0.0001
-          },
-          {
-            "row": 3,
-            "time": 0.4,
-            "variable": "p2",
-            "expected": 1,
-            "actual": 0,
-            "absoluteError": 1,
-            "tolerance": 0.0002
-          },
-          {
-            "row": 4,
-            "time": 0.6,
-            "variable": "p1",
-            "expected": 0,
-            "actual": 1,
-            "absoluteError": 1,
-            "tolerance": 0.0001
-          },
-          {
-            "row": 4,
-            "time": 0.6,
-            "variable": "p2",
-            "expected": 1,
-            "actual": 0,
-            "absoluteError": 1,
-            "tolerance": 0.0002
-          },
-          {
-            "row": 5,
-            "time": 0.8,
-            "variable": "p1",
-            "expected": 0,
-            "actual": 1,
-            "absoluteError": 1,
-            "tolerance": 0.0001
-          },
-          {
-            "row": 5,
-            "time": 0.8,
-            "variable": "p2",
-            "expected": 1,
-            "actual": 0,
-            "absoluteError": 1,
-            "tolerance": 0.0002
-          },
-          {
-            "row": 6,
-            "time": 1,
-            "variable": "p1",
-            "expected": 0,
-            "actual": 1,
-            "absoluteError": 1,
-            "tolerance": 0.0001
-          },
-          {
-            "row": 6,
-            "time": 1,
             "variable": "p2",
             "expected": 1,
             "actual": 0,
@@ -46157,96 +45851,6 @@
             "actual": 3,
             "absoluteError": 2,
             "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 2,
-            "time": 1,
-            "variable": "x",
-            "expected": 5,
-            "actual": 3,
-            "absoluteError": 2,
-            "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 3,
-            "time": 2,
-            "variable": "x",
-            "expected": 5,
-            "actual": 3,
-            "absoluteError": 2,
-            "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 4,
-            "time": 3,
-            "variable": "x",
-            "expected": 5,
-            "actual": 3,
-            "absoluteError": 2,
-            "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 5,
-            "time": 4,
-            "variable": "x",
-            "expected": 5,
-            "actual": 3,
-            "absoluteError": 2,
-            "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 6,
-            "time": 5,
-            "variable": "x",
-            "expected": 5,
-            "actual": 3,
-            "absoluteError": 2,
-            "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 7,
-            "time": 6,
-            "variable": "x",
-            "expected": 5,
-            "actual": 3,
-            "absoluteError": 2,
-            "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 8,
-            "time": 7,
-            "variable": "x",
-            "expected": 5,
-            "actual": 3,
-            "absoluteError": 2,
-            "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 9,
-            "time": 8,
-            "variable": "x",
-            "expected": 5,
-            "actual": 3,
-            "absoluteError": 2,
-            "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 10,
-            "time": 9,
-            "variable": "x",
-            "expected": 5,
-            "actual": 3,
-            "absoluteError": 2,
-            "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 11,
-            "time": 10,
-            "variable": "x",
-            "expected": 5,
-            "actual": 3,
-            "absoluteError": 2,
-            "tolerance": 0.0006000000000000001
           }
         ]
       },
@@ -46298,163 +45902,91 @@
           {
             "row": 2,
             "time": 1,
-            "variable": "x",
-            "expected": 7,
-            "actual": 3,
-            "absoluteError": 4,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 2,
-            "time": 1,
             "variable": "y",
             "expected": 3,
-            "actual": 0,
-            "absoluteError": 3,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 3,
-            "time": 2,
-            "variable": "x",
-            "expected": 7,
-            "actual": 3,
+            "actual": 7,
             "absoluteError": 4,
-            "tolerance": 0.0008
+            "tolerance": 0.0004
           },
           {
             "row": 3,
             "time": 2,
             "variable": "y",
             "expected": 3,
-            "actual": 0,
-            "absoluteError": 3,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 4,
-            "time": 3,
-            "variable": "x",
-            "expected": 7,
-            "actual": 3,
+            "actual": 7,
             "absoluteError": 4,
-            "tolerance": 0.0008
+            "tolerance": 0.0004
           },
           {
             "row": 4,
             "time": 3,
             "variable": "y",
             "expected": 3,
-            "actual": 0,
-            "absoluteError": 3,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 5,
-            "time": 4,
-            "variable": "x",
-            "expected": 7,
-            "actual": 3,
+            "actual": 7,
             "absoluteError": 4,
-            "tolerance": 0.0008
+            "tolerance": 0.0004
           },
           {
             "row": 5,
             "time": 4,
             "variable": "y",
             "expected": 3,
-            "actual": 0,
-            "absoluteError": 3,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 6,
-            "time": 5,
-            "variable": "x",
-            "expected": 7,
-            "actual": 3,
+            "actual": 7,
             "absoluteError": 4,
-            "tolerance": 0.0008
+            "tolerance": 0.0004
           },
           {
             "row": 6,
             "time": 5,
             "variable": "y",
             "expected": 3,
-            "actual": 0,
-            "absoluteError": 3,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 7,
-            "time": 6,
-            "variable": "x",
-            "expected": 7,
-            "actual": 3,
+            "actual": 7,
             "absoluteError": 4,
-            "tolerance": 0.0008
+            "tolerance": 0.0004
           },
           {
             "row": 7,
             "time": 6,
             "variable": "y",
             "expected": 3,
-            "actual": 0,
-            "absoluteError": 3,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 8,
-            "time": 7,
-            "variable": "x",
-            "expected": 7,
-            "actual": 3,
+            "actual": 7,
             "absoluteError": 4,
-            "tolerance": 0.0008
+            "tolerance": 0.0004
           },
           {
             "row": 8,
             "time": 7,
             "variable": "y",
             "expected": 3,
-            "actual": 0,
-            "absoluteError": 3,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 9,
-            "time": 8,
-            "variable": "x",
-            "expected": 7,
-            "actual": 3,
+            "actual": 7,
             "absoluteError": 4,
-            "tolerance": 0.0008
+            "tolerance": 0.0004
           },
           {
             "row": 9,
             "time": 8,
             "variable": "y",
             "expected": 3,
-            "actual": 0,
-            "absoluteError": 3,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 10,
-            "time": 9,
-            "variable": "x",
-            "expected": 7,
-            "actual": 3,
+            "actual": 7,
             "absoluteError": 4,
-            "tolerance": 0.0008
+            "tolerance": 0.0004
           },
           {
             "row": 10,
             "time": 9,
             "variable": "y",
             "expected": 3,
-            "actual": 0,
-            "absoluteError": 3,
+            "actual": 7,
+            "absoluteError": 4,
+            "tolerance": 0.0004
+          },
+          {
+            "row": 11,
+            "time": 10,
+            "variable": "y",
+            "expected": 3,
+            "actual": 7,
+            "absoluteError": 4,
             "tolerance": 0.0004
           }
         ]
@@ -46499,168 +46031,6 @@
           {
             "row": 1,
             "time": 0,
-            "variable": "y",
-            "expected": 7,
-            "actual": 0,
-            "absoluteError": 7,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 2,
-            "time": 1,
-            "variable": "x",
-            "expected": 7,
-            "actual": 3,
-            "absoluteError": 4,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 2,
-            "time": 1,
-            "variable": "y",
-            "expected": 7,
-            "actual": 0,
-            "absoluteError": 7,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 3,
-            "time": 2,
-            "variable": "x",
-            "expected": 7,
-            "actual": 3,
-            "absoluteError": 4,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 3,
-            "time": 2,
-            "variable": "y",
-            "expected": 7,
-            "actual": 0,
-            "absoluteError": 7,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 4,
-            "time": 3,
-            "variable": "x",
-            "expected": 7,
-            "actual": 3,
-            "absoluteError": 4,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 4,
-            "time": 3,
-            "variable": "y",
-            "expected": 7,
-            "actual": 0,
-            "absoluteError": 7,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 5,
-            "time": 4,
-            "variable": "x",
-            "expected": 7,
-            "actual": 3,
-            "absoluteError": 4,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 5,
-            "time": 4,
-            "variable": "y",
-            "expected": 7,
-            "actual": 0,
-            "absoluteError": 7,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 6,
-            "time": 5,
-            "variable": "x",
-            "expected": 7,
-            "actual": 3,
-            "absoluteError": 4,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 6,
-            "time": 5,
-            "variable": "y",
-            "expected": 7,
-            "actual": 0,
-            "absoluteError": 7,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 7,
-            "time": 6,
-            "variable": "x",
-            "expected": 7,
-            "actual": 3,
-            "absoluteError": 4,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 7,
-            "time": 6,
-            "variable": "y",
-            "expected": 7,
-            "actual": 0,
-            "absoluteError": 7,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 8,
-            "time": 7,
-            "variable": "x",
-            "expected": 7,
-            "actual": 3,
-            "absoluteError": 4,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 8,
-            "time": 7,
-            "variable": "y",
-            "expected": 7,
-            "actual": 0,
-            "absoluteError": 7,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 9,
-            "time": 8,
-            "variable": "x",
-            "expected": 7,
-            "actual": 3,
-            "absoluteError": 4,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 9,
-            "time": 8,
-            "variable": "y",
-            "expected": 7,
-            "actual": 0,
-            "absoluteError": 7,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 10,
-            "time": 9,
-            "variable": "x",
-            "expected": 7,
-            "actual": 3,
-            "absoluteError": 4,
-            "tolerance": 0.0008
-          },
-          {
-            "row": 10,
-            "time": 9,
             "variable": "y",
             "expected": 7,
             "actual": 0,
@@ -46722,96 +46092,6 @@
             "actual": 3,
             "absoluteError": 3,
             "tolerance": 0.0001
-          },
-          {
-            "row": 2,
-            "time": 1,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
-          },
-          {
-            "row": 3,
-            "time": 2,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
-          },
-          {
-            "row": 4,
-            "time": 3,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
-          },
-          {
-            "row": 5,
-            "time": 4,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
-          },
-          {
-            "row": 6,
-            "time": 5,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
-          },
-          {
-            "row": 7,
-            "time": 6,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
-          },
-          {
-            "row": 8,
-            "time": 7,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
-          },
-          {
-            "row": 9,
-            "time": 8,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
-          },
-          {
-            "row": 10,
-            "time": 9,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
-          },
-          {
-            "row": 11,
-            "time": 10,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
           }
         ]
       },
@@ -46864,29 +46144,11 @@
           {
             "row": 2,
             "time": 1,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
-          },
-          {
-            "row": 2,
-            "time": 1,
             "variable": "y",
             "expected": 7,
             "actual": 6,
             "absoluteError": 1,
             "tolerance": 0.0008
-          },
-          {
-            "row": 3,
-            "time": 2,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
           },
           {
             "row": 3,
@@ -46900,29 +46162,11 @@
           {
             "row": 4,
             "time": 3,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
-          },
-          {
-            "row": 4,
-            "time": 3,
             "variable": "y",
             "expected": 7,
             "actual": 6,
             "absoluteError": 1,
             "tolerance": 0.0008
-          },
-          {
-            "row": 5,
-            "time": 4,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
           },
           {
             "row": 5,
@@ -46936,29 +46180,11 @@
           {
             "row": 6,
             "time": 5,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
-          },
-          {
-            "row": 6,
-            "time": 5,
             "variable": "y",
             "expected": 7,
             "actual": 6,
             "absoluteError": 1,
             "tolerance": 0.0008
-          },
-          {
-            "row": 7,
-            "time": 6,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
           },
           {
             "row": 7,
@@ -46972,29 +46198,11 @@
           {
             "row": 8,
             "time": 7,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
-          },
-          {
-            "row": 8,
-            "time": 7,
             "variable": "y",
             "expected": 7,
             "actual": 6,
             "absoluteError": 1,
             "tolerance": 0.0008
-          },
-          {
-            "row": 9,
-            "time": 8,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
           },
           {
             "row": 9,
@@ -47008,15 +46216,15 @@
           {
             "row": 10,
             "time": 9,
-            "variable": "x",
-            "expected": 0,
-            "actual": 3,
-            "absoluteError": 3,
-            "tolerance": 0.0001
+            "variable": "y",
+            "expected": 7,
+            "actual": 6,
+            "absoluteError": 1,
+            "tolerance": 0.0008
           },
           {
-            "row": 10,
-            "time": 9,
+            "row": 11,
+            "time": 10,
             "variable": "y",
             "expected": 7,
             "actual": 6,
@@ -49203,96 +48411,6 @@
             "actual": 0,
             "absoluteError": 200,
             "tolerance": 0.0201
-          },
-          {
-            "row": 2,
-            "time": 1,
-            "variable": "Allsum",
-            "expected": 200,
-            "actual": 0,
-            "absoluteError": 200,
-            "tolerance": 0.0201
-          },
-          {
-            "row": 3,
-            "time": 2,
-            "variable": "Allsum",
-            "expected": 200,
-            "actual": 0,
-            "absoluteError": 200,
-            "tolerance": 0.0201
-          },
-          {
-            "row": 4,
-            "time": 3,
-            "variable": "Allsum",
-            "expected": 200,
-            "actual": 0,
-            "absoluteError": 200,
-            "tolerance": 0.0201
-          },
-          {
-            "row": 5,
-            "time": 4,
-            "variable": "Allsum",
-            "expected": 200,
-            "actual": 0,
-            "absoluteError": 200,
-            "tolerance": 0.0201
-          },
-          {
-            "row": 6,
-            "time": 5,
-            "variable": "Allsum",
-            "expected": 200,
-            "actual": 0,
-            "absoluteError": 200,
-            "tolerance": 0.0201
-          },
-          {
-            "row": 7,
-            "time": 6,
-            "variable": "Allsum",
-            "expected": 200,
-            "actual": 0,
-            "absoluteError": 200,
-            "tolerance": 0.0201
-          },
-          {
-            "row": 8,
-            "time": 7,
-            "variable": "Allsum",
-            "expected": 200,
-            "actual": 0,
-            "absoluteError": 200,
-            "tolerance": 0.0201
-          },
-          {
-            "row": 9,
-            "time": 8,
-            "variable": "Allsum",
-            "expected": 200,
-            "actual": 0,
-            "absoluteError": 200,
-            "tolerance": 0.0201
-          },
-          {
-            "row": 10,
-            "time": 9,
-            "variable": "Allsum",
-            "expected": 200,
-            "actual": 0,
-            "absoluteError": 200,
-            "tolerance": 0.0201
-          },
-          {
-            "row": 11,
-            "time": 10,
-            "variable": "Allsum",
-            "expected": 200,
-            "actual": 0,
-            "absoluteError": 200,
-            "tolerance": 0.0201
           }
         ]
       },
@@ -50573,7 +49691,7 @@
       "comparison": {
         "status": "failed",
         "comparedValues": 33,
-        "maxAbsoluteError": 0.5010000000000003,
+        "maxAbsoluteError": 0.24792556634304197,
         "failures": [
           {
             "row": 2,
@@ -50661,8 +49779,8 @@
             "time": 0.5,
             "variable": "S1",
             "expected": 0.1281,
-            "actual": 0.04368099999999999,
-            "absoluteError": 0.084419,
+            "actual": 0.12188099999999998,
+            "absoluteError": 0.006219000000000016,
             "tolerance": 0.00011281
           },
           {
@@ -50670,8 +49788,8 @@
             "time": 0.5,
             "variable": "x",
             "expected": 0.61,
-            "actual": 0.209,
-            "absoluteError": 0.401,
+            "actual": 0.5831626794258373,
+            "absoluteError": 0.02683732057416266,
             "tolerance": 0.000161
           },
           {
@@ -50688,8 +49806,8 @@
             "time": 0.6,
             "variable": "S1",
             "expected": 0.1495,
-            "actual": 0.052440999999999974,
-            "absoluteError": 0.09705900000000002,
+            "actual": 0.130641,
+            "absoluteError": 0.018858999999999987,
             "tolerance": 0.00011495
           },
           {
@@ -50697,8 +49815,8 @@
             "time": 0.6,
             "variable": "x",
             "expected": 0.65,
-            "actual": 0.22899999999999993,
-            "absoluteError": 0.4210000000000001,
+            "actual": 0.5704847161572054,
+            "absoluteError": 0.0795152838427946,
             "tolerance": 0.000165
           },
           {
@@ -50715,8 +49833,8 @@
             "time": 0.7,
             "variable": "S1",
             "expected": 0.1725,
-            "actual": 0.06200099999999996,
-            "absoluteError": 0.11049900000000003,
+            "actual": 0.14020100000000002,
+            "absoluteError": 0.03229899999999997,
             "tolerance": 0.00011725
           },
           {
@@ -50724,8 +49842,8 @@
             "time": 0.7,
             "variable": "x",
             "expected": 0.69,
-            "actual": 0.24899999999999986,
-            "absoluteError": 0.44100000000000006,
+            "actual": 0.5630562248995985,
+            "absoluteError": 0.12694377510040145,
             "tolerance": 0.000169
           },
           {
@@ -50742,8 +49860,8 @@
             "time": 0.8,
             "variable": "S1",
             "expected": 0.1971,
-            "actual": 0.07236099999999995,
-            "absoluteError": 0.12473900000000004,
+            "actual": 0.15056100000000003,
+            "absoluteError": 0.04653899999999997,
             "tolerance": 0.00011971
           },
           {
@@ -50751,8 +49869,8 @@
             "time": 0.8,
             "variable": "x",
             "expected": 0.73,
-            "actual": 0.26899999999999985,
-            "absoluteError": 0.46100000000000013,
+            "actual": 0.5597063197026024,
+            "absoluteError": 0.17029368029739755,
             "tolerance": 0.000173
           }
         ]
@@ -50869,8 +49987,8 @@
             "time": 0.1,
             "variable": "S1",
             "expected": 0.0208,
-            "actual": 0.5204000000000001,
-            "absoluteError": 0.4996000000000001,
+            "actual": 0.020400000000000012,
+            "absoluteError": 0.00039999999999998717,
             "tolerance": 0.00010208
           },
           {
@@ -50878,8 +49996,8 @@
             "time": 0.1,
             "variable": "x",
             "expected": 0.04,
-            "actual": 1.0007692307692309,
-            "absoluteError": 0.9607692307692308,
+            "actual": 0.03923076923076925,
+            "absoluteError": 0.0007692307692307512,
             "tolerance": 0.00010400000000000001
           },
           {
@@ -50887,8 +50005,8 @@
             "time": 0.2,
             "variable": "S1",
             "expected": 0.0432,
-            "actual": 0.5416000000000001,
-            "absoluteError": 0.49840000000000007,
+            "actual": 0.041600000000000005,
+            "absoluteError": 0.0015999999999999973,
             "tolerance": 0.00010432
           },
           {
@@ -50896,8 +50014,8 @@
             "time": 0.2,
             "variable": "x",
             "expected": 0.08,
-            "actual": 1.002962962962963,
-            "absoluteError": 0.9229629629629631,
+            "actual": 0.07703703703703704,
+            "absoluteError": 0.002962962962962959,
             "tolerance": 0.00010800000000000001
           },
           {
@@ -50905,8 +50023,8 @@
             "time": 0.3,
             "variable": "S1",
             "expected": 0.0672,
-            "actual": 0.5636,
-            "absoluteError": 0.4964,
+            "actual": 0.06359999999999999,
+            "absoluteError": 0.003600000000000006,
             "tolerance": 0.00010672000000000001
           },
           {
@@ -50914,8 +50032,8 @@
             "time": 0.3,
             "variable": "x",
             "expected": 0.12,
-            "actual": 1.0064285714285712,
-            "absoluteError": 0.8864285714285712,
+            "actual": 0.11357142857142855,
+            "absoluteError": 0.00642857142857145,
             "tolerance": 0.00011200000000000001
           },
           {
@@ -50923,8 +50041,8 @@
             "time": 0.4,
             "variable": "S1",
             "expected": 0.0928,
-            "actual": 0.5864,
-            "absoluteError": 0.49360000000000004,
+            "actual": 0.08639999999999998,
+            "absoluteError": 0.006400000000000017,
             "tolerance": 0.00010928000000000001
           },
           {
@@ -50932,8 +50050,8 @@
             "time": 0.4,
             "variable": "x",
             "expected": 0.16,
-            "actual": 1.0110344827586206,
-            "absoluteError": 0.8510344827586206,
+            "actual": 0.14896551724137924,
+            "absoluteError": 0.011034482758620762,
             "tolerance": 0.000116
           },
           {
@@ -50941,8 +50059,8 @@
             "time": 0.5,
             "variable": "S1",
             "expected": 0.12,
-            "actual": 0.6100000000000001,
-            "absoluteError": 0.4900000000000001,
+            "actual": 0.10999999999999997,
+            "absoluteError": 0.010000000000000023,
             "tolerance": 0.00011200000000000001
           },
           {
@@ -50950,8 +50068,8 @@
             "time": 0.5,
             "variable": "x",
             "expected": 0.2,
-            "actual": 1.0166666666666666,
-            "absoluteError": 0.8166666666666667,
+            "actual": 0.18333333333333326,
+            "absoluteError": 0.016666666666666746,
             "tolerance": 0.00012
           },
           {
@@ -50959,8 +50077,8 @@
             "time": 0.6,
             "variable": "S1",
             "expected": 0.1488,
-            "actual": 0.6344,
-            "absoluteError": 0.4856,
+            "actual": 0.1344,
+            "absoluteError": 0.014399999999999996,
             "tolerance": 0.00011488000000000001
           },
           {
@@ -50968,8 +50086,8 @@
             "time": 0.6,
             "variable": "x",
             "expected": 0.24,
-            "actual": 1.0232258064516129,
-            "absoluteError": 0.7832258064516129,
+            "actual": 0.2167741935483871,
+            "absoluteError": 0.0232258064516129,
             "tolerance": 0.000124
           },
           {
@@ -50977,8 +50095,8 @@
             "time": 0.7,
             "variable": "S1",
             "expected": 0.1792,
-            "actual": 0.6595999999999999,
-            "absoluteError": 0.4803999999999998,
+            "actual": 0.1596,
+            "absoluteError": 0.019600000000000006,
             "tolerance": 0.00011792000000000001
           },
           {
@@ -50986,8 +50104,8 @@
             "time": 0.7,
             "variable": "x",
             "expected": 0.28,
-            "actual": 1.0306249999999997,
-            "absoluteError": 0.7506249999999997,
+            "actual": 0.24937499999999999,
+            "absoluteError": 0.03062500000000004,
             "tolerance": 0.00012800000000000002
           },
           {
@@ -50995,8 +50113,8 @@
             "time": 0.8,
             "variable": "S1",
             "expected": 0.2112,
-            "actual": 0.6855999999999999,
-            "absoluteError": 0.4743999999999999,
+            "actual": 0.1856,
+            "absoluteError": 0.02560000000000001,
             "tolerance": 0.00012112
           },
           {
@@ -51004,8 +50122,8 @@
             "time": 0.8,
             "variable": "x",
             "expected": 0.32,
-            "actual": 1.0387878787878786,
-            "absoluteError": 0.7187878787878785,
+            "actual": 0.2812121212121212,
+            "absoluteError": 0.038787878787878816,
             "tolerance": 0.000132
           },
           {
@@ -51013,8 +50131,8 @@
             "time": 0.9,
             "variable": "S1",
             "expected": 0.2448,
-            "actual": 0.7123999999999999,
-            "absoluteError": 0.4675999999999999,
+            "actual": 0.21239999999999992,
+            "absoluteError": 0.03240000000000007,
             "tolerance": 0.00012448
           },
           {
@@ -51022,8 +50140,8 @@
             "time": 0.9,
             "variable": "x",
             "expected": 0.36,
-            "actual": 1.0476470588235292,
-            "absoluteError": 0.6876470588235292,
+            "actual": 0.31235294117647044,
+            "absoluteError": 0.04764705882352954,
             "tolerance": 0.000136
           }
         ]
@@ -53439,96 +52557,6 @@
             "actual": 1,
             "absoluteError": 2,
             "tolerance": 0.0004
-          },
-          {
-            "row": 2,
-            "time": 1,
-            "variable": "P2",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 3,
-            "time": 2,
-            "variable": "P2",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 4,
-            "time": 3,
-            "variable": "P2",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 5,
-            "time": 4,
-            "variable": "P2",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 6,
-            "time": 5,
-            "variable": "P2",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 7,
-            "time": 6,
-            "variable": "P2",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 8,
-            "time": 7,
-            "variable": "P2",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 9,
-            "time": 8,
-            "variable": "P2",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 10,
-            "time": 9,
-            "variable": "P2",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 11,
-            "time": 10,
-            "variable": "P2",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
           }
         ]
       },
@@ -55376,96 +54404,6 @@
             "actual": 1,
             "absoluteError": 4,
             "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 2,
-            "time": 1,
-            "variable": "p1",
-            "expected": 5,
-            "actual": 1,
-            "absoluteError": 4,
-            "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 3,
-            "time": 2,
-            "variable": "p1",
-            "expected": 5,
-            "actual": 1,
-            "absoluteError": 4,
-            "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 4,
-            "time": 3,
-            "variable": "p1",
-            "expected": 5,
-            "actual": 1,
-            "absoluteError": 4,
-            "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 5,
-            "time": 4,
-            "variable": "p1",
-            "expected": 5,
-            "actual": 1,
-            "absoluteError": 4,
-            "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 6,
-            "time": 5,
-            "variable": "p1",
-            "expected": 5,
-            "actual": 1,
-            "absoluteError": 4,
-            "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 7,
-            "time": 6,
-            "variable": "p1",
-            "expected": 5,
-            "actual": 1,
-            "absoluteError": 4,
-            "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 8,
-            "time": 7,
-            "variable": "p1",
-            "expected": 5,
-            "actual": 1,
-            "absoluteError": 4,
-            "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 9,
-            "time": 8,
-            "variable": "p1",
-            "expected": 5,
-            "actual": 1,
-            "absoluteError": 4,
-            "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 10,
-            "time": 9,
-            "variable": "p1",
-            "expected": 5,
-            "actual": 1,
-            "absoluteError": 4,
-            "tolerance": 0.0006000000000000001
-          },
-          {
-            "row": 11,
-            "time": 10,
-            "variable": "p1",
-            "expected": 5,
-            "actual": 1,
-            "absoluteError": 4,
-            "tolerance": 0.0006000000000000001
           }
         ]
       },
@@ -55961,96 +54899,6 @@
             "actual": 1,
             "absoluteError": 2,
             "tolerance": 0.0004
-          },
-          {
-            "row": 2,
-            "time": 1,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 3,
-            "time": 2,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 4,
-            "time": 3,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 5,
-            "time": 4,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 6,
-            "time": 5,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 7,
-            "time": 6,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 8,
-            "time": 7,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 9,
-            "time": 8,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 10,
-            "time": 9,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 11,
-            "time": 10,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
           }
         ]
       },
@@ -56080,96 +54928,6 @@
           {
             "row": 1,
             "time": 0,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 2,
-            "time": 1,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 3,
-            "time": 2,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 4,
-            "time": 3,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 5,
-            "time": 4,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 6,
-            "time": 5,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 7,
-            "time": 6,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 8,
-            "time": 7,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 9,
-            "time": 8,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 10,
-            "time": 9,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 11,
-            "time": 10,
             "variable": "P1",
             "expected": 3,
             "actual": 1,
@@ -56222,96 +54980,6 @@
             "actual": 1,
             "absoluteError": 2,
             "tolerance": 0.0004
-          },
-          {
-            "row": 2,
-            "time": 1,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 3,
-            "time": 2,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 4,
-            "time": 3,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 5,
-            "time": 4,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 6,
-            "time": 5,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 7,
-            "time": 6,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 8,
-            "time": 7,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 9,
-            "time": 8,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 10,
-            "time": 9,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 11,
-            "time": 10,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
           }
         ]
       },
@@ -56341,96 +55009,6 @@
           {
             "row": 1,
             "time": 0,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 2,
-            "time": 1,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 3,
-            "time": 2,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 4,
-            "time": 3,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 5,
-            "time": 4,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 6,
-            "time": 5,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 7,
-            "time": 6,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 8,
-            "time": 7,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 9,
-            "time": 8,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 10,
-            "time": 9,
-            "variable": "P1",
-            "expected": 3,
-            "actual": 1,
-            "absoluteError": 2,
-            "tolerance": 0.0004
-          },
-          {
-            "row": 11,
-            "time": 10,
             "variable": "P1",
             "expected": 3,
             "actual": 1,
@@ -56470,96 +55048,6 @@
             "actual": 2,
             "absoluteError": 2,
             "tolerance": 0.0005
-          },
-          {
-            "row": 2,
-            "time": 1,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 3,
-            "time": 2,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 4,
-            "time": 3,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 5,
-            "time": 4,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 6,
-            "time": 5,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 7,
-            "time": 6,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 8,
-            "time": 7,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 9,
-            "time": 8,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 10,
-            "time": 9,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 11,
-            "time": 10,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
           }
         ]
       },
@@ -56589,96 +55077,6 @@
           {
             "row": 1,
             "time": 0,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 2,
-            "time": 1,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 3,
-            "time": 2,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 4,
-            "time": 3,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 5,
-            "time": 4,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 6,
-            "time": 5,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 7,
-            "time": 6,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 8,
-            "time": 7,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 9,
-            "time": 8,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 10,
-            "time": 9,
-            "variable": "P1",
-            "expected": 4,
-            "actual": 2,
-            "absoluteError": 2,
-            "tolerance": 0.0005
-          },
-          {
-            "row": 11,
-            "time": 10,
             "variable": "P1",
             "expected": 4,
             "actual": 2,
@@ -58548,271 +56946,43 @@
       "caseId": "01779",
       "synopsis": "A species concentration and its compartment assigned to by the same event.",
       "sourcePath": "semantic/01779/01779-sbml-l3v1.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "01779/input.heta",
       "simulationInputPath": "01779/simulation-input.json",
       "outputs": {
         "simulation": "01779/simulation.csv"
       },
       "comparison": {
-        "status": "failed",
+        "status": "valid",
         "comparedValues": 33,
-        "maxAbsoluteError": 0.29999999999999993,
-        "failures": [
-          {
-            "row": 6,
-            "time": 0.5,
-            "variable": "S1",
-            "expected": 0.1,
-            "actual": 0.04000000000000001,
-            "absoluteError": 0.06,
-            "tolerance": 0.00011
-          },
-          {
-            "row": 6,
-            "time": 0.5,
-            "variable": "x",
-            "expected": 0.5,
-            "actual": 0.20000000000000004,
-            "absoluteError": 0.29999999999999993,
-            "tolerance": 0.00015000000000000001
-          },
-          {
-            "row": 7,
-            "time": 0.6,
-            "variable": "S1",
-            "expected": 0.1,
-            "actual": 0.04000000000000001,
-            "absoluteError": 0.06,
-            "tolerance": 0.00011
-          },
-          {
-            "row": 7,
-            "time": 0.6,
-            "variable": "x",
-            "expected": 0.5,
-            "actual": 0.20000000000000004,
-            "absoluteError": 0.29999999999999993,
-            "tolerance": 0.00015000000000000001
-          },
-          {
-            "row": 8,
-            "time": 0.7,
-            "variable": "S1",
-            "expected": 0.1,
-            "actual": 0.04000000000000001,
-            "absoluteError": 0.06,
-            "tolerance": 0.00011
-          },
-          {
-            "row": 8,
-            "time": 0.7,
-            "variable": "x",
-            "expected": 0.5,
-            "actual": 0.20000000000000004,
-            "absoluteError": 0.29999999999999993,
-            "tolerance": 0.00015000000000000001
-          },
-          {
-            "row": 9,
-            "time": 0.8,
-            "variable": "S1",
-            "expected": 0.1,
-            "actual": 0.04000000000000001,
-            "absoluteError": 0.06,
-            "tolerance": 0.00011
-          },
-          {
-            "row": 9,
-            "time": 0.8,
-            "variable": "x",
-            "expected": 0.5,
-            "actual": 0.20000000000000004,
-            "absoluteError": 0.29999999999999993,
-            "tolerance": 0.00015000000000000001
-          },
-          {
-            "row": 10,
-            "time": 0.9,
-            "variable": "S1",
-            "expected": 0.1,
-            "actual": 0.04000000000000001,
-            "absoluteError": 0.06,
-            "tolerance": 0.00011
-          },
-          {
-            "row": 10,
-            "time": 0.9,
-            "variable": "x",
-            "expected": 0.5,
-            "actual": 0.20000000000000004,
-            "absoluteError": 0.29999999999999993,
-            "tolerance": 0.00015000000000000001
-          },
-          {
-            "row": 11,
-            "time": 1,
-            "variable": "S1",
-            "expected": 0.1,
-            "actual": 0.04000000000000001,
-            "absoluteError": 0.06,
-            "tolerance": 0.00011
-          },
-          {
-            "row": 11,
-            "time": 1,
-            "variable": "x",
-            "expected": 0.5,
-            "actual": 0.20000000000000004,
-            "absoluteError": 0.29999999999999993,
-            "tolerance": 0.00015000000000000001
-          }
-        ]
+        "maxAbsoluteError": 0
       },
       "simulationPlotPaths": [
         "01779/plot-001.png",
         "01779/plot-002.png",
         "01779/plot-003.png"
-      ],
-      "error": {
-        "phase": "comparison",
-        "message": "Simulation results exceed the Semantic Test Suite tolerances"
-      }
+      ]
     },
     {
       "caseId": "01780",
       "synopsis": "A species concentration and its compartment assigned to by the same event.",
       "sourcePath": "semantic/01780/01780-sbml-l3v1.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "01780/input.heta",
       "simulationInputPath": "01780/simulation-input.json",
       "outputs": {
         "simulation": "01780/simulation.csv"
       },
       "comparison": {
-        "status": "failed",
+        "status": "valid",
         "comparedValues": 33,
-        "maxAbsoluteError": 0.29999999999999993,
-        "failures": [
-          {
-            "row": 6,
-            "time": 0.5,
-            "variable": "S1",
-            "expected": 0.1,
-            "actual": 0.04000000000000001,
-            "absoluteError": 0.06,
-            "tolerance": 0.00011
-          },
-          {
-            "row": 6,
-            "time": 0.5,
-            "variable": "x",
-            "expected": 0.5,
-            "actual": 0.20000000000000004,
-            "absoluteError": 0.29999999999999993,
-            "tolerance": 0.00015000000000000001
-          },
-          {
-            "row": 7,
-            "time": 0.6,
-            "variable": "S1",
-            "expected": 0.1,
-            "actual": 0.04000000000000001,
-            "absoluteError": 0.06,
-            "tolerance": 0.00011
-          },
-          {
-            "row": 7,
-            "time": 0.6,
-            "variable": "x",
-            "expected": 0.5,
-            "actual": 0.20000000000000004,
-            "absoluteError": 0.29999999999999993,
-            "tolerance": 0.00015000000000000001
-          },
-          {
-            "row": 8,
-            "time": 0.7,
-            "variable": "S1",
-            "expected": 0.1,
-            "actual": 0.04000000000000001,
-            "absoluteError": 0.06,
-            "tolerance": 0.00011
-          },
-          {
-            "row": 8,
-            "time": 0.7,
-            "variable": "x",
-            "expected": 0.5,
-            "actual": 0.20000000000000004,
-            "absoluteError": 0.29999999999999993,
-            "tolerance": 0.00015000000000000001
-          },
-          {
-            "row": 9,
-            "time": 0.8,
-            "variable": "S1",
-            "expected": 0.1,
-            "actual": 0.04000000000000001,
-            "absoluteError": 0.06,
-            "tolerance": 0.00011
-          },
-          {
-            "row": 9,
-            "time": 0.8,
-            "variable": "x",
-            "expected": 0.5,
-            "actual": 0.20000000000000004,
-            "absoluteError": 0.29999999999999993,
-            "tolerance": 0.00015000000000000001
-          },
-          {
-            "row": 10,
-            "time": 0.9,
-            "variable": "S1",
-            "expected": 0.1,
-            "actual": 0.04000000000000001,
-            "absoluteError": 0.06,
-            "tolerance": 0.00011
-          },
-          {
-            "row": 10,
-            "time": 0.9,
-            "variable": "x",
-            "expected": 0.5,
-            "actual": 0.20000000000000004,
-            "absoluteError": 0.29999999999999993,
-            "tolerance": 0.00015000000000000001
-          },
-          {
-            "row": 11,
-            "time": 1,
-            "variable": "S1",
-            "expected": 0.1,
-            "actual": 0.04000000000000001,
-            "absoluteError": 0.06,
-            "tolerance": 0.00011
-          },
-          {
-            "row": 11,
-            "time": 1,
-            "variable": "x",
-            "expected": 0.5,
-            "actual": 0.20000000000000004,
-            "absoluteError": 0.29999999999999993,
-            "tolerance": 0.00015000000000000001
-          }
-        ]
+        "maxAbsoluteError": 0
       },
       "simulationPlotPaths": [
         "01780/plot-001.png",
         "01780/plot-002.png",
         "01780/plot-003.png"
-      ],
-      "error": {
-        "phase": "comparison",
-        "message": "Simulation results exceed the Semantic Test Suite tolerances"
-      }
+      ]
     },
     {
       "caseId": "01781",
@@ -59641,7 +57811,7 @@
       "simulationInputPath": "01814/simulation-input.json",
       "error": {
         "phase": "heta-load-simulation",
-        "message": "LoadError: TypeError: in NamedTuple, in name, expected Symbol, got a value of type Bool\nin expression starting at /tmp/jl_86RqTl/julia/model.jl:5",
+        "message": "LoadError: TypeError: in NamedTuple, in name, expected Symbol, got a value of type Bool\nin expression starting at /tmp/jl_7qecMU/julia/model.jl:5",
         "exitCode": 0
       }
     },
@@ -59667,7 +57837,7 @@
       "simulationInputPath": "01816/simulation-input.json",
       "error": {
         "phase": "heta-load-simulation",
-        "message": "LoadError: TypeError: in NamedTuple, in name, expected Symbol, got a value of type Bool\nin expression starting at /tmp/jl_b2DQFN/julia/model.jl:5",
+        "message": "LoadError: TypeError: in NamedTuple, in name, expected Symbol, got a value of type Bool\nin expression starting at /tmp/jl_PBoIpr/julia/model.jl:5",
         "exitCode": 0
       }
     },

@@ -5,113 +5,11 @@ No declaration file, running with defaults...
 [info]	Heta compiler v0.12.3 is initialized for the platform "undefined"
 [info]	Reading module of type "heta" from file "input.heta"...
 [info]	Reading module of type "sbml" from file "../../../cases/semantic/01531/01531-sbml-l2v5.xml"...
-[error]	CSwitcher trigger "undefined::E0" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E1" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E2" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E3" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E4" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E5" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E6" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E7" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E8" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E9" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E10" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E11" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E12" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E13" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E14" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E15" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E16" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E17" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E18" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E19" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E20" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E21" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E22" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E23" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E24" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E25" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E26" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E27" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E28" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E29" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E30" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E31" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E32" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E33" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E34" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E35" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E36" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E37" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E38" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E39" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E40" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E41" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E42" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E43" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E44" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E45" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E46" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E47" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E48" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E49" should be a numeric expression.
-[error]	CSwitcher trigger "undefined::E50" should be a numeric expression.
-[error]	undefined::E51 Cannot parse MathExpr properly. Value expected (char 11) " trig  > ()"
-[error]	undefined::E52 Cannot parse MathExpr properly. Value expected (char 11) " trig  > ()"
-[error]	undefined::E55 Cannot parse MathExpr properly. Value expected (char 21) "min( trig  >  0 , -())"
-[info]	Platform hash: 7bd2dec9e3e634e7604fe1e21819c930d3457c7fa8d515469d3207327a627948
+[error]	undefined::E51 Cannot parse MathExpr properly. Value expected (char 11) " trig  - ()"
+[error]	undefined::E52 Cannot parse MathExpr properly. Value expected (char 11) " trig  - ()"
+[error]	undefined::E55 Cannot parse MathExpr properly. Value expected (char 21) "min( trig  -  0 , -())"
+[info]	Platform hash: aeffa3ed4ad2caf4c7c6148be153e58c2ebcde16eb098b62dd4817157d6f5965
 [info]	Setting references in elements, total length 209
-[error]	No required "trigger" property for "E0" of CSwitcher.
-[error]	No required "trigger" property for "E1" of CSwitcher.
-[error]	No required "trigger" property for "E2" of CSwitcher.
-[error]	No required "trigger" property for "E3" of CSwitcher.
-[error]	No required "trigger" property for "E4" of CSwitcher.
-[error]	No required "trigger" property for "E5" of CSwitcher.
-[error]	No required "trigger" property for "E6" of CSwitcher.
-[error]	No required "trigger" property for "E7" of CSwitcher.
-[error]	No required "trigger" property for "E8" of CSwitcher.
-[error]	No required "trigger" property for "E9" of CSwitcher.
-[error]	No required "trigger" property for "E10" of CSwitcher.
-[error]	No required "trigger" property for "E11" of CSwitcher.
-[error]	No required "trigger" property for "E12" of CSwitcher.
-[error]	No required "trigger" property for "E13" of CSwitcher.
-[error]	No required "trigger" property for "E14" of CSwitcher.
-[error]	No required "trigger" property for "E15" of CSwitcher.
-[error]	No required "trigger" property for "E16" of CSwitcher.
-[error]	No required "trigger" property for "E17" of CSwitcher.
-[error]	No required "trigger" property for "E18" of CSwitcher.
-[error]	No required "trigger" property for "E19" of CSwitcher.
-[error]	No required "trigger" property for "E20" of CSwitcher.
-[error]	No required "trigger" property for "E21" of CSwitcher.
-[error]	No required "trigger" property for "E22" of CSwitcher.
-[error]	No required "trigger" property for "E23" of CSwitcher.
-[error]	No required "trigger" property for "E24" of CSwitcher.
-[error]	No required "trigger" property for "E25" of CSwitcher.
-[error]	No required "trigger" property for "E26" of CSwitcher.
-[error]	No required "trigger" property for "E27" of CSwitcher.
-[error]	No required "trigger" property for "E28" of CSwitcher.
-[error]	No required "trigger" property for "E29" of CSwitcher.
-[error]	No required "trigger" property for "E30" of CSwitcher.
-[error]	No required "trigger" property for "E31" of CSwitcher.
-[error]	No required "trigger" property for "E32" of CSwitcher.
-[error]	No required "trigger" property for "E33" of CSwitcher.
-[error]	No required "trigger" property for "E34" of CSwitcher.
-[error]	No required "trigger" property for "E35" of CSwitcher.
-[error]	No required "trigger" property for "E36" of CSwitcher.
-[error]	No required "trigger" property for "E37" of CSwitcher.
-[error]	No required "trigger" property for "E38" of CSwitcher.
-[error]	No required "trigger" property for "E39" of CSwitcher.
-[error]	No required "trigger" property for "E40" of CSwitcher.
-[error]	No required "trigger" property for "E41" of CSwitcher.
-[error]	No required "trigger" property for "E42" of CSwitcher.
-[error]	No required "trigger" property for "E43" of CSwitcher.
-[error]	No required "trigger" property for "E44" of CSwitcher.
-[error]	No required "trigger" property for "E45" of CSwitcher.
-[error]	No required "trigger" property for "E46" of CSwitcher.
-[error]	No required "trigger" property for "E47" of CSwitcher.
-[error]	No required "trigger" property for "E48" of CSwitcher.
-[error]	No required "trigger" property for "E49" of CSwitcher.
-[error]	No required "trigger" property for "E50" of CSwitcher.
 [error]	No required "trigger" property for "E51" of CSwitcher.
 [error]	No required "trigger" property for "E52" of CSwitcher.
 [error]	No required "trigger" property for "E55" of CSwitcher.

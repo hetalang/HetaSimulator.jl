@@ -6,8 +6,8 @@
     "packageVersion": "0.3.1"
   },
   "status": "completed-with-errors",
-  "startedAt": "2026-10-21T18:59:36.155Z",
-  "completedAt": "2026-10-21T19:20:26.863Z",
+  "startedAt": "2026-10-22T13:55:34.035Z",
+  "completedAt": "2026-10-22T14:20:26.433Z",
   "command": {
     "source": "cases/index.json",
     "target": "results/l2v5",
@@ -1042,14 +1042,21 @@
       "caseId": "00041",
       "synopsis": "A simple reaction during which the species values are reset\nby events.",
       "sourcePath": "semantic/00041/00041-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00041/input.heta",
       "simulationInputPath": "00041/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00041' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00041/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 102,
+        "maxAbsoluteError": 1.926284063022421e-7
+      },
+      "simulationPlotPaths": [
+        "00041/plot-001.png",
+        "00041/plot-002.png"
+      ]
     },
     {
       "caseId": "00042",
@@ -7911,14 +7918,22 @@
       "caseId": "00349",
       "synopsis": "Basic two reactions with three species in one compartment\nand two events that assigns value to a species.",
       "sourcePath": "semantic/00349/00349-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00349/input.heta",
       "simulationInputPath": "00349/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00349' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00349/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 153,
+        "maxAbsoluteError": 1.2140062066734458e-7
+      },
+      "simulationPlotPaths": [
+        "00349/plot-001.png",
+        "00349/plot-002.png",
+        "00349/plot-003.png"
+      ]
     },
     {
       "caseId": "00350",
@@ -7945,40 +7960,67 @@
       "caseId": "00351",
       "synopsis": "Basic two reactions with four species in one compartment\nand one event that assigns value to a species.",
       "sourcePath": "semantic/00351/00351-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00351/input.heta",
       "simulationInputPath": "00351/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00351' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00351/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 8.238225206180783e-11
+      },
+      "simulationPlotPaths": [
+        "00351/plot-001.png",
+        "00351/plot-002.png",
+        "00351/plot-003.png",
+        "00351/plot-004.png"
+      ]
     },
     {
       "caseId": "00352",
       "synopsis": "Basic two reactions with four species in one compartment\nand two events that assign value to a species.",
       "sourcePath": "semantic/00352/00352-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00352/input.heta",
       "simulationInputPath": "00352/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00352' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00352/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 9.564457351118882e-10
+      },
+      "simulationPlotPaths": [
+        "00352/plot-001.png",
+        "00352/plot-002.png",
+        "00352/plot-003.png",
+        "00352/plot-004.png"
+      ]
     },
     {
       "caseId": "00353",
       "synopsis": "Basic two reactions with four species in one compartment\nand an event that assigns value to two species.",
       "sourcePath": "semantic/00353/00353-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00353/input.heta",
       "simulationInputPath": "00353/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00353' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00353/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 5.395395713536644e-9
+      },
+      "simulationPlotPaths": [
+        "00353/plot-001.png",
+        "00353/plot-002.png",
+        "00353/plot-003.png",
+        "00353/plot-004.png"
+      ]
     },
     {
       "caseId": "00354",
@@ -8018,14 +8060,22 @@
       "caseId": "00356",
       "synopsis": "Basic two reactions with three species in one compartment\nand two events that assigns value to a species using a function.",
       "sourcePath": "semantic/00356/00356-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00356/input.heta",
       "simulationInputPath": "00356/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00356' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00356/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 153,
+        "maxAbsoluteError": 4.369934880621429e-8
+      },
+      "simulationPlotPaths": [
+        "00356/plot-001.png",
+        "00356/plot-002.png",
+        "00356/plot-003.png"
+      ]
     },
     {
       "caseId": "00357",
@@ -8133,40 +8183,64 @@
       "caseId": "00363",
       "synopsis": "Basic two reactions with three species in one 2D compartment\nand two events that assign value to a species.",
       "sourcePath": "semantic/00363/00363-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00363/input.heta",
       "simulationInputPath": "00363/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00363' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00363/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 153,
+        "maxAbsoluteError": 5.4856623687982164e-9
+      },
+      "simulationPlotPaths": [
+        "00363/plot-001.png",
+        "00363/plot-002.png",
+        "00363/plot-003.png"
+      ]
     },
     {
       "caseId": "00364",
       "synopsis": "Basic two reactions with three species in one 1D compartment\nand two events that assign value to a species.",
       "sourcePath": "semantic/00364/00364-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00364/input.heta",
       "simulationInputPath": "00364/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00364' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00364/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 153,
+        "maxAbsoluteError": 4.362475936048327e-9
+      },
+      "simulationPlotPaths": [
+        "00364/plot-001.png",
+        "00364/plot-002.png",
+        "00364/plot-003.png"
+      ]
     },
     {
       "caseId": "00365",
       "synopsis": "Basic two reactions with three species in one 0D compartment\nand two events that assign value to a species.",
       "sourcePath": "semantic/00365/00365-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00365/input.heta",
       "simulationInputPath": "00365/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00365' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00365/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 153,
+        "maxAbsoluteError": 1.950830386121538e-9
+      },
+      "simulationPlotPaths": [
+        "00365/plot-001.png",
+        "00365/plot-002.png",
+        "00365/plot-003.png"
+      ]
     },
     {
       "caseId": "00366",
@@ -8256,14 +8330,22 @@
       "caseId": "00370",
       "synopsis": "Basic two reactions with three species in one compartment\nand two events that assign value to a species.",
       "sourcePath": "semantic/00370/00370-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00370/input.heta",
       "simulationInputPath": "00370/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00370' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00370/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 153,
+        "maxAbsoluteError": 2.673948324982689e-7
+      },
+      "simulationPlotPaths": [
+        "00370/plot-001.png",
+        "00370/plot-002.png",
+        "00370/plot-003.png"
+      ]
     },
     {
       "caseId": "00371",
@@ -8290,40 +8372,67 @@
       "caseId": "00372",
       "synopsis": "Basic two reactions with four species in one compartment\nand one event that assigns value to a species.",
       "sourcePath": "semantic/00372/00372-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00372/input.heta",
       "simulationInputPath": "00372/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00372' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00372/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 3.5501112900099274e-11
+      },
+      "simulationPlotPaths": [
+        "00372/plot-001.png",
+        "00372/plot-002.png",
+        "00372/plot-003.png",
+        "00372/plot-004.png"
+      ]
     },
     {
       "caseId": "00373",
       "synopsis": "Basic two reactions with four species in one compartment\nand two events that assign value to a species.",
       "sourcePath": "semantic/00373/00373-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00373/input.heta",
       "simulationInputPath": "00373/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00373' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00373/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 3.103696337436457e-8
+      },
+      "simulationPlotPaths": [
+        "00373/plot-001.png",
+        "00373/plot-002.png",
+        "00373/plot-003.png",
+        "00373/plot-004.png"
+      ]
     },
     {
       "caseId": "00374",
       "synopsis": "Basic two reactions with four species in one compartment\nand an event that assigns value to two species.",
       "sourcePath": "semantic/00374/00374-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00374/input.heta",
       "simulationInputPath": "00374/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00374' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00374/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 8.241015281209435e-11
+      },
+      "simulationPlotPaths": [
+        "00374/plot-001.png",
+        "00374/plot-002.png",
+        "00374/plot-003.png",
+        "00374/plot-004.png"
+      ]
     },
     {
       "caseId": "00375",
@@ -8392,40 +8501,64 @@
       "caseId": "00378",
       "synopsis": "Basic two reactions with three species in one compartment\nand two events that assign value to a species.",
       "sourcePath": "semantic/00378/00378-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00378/input.heta",
       "simulationInputPath": "00378/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00378' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00378/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 153,
+        "maxAbsoluteError": 9.934268074829333e-9
+      },
+      "simulationPlotPaths": [
+        "00378/plot-001.png",
+        "00378/plot-002.png",
+        "00378/plot-003.png"
+      ]
     },
     {
       "caseId": "00379",
       "synopsis": "Basic two reactions with three species in one compartment\nand two events that assign value to a species.",
       "sourcePath": "semantic/00379/00379-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00379/input.heta",
       "simulationInputPath": "00379/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00379' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00379/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 153,
+        "maxAbsoluteError": 1.0618326551359303e-8
+      },
+      "simulationPlotPaths": [
+        "00379/plot-001.png",
+        "00379/plot-002.png",
+        "00379/plot-003.png"
+      ]
     },
     {
       "caseId": "00380",
       "synopsis": "Basic two reactions with three species in one compartment\nand two events that assign value to a species.",
       "sourcePath": "semantic/00380/00380-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00380/input.heta",
       "simulationInputPath": "00380/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00380' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00380/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 153,
+        "maxAbsoluteError": 4.492796151778222e-8
+      },
+      "simulationPlotPaths": [
+        "00380/plot-001.png",
+        "00380/plot-002.png",
+        "00380/plot-003.png"
+      ]
     },
     {
       "caseId": "00381",
@@ -8494,27 +8627,45 @@
       "caseId": "00384",
       "synopsis": "Basic two reactions with four species in one compartment\nand one event that assigns value to a species.",
       "sourcePath": "semantic/00384/00384-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00384/input.heta",
       "simulationInputPath": "00384/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00384' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00384/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 6.122332594235905e-13
+      },
+      "simulationPlotPaths": [
+        "00384/plot-001.png",
+        "00384/plot-002.png",
+        "00384/plot-003.png",
+        "00384/plot-004.png"
+      ]
     },
     {
       "caseId": "00385",
       "synopsis": "Basic two reactions with four species in one compartment\nand two events that assign value to a species.",
       "sourcePath": "semantic/00385/00385-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00385/input.heta",
       "simulationInputPath": "00385/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00385' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00385/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 6.961138154619462e-11
+      },
+      "simulationPlotPaths": [
+        "00385/plot-001.png",
+        "00385/plot-002.png",
+        "00385/plot-003.png",
+        "00385/plot-004.png"
+      ]
     },
     {
       "caseId": "00386",
@@ -8601,14 +8752,23 @@
       "caseId": "00390",
       "synopsis": "Basic two reactions with four species in one compartment\nand two events that assign value to a species.",
       "sourcePath": "semantic/00390/00390-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00390/input.heta",
       "simulationInputPath": "00390/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00390' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00390/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 6.544441877309737e-9
+      },
+      "simulationPlotPaths": [
+        "00390/plot-001.png",
+        "00390/plot-002.png",
+        "00390/plot-003.png",
+        "00390/plot-004.png"
+      ]
     },
     {
       "caseId": "00391",
@@ -8631,14 +8791,23 @@
       "caseId": "00392",
       "synopsis": "Basic two reactions with four species in one compartment\nand two events that assign value to a species.",
       "sourcePath": "semantic/00392/00392-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00392/input.heta",
       "simulationInputPath": "00392/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00392' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00392/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 8.23821670603575e-11
+      },
+      "simulationPlotPaths": [
+        "00392/plot-001.png",
+        "00392/plot-002.png",
+        "00392/plot-003.png",
+        "00392/plot-004.png"
+      ]
     },
     {
       "caseId": "00393",
@@ -8724,14 +8893,22 @@
       "caseId": "00397",
       "synopsis": "Model using parameters and rules only with\none event that assigns value to a parameter.",
       "sourcePath": "semantic/00397/00397-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00397/input.heta",
       "simulationInputPath": "00397/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00397' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00397/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 153,
+        "maxAbsoluteError": 5.430755245505736e-8
+      },
+      "simulationPlotPaths": [
+        "00397/plot-001.png",
+        "00397/plot-002.png",
+        "00397/plot-003.png"
+      ]
     },
     {
       "caseId": "00398",
@@ -13572,40 +13749,67 @@
       "caseId": "00652",
       "synopsis": "Two reactions with four species in one",
       "sourcePath": "semantic/00652/00652-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00652/input.heta",
       "simulationInputPath": "00652/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00652' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00652/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 1.0542975658624741e-12
+      },
+      "simulationPlotPaths": [
+        "00652/plot-001.png",
+        "00652/plot-002.png",
+        "00652/plot-003.png",
+        "00652/plot-004.png"
+      ]
     },
     {
       "caseId": "00653",
       "synopsis": "Two reactions with four species in one",
       "sourcePath": "semantic/00653/00653-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00653/input.heta",
       "simulationInputPath": "00653/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00653' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00653/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 6.572917530351871e-13
+      },
+      "simulationPlotPaths": [
+        "00653/plot-001.png",
+        "00653/plot-002.png",
+        "00653/plot-003.png",
+        "00653/plot-004.png"
+      ]
     },
     {
       "caseId": "00654",
       "synopsis": "Two reactions with four species in one",
       "sourcePath": "semantic/00654/00654-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00654/input.heta",
       "simulationInputPath": "00654/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00654' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00654/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 1.3005259643186252e-12
+      },
+      "simulationPlotPaths": [
+        "00654/plot-001.png",
+        "00654/plot-002.png",
+        "00654/plot-003.png",
+        "00654/plot-004.png"
+      ]
     },
     {
       "caseId": "00655",
@@ -15367,14 +15571,22 @@
       "caseId": "00744",
       "synopsis": "Basic two reactions with three species in one compartment\nand two events that assign value to a species.",
       "sourcePath": "semantic/00744/00744-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00744/input.heta",
       "simulationInputPath": "00744/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00744' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00744/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 153,
+        "maxAbsoluteError": 1.1056664206421374e-7
+      },
+      "simulationPlotPaths": [
+        "00744/plot-001.png",
+        "00744/plot-002.png",
+        "00744/plot-003.png"
+      ]
     },
     {
       "caseId": "00745",
@@ -15401,40 +15613,67 @@
       "caseId": "00746",
       "synopsis": "Basic two reactions with four species in one compartment\nand one event that assigns value to a species.",
       "sourcePath": "semantic/00746/00746-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00746/input.heta",
       "simulationInputPath": "00746/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00746' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00746/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 1.48746487349527e-9
+      },
+      "simulationPlotPaths": [
+        "00746/plot-001.png",
+        "00746/plot-002.png",
+        "00746/plot-003.png",
+        "00746/plot-004.png"
+      ]
     },
     {
       "caseId": "00747",
       "synopsis": "Basic two reactions with four species in one compartment\nand two events that assign value to a species.",
       "sourcePath": "semantic/00747/00747-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00747/input.heta",
       "simulationInputPath": "00747/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00747' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00747/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 9.718951744742618e-12
+      },
+      "simulationPlotPaths": [
+        "00747/plot-001.png",
+        "00747/plot-002.png",
+        "00747/plot-003.png",
+        "00747/plot-004.png"
+      ]
     },
     {
       "caseId": "00748",
       "synopsis": "Basic two reactions with four species in one compartment\nand an event that assigns value to two species.",
       "sourcePath": "semantic/00748/00748-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00748/input.heta",
       "simulationInputPath": "00748/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00748' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00748/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 1.2408643557115795e-9
+      },
+      "simulationPlotPaths": [
+        "00748/plot-001.png",
+        "00748/plot-002.png",
+        "00748/plot-003.png",
+        "00748/plot-004.png"
+      ]
     },
     {
       "caseId": "00749",
@@ -15504,14 +15743,23 @@
       "caseId": "00752",
       "synopsis": "Basic two reactions with three species in one compartment\nand two events that assigns value to a species using a function.",
       "sourcePath": "semantic/00752/00752-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00752/input.heta",
       "simulationInputPath": "00752/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00752' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00752/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 2.7948063974214676e-8
+      },
+      "simulationPlotPaths": [
+        "00752/plot-001.png",
+        "00752/plot-002.png",
+        "00752/plot-003.png",
+        "00752/plot-004.png"
+      ]
     },
     {
       "caseId": "00753",
@@ -18106,27 +18354,44 @@
       "caseId": "00884",
       "synopsis": "Basic two reactions with three species in one compartment",
       "sourcePath": "semantic/00884/00884-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00884/input.heta",
       "simulationInputPath": "00884/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00884' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00884/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 153,
+        "maxAbsoluteError": 1.6805309466239038e-7
+      },
+      "simulationPlotPaths": [
+        "00884/plot-001.png",
+        "00884/plot-002.png",
+        "00884/plot-003.png"
+      ]
     },
     {
       "caseId": "00885",
       "synopsis": "Basic two reactions with four species in one compartment",
       "sourcePath": "semantic/00885/00885-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00885/input.heta",
       "simulationInputPath": "00885/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00885' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00885/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 9.183410698554439e-10
+      },
+      "simulationPlotPaths": [
+        "00885/plot-001.png",
+        "00885/plot-002.png",
+        "00885/plot-003.png",
+        "00885/plot-004.png"
+      ]
     },
     {
       "caseId": "00886",
@@ -19101,66 +19366,101 @@
       "caseId": "00944",
       "synopsis": "Basic one reaction with one species in one compartment and one event, assigning to a parameter.",
       "sourcePath": "semantic/00944/00944-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00944/input.heta",
       "simulationInputPath": "00944/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00944' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00944/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 602,
+        "maxAbsoluteError": 4.1382500315378934e-7
+      },
+      "simulationPlotPaths": [
+        "00944/plot-001.png",
+        "00944/plot-002.png"
+      ]
     },
     {
       "caseId": "00945",
       "synopsis": "Basic one reaction with one species in one compartment and one event that changes the size of the compartment.",
       "sourcePath": "semantic/00945/00945-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00945/input.heta",
       "simulationInputPath": "00945/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00945' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00945/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 602,
+        "maxAbsoluteError": 0.0000036269300585090036
+      },
+      "simulationPlotPaths": [
+        "00945/plot-001.png",
+        "00945/plot-002.png"
+      ]
     },
     {
       "caseId": "00946",
       "synopsis": "Basic one reaction with one species in one compartment and one event, assigning to a parameter.",
       "sourcePath": "semantic/00946/00946-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00946/input.heta",
       "simulationInputPath": "00946/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00946' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00946/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 602,
+        "maxAbsoluteError": 0.0000036269300585090036
+      },
+      "simulationPlotPaths": [
+        "00946/plot-001.png",
+        "00946/plot-002.png"
+      ]
     },
     {
       "caseId": "00947",
       "synopsis": "Basic one reaction with one species in one compartment and one event, assigning to a parameter.",
       "sourcePath": "semantic/00947/00947-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00947/input.heta",
       "simulationInputPath": "00947/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00947' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00947/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 602,
+        "maxAbsoluteError": 3.5597530206876726e-7
+      },
+      "simulationPlotPaths": [
+        "00947/plot-001.png",
+        "00947/plot-002.png"
+      ]
     },
     {
       "caseId": "00948",
       "synopsis": "Basic one reaction with one species in one compartment and one event, assigning to a parameter.",
       "sourcePath": "semantic/00948/00948-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00948/input.heta",
       "simulationInputPath": "00948/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00948' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00948/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 602,
+        "maxAbsoluteError": 3.5597530206876726e-7
+      },
+      "simulationPlotPaths": [
+        "00948/plot-001.png",
+        "00948/plot-002.png"
+      ]
     },
     {
       "caseId": "00949",
@@ -19550,14 +19850,23 @@
       "caseId": "00979",
       "synopsis": "Two event where the two event assignments should not interfere with each other.",
       "sourcePath": "semantic/00979/00979-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00979/input.heta",
       "simulationInputPath": "00979/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/00979' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00979/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 44,
+        "maxAbsoluteError": 0
+      },
+      "simulationPlotPaths": [
+        "00979/plot-001.png",
+        "00979/plot-002.png",
+        "00979/plot-003.png",
+        "00979/plot-004.png"
+      ]
     },
     {
       "caseId": "00980",
@@ -22196,20 +22505,98 @@
       "caseId": "01211",
       "synopsis": "A trigger with an nary relational element.",
       "sourcePath": "semantic/01211/01211-sbml-l2v5.xml",
-      "status": "success",
+      "status": "failed",
       "buildSourcePath": "01211/input.heta",
       "simulationInputPath": "01211/simulation-input.json",
       "outputs": {
         "simulation": "01211/simulation.csv"
       },
       "comparison": {
-        "status": "valid",
+        "status": "failed",
         "comparedValues": 11,
-        "maxAbsoluteError": 0
+        "maxAbsoluteError": 2,
+        "failures": [
+          {
+            "row": 4,
+            "time": 0.3,
+            "variable": "x",
+            "expected": 3,
+            "actual": 5,
+            "absoluteError": 2,
+            "tolerance": 0.0004
+          },
+          {
+            "row": 5,
+            "time": 0.4,
+            "variable": "x",
+            "expected": 3,
+            "actual": 5,
+            "absoluteError": 2,
+            "tolerance": 0.0004
+          },
+          {
+            "row": 6,
+            "time": 0.5,
+            "variable": "x",
+            "expected": 3,
+            "actual": 5,
+            "absoluteError": 2,
+            "tolerance": 0.0004
+          },
+          {
+            "row": 7,
+            "time": 0.6,
+            "variable": "x",
+            "expected": 3,
+            "actual": 5,
+            "absoluteError": 2,
+            "tolerance": 0.0004
+          },
+          {
+            "row": 8,
+            "time": 0.7,
+            "variable": "x",
+            "expected": 3,
+            "actual": 5,
+            "absoluteError": 2,
+            "tolerance": 0.0004
+          },
+          {
+            "row": 9,
+            "time": 0.8,
+            "variable": "x",
+            "expected": 3,
+            "actual": 5,
+            "absoluteError": 2,
+            "tolerance": 0.0004
+          },
+          {
+            "row": 10,
+            "time": 0.9,
+            "variable": "x",
+            "expected": 3,
+            "actual": 5,
+            "absoluteError": 2,
+            "tolerance": 0.0004
+          },
+          {
+            "row": 11,
+            "time": 1,
+            "variable": "x",
+            "expected": 3,
+            "actual": 5,
+            "absoluteError": 2,
+            "tolerance": 0.0004
+          }
+        ]
       },
       "simulationPlotPaths": [
         "01211/plot-001.png"
-      ]
+      ],
+      "error": {
+        "phase": "comparison",
+        "message": "Simulation results exceed the Semantic Test Suite tolerances"
+      }
     },
     {
       "caseId": "01213",
@@ -22235,10 +22622,112 @@
       "status": "failed",
       "buildSourcePath": "01214/input.heta",
       "simulationInputPath": "01214/simulation-input.json",
+      "outputs": {
+        "simulation": "01214/simulation.csv"
+      },
+      "comparison": {
+        "status": "failed",
+        "comparedValues": 11,
+        "maxAbsoluteError": 2,
+        "failures": [
+          {
+            "row": 2,
+            "time": 0.1,
+            "variable": "x",
+            "expected": 7,
+            "actual": 5,
+            "absoluteError": 2,
+            "tolerance": 0.0008
+          },
+          {
+            "row": 3,
+            "time": 0.2,
+            "variable": "x",
+            "expected": 7,
+            "actual": 5,
+            "absoluteError": 2,
+            "tolerance": 0.0008
+          },
+          {
+            "row": 4,
+            "time": 0.3,
+            "variable": "x",
+            "expected": 7,
+            "actual": 5,
+            "absoluteError": 2,
+            "tolerance": 0.0008
+          },
+          {
+            "row": 5,
+            "time": 0.4,
+            "variable": "x",
+            "expected": 7,
+            "actual": 5,
+            "absoluteError": 2,
+            "tolerance": 0.0008
+          },
+          {
+            "row": 6,
+            "time": 0.5,
+            "variable": "x",
+            "expected": 7,
+            "actual": 5,
+            "absoluteError": 2,
+            "tolerance": 0.0008
+          },
+          {
+            "row": 7,
+            "time": 0.6,
+            "variable": "x",
+            "expected": 7,
+            "actual": 5,
+            "absoluteError": 2,
+            "tolerance": 0.0008
+          },
+          {
+            "row": 8,
+            "time": 0.7,
+            "variable": "x",
+            "expected": 7,
+            "actual": 5,
+            "absoluteError": 2,
+            "tolerance": 0.0008
+          },
+          {
+            "row": 9,
+            "time": 0.8,
+            "variable": "x",
+            "expected": 7,
+            "actual": 5,
+            "absoluteError": 2,
+            "tolerance": 0.0008
+          },
+          {
+            "row": 10,
+            "time": 0.9,
+            "variable": "x",
+            "expected": 7,
+            "actual": 5,
+            "absoluteError": 2,
+            "tolerance": 0.0008
+          },
+          {
+            "row": 11,
+            "time": 1,
+            "variable": "x",
+            "expected": 7,
+            "actual": 5,
+            "absoluteError": 2,
+            "tolerance": 0.0008
+          }
+        ]
+      },
+      "simulationPlotPaths": [
+        "01214/plot-001.png"
+      ],
       "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/01214' with exit code 2.",
-        "exitCode": 0
+        "phase": "comparison",
+        "message": "Simulation results exceed the Semantic Test Suite tolerances"
       }
     },
     {
@@ -22459,14 +22948,21 @@
       "caseId": "01222",
       "synopsis": "A boundary substance-only species in varying compartment under control of a rate rule.",
       "sourcePath": "semantic/01222/01222-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "01222/input.heta",
       "simulationInputPath": "01222/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/01222' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "01222/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 22,
+        "maxAbsoluteError": 2.6645352591003757e-14
+      },
+      "simulationPlotPaths": [
+        "01222/plot-001.png",
+        "01222/plot-002.png"
+      ]
     },
     {
       "caseId": "01223",
@@ -22555,27 +23051,43 @@
       "caseId": "01227",
       "synopsis": "A simple reaction whose identifier is used in a trigger.",
       "sourcePath": "semantic/01227/01227-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "01227/input.heta",
       "simulationInputPath": "01227/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/01227' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "01227/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 33,
+        "maxAbsoluteError": 1.0658141036401503e-14
+      },
+      "simulationPlotPaths": [
+        "01227/plot-001.png",
+        "01227/plot-002.png",
+        "01227/plot-003.png"
+      ]
     },
     {
       "caseId": "01228",
       "synopsis": "A simple reaction whose identifier is used in an event assignment.",
       "sourcePath": "semantic/01228/01228-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "01228/input.heta",
       "simulationInputPath": "01228/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/01228' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "01228/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 33,
+        "maxAbsoluteError": 2.6645352591003757e-14
+      },
+      "simulationPlotPaths": [
+        "01228/plot-001.png",
+        "01228/plot-002.png",
+        "01228/plot-003.png"
+      ]
     },
     {
       "caseId": "01230",
@@ -23033,14 +23545,22 @@
       "caseId": "01340",
       "synopsis": "A reaction whose rate goes negative due to an event.",
       "sourcePath": "semantic/01340/01340-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "01340/input.heta",
       "simulationInputPath": "01340/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/01340' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "01340/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 33,
+        "maxAbsoluteError": 7.993605777301127e-15
+      },
+      "simulationPlotPaths": [
+        "01340/plot-001.png",
+        "01340/plot-002.png",
+        "01340/plot-003.png"
+      ]
     },
     {
       "caseId": "01341",
@@ -24417,10 +24937,204 @@
       "status": "not-evaluated",
       "buildSourcePath": "01504/input.heta",
       "simulationInputPath": "01504/simulation-input.json",
+      "outputs": {
+        "simulation": "01504/simulation.csv"
+      },
+      "comparison": {
+        "status": "failed",
+        "comparedValues": 33,
+        "maxAbsoluteError": 0.048714285714285765,
+        "failures": [
+          {
+            "row": 2,
+            "time": 0.1,
+            "variable": "S1",
+            "expected": 0.0208,
+            "actual": 0.020400000000000012,
+            "absoluteError": 0.00039999999999998717,
+            "tolerance": 0.00010208
+          },
+          {
+            "row": 2,
+            "time": 0.1,
+            "variable": "x",
+            "expected": 0.04,
+            "actual": 0.03923076923076925,
+            "absoluteError": 0.0007692307692307512,
+            "tolerance": 0.00010400000000000001
+          },
+          {
+            "row": 3,
+            "time": 0.2,
+            "variable": "S1",
+            "expected": 0.0432,
+            "actual": 0.041600000000000005,
+            "absoluteError": 0.0015999999999999973,
+            "tolerance": 0.00010432
+          },
+          {
+            "row": 3,
+            "time": 0.2,
+            "variable": "x",
+            "expected": 0.08,
+            "actual": 0.07703703703703704,
+            "absoluteError": 0.002962962962962959,
+            "tolerance": 0.00010800000000000001
+          },
+          {
+            "row": 4,
+            "time": 0.3,
+            "variable": "S1",
+            "expected": 0.0672,
+            "actual": 0.06359999999999999,
+            "absoluteError": 0.003600000000000006,
+            "tolerance": 0.00010672000000000001
+          },
+          {
+            "row": 4,
+            "time": 0.3,
+            "variable": "x",
+            "expected": 0.12,
+            "actual": 0.11357142857142855,
+            "absoluteError": 0.00642857142857145,
+            "tolerance": 0.00011200000000000001
+          },
+          {
+            "row": 5,
+            "time": 0.4,
+            "variable": "S1",
+            "expected": 0.0928,
+            "actual": 0.08639999999999998,
+            "absoluteError": 0.006400000000000017,
+            "tolerance": 0.00010928000000000001
+          },
+          {
+            "row": 5,
+            "time": 0.4,
+            "variable": "x",
+            "expected": 0.16,
+            "actual": 0.14896551724137924,
+            "absoluteError": 0.011034482758620762,
+            "tolerance": 0.000116
+          },
+          {
+            "row": 6,
+            "time": 0.5,
+            "variable": "S1",
+            "expected": 0.132,
+            "actual": 0.12990000000000004,
+            "absoluteError": 0.002099999999999963,
+            "tolerance": 0.0001132
+          },
+          {
+            "row": 6,
+            "time": 0.5,
+            "variable": "x",
+            "expected": 0.22,
+            "actual": 0.21650000000000005,
+            "absoluteError": 0.0034999999999999476,
+            "tolerance": 0.00012200000000000001
+          },
+          {
+            "row": 7,
+            "time": 0.6,
+            "variable": "S1",
+            "expected": 0.1612,
+            "actual": 0.15430000000000002,
+            "absoluteError": 0.0068999999999999895,
+            "tolerance": 0.00011612
+          },
+          {
+            "row": 7,
+            "time": 0.6,
+            "variable": "x",
+            "expected": 0.26,
+            "actual": 0.24887096774193548,
+            "absoluteError": 0.011129032258064525,
+            "tolerance": 0.000126
+          },
+          {
+            "row": 8,
+            "time": 0.7,
+            "variable": "S1",
+            "expected": 0.192,
+            "actual": 0.1795,
+            "absoluteError": 0.012500000000000011,
+            "tolerance": 0.00011920000000000001
+          },
+          {
+            "row": 8,
+            "time": 0.7,
+            "variable": "x",
+            "expected": 0.3,
+            "actual": 0.28046874999999993,
+            "absoluteError": 0.019531250000000056,
+            "tolerance": 0.00013000000000000002
+          },
+          {
+            "row": 9,
+            "time": 0.8,
+            "variable": "S1",
+            "expected": 0.2244,
+            "actual": 0.2055,
+            "absoluteError": 0.0189,
+            "tolerance": 0.00012244
+          },
+          {
+            "row": 9,
+            "time": 0.8,
+            "variable": "x",
+            "expected": 0.34,
+            "actual": 0.3113636363636363,
+            "absoluteError": 0.028636363636363737,
+            "tolerance": 0.000134
+          },
+          {
+            "row": 10,
+            "time": 0.9,
+            "variable": "S1",
+            "expected": 0.2584,
+            "actual": 0.23229999999999995,
+            "absoluteError": 0.026100000000000068,
+            "tolerance": 0.00012584
+          },
+          {
+            "row": 10,
+            "time": 0.9,
+            "variable": "x",
+            "expected": 0.38,
+            "actual": 0.3416176470588234,
+            "absoluteError": 0.03838235294117659,
+            "tolerance": 0.000138
+          },
+          {
+            "row": 11,
+            "time": 1,
+            "variable": "S1",
+            "expected": 0.294,
+            "actual": 0.25989999999999996,
+            "absoluteError": 0.03410000000000002,
+            "tolerance": 0.0001294
+          },
+          {
+            "row": 11,
+            "time": 1,
+            "variable": "x",
+            "expected": 0.42,
+            "actual": 0.3712857142857142,
+            "absoluteError": 0.048714285714285765,
+            "tolerance": 0.000142
+          }
+        ]
+      },
+      "simulationPlotPaths": [
+        "01504/plot-001.png",
+        "01504/plot-002.png",
+        "01504/plot-003.png"
+      ],
       "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/01504' with exit code 2.",
-        "exitCode": 0
+        "phase": "comparison",
+        "message": "Simulation results exceed the Semantic Test Suite tolerances"
       },
       "buildStatus": "failed",
       "notEvaluatedTestTags": [
@@ -24434,10 +25148,204 @@
       "status": "not-evaluated",
       "buildSourcePath": "01505/input.heta",
       "simulationInputPath": "01505/simulation-input.json",
+      "outputs": {
+        "simulation": "01505/simulation.csv"
+      },
+      "comparison": {
+        "status": "failed",
+        "comparedValues": 33,
+        "maxAbsoluteError": 0.2535806451612904,
+        "failures": [
+          {
+            "row": 2,
+            "time": 0.1,
+            "variable": "S1",
+            "expected": 0.0208,
+            "actual": 0.020400000000000012,
+            "absoluteError": 0.00039999999999998717,
+            "tolerance": 0.00010208
+          },
+          {
+            "row": 2,
+            "time": 0.1,
+            "variable": "x",
+            "expected": 0.04,
+            "actual": 0.03923076923076925,
+            "absoluteError": 0.0007692307692307512,
+            "tolerance": 0.00010400000000000001
+          },
+          {
+            "row": 3,
+            "time": 0.2,
+            "variable": "S1",
+            "expected": 0.0432,
+            "actual": 0.041600000000000005,
+            "absoluteError": 0.0015999999999999973,
+            "tolerance": 0.00010432
+          },
+          {
+            "row": 3,
+            "time": 0.2,
+            "variable": "x",
+            "expected": 0.08,
+            "actual": 0.07703703703703704,
+            "absoluteError": 0.002962962962962959,
+            "tolerance": 0.00010800000000000001
+          },
+          {
+            "row": 4,
+            "time": 0.3,
+            "variable": "S1",
+            "expected": 0.0672,
+            "actual": 0.06359999999999999,
+            "absoluteError": 0.003600000000000006,
+            "tolerance": 0.00010672000000000001
+          },
+          {
+            "row": 4,
+            "time": 0.3,
+            "variable": "x",
+            "expected": 0.12,
+            "actual": 0.11357142857142855,
+            "absoluteError": 0.00642857142857145,
+            "tolerance": 0.00011200000000000001
+          },
+          {
+            "row": 5,
+            "time": 0.4,
+            "variable": "S1",
+            "expected": 0.0928,
+            "actual": 0.08639999999999998,
+            "absoluteError": 0.006400000000000017,
+            "tolerance": 0.00010928000000000001
+          },
+          {
+            "row": 5,
+            "time": 0.4,
+            "variable": "x",
+            "expected": 0.16,
+            "actual": 0.14896551724137924,
+            "absoluteError": 0.011034482758620762,
+            "tolerance": 0.000116
+          },
+          {
+            "row": 6,
+            "time": 0.5,
+            "variable": "S1",
+            "expected": 0.11571,
+            "actual": 0.10219999999999997,
+            "absoluteError": 0.013510000000000022,
+            "tolerance": 0.000111571
+          },
+          {
+            "row": 6,
+            "time": 0.5,
+            "variable": "x",
+            "expected": 0.551,
+            "actual": 0.48666666666666647,
+            "absoluteError": 0.06433333333333358,
+            "tolerance": 0.0001551
+          },
+          {
+            "row": 7,
+            "time": 0.6,
+            "variable": "S1",
+            "expected": 0.13593,
+            "actual": 0.11099999999999995,
+            "absoluteError": 0.02493000000000005,
+            "tolerance": 0.00011359300000000001
+          },
+          {
+            "row": 7,
+            "time": 0.6,
+            "variable": "x",
+            "expected": 0.591,
+            "actual": 0.4826086956521737,
+            "absoluteError": 0.10839130434782629,
+            "tolerance": 0.00015910000000000002
+          },
+          {
+            "row": 8,
+            "time": 0.7,
+            "variable": "S1",
+            "expected": 0.15775,
+            "actual": 0.12059999999999994,
+            "absoluteError": 0.03715000000000006,
+            "tolerance": 0.00011577500000000001
+          },
+          {
+            "row": 8,
+            "time": 0.7,
+            "variable": "x",
+            "expected": 0.631,
+            "actual": 0.4823999999999998,
+            "absoluteError": 0.14860000000000023,
+            "tolerance": 0.0001631
+          },
+          {
+            "row": 9,
+            "time": 0.8,
+            "variable": "S1",
+            "expected": 0.18117,
+            "actual": 0.13099999999999995,
+            "absoluteError": 0.05017000000000005,
+            "tolerance": 0.00011811700000000001
+          },
+          {
+            "row": 9,
+            "time": 0.8,
+            "variable": "x",
+            "expected": 0.671,
+            "actual": 0.48518518518518494,
+            "absoluteError": 0.1858148148148151,
+            "tolerance": 0.0001671
+          },
+          {
+            "row": 10,
+            "time": 0.9,
+            "variable": "S1",
+            "expected": 0.20619,
+            "actual": 0.1422,
+            "absoluteError": 0.06399000000000002,
+            "tolerance": 0.000120619
+          },
+          {
+            "row": 10,
+            "time": 0.9,
+            "variable": "x",
+            "expected": 0.711,
+            "actual": 0.4903448275862068,
+            "absoluteError": 0.22065517241379318,
+            "tolerance": 0.00017109999999999998
+          },
+          {
+            "row": 11,
+            "time": 1,
+            "variable": "S1",
+            "expected": 0.23281,
+            "actual": 0.15419999999999998,
+            "absoluteError": 0.07861000000000001,
+            "tolerance": 0.00012328100000000001
+          },
+          {
+            "row": 11,
+            "time": 1,
+            "variable": "x",
+            "expected": 0.751,
+            "actual": 0.4974193548387096,
+            "absoluteError": 0.2535806451612904,
+            "tolerance": 0.00017510000000000003
+          }
+        ]
+      },
+      "simulationPlotPaths": [
+        "01505/plot-001.png",
+        "01505/plot-002.png",
+        "01505/plot-003.png"
+      ],
       "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/01505' with exit code 2.",
-        "exitCode": 0
+        "phase": "comparison",
+        "message": "Simulation results exceed the Semantic Test Suite tolerances"
       },
       "buildStatus": "failed",
       "notEvaluatedTestTags": [
@@ -24451,10 +25359,204 @@
       "status": "not-evaluated",
       "buildSourcePath": "01506/input.heta",
       "simulationInputPath": "01506/simulation-input.json",
+      "outputs": {
+        "simulation": "01506/simulation.csv"
+      },
+      "comparison": {
+        "status": "failed",
+        "comparedValues": 33,
+        "maxAbsoluteError": 0.24838709677419335,
+        "failures": [
+          {
+            "row": 2,
+            "time": 0.1,
+            "variable": "S1",
+            "expected": 0.0208,
+            "actual": 0.020400000000000012,
+            "absoluteError": 0.00039999999999998717,
+            "tolerance": 0.00010208
+          },
+          {
+            "row": 2,
+            "time": 0.1,
+            "variable": "x",
+            "expected": 0.04,
+            "actual": 0.03923076923076925,
+            "absoluteError": 0.0007692307692307512,
+            "tolerance": 0.00010400000000000001
+          },
+          {
+            "row": 3,
+            "time": 0.2,
+            "variable": "S1",
+            "expected": 0.0432,
+            "actual": 0.041600000000000005,
+            "absoluteError": 0.0015999999999999973,
+            "tolerance": 0.00010432
+          },
+          {
+            "row": 3,
+            "time": 0.2,
+            "variable": "x",
+            "expected": 0.08,
+            "actual": 0.07703703703703704,
+            "absoluteError": 0.002962962962962959,
+            "tolerance": 0.00010800000000000001
+          },
+          {
+            "row": 4,
+            "time": 0.3,
+            "variable": "S1",
+            "expected": 0.0672,
+            "actual": 0.06359999999999999,
+            "absoluteError": 0.003600000000000006,
+            "tolerance": 0.00010672000000000001
+          },
+          {
+            "row": 4,
+            "time": 0.3,
+            "variable": "x",
+            "expected": 0.12,
+            "actual": 0.11357142857142855,
+            "absoluteError": 0.00642857142857145,
+            "tolerance": 0.00011200000000000001
+          },
+          {
+            "row": 5,
+            "time": 0.4,
+            "variable": "S1",
+            "expected": 0.0928,
+            "actual": 0.08639999999999998,
+            "absoluteError": 0.006400000000000017,
+            "tolerance": 0.00010928000000000001
+          },
+          {
+            "row": 5,
+            "time": 0.4,
+            "variable": "x",
+            "expected": 0.16,
+            "actual": 0.14896551724137924,
+            "absoluteError": 0.011034482758620762,
+            "tolerance": 0.000116
+          },
+          {
+            "row": 6,
+            "time": 0.5,
+            "variable": "S1",
+            "expected": 0.1281,
+            "actual": 0.1221,
+            "absoluteError": 0.0059999999999999915,
+            "tolerance": 0.00011281
+          },
+          {
+            "row": 6,
+            "time": 0.5,
+            "variable": "x",
+            "expected": 0.61,
+            "actual": 0.5814285714285714,
+            "absoluteError": 0.02857142857142858,
+            "tolerance": 0.000161
+          },
+          {
+            "row": 7,
+            "time": 0.6,
+            "variable": "S1",
+            "expected": 0.1495,
+            "actual": 0.13090000000000002,
+            "absoluteError": 0.018599999999999978,
+            "tolerance": 0.00011495
+          },
+          {
+            "row": 7,
+            "time": 0.6,
+            "variable": "x",
+            "expected": 0.65,
+            "actual": 0.5691304347826087,
+            "absoluteError": 0.0808695652173913,
+            "tolerance": 0.000165
+          },
+          {
+            "row": 8,
+            "time": 0.7,
+            "variable": "S1",
+            "expected": 0.1725,
+            "actual": 0.1405,
+            "absoluteError": 0.03199999999999997,
+            "tolerance": 0.00011725
+          },
+          {
+            "row": 8,
+            "time": 0.7,
+            "variable": "x",
+            "expected": 0.69,
+            "actual": 0.562,
+            "absoluteError": 0.1279999999999999,
+            "tolerance": 0.000169
+          },
+          {
+            "row": 9,
+            "time": 0.8,
+            "variable": "S1",
+            "expected": 0.1971,
+            "actual": 0.15090000000000003,
+            "absoluteError": 0.04619999999999996,
+            "tolerance": 0.00011971
+          },
+          {
+            "row": 9,
+            "time": 0.8,
+            "variable": "x",
+            "expected": 0.73,
+            "actual": 0.558888888888889,
+            "absoluteError": 0.171111111111111,
+            "tolerance": 0.000173
+          },
+          {
+            "row": 10,
+            "time": 0.9,
+            "variable": "S1",
+            "expected": 0.2233,
+            "actual": 0.16210000000000008,
+            "absoluteError": 0.06119999999999992,
+            "tolerance": 0.00012233
+          },
+          {
+            "row": 10,
+            "time": 0.9,
+            "variable": "x",
+            "expected": 0.77,
+            "actual": 0.5589655172413796,
+            "absoluteError": 0.21103448275862047,
+            "tolerance": 0.00017700000000000002
+          },
+          {
+            "row": 11,
+            "time": 1,
+            "variable": "S1",
+            "expected": 0.2511,
+            "actual": 0.1741000000000001,
+            "absoluteError": 0.0769999999999999,
+            "tolerance": 0.00012511
+          },
+          {
+            "row": 11,
+            "time": 1,
+            "variable": "x",
+            "expected": 0.81,
+            "actual": 0.5616129032258067,
+            "absoluteError": 0.24838709677419335,
+            "tolerance": 0.000181
+          }
+        ]
+      },
+      "simulationPlotPaths": [
+        "01506/plot-001.png",
+        "01506/plot-002.png",
+        "01506/plot-003.png"
+      ],
       "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/01506' with exit code 2.",
-        "exitCode": 0
+        "phase": "comparison",
+        "message": "Simulation results exceed the Semantic Test Suite tolerances"
       },
       "buildStatus": "failed",
       "notEvaluatedTestTags": [
@@ -25995,27 +27097,43 @@
       "caseId": "01779",
       "synopsis": "A species concentration and its compartment assigned to by the same event.",
       "sourcePath": "semantic/01779/01779-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "01779/input.heta",
       "simulationInputPath": "01779/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/01779' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "01779/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 33,
+        "maxAbsoluteError": 0
+      },
+      "simulationPlotPaths": [
+        "01779/plot-001.png",
+        "01779/plot-002.png",
+        "01779/plot-003.png"
+      ]
     },
     {
       "caseId": "01780",
       "synopsis": "A species concentration and its compartment assigned to by the same event.",
       "sourcePath": "semantic/01780/01780-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "01780/input.heta",
       "simulationInputPath": "01780/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "heta_build failed while generating julia model from '/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/01780' with exit code 2.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "01780/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 33,
+        "maxAbsoluteError": 0
+      },
+      "simulationPlotPaths": [
+        "01780/plot-001.png",
+        "01780/plot-002.png",
+        "01780/plot-003.png"
+      ]
     },
     {
       "caseId": "01781",
@@ -26942,7 +28060,7 @@
       "simulationInputPath": "01814/simulation-input.json",
       "error": {
         "phase": "heta-load-simulation",
-        "message": "LoadError: syntax: invalid assignment location \"true\" around /tmp/jl_EZjXkC/julia/model.jl:81\nin expression starting at /tmp/jl_EZjXkC/julia/model.jl:5",
+        "message": "LoadError: syntax: invalid assignment location \"true\" around /tmp/jl_JOA1MK/julia/model.jl:81\nin expression starting at /tmp/jl_JOA1MK/julia/model.jl:5",
         "exitCode": 0
       }
     },
@@ -26968,7 +28086,7 @@
       "simulationInputPath": "01816/simulation-input.json",
       "error": {
         "phase": "heta-load-simulation",
-        "message": "LoadError: syntax: invalid assignment location \"false\" around /tmp/jl_w966Ka/julia/model.jl:81\nin expression starting at /tmp/jl_w966Ka/julia/model.jl:5",
+        "message": "LoadError: syntax: invalid assignment location \"false\" around /tmp/jl_YtRcOK/julia/model.jl:81\nin expression starting at /tmp/jl_YtRcOK/julia/model.jl:5",
         "exitCode": 0
       }
     },
