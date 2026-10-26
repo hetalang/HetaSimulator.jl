@@ -6,6 +6,7 @@
 - heta-compiler updated to v0.12.3
 - re-export SpecialFunctions for model expressions
 - change DEvent handling to trigger on false-to-true transitions using ContinuousCallback with root finding disabled
+- fixes annoying "sigma not found" message
 
 ## 0.8.7
 
