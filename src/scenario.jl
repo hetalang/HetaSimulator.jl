@@ -40,7 +40,7 @@ Arguments:
 - `parameters` : `Vector` of `Pair`s containing parameters' names and values. Overwrites default model's values. Default is empty vector.
 - `events_active` : `Vector` of `Pair`s containing events' names and true/false values. Overwrites default model's values. Default is empty `Vector{Pair}`
 - `events_save` : `Tuple` or `Vector{Tuple}` marking whether to save solution before and after event. Default is `(true,true)` for all events
-- `saveat` : time points, where solution should be saved. Default `nothing` values stands for saving solution at timepoints reached by the solver 
+- `saveat` : time points where the solution should be saved. Supports vectors, such as `[0, 2, 10]`, and ranges, such as `0:0.5:10` or `range(0, 10; length=101)`. The default `nothing` saves the solution at time points reached by the solver.
 
 - `save_scope` : should scope be saved together with solution. Default is `true`
 

@@ -16,7 +16,7 @@ The first row is intended for headers which clarify the columns meaning. The seq
 
 - `parameters.<id>` (optional) : a `Float64` value which updates and fixes the value of model's `Const` with the corresponding id. Missing value does not updates the parameter's value and is ignored.
 
-- `saveat[]` (* optional) : a set of `Float64` values separated by semicolons. The values states the time points for simulated output.
+- `saveat[]` (optional) : time points for simulated output. Supports a single number (`10`), values separated by semicolons (`0;2;10`), and ranges written as `start:stop` (step size 1, for example `0:10`) or `start:step:stop` (for example `0:0.5:10`). Values and ranges can be combined using semicolons, for example `0:0.5:5;7;10`. All time points are parsed as `Float64`. A missing cell or omitted column saves the solution at time points reached by the solver.
 
 - `observables[]` (optional) : a set of `String` separated by semicolon. Model Records that will be saved as simulation results. If not set the default observables will be used (`output: true` property in Heta notation).
 
