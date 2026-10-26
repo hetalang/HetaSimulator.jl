@@ -2,7 +2,7 @@
 function merge_strict(x::NamedTuple, y::NamedTuple)
   if length(y) > 0
     miss_keys = setdiff(keys(y), keys(x))
-    !isempty(miss_keys) && @warn "Keys $(miss_keys) not found."
+    !isempty(miss_keys) && @warn "Keys $(miss_keys) not found." maxlog=1
     # yidxs = findall(x->x ∉ keys(x), keys(y))
     # @assert isempty(yidxs) "Cannot merge elements with keys $(keys(y)[yidxs]) in strict mode."
 
