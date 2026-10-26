@@ -20,6 +20,7 @@ module HetaSimulator
   using LabelledArrays
   using DataStructures
   @reexport using NaNMath
+  @reexport using SpecialFunctions
   @reexport using DataFrames
   import DataFrames: DataFrame
   @reexport using Distributions

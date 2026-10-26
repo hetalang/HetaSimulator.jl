@@ -15,6 +15,8 @@ const GROUP_HEADER = Symbol("group")
       tspan;
       measurements::Vector{AbstractMeasurementPoint}=AbstractMeasurementPoint[],
       observables::Union{Nothing,Vector{Symbol}}=nothing,
+      tags::AbstractVector{Symbol} = Symbol[],
+      group::Union{Symbol,Nothing} = nothing,
       parameters::AbstractVector{<:Pair{Symbol,<:Real}} = Pair{Symbol,Float64}[],
       events_active::Union{Nothing, Vector{Pair{Symbol,Bool}}} = Pair{Symbol,Bool}[],
       events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}} = (true,true),
@@ -33,14 +35,19 @@ Arguments:
 - `tspan` : time span for the ODE problem
 - `measurements` : `Vector` of measurements. Default is empty `Vector{AbstractMeasurementPoint}`
 - `observables` : names of output observables. Overwrites default model's values. Default is `nothing`
-- `tags` :
-- `group` :
+- `tags` : metadata labels as a vector of `Symbol`s. Default is `Symbol[]`. Each tag adds a Boolean column named `tags.<tag>` containing `true` to `DataFrame(sim(scenario))`.
+- `group` : a single metadata label as a `Symbol`, or `nothing` (the default). When set, adds a `group` column containing that symbol to `DataFrame(sim(scenario))`.
 - `parameters` : `Vector` of `Pair`s containing parameters' names and values. Overwrites default model's values. Default is empty vector.
 - `events_active` : `Vector` of `Pair`s containing events' names and true/false values. Overwrites default model's values. Default is empty `Vector{Pair}`
 - `events_save` : `Tuple` or `Vector{Tuple}` marking whether to save solution before and after event. Default is `(true,true)` for all events
 - `saveat` : time points, where solution should be saved. Default `nothing` values stands for saving solution at timepoints reached by the solver 
 
 - `save_scope` : should scope be saved together with solution. Default is `true`
+
+`group` and `tags` label results without changing the simulated dynamics.
+Access them directly as `scenario.group` and `scenario.tags`.
+The same metadata columns are included in `DataFrame(mc(scenario, ...))`
+for every Monte-Carlo iteration and in CSV output from `save_results`.
 """
 function Scenario(
   model::Model,

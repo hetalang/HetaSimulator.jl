@@ -52,6 +52,12 @@ Converts simulation results of type `SimResult`, `MCResult`, etc  to `DataFrame`
 
 Example: `DataFrame(s)`
 
+For `SimResult` and `MCResult`, scenario metadata is included on every row: a non-`nothing`
+`group` adds a `group` column of symbols, and each tag adds a Boolean
+`tags.<tag>` column containing `true`. Unset metadata adds no columns.
+When combining results from multiple scenarios, absent metadata columns are
+filled with `missing` (including absent tags, which are not filled with `false`).
+
 Arguments:
 
 - `s` : simulation results of type [`SimResult`](@ref), [`MCResult`](@ref) or `Vector` containing them
@@ -60,17 +66,17 @@ Arguments:
 """
 function DataFrame(sr::SimResult; kwargs...)
   df = DataFrame(sr.sim; kwargs...)
+  return add_scenario_metadata!(df, sr.scenario)
+end
 
-  # XXX: experimental option, currently group column is more useful
-  if length(sr.scenario.tags) > 0
-    for tag in sr.scenario.tags
-      df[:,"tags.$tag"] .= true
-    end
+function add_scenario_metadata!(df::DataFrame, scenario::Scenario)
+  for tag in scenario.tags
+    df[:,"tags.$tag"] .= true
   end
 
   # group column
-  if !isnothing(sr.scenario.group)
-    df.group .= sr.scenario.group
+  if !isnothing(scenario.group)
+    df.group .= scenario.group
   end
 
   return df
@@ -104,7 +110,7 @@ function DataFrame(mcr::MCResult; itercol=true, kwargs...)
       append!(df, DataFrame(mcr[i]; iter=(itercol ? i : nothing), kwargs...))
     end
   end
-  return df
+  return add_scenario_metadata!(df, mcr.scenario)
 end
 
 function DataFrame(mcr::Pair{Symbol,S}; kwargs...) where S<:MCResult

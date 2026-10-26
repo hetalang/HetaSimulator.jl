@@ -19,6 +19,9 @@ DEFAULT_MC_OUTPUT(sol,ctx) = sol
 
 Run Monte-Carlo simulations with single `Scenario`. Returns [`MCResult`](@ref) type.
 
+Converting the result to a `DataFrame` includes the scenario's `group` and
+`tags.<tag>` columns on every iteration when those labels are set.
+
 Example: `mc(scenario, [:k2=>Normal(1e-3,1e-4), :k3=>Uniform(1e-4,1e-2)], 1000)`
 
 Arguments:
