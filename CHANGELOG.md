@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.8.8
+
+- HetaImporter compat changed to 0.3
+- heta-compiler updated to v0.12.3
+- re-export SpecialFunctions for model expressions
+- change DEvent handling to trigger on false-to-true transitions using ContinuousCallback with root finding disabled
+
 ## 0.8.7
 
 - HetaImporter compat changed to 0.2
