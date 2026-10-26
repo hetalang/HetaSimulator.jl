@@ -16,4 +16,4 @@
 #defineFunction acsch { arguments: [x], math: "ln(1 / x + sqrt(1 + 1 / x^2))" };
 #defineFunction acoth { arguments: [x], math: "0.5 * ln((x + 1) / (x - 1))" };
 
-#include { source: ../../../cases/semantic/00402/00402-sbml-l2v5.xml, type: sbml };
+#include { source: ../../../cases/semantic/00402/00402-sbml-l2v5.xml, type: sbml, useCSwitcher: true };
