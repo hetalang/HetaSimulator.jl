@@ -1,0 +1,20 @@
+{
+  "sourceSettingsPath": "semantic/00574/00574-settings.txt",
+  "referenceResultsPath": "semantic/00574/00574-results.csv",
+  "variables": [
+    "p1",
+    "p2",
+    "p3",
+    "p4"
+  ],
+  "absoluteTolerance": 0.01,
+  "relativeTolerance": 0.0001,
+  "amountVariables": [],
+  "concentrationVariables": [],
+  "timeCourse": {
+    "start": 0,
+    "duration": 10,
+    "steps": 50
+  },
+  "speciesOutputs": {}
+}

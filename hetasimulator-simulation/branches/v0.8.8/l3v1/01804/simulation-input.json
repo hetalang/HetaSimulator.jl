@@ -1,0 +1,40 @@
+{
+  "sourceSettingsPath": "semantic/01804/01804-settings.txt",
+  "referenceResultsPath": "semantic/01804/01804-results.csv",
+  "variables": [
+    "spec",
+    "Spec",
+    "sPeC",
+    "C"
+  ],
+  "absoluteTolerance": 0.0001,
+  "relativeTolerance": 0.0001,
+  "amountVariables": [
+    "spec",
+    "Spec",
+    "sPeC"
+  ],
+  "concentrationVariables": [],
+  "timeCourse": {
+    "start": 0,
+    "duration": 10,
+    "steps": 10
+  },
+  "speciesOutputs": {
+    "spec": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "Spec": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "sPeC": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    }
+  }
+}

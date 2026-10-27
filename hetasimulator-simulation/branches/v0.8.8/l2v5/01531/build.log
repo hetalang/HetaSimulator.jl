@@ -1,0 +1,19 @@
+Running compilation in directory "/home/runner/work/HetaSimulator.jl/HetaSimulator.jl/fcts-run/node_modules/@hetalang/format-conversion-test-suite/results/l2v5/01531"...
+
+No declaration file, running with defaults...
+
+[info]	Heta compiler v0.12.3 is initialized for the platform "undefined"
+[info]	Reading module of type "heta" from file "input.heta"...
+[info]	Reading module of type "sbml" from file "../../../cases/semantic/01531/01531-sbml-l2v5.xml"...
+[error]	undefined::E51 Cannot parse MathExpr properly. Value expected (char 11) " trig  - ()"
+[error]	undefined::E52 Cannot parse MathExpr properly. Value expected (char 11) " trig  - ()"
+[error]	undefined::E55 Cannot parse MathExpr properly. Value expected (char 21) "min( trig  -  0 , -())"
+[info]	Platform hash: aeffa3ed4ad2caf4c7c6148be153e58c2ebcde16eb098b62dd4817157d6f5965
+[info]	Setting references in elements, total length 209
+[error]	No required "trigger" property for "E51" of CSwitcher.
+[error]	No required "trigger" property for "E52" of CSwitcher.
+[error]	No required "trigger" property for "E55" of CSwitcher.
+[info]	Checking for circular references in Records.
+[warn]	Units checking and export were skipped because of errors in compilation.
+Compilation ERROR! See logs.
+
