@@ -2,8 +2,9 @@ name: Verify HetaSimulator simulation
 
 on:
   workflow_dispatch:
-  release:
-    types: [published]
+  push:
+    tags:
+      - 'v*'
 
 permissions:
   contents: write
@@ -21,12 +22,12 @@ jobs:
 
     steps:
       - name: Checkout HetaSimulator.jl
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.release.tag_name || github.sha }}
+          ref: ${{ github.ref }}
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '24'
 
@@ -117,7 +118,7 @@ jobs:
 
       - name: Checkout reports publication branch
         if: always()
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: reports
           path: reports-publication
@@ -125,13 +126,10 @@ jobs:
       - name: Publish simulation report
         if: always()
         shell: bash
-        env:
-          RELEASE_TAG: ${{ github.event.release.tag_name }}
-          PRERELEASE: ${{ github.event.release.prerelease }}
         run: |
           publication_root="$GITHUB_WORKSPACE/reports-publication/hetasimulator-simulation"
-          if [[ "$GITHUB_EVENT_NAME" == 'release' ]]; then
-            destination="$publication_root/releases/$RELEASE_TAG"
+          if [[ "$GITHUB_REF_TYPE" == 'tag' ]]; then
+            destination="$publication_root/releases/$GITHUB_REF_NAME"
           else
             destination="$publication_root/branches/$GITHUB_REF_NAME"
           fi
@@ -149,7 +147,7 @@ jobs:
             cp -a "$FCTS_ROOT/results/$report_name" "$destination/$report_name"
           done
 
-          if [[ "$GITHUB_EVENT_NAME" == 'release' && "$PRERELEASE" == 'false' ]]; then
+          if [[ "$GITHUB_REF_TYPE" == 'tag' && "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             latest="$publication_root/releases/latest"
             rm -rf "$latest"
             mkdir -p "$latest"
