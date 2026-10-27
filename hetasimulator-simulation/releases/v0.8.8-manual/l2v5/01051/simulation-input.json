@@ -1,0 +1,46 @@
+{
+  "sourceSettingsPath": "semantic/01051/01051-settings.txt",
+  "referenceResultsPath": "semantic/01051/01051-results.csv",
+  "variables": [
+    "A1",
+    "A2",
+    "A3",
+    "A4"
+  ],
+  "absoluteTolerance": 0.01,
+  "relativeTolerance": 0.0001,
+  "amountVariables": [
+    "A1",
+    "A2",
+    "A3",
+    "A4"
+  ],
+  "concentrationVariables": [],
+  "timeCourse": {
+    "start": 0,
+    "duration": 1,
+    "steps": 50
+  },
+  "speciesOutputs": {
+    "A1": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "A2": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "A3": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "A4": {
+      "compartment": "C",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "sourceSettingsPath": "semantic/00969/00969-settings.txt",
+  "referenceResultsPath": "semantic/00969/00969-results.csv",
+  "variables": [
+    "X"
+  ],
+  "absoluteTolerance": 0.0001,
+  "relativeTolerance": 0.0001,
+  "amountVariables": [
+    "X"
+  ],
+  "concentrationVariables": [],
+  "timeCourse": {
+    "start": 0,
+    "duration": 10,
+    "steps": 100
+  },
+  "speciesOutputs": {
+    "X": {
+      "compartment": "default_compartment",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    }
+  }
+}
