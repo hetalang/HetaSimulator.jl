@@ -207,6 +207,15 @@ Monte-Carlo results can be used to calculate some characteristics which will be 
 
 There are some standard methods taken from `SciMLBase.jl` (see more here <https://docs.sciml.ai/DiffEqDocs/stable/features/ensemble/#Example-4:-Using-the-Analysis-Tools>).
 
+Statistics at a single time point return ordinary numeric vectors in the order
+given by `observables(mcv1)`. Mean, median, quantile, and variance time series
+return a `DiffEqArray` with observable names:
+
+```julia
+means = timestep_mean(mcv1, :)
+means[:b, :]  # mean trajectory of b
+```
+
 See below several methods that calculate statistics for some particular time point.
 
 ```julia

@@ -33,7 +33,7 @@ const DEFAULT_FITTING_ABSTOL = 1e-8
 
   - `target` : can be a `Platform`, a vector of scenarios, or a vector of pairs (`Vector{Pair{Symbol,Scenario}}`), matching the accepted types of the `estimator` function.
   - `parameters_fitted` : can be a vector of pairs (`Vector{Pair{Symbol,<:Real}}`) or a `DataFrame` with parameter setup, as accepted by `estimator`.
-  - `parameters` : parameters, which overwrite both `Model` and `Scenario` parameters. Default is `nothing`
+  - `parameters` : parameters, which overwrite both `HetaODESystem` and `Scenario` parameters. Default is `nothing`
   - `alg` : ODE solver. See SciML docs for details. Default is `AutoTsit5(Rosenbrock23())`
   - `reltol` : relative tolerance. Default is 1e-6
   - `abstol` : absolute tolerance. Default is 1e-8

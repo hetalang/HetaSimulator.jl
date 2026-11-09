@@ -45,23 +45,8 @@ function _subset(
 end
 
 has_saveat(c::Scenario) = has_saveat(c.prob)
-has_saveat(prob::SciMLBase.AbstractODEProblem) = !isempty(prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat_cache) 
+has_saveat(prob::SciMLBase.AbstractODEProblem) = !isempty(get(prob.kwargs, :saveat, Float64[]))
 has_saveat(mcr::MCResult) = mcr.saveat
-
-# auxilary method to update values in LVector
-# TODO: not optimal method
-# TODO: write for any number of pairs update(la::LArray, argv...)
-function update(la::LArray, pairs::AbstractVector{Pair{Symbol, C}}) where C<:Real
-  clone = copy(la)
-  keys_la = keys(la)
-
-  for (key, value) in pairs
-    key ∉ keys_la && throw("key :$key is not found in LVector.")
-    clone[key] = value
-  end
-
-  return clone
-end
 
 update(p1::AbstractVector{P}, p2::AbstractVector{P}) where P<:Pair = update(Dict(p1),Dict(p2))
 
@@ -89,22 +74,6 @@ end
 bool(b::Bool) = b
 
 sanitizenames!(df::DataFrame) = rename!(df, strip.(names(df)))
-
-# tmp adding methods to ArrayPartition interface to support events
-function Base.setindex!(A::ArrayPartition, X::AbstractArray, I::AbstractVector{Int})
-  Base.@_propagate_inbounds_meta
-  Base.@boundscheck Base.setindex_shape_check(X, length(I))
-  Base.require_one_based_indexing(X)
-  X′ = Base.unalias(A, X)
-  I′ = Base.unalias(A, I)
-  count = 1
-  for i in I′
-      @inbounds x = X′[count]
-      A[i] = x
-      count += 1
-  end
-  return A
-end
 
 function _to_float(x::Real)
     return float(x)

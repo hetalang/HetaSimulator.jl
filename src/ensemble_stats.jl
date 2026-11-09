@@ -1,6 +1,6 @@
 ########################################## Statistics ######################################################
 # Statistics for MCResult type
-# currently median and quantile don't output LVector
+# Single-time statistics return numeric vectors; time series carry observable names.
 
 function SciMLBase.EnsembleAnalysis.get_timestep(mcr::MCResult,i) 
   @assert has_saveat(mcr) "Solution doesn't contain single time vector, default statistics are not available."
@@ -13,7 +13,7 @@ function SciMLBase.EnsembleAnalysis.get_timepoint(mcr::MCResult, t)
 
   # indexes = indexin(vars, observables(mcr))
 
-  res = (mcr[j](t) for j in 1:length(mcr)) # mcr[1](t) # is a LabelledArray
+  res = (mcr[j](t) for j in 1:length(mcr))
   
   return res
 end
@@ -36,7 +36,7 @@ function SciMLBase.EnsembleAnalysis.timepoint_quantile(sim::MCResult, q, t)
   end
 end
 
-function SciMLBase.EnsembleAnalysis.timestep_quantile(sim::MCResult,q,i)
+function SciMLBase.EnsembleAnalysis.timestep_quantile(sim::MCResult,q,i::Integer)
   arr = componentwise_vectors_timestep(sim,i)
   if typeof(first(arr)) <: AbstractArray
     return reshape([quantile(x,q) for x in arr],size(sim[1][i])...)
@@ -45,7 +45,7 @@ function SciMLBase.EnsembleAnalysis.timestep_quantile(sim::MCResult,q,i)
   end
 end
 
-function SciMLBase.EnsembleAnalysis.timestep_median(sim::MCResult,i)
+function SciMLBase.EnsembleAnalysis.timestep_median(sim::MCResult,i::Integer)
   arr = componentwise_vectors_timestep(sim,i)
   if typeof(first(arr)) <: AbstractArray
     return reshape([median(x) for x in arr],size(sim[1][i])...)
@@ -55,13 +55,16 @@ function SciMLBase.EnsembleAnalysis.timestep_median(sim::MCResult,i)
 end
 
 function SciMLBase.EnsembleAnalysis.timeseries_steps_mean(sim::MCResult)
-  DiffEqArray([timestep_mean(sim, i) for i in 1:length(sim[1])], sim[1].t)
+  DiffEqArray([timestep_mean(sim, i) for i in 1:length(sim[1])], sim[1].t;
+    variables=observables(sim), independent_variables=[:t])
 end
 function SciMLBase.EnsembleAnalysis.timeseries_steps_median(sim::MCResult)
-  DiffEqArray([timestep_median(sim, i) for i in 1:length(sim[1])], sim[1].t)
+  DiffEqArray([timestep_median(sim, i) for i in 1:length(sim[1])], sim[1].t;
+    variables=observables(sim), independent_variables=[:t])
 end
 function SciMLBase.EnsembleAnalysis.timeseries_steps_quantile(sim::MCResult, q)
-  DiffEqArray([timestep_quantile(sim, q, i) for i in 1:length(sim[1])], sim[1].t)
+  DiffEqArray([timestep_quantile(sim, q, i) for i in 1:length(sim[1])], sim[1].t;
+    variables=observables(sim), independent_variables=[:t])
 end
 function SciMLBase.EnsembleAnalysis.timeseries_steps_meanvar(sim::MCResult)
   m, v = timestep_meanvar(sim, 1)
@@ -72,7 +75,26 @@ function SciMLBase.EnsembleAnalysis.timeseries_steps_meanvar(sim::MCResult)
       push!(means, m)
       push!(vars, v)
   end
-  DiffEqArray(means, sim[1].t), DiffEqArray(vars, sim[1].t)
+  DiffEqArray(means, sim[1].t; variables=observables(sim), independent_variables=[:t]),
+    DiffEqArray(vars, sim[1].t; variables=observables(sim), independent_variables=[:t])
+end
+
+function SciMLBase.EnsembleAnalysis.timeseries_point_mean(sim::MCResult, ts)
+  DiffEqArray([timepoint_mean(sim, t) for t in ts], ts;
+    variables=observables(sim), independent_variables=[:t])
+end
+function SciMLBase.EnsembleAnalysis.timeseries_point_median(sim::MCResult, ts)
+  DiffEqArray([timepoint_median(sim, t) for t in ts], ts;
+    variables=observables(sim), independent_variables=[:t])
+end
+function SciMLBase.EnsembleAnalysis.timeseries_point_quantile(sim::MCResult, q, ts)
+  DiffEqArray([timepoint_quantile(sim, q, t) for t in ts], ts;
+    variables=observables(sim), independent_variables=[:t])
+end
+function SciMLBase.EnsembleAnalysis.timeseries_point_meanvar(sim::MCResult, ts)
+  stats = [timepoint_meanvar(sim, t) for t in ts]
+  DiffEqArray(first.(stats), ts; variables=observables(sim), independent_variables=[:t]),
+    DiffEqArray(last.(stats), ts; variables=observables(sim), independent_variables=[:t])
 end
 function SciMLBase.EnsembleAnalysis.timeseries_steps_meancov(sim::MCResult)
   reshape(

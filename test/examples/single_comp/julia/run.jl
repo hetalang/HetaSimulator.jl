@@ -3,7 +3,7 @@
 =#
 using HetaSimulator, Plots
 
-model = load_jlmodel("./model.jl")
+model = models(load_platform(dirname(@__DIR__)))[:nameless]
 
 ### default simulations
 

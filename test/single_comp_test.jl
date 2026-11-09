@@ -1,8 +1,9 @@
-platform = load_platform("$HetaSimulatorDir/test/examples/single_comp", ir_format=:julia)
+platform = load_platform("$HetaSimulatorDir/test/examples/single_comp")
 model = platform.models[:nameless];
 @test test_show(platform)
 @test test_show(model)
-@test states(model) == [:A, :B]
+@test model isa HetaODESystem
+@test states(model) == [:A_amt_, :B_amt_]
 
 # Wrong input tests
 ## no saveat or tspan
@@ -16,7 +17,7 @@ s = sim(Scenario(model, (0., 200.), observables=[:r1], saveat = [0.0, 150., 250.
 @test typeof(s) <: HetaSimulator.SimResult
 @test status(s) == :Success
 @test times(s)[end] == 150.
-@test vals(s)[1][:r1] == 0.1
+@test s[:r1, 1] == 0.1
 
 # tests related to saveat, tspan behavior
 s1 = Scenario(model, (0., 200.)) |> sim

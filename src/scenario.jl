@@ -11,7 +11,7 @@ const GROUP_HEADER = Symbol("group")
 # general interface
 """
     Scenario(
-      model::Model,
+      model::HetaODESystem,
       tspan;
       measurements::Vector{AbstractMeasurementPoint}=AbstractMeasurementPoint[],
       observables::Union{Nothing,Vector{Symbol}}=nothing,
@@ -22,7 +22,6 @@ const GROUP_HEADER = Symbol("group")
       events_save::Union{Tuple,Vector{Pair{Symbol, Tuple{Bool, Bool}}}} = (true,true),
       saveat::Union{Nothing,AbstractVector} = nothing,
 
-      save_scope::Bool = true,
     )
 
 Builds simulation scenario of type [`Scenario`](@ref)
@@ -31,7 +30,7 @@ Example: `Scenario(model, (0., 200.))`
 
 Arguments:
 
-- `model` : model of type [`Model`](@ref)
+- `model` : model of type `HetaODESystem`
 - `tspan` : time span for the ODE problem
 - `measurements` : `Vector` of measurements. Default is empty `Vector{AbstractMeasurementPoint}`
 - `observables` : names of output observables. Overwrites default model's values. Default is `nothing`
@@ -42,7 +41,6 @@ Arguments:
 - `events_save` : `Tuple` or `Vector{Tuple}` marking whether to save solution before and after event. Default is `(true,true)` for all events
 - `saveat` : time points where the solution should be saved. Supports vectors, such as `[0, 2, 10]`, and ranges, such as `0:0.5:10` or `range(0, 10; length=101)`. The default `nothing` saves the solution at time points reached by the solver.
 
-- `save_scope` : should scope be saved together with solution. Default is `true`
 
 `group` and `tags` label results without changing the simulated dynamics.
 Access them directly as `scenario.group` and `scenario.tags`.
@@ -50,28 +48,28 @@ The same metadata columns are included in `DataFrame(mc(scenario, ...))`
 for every Monte-Carlo iteration and in CSV output from `save_results`.
 """
 function Scenario(
-  model::Model,
+  model::HetaODESystem,
   tspan;
   measurements::Vector{AbstractMeasurementPoint} = AbstractMeasurementPoint[],
   observables::Union{Nothing,Vector{Symbol}} = nothing,
   tags::AbstractVector{Symbol} = Symbol[],
   group::Union{Symbol, Nothing} = nothing,
   parameters::AbstractVector{<:Pair{Symbol,<:Real}} = Pair{Symbol,Float64}[],
-  kwargs... # all arguments of build_ode_problem()
+  events_active=nothing,
+  events_save=(true, true),
+  saveat::Union{Nothing,AbstractVector}=nothing,
+  kwargs...
 )
   parameters_norm = normalize_params(parameters)
-  params_total = merge_strict(model.constants, NamedTuple(parameters_norm))
-  
-  # ODE problem
-  prob = build_ode_problem(
-    model,
-    tspan;
-    observables_ = observables,
-    params = params_total,
-    kwargs...
-  )
-
-  return Scenario(model.init_func, prob, measurements, tags, group, params_total)
+  params_total = merge_strict(NamedTuple(HetaImporter.parameters(model).tunable), NamedTuple(parameters_norm))
+  outputs = isnothing(observables) ? HetaSimulator.observables(model) : copy(observables)
+  missing_outputs = setdiff(outputs, records(model))
+  isempty(missing_outputs) || error("The following observables have not been found in the model: $missing_outputs")
+  event_saves = events_save isa Tuple ? [id => events_save for id in switchers(model)] : events_save
+  times = isnothing(saveat) ? Float64[] : collect(float.(saveat))
+  prob = ODEProblem(model, tspan; p=[id => params_total[id] for id in constants(model)], events_active,
+    events_save=event_saves, saveat=times, kwargs...)
+  return Scenario(prob, measurements, tags, group, params_total, outputs)
 end
 
 # Scenario struct method

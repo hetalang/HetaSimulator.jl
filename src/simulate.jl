@@ -23,7 +23,7 @@ Example: `Scenario(model, (0., 200.); saveat = [0.0, 150.]) |> sim`
 Arguments:
 
 - `scenario` : simulation scenario of type [`Scenario`](@ref)
-- `parameters` : parameters overwrite both `Model` and `Scenario` parameters. Default is empty vector.
+- `parameters` : parameters overwrite both `HetaODESystem` and `Scenario` parameters. Default is empty vector.
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : relative tolerance. Default is 1e-6
@@ -40,32 +40,17 @@ function sim(
   parameters_norm = normalize_params(parameters)
   parameters_nt = NamedTuple(parameters_norm)
 
-  prob = remake_prob(scenario, parameters_nt; safetycopy=true)
-  #=
-  prob = if length(parameters_nt) > 0
-    constants_total = merge_strict(scenario.parameters, parameters_nt)
-    u0, p0 = scenario.init_func(constants_total)
-  
-    remake(scenario.prob; u0=u0, p=p0)
-  else 
-    deepcopy(scenario.prob)
-  end
-  =#
-  #= variant 2
-  prob = let
-    constants_total = merge_strict(scenario.parameters, parameters_nt)
-    u0, p0 = scenario.init_func(constants_total)
-    remake(scenario.prob; u0=u0, p=p0)
-  end
-  =#
+  params_total = merge_strict(scenario.parameters, parameters_nt)
+  # remake replaces parameter buffers, but callbacks still require isolation.
+  prob = remake(deepcopy(scenario.prob);
+    p=[id => params_total[id] for id in constants(scenario.prob.f.sys)])
 
   sol = solve(prob, alg; reltol = reltol, abstol = abstol,
-    save_start = false, save_end = false, save_everystep = false, kwargs...)
+    kwargs...)
 
   #parameters_names = Symbol[first(x) for x in parameters]
   #return build_results(sol, scenario, parameters_names)
-  sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-  simulation = Simulation(sv, parameters_nt, sol.retcode)
+  simulation = Simulation(sol, parameters_nt, observables(scenario))
 
   return SimResult(simulation, scenario)
 end
@@ -88,7 +73,7 @@ Example: `sim([:x => scn1, :y=>scn2, :z=>scn3])`
 Arguments:
 
 - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
-- `parameters` : parameters, which overwrite both `Model` and `Scenario` parameters. Default is empty vector.
+- `parameters` : parameters, which overwrite both `HetaODESystem` and `Scenario` parameters. Default is empty vector.
 - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
 - `reltol` : relative tolerance. Default is 1e-3
 - `abstol` : absolute tolerance. Default is 1e-6
@@ -96,7 +81,6 @@ Arguments:
 - `reduction_func` : this function determines how to reduce the data in each batch. Defaults to appending the data from the batches
 - `parallel_type` : parallel setup. See SciML docs for details. Default is no parallelism: EnsembleSerial()
 - `kwargs...` : other solver related arguments supported by SciMLBase.solve. See SciML docs for de
-      #update_init_values(scn_i.prob, scn_i.init_func, parameters_nt) tails
 """
 function sim(
   scenario_pairs::Vector{P};
@@ -126,24 +110,15 @@ function sim(
     next!(p)
     verbose && println("Processing scenario $i")
     scn_i = last(scenario_pairs[i])
-    prob_i = remake_prob(scn_i, parameters_nt; safetycopy)
-    return prob_i
-    #=
-    constants_total_i = merge_strict(scn_i.parameters, parameters_nt)
-    if length(parameters_nt) > 0
-      u0, p0 = scn_i.init_func(constants_total_i)
-      remake(scn_i.prob; u0=u0, p=p0)
-    else
-      deepcopy(scn_i.prob)
-    end
-    =#
+    params_total = merge_strict(scn_i.parameters, parameters_nt)
+    base = safetycopy ? deepcopy(scn_i.prob) : scn_i.prob
+    return remake(base; p=[id => params_total[id] for id in constants(base.f.sys)])
   end
 
   function _output(sol, ctx)
     i = ctx.sim_id
-    sv_i = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
     scenario = last(scenario_pairs[i])
-    simulation = Simulation(sv_i, parameters_nt, sol.retcode)
+    simulation = Simulation(sol, parameters_nt, observables(scenario))
     simres = SimResult(simulation, scenario)
 
     return (output_func(simres,i), false,)
@@ -160,9 +135,6 @@ function sim(
     trajectories = lc,
     reltol = reltol,
     abstol = abstol,
-    save_start = false,
-    save_end = false,
-    save_everystep = false,
     kwargs...
     )
 

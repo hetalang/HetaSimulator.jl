@@ -36,55 +36,14 @@ end
 
 ################################## Model ###########################################
 
-abstract type AbstractModel end
-
-"""
-    struct Model{IF,OF,EV,SG,EA, MM} <: AbstractModel
-      init_func::IF
-      ode_func::OF
-      events::EV
-      saving_generator::SG
-      records_output::AbstractVector{Pair{Symbol,Bool}}
-      states::AbstractVector{Symbol}
-      constants::NamedTuple
-      statics::NamedTuple
-      events_active::EA
-      mass_matrix::MM
-    end
-
-Structure storing core properties of ODE model.
-This represent the content of one namespace from a Heta platform.
-
-To get list of model content use methods: constants(model), records(model), switchers(model).
-
-To get the default model options use methods: 
-`events_active(model)`, `events_save(model)`, `observables(model)`.
-These values can be rewritten by a [`Scenario`]{@ref}.
-"""
-struct Model{IF,OF,EV,SG,EA, MM} <: AbstractModel
-  init_func::IF
-  ode_func::OF
-  events::EV # IDEA: use (:TimeEvent, ...) instead of TimeEvent(...)
-  saving_generator::SG
-  records_output::AbstractVector{Pair{Symbol,Bool}}
-  states::AbstractVector{Symbol}
-  constants::NamedTuple
-  nstatics::Int
-  nstates::Int
-  events_active::EA
-  mass_matrix::MM
-end
-
-constants(m::Model) = [keys(m.constants)...] # ids of constants
-records(m::Model) = first.(m.records_output) # ids of records
-states(m::Model) = m.states                 # ids of states
-switchers(m::Model) = [keys(m.events)...]    # ids of events
-events_active(m::Model) = collect(Pair{Symbol, Bool}, pairs(m.events_active))
-events_save(m::Model) = [first(x) => (false,false) for x in pairs(m.events)]
-observables(m::Model) = begin                # ids of active observables
-  only_true = filter((p) -> last(p), m.records_output)
-  first.(only_true)
-end
+constants(m::HetaODESystem) = collect(keys(parameters(m).tunable))
+records(m::HetaODESystem) = unique(vcat(states(m), collect(keys(observed(m))),
+  collect(keys(parameters(m).derived)), collect(keys(parameters(m).discrete))))
+states(m::HetaODESystem) = collect(keys(equations(m)))
+switchers(m::HetaODESystem) = [id for group in events(m) for id in keys(group)]
+events_active(m::HetaODESystem) = [id => event.is_active for group in events(m) for (id, event) in group]
+events_save(m::HetaODESystem) = [id => (true, true) for id in switchers(m)]
+observables(m::HetaODESystem) = copy(m.dynms.observables)
 
 # auxilary function to display first n components of Vector or Tuple
 function print_lim(x::Union{Vector, Tuple}, n::Int)
@@ -113,19 +72,6 @@ function print_lim(x::NamedTuple, n::Int)
   return "(" * join(string_array, ", ") * ")"
 end
 
-function Base.show(io::IO, mime::MIME"text/plain", m::AbstractModel)
-  const_str = print_lim(constants(m), 10)
-  states_str = print_lim(states(m), 10)
-  record_str = print_lim(records(m), 10)
-  switchers_str = print_lim(switchers(m), 10)
-
-  println(io, "Model contains $(length(m.constants)) constant(s), $(length(m.states)) state(s), $(length(m.records_output)) record(s), $(length(m.events)) switcher(s).")
-  println(io, "   Constants (model-level parameters): $const_str")
-  println(io, "   States: $states_str")
-  println(io, "   Records (observables): $record_str")
-  println(io, "   Switchers (events): $switchers_str")
-end
-
 ################################## Measurement ###########################################
 
 # abstract type AbstractMeasurement end # not used
@@ -134,7 +80,6 @@ abstract type AbstractMeasurementPoint end
 struct NormalMeasurementPoint{M,SD} <: AbstractMeasurementPoint
   t::Float64
   val::Float64
-  scope::Symbol
   μ::M
   σ::SD
   weight::Float64
@@ -143,7 +88,6 @@ end
 struct LogNormalMeasurementPoint{M,SD} <: AbstractMeasurementPoint
   t::Float64
   val::Float64
-  scope::Symbol
   μ::M
   σ::SD
   weight::Float64
@@ -155,33 +99,33 @@ const MeasurementVector{P} = AbstractVector{P} where P<:AbstractMeasurementPoint
 abstract type AbstractScenario end
 
 """
-  struct Scenario{F,P,M} <: AbstractScenario
-    init_func::F
+  struct Scenario{P,M} <: AbstractScenario
     prob::P
     measurements::M
     tags::AbstractVector{Symbol}
     group::Union{Symbol,Nothing}
     parameters::NamedTuple
+    observables::Vector{Symbol}
   end
 
   Type representing simulation conditions, i.e. model variant with updated parameters and outputs.
 
   To get the internal properties use methods: `tspan(scenario)`, `parameters(scenario)`, `measurements(scenario)`
 """
-struct Scenario{F,P,M} <: AbstractScenario
-  init_func::F
+struct Scenario{P,M} <: AbstractScenario
   prob::P
   measurements::M
   tags::AbstractVector{Symbol}
   group::Union{Symbol,Nothing}
   parameters::NamedTuple
+  observables::Vector{Symbol}
 end
 
-saveat(scn::Scenario) = scn.prob.kwargs[:callback].discrete_callbacks[1].affect!.saveat_cache
+saveat(scn::Scenario) = get(scn.prob.kwargs, :saveat, Float64[])
 tspan(scn::Scenario) = scn.prob.tspan
 parameters(scn::Scenario) = scn.parameters # scn.prob.p
 measurements(scn::Scenario) = scn.measurements
-observables(scn::Scenario) = LabelledArrays.symnames(eltype(scn.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values.u))
+observables(scn::Scenario) = scn.observables
 # events_active(scn::Scenario)
 # events_save(scn::Scenario)
 
@@ -207,48 +151,24 @@ end
 ################################## SimResult ###########################################
 abstract type AbstractResult end
 
-struct SavedValues{uType,tType}
-  u::Vector{uType}
-  t::Vector{tType}
-  scope::Vector{Symbol}
-end
-
-function SavedValues(::Type{uType}, ::Type{tType}) where {uType, tType}
-    return SavedValues{uType, tType}(Vector{uType}(), Vector{tType}(), Vector{Symbol}())
-end
-
-
-function clear_savings(sv::SavedValues)
-  !isempty(sv.u) && deleteat!(sv.u,1:length(sv.u))
-  !isempty(sv.t) && deleteat!(sv.t,1:length(sv.t))
-  !isnothing(sv.scope) && !isempty(sv.scope) && deleteat!(sv.scope,1:length(sv.scope))
-  return nothing
-end
-
-struct Simulation{V,scopeType}
+struct Simulation{V}
   vals::V
-  scope::scopeType
   parameters::NamedTuple
   status::Symbol
 end
 
-# copy fix is tmp needed not to rewrite SavedValues with new simulation
-Simulation(sv::SavedValues, params, status) = Simulation(
-  SciMLBase.RecursiveArrayTools.DiffEqArray(sv),
-  copy(sv.scope),
-  params,
-  Symbol(status)
-) 
-
-function SciMLBase.RecursiveArrayTools.DiffEqArray(sv::SavedValues, p=nothing; safetycopy=true)
-  vec = sv.u
-  ts = sv.t
-  vars = !isempty(vec) ? collect(symbols(vec[1])) : []
-  if safetycopy
-    return SciMLBase.RecursiveArrayTools.DiffEqArray(copy(vec), copy(ts), p; variables = vars)
-  else
-    return SciMLBase.RecursiveArrayTools.DiffEqArray(vec, ts, p; variables = vars)
-  end
+# Native indexing evaluates observed expressions using the saved parameter history.
+function Simulation(sol::SciMLBase.AbstractODESolution, params::NamedTuple, vars::Vector{Symbol})
+  model_parameters = parameters(sol.prob.f.sys)
+  parameter_ids = union(keys(model_parameters.tunable), keys(model_parameters.derived),
+    keys(model_parameters.discrete))
+  # Discrete parameters have their own event-time grid; sample them on the ODE
+  # grid. Keep direct state/observed indexing to preserve duplicate event rows.
+  columns = [id in parameter_ids ? [sol(t; idxs=id) for t in sol.t] : sol[id] for id in vars]
+  T = isempty(columns) ? eltype(eltype(sol.u)) : promote_type(eltype.(columns)...)
+  rows = [T[col[i] for col in columns] for i in eachindex(sol.t)]
+  values = DiffEqArray(rows, copy(sol.t); variables=vars, independent_variables=[:t])
+  return Simulation(values, params, Symbol(sol.retcode))
 end
 
 status(s::Simulation) = s.status
@@ -294,7 +214,7 @@ measurements(sr::SimResult) = sr.scenario.measurements
 @inline Base.length(sr::SimResult) = length(sr.sim)
 
 function Base.show(io::IO, mime::MIME"text/plain", sr::SimResult)
-  dim2 = length(keys(sr.sim[1])) # number of observables
+  dim2 = length(observables(sr))
   dimentions_str = "$(length(sr))x$dim2"
   times_str = print_lim(times(sr), 10)
   outputs_str = print_lim(observables(sr), 10)
@@ -309,7 +229,7 @@ end
 
 function Base.show(io::IO, mime::MIME"text/plain", srp::Pair{Symbol, S}, short::Bool = false) where S<:SimResult
   sr = last(srp)
-  dim2 = length(keys(sr.sim[1])) # number of observables
+  dim2 = length(observables(sr))
   dimentions_str = "$(length(sr))x$dim2"
 
   short || println(io, "Pair{Symbol, SimResult}")
@@ -425,32 +345,6 @@ observables(ens::LabelledEnsembleSummary) = ens.vars
 
 Base.show(io::IO, mime::MIME"text/plain", ens::LabelledEnsembleSummary) = 
   println(io, "Summary statistics for the following observables: $(observables(ens))")
-
-################################## Events ##############################################
-abstract type AbstractEvent end
-
-struct TimeEvent{F1,F2} <: AbstractEvent
-  condition_func::F1
-  affect_func::F2
-  atStart::Bool
-end
-
-struct CEvent{F1,F2} <: AbstractEvent
-  condition_func::F1
-  affect_func::F2
-  atStart::Bool
-end
-
-struct DEvent{F1,F2} <: AbstractEvent
-  condition_func::F1
-  affect_func::F2
-  atStart::Bool
-end
-
-struct StopEvent{F1} <: AbstractEvent
-  condition_func::F1
-  atStart::Bool
-end
 
 ################################## Fitting ###########################################
 """

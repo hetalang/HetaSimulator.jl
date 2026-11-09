@@ -7,7 +7,7 @@ The content of the table can be loaded into Julia environment as a `DataFrame` a
 
 The first row is the header. The sequence of the columns may vary.
 
-- `parameter` : a `String` representing unique identifier of model-level parameter. The corresponding parameter must be declared in the `Model`'s namespace (`@Const` component).
+- `parameter` : a `String` representing unique identifier of model-level parameter. The corresponding parameter must be declared in the `HetaODESystem`'s namespace (`@Const` component).
 
 - `nominal` (optional): a `Float64` nominal value which will be used as an initial value for the parameter. If it is skipped then the default value from the model will be used.
 

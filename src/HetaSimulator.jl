@@ -4,8 +4,9 @@ module HetaSimulator
   
   # diffeq-related pkgs
   @reexport using HetaImporter
+  import HetaImporter: parameters, scenarios, events
   using SciMLBase
-  using SciMLBase.RecursiveArrayTools: VectorOfArray, vecarr_to_vectors, DiffEqArray, ArrayPartition, copyat_or_push! #, NamedArrayPartition
+  using SciMLBase.RecursiveArrayTools: VectorOfArray, vecarr_to_vectors, DiffEqArray
   @reexport using SciMLBase.EnsembleAnalysis
   @reexport using OrdinaryDiffEqBDF
   @reexport using OrdinaryDiffEqRosenbrock
@@ -17,10 +18,8 @@ module HetaSimulator
   @reexport using OptimizationNLopt
 
   # utils
-  using LabelledArrays
   using DataStructures
   @reexport using NaNMath
-  @reexport using SpecialFunctions
   @reexport using DataFrames
   import DataFrames: DataFrame
   @reexport using Distributions
@@ -41,13 +40,10 @@ module HetaSimulator
   include("types.jl")
   include("load_platform.jl")
   include("utils.jl")
-  include("events.jl")
   include("measurements.jl")
-  include("ode_problem.jl")
   include("scenario.jl")
   include("parameters.jl")
   include("simulate.jl")
-  include("saving.jl")
   include("solution_interface.jl")
   include("plots.jl")
   include("loss.jl")
@@ -56,14 +52,13 @@ module HetaSimulator
   include("estimator.jl")
   include("monte_carlo.jl")
   include("ensemble_stats.jl")
-  include("import_platform.jl")
   include("save_as_heta.jl")
   include("heta_funcs.jl")
 
 
   export heta, heta_version, heta_help, heta_init, heta_build
-  export load_platform, load_jlplatform, load_jlmodel
-  export Platform, Model, Scenario
+  export load_platform
+  export Platform, Scenario
   export read_scenarios, add_scenarios!
   export read_measurements, add_measurements!, measurements_as_table
   export read_parameters

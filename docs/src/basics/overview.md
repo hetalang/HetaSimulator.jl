@@ -139,26 +139,12 @@ The list of additional arguments is approximately the same as [CLI options](http
 
 ### Loading pre-compiled platform
 
-Alternatively you can use files generated with stand-alone [Heta compiler](https://hetalang.github.io/#/heta-compiler/).
-
-To do so the model code should be build with `--export Julia` options.
-
-```heta
-...
-sw2 @TimeSwitcher {start: 0, period: 24, active: false};
-A0 [sw2]= dose;
-```
-
-Running the code with the console command `heta build --export Julia my_project` produces the file __my\_example/dist/julia/model.jl__ which can be loaded with [`load_jlplatform`](@ref) method.
+`load_platform` calls HetaImporter's `import_heta_all` to compile the project
+and load each namespace as a native `HetaODESystem`. Generated Julia model
+files and the former `load_jlplatform`/`load_jlmodel` entry points are no longer used.
 
 ```julia
-p = load_jlplatform("./my_example/dist/julia/model.jl")
-```
-```julia
-Loading platform... OK!
-Platform with 1 model(s), 0 scenario(s), 0 measurement(s)
-   Models: nameless
-   Scenarios:   
+p = load_platform("./my_example")
 ```
 
 ## Creating scenarios
@@ -413,18 +399,18 @@ The whole solution can also be transformed into `DataFrame`.
 res_df = DataFrame(res)
 ```
 ```julia
-1031×6 DataFrame
-  Row │ t             A0            C1           C2           scope   scenario   
-      │ Float64       Float64       Float64      Float64      Symbol  Symbol      
+1031×5 DataFrame
+  Row │ t  A0  C1  C2  scenario
+      │ Float64  Float64  Float64  Float64  Symbol
 ──────┼───────────────────────────────────────────────────────────────────────────
-    1 │  0.0           0.0          0.0          0.0          ode_    multiple_15
-    2 │  0.0          15.0          0.0          0.0          sw2     multiple_15
-    3 │  3.33311e-6   14.999        0.000158714  2.49537e-11  ode_    multiple_15
-    4 │  3.66642e-5   14.989        0.00174525   3.0187e-9    ode_    multiple_15
-  ⋮   │      ⋮             ⋮             ⋮            ⋮         ⋮          ⋮
- 1029 │ 45.1252       -3.9532e-26   0.0292381    0.108637     ode_    dose_100
- 1030 │ 47.5238        3.29325e-27  0.0247767    0.0920607    ode_    dose_100
- 1031 │ 48.0          -6.75365e-28  0.0239764    0.089087     ode_    dose_100
+    1 │ 0.0  0.0  0.0  0.0  multiple_15
+    2 │ 0.0  15.0  0.0  0.0  multiple_15
+    3 │ 3.33311e-6  14.999  0.000158714  2.49537e-11  multiple_15
+    4 │ 3.66642e-5  14.989  0.00174525  3.0187e-9  multiple_15
+  ⋮   │ ⋮  ⋮  ⋮  ⋮  ⋮
+ 1029 │ 45.1252  -3.9532e-26  0.0292381  0.108637  dose_100
+ 1030 │ 47.5238  3.29325e-27  0.0247767  0.0920607  dose_100
+ 1031 │ 48.0  -6.75365e-28  0.0239764  0.089087  dose_100
                                                                  1024 rows omitted
 ```
 
@@ -436,18 +422,18 @@ Any component can also be transformed into `DataFrame`.
 res_df1 = DataFrame(res[1])
 ```
 ```julia
-702×6 DataFrame
- Row │ t              A0            C1           C2           scope   scenario   
-     │ Float64        Float64       Float64      Float64      Symbol  Symbol      
+702×5 DataFrame
+ Row │ t  A0  C1  C2  scenario
+     │ Float64  Float64  Float64  Float64  Symbol
 ─────┼────────────────────────────────────────────────────────────────────────────
-   1 │   0.0           0.0          0.0          0.0          ode_    multiple_15
-   2 │   0.0          15.0          0.0          0.0          sw2     multiple_15
-   3 │   3.33311e-6   14.999        0.000158714  2.49537e-11  ode_    multiple_15
-   4 │   3.66642e-5   14.989        0.00174525   3.0187e-9    ode_    multiple_15
-  ⋮  │       ⋮             ⋮             ⋮            ⋮         ⋮          ⋮
- 700 │ 168.0           2.79899e-18  0.0232934    0.0865488    ode_    multiple_15
- 701 │ 168.0           2.79899e-18  0.0232934    0.0865488    ode_    multiple_15
- 702 │ 168.0          15.0          0.0232934    0.0865488    sw2     multiple_15
+   1 │ 0.0  0.0  0.0  0.0  multiple_15
+   2 │ 0.0  15.0  0.0  0.0  multiple_15
+   3 │ 3.33311e-6  14.999  0.000158714  2.49537e-11  multiple_15
+   4 │ 3.66642e-5  14.989  0.00174525  3.0187e-9  multiple_15
+  ⋮  │ ⋮  ⋮  ⋮  ⋮  ⋮
+ 700 │ 168.0  2.79899e-18  0.0232934  0.0865488  multiple_15
+ 701 │ 168.0  2.79899e-18  0.0232934  0.0865488  multiple_15
+ 702 │ 168.0  15.0  0.0232934  0.0865488  multiple_15
                                                                   695 rows omitted
 ```
 
@@ -481,22 +467,22 @@ To transform all results into `DataFrame`
 mc_df = DataFrame(mc_res)
 ```
 ```julia
-946000×7 DataFrame
-    Row │ iter   t             A0           C1           C2           scope   scenario   
-        │ Int64  Float64       Float64      Float64      Float64      Symbol  Symbol      
+946000×6 DataFrame
+    Row │ iter  t  A0  C1  C2  scenario
+        │ Int64  Float64  Float64  Float64  Float64  Symbol
 ────────┼─────────────────────────────────────────────────────────────────────────────────
-      1 │     1   0.0           0.0         0.0          0.0          ode_    multiple_15 
-      2 │     1   0.0          15.0         0.0          0.0          sw2     multiple_15
-      3 │     1   6.67001e-6   14.999       0.000158714  4.99357e-11  ode_    multiple_15
-      4 │     1   7.33701e-5   14.989       0.00174525   6.04082e-9   ode_    multiple_15
-      5 │     1   0.000740371  14.8894      0.0175505    6.13689e-7   ode_    multiple_15
-      6 │     1   0.00602741   14.1231      0.139042     3.99353e-5   ode_    multiple_15
-   ⋮    │   ⋮         ⋮             ⋮            ⋮            ⋮         ⋮          ⋮
- 945996 │  1000  46.6664        4.55058e-7  0.247023     0.484307     ode_    dose_100
- 945997 │  1000  47.0172        4.55058e-7  0.243049     0.476516     ode_    dose_100
- 945998 │  1000  47.3681        4.55059e-7  0.239139     0.46885      ode_    dose_100
- 945999 │  1000  47.719         4.55058e-7  0.235292     0.461307     ode_    dose_100
- 946000 │  1000  48.0           1.28404e-7  0.232256     0.455355     ode_    dose_100
+      1 │ 1  0.0  0.0  0.0  0.0  multiple_15
+      2 │ 1  0.0  15.0  0.0  0.0  multiple_15
+      3 │ 1  6.67001e-6  14.999  0.000158714  4.99357e-11  multiple_15
+      4 │ 1  7.33701e-5  14.989  0.00174525  6.04082e-9  multiple_15
+      5 │ 1  0.000740371  14.8894  0.0175505  6.13689e-7  multiple_15
+      6 │ 1  0.00602741  14.1231  0.139042  3.99353e-5  multiple_15
+   ⋮    │ ⋮  ⋮  ⋮  ⋮  ⋮  ⋮
+ 945996 │ 1000  46.6664  4.55058e-7  0.247023  0.484307  dose_100
+ 945997 │ 1000  47.0172  4.55058e-7  0.243049  0.476516  dose_100
+ 945998 │ 1000  47.3681  4.55059e-7  0.239139  0.46885  dose_100
+ 945999 │ 1000  47.719  4.55058e-7  0.235292  0.461307  dose_100
+ 946000 │ 1000  48.0  1.28404e-7  0.232256  0.455355  dose_100
                                                                        945989 rows omitted
 ```
 

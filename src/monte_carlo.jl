@@ -62,6 +62,7 @@ function mc(
   @assert !any(y_lost) "The following keys are not found: $(first.(parameters_variation)[y_lost])."
 
   parameters_variation_nt = NamedTuple(parameters_variation)
+  parameters_pregenerated = [generate_params(parameters_variation_nt, i) for i in 1:num_iter]
 
   #(parallel_type == EnsembleSerial()) # tmp fix
   p = Progress(num_iter, dt=0.5, barglyphs=BarGlyphs("[=> ]"), barlen=50, enabled = progress_bar)
@@ -71,24 +72,16 @@ function mc(
     verbose && println("Processing iteration $i")
     progress_bar && (parallel_type != EnsembleDistributed() ? next!(p) : put!(progch, true))
     
-    prob_i = remake_prob(scenario, generate_params(parameters_variation_nt, i); safetycopy)
-    return prob_i
-    #=
-    constants_total_i = merge_strict(scenario.parameters, generate_params(parameters_variation_nt, i))
-    u0, p0 = scenario.init_func(constants_total_i)
-
-    return remake(scenario.prob; u0=u0, p=p0)
-    =#
+    params_total = merge_strict(scenario.parameters, parameters_pregenerated[i])
+    # EnsembleProblem supplies the private copy when safetycopy=true.
+    return remake(prob; p=[id => params_total[id] for id in constants(prob.f.sys)])
   end
 
   function _output(sol, ctx)
     i = ctx.sim_id
-    # take numbers from p
-    values_i = sol.prob.p.x[2][cons_indexes]
-    params_i = NamedTuple(zip(first.(parameters_variation), values_i))
+    params_i = parameters_pregenerated[i]
     # take simulated values from solution
-    sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-    simulation = Simulation(sv, params_i, sol.retcode)
+    simulation = Simulation(sol, params_i, observables(scenario))
 
     return (output_func(simulation, ctx), false)
   end
@@ -97,7 +90,7 @@ function mc(
     prob_func = prob_func,
     output_func = _output,
     reduction = reduction_func,
-    safetycopy = false
+    safetycopy = safetycopy
   )
 
   if progress_bar && (parallel_type == EnsembleDistributed())
@@ -110,9 +103,6 @@ function mc(
           trajectories = num_iter,
           reltol = reltol,
           abstol = abstol,
-          save_start = false,
-          save_end = false,
-          save_everystep = false,
           kwargs...
         )
         put!(progch, false)
@@ -123,9 +113,6 @@ function mc(
       trajectories = num_iter,
       reltol = reltol,
       abstol = abstol,
-      save_start = false,
-      save_end = false,
-      save_everystep = false,
       kwargs...
     )
   end
@@ -244,14 +231,9 @@ function mc(
     scn_i = last(scenario_pairs[iter_i[2]])
     parameters_i = parameters_pregenerated[iter_i[1]]
 
-    prob_i = remake_prob(scn_i, parameters_i; safetycopy)
-    return prob_i
-    #=
-    constants_total_i = merge_strict(scn_i.parameters, parameters_i)
-    u0, p0 = scn_i.init_func(constants_total_i)
-
-    return remake(scn_i.prob; u0=u0, p=p0)
-    =#
+    params_total = merge_strict(scn_i.parameters, parameters_i)
+    base = safetycopy ? deepcopy(scn_i.prob) : scn_i.prob
+    return remake(base; p=[id => params_total[id] for id in constants(base.f.sys)])
   end
 
   function _output(sol, ctx)
@@ -260,8 +242,7 @@ function mc(
     # takes parameters_variation from pre-generated
     params_i = parameters_pregenerated[iter_i[1]]
     # take simulated values from solution
-    sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-    simulation = Simulation(sv, params_i, sol.retcode)
+    simulation = Simulation(sol, params_i, observables(last(scenario_pairs[iter_i[2]])))
 
     return (output_func(simulation, i), false)
   end
@@ -283,9 +264,6 @@ function mc(
           trajectories = lp*lc,
           reltol = reltol,
           abstol = abstol,
-          save_start = false,
-          save_end = false,
-          save_everystep = false,
           kwargs...
         )
         put!(progch, false)
@@ -296,9 +274,6 @@ function mc(
       trajectories = lp*lc,
       reltol = reltol,
       abstol = abstol,
-      save_start = false,
-      save_end = false,
-      save_everystep = false,
       kwargs...
     )
   end

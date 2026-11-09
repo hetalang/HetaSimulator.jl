@@ -33,7 +33,7 @@ function _param_value(sim, p::Symbol, dp)
   if p ∈ keys(parameters(sim))
     val = parameters(sim)[p]
   elseif p ∈ observables(sim)
-    val = sim(dp.t, p, dp.scope)
+    val = sim(dp.t, p)
   elseif p ∈ keys(scenario_parameters(sim))  
     val = scenario_parameters(sim)[p]
   else 

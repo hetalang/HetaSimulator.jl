@@ -26,7 +26,7 @@ normalize_params(v::AbstractVector{<:Pair{Symbol,<:Real}}) =
 
   - `scenario_pairs` : vector of pairs containing names and scenarios of type [`Scenario`](@ref)
   - `parameters_fitted` : parameters and their nominal values that will be used as default
-  - `parameters` : paramters, which overwrite both `Model` and `Scenario` parameters. Default is `nothing`
+  - `parameters` : paramters, which overwrite both `HetaODESystem` and `Scenario` parameters. Default is `nothing`
   - `alg` : ODE solver. See SciML docs for details. Default is AutoTsit5(Rosenbrock23())
   - `reltol` : relative tolerance. Default is 1e-6
   - `abstol` : relative tolerance. Default is 1e-8
@@ -68,32 +68,25 @@ function estimator(
   
   isempty(selected_scenario_pairs) && throw("No measurements points included in scenarios.")
   
-  # update saveat and initial values
+  # These templates are not solved or mutated; each evaluation copies its template.
   selected_prob = []
+  selected_parameters = []
   for scen_pair in selected_scenario_pairs
     scen = last(scen_pair)
-    prob_i = !isnothing(parameters) ? remake_prob(scen, NamedTuple(parameters); safetycopy=true) : deepcopy(scen.prob)
-    prob_i = remake_saveat(prob_i, scen.measurements)
-    #=
-    prob_i = if !isnothing(parameters)
-      params_total_i = merge_strict(scen.parameters, NamedTuple(parameters))
-      u0, p0 = scen.init_func(params_total_i)
-      remake(prob_i; u0=u0, p=p0)
-    else
-      prob_i
-    end
-    =#
+    saveat = sort!(unique([dp.t for dp in scen.measurements]))
+    tspan = (first(scen.prob.tspan), convert(typeof(last(scen.prob.tspan)), last(saveat)))
+    prob_i = remake(scen.prob; saveat, tspan)
     push!(selected_prob, prob_i)
+    push!(selected_parameters, merge(scen.parameters,
+      isnothing(parameters) ? NamedTuple() : NamedTuple(parameters)))
   end
 
   function prob_func(x) # x::
     function(prob, ctx) # internal_prob_func
       i = ctx.sim_id
-      #update_init_values(selected_prob[i], last(selected_scenario_pairs[i]).init_func, x)
-      scn = last(selected_scenario_pairs[i])
-      T = eltype(x)
-      params_total = (T <: ForwardDiff.Dual) ? merge_strict(NamedTuple{keys(scn.parameters)}(T.(collect(scn.parameters))), x) : merge_strict(scn.parameters, x)
-      remake_prob(selected_prob[i], scn.init_func, params_total; safetycopy=true) #?safetycopy=false
+      params_total = merge_strict(selected_parameters[i], x)
+      base = deepcopy(selected_prob[i])
+      remake(base; p=[id => params_total[id] for id in constants(base.f.sys)])
     end
   end
 
@@ -104,8 +97,8 @@ function estimator(
         @warn "Simulated scenario $i returned $(sol.retcode) status"
         return (Inf, false)
       end
-      sv = sol.prob.kwargs[:callback].discrete_callbacks[1].affect!.saved_values
-      simulation = Simulation(sv, NamedTuple{Tuple(parameters_fitted_names)}(x), sol.retcode)
+      result_parameters = merge(isnothing(parameters) ? NamedTuple() : NamedTuple(parameters), x)
+      simulation = Simulation(sol, result_parameters, observables(last(selected_scenario_pairs[i])))
       result = SimResult(simulation, last(selected_scenario_pairs[i]))
       loss_val = loss(result, result.scenario.measurements)
       (loss_val, false)
@@ -135,9 +128,6 @@ function estimator(
       trajectories = length(selected_scenario_pairs),
       reltol,
       abstol,
-      save_start = false, 
-      save_end = false, 
-      save_everystep = false, 
       kwargs...
     )
 

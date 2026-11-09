@@ -1,6 +1,6 @@
 using DataFrames
 
-platform = load_platform(joinpath(@__DIR__, "examples", "single_comp"); ir_format=:julia)
+platform = load_platform(joinpath(@__DIR__, "examples", "single_comp"))
 model = models(platform)[:nameless]
 
 @testset "Single simulation metadata" begin

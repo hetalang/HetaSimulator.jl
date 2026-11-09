@@ -37,7 +37,7 @@ sw2 @TimeSwitcher {start: 0, period: 24, active: false};
 A0 [sw2]= dose;
 ```
 
-The modeling platform includes only one namespace `nameless` which is the default one. After loading the model into Julia a single `Model` with id `:nameless` is available.
+The modeling platform includes only one namespace `nameless` which is the default one. After loading the model into Julia a single `HetaODESystem` with id `:nameless` is available.
 
 ```julia
 using HetaSimulator, Plots
@@ -227,7 +227,7 @@ See more about scenario tables in [tabular CSV format](../table-formats/scenario
 The base [`sim`](@ref) method is applied to a `Scenario` object.
 This object can be created directly using `Scenario` constructor or taken from the `Platform` object.
 
-The result of `sim` function execution is the solution of the relevant ODE system with parameters (1) stored as defaults in the `Model`, (2) overwritten in the `Scenario` object and (3) overwritten by passing `parameters` keyword arguments to `sim` function. 
+The result of `sim` function execution is the solution of the relevant ODE system with parameters (1) stored as defaults in the `HetaODESystem`, (2) overwritten in the `Scenario` object and (3) overwritten by passing `parameters` keyword arguments to `sim` function.
 
 ```julia
 res2 = sim(scenario2)
@@ -243,6 +243,16 @@ res2 = sim(scenario2)
 
 `sim` method applied to a single `Scenario` returns an object of [`HetaSimulator.SimResult`](@ref) type. 
 The method supports additional keyword arguments which can set the integration method, solver options, etc. For more information see [`sim`](@ref)
+
+Observable names are stored with the result's `DiffEqArray`. Use the result
+itself for named queries:
+
+```julia
+res2[:C1, :]       # C1 at all saved times
+res2[:C1, 1]       # C1 in the first saved row
+res2(0.0, :C1)     # C1 in the first row saved at time 0.0
+res2[1]            # ordinary numeric vector in observables(res2) order
+```
 
 The results can be visualized using `plot` function. 
 
@@ -269,19 +279,19 @@ res_df = DataFrame(res1)
 ```
 
 ```
-315×5 DataFrame
- Row │ t             C1           C2           v_el          scope  
-     │ Float64       Float64      Float64      Float64       Symbol 
+315×4 DataFrame
+ Row │ t  C1  C2  v_el
+     │ Float64  Float64  Float64  Float64
 ─────┼──────────────────────────────────────────────────────────────
-   1 │  0.0          0.0          0.0           0.0          start_
-   2 │  0.0          0.0          0.0           0.0          ode_
-   3 │  0.0          0.0          0.0           0.0          sw2
-   4 │  4.99995e-7   0.000158728  3.74355e-12   0.000499992  ode_
-  ⋮  │      ⋮             ⋮            ⋮            ⋮          ⋮
- 312 │ 49.4347       6.63602      1.77171      20.9035       ode_
- 313 │ 49.6571       5.79124      1.86371      18.2424       ode_
- 314 │ 49.8827       5.05502      1.93842      15.9233       ode_
- 315 │ 50.0          4.71407      1.97083      14.8493       ode_
+   1 │ 0.0  0.0  0.0  0.0
+   2 │ 0.0  0.0  0.0  0.0
+   3 │ 0.0  0.0  0.0  0.0
+   4 │ 4.99995e-7  0.000158728  3.74355e-12  0.000499992
+  ⋮  │ ⋮  ⋮  ⋮  ⋮
+ 312 │ 49.4347  6.63602  1.77171  20.9035
+ 313 │ 49.6571  5.79124  1.86371  18.2424
+ 314 │ 49.8827  5.05502  1.93842  15.9233
+ 315 │ 50.0  4.71407  1.97083  14.8493
                                                     307 rows omitted
 ```
 
@@ -384,7 +394,7 @@ A typical workflow for simulation of a modeling platforms in HetaSimulator.jl co
 3. Run `sim` method with the whole platform or with the selected scenarios; 
 4. Display results with `plot` or convert them into `DataFrame`.
 
-1. `Model` and `Scenario` objects are "immutable". This means a user cannot update their parts directly. User can only create new `Scenario`s and apply `add_scenarios!` method using the same identifiers. This replaces the previously created scenarios with the same ids.
+1. `HetaODESystem` and `Scenario` objects are "immutable". This means a user cannot update their parts directly. User can only create new `Scenario`s and apply `add_scenarios!` method using the same identifiers. This replaces the previously created scenarios with the same ids.
 
 1. To update a model structure one should include changes into the `heta` model code and repeat all the steps.
 

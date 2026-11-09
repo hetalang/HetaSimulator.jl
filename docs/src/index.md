@@ -102,22 +102,22 @@ plot(results)
 # transform results to data frame
 df = DataFrame(results)
 ...
-9×4 DataFrame
- Row │ t             s1        s2           scope  
-     │ Float64       Float64   Float64      Symbol 
+9×3 DataFrame
+ Row │ t  s1  s2
+     │ Float64  Float64  Float64
 ─────┼─────────────────────────────────────────────
-   1 │    0.0555525  11.9993   0.000666611  ode_
-   2 │    0.611077   11.9927   0.00733069   ode_
+   1 │ 0.0555525  11.9993  0.000666611
+   2 │ 0.611077  11.9927  0.00733069
 ```
 
 ## Architecture
 
 The user of HetaSimulator typically deals with the following three types:
-- `Model` - an ODE model, containing rhs, rules, initial parameters and vector of events.
+- `HetaODESystem` - an ODE model, containing rhs, rules, initial parameters and vector of events.
 - `Scenario` - scenario representing a specific model's setup for simulations or fitting. This setup can include initial parameters and events, output variables etc. In case of fitting `Scenario` should also include experimental data. A common usage of `Scenario` can be model's simulation with different drugs (parameters and events setup). Different `Scenario`'s can be united to run multi-scenarios simulations and fitting.
-- `Platform` - container for different `Model`s and `Scenario`s.
+- `Platform` - container for different `HetaODESystem`s and `Scenario`s.
 
-The user can perform the following three operations with both `Model`, `Scenario` and `Platform`
+The user can perform the following three operations with both `HetaODESystem`, `Scenario` and `Platform`
 - `sim` - run a single or multi-scenarios simulations. 
 - `fit` - fit a model to experimental data. 
 - `mc` - run Monte-Carlo or virtual patients simulations.

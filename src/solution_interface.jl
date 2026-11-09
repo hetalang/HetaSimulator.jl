@@ -1,7 +1,7 @@
 ############################ Accessing Solution Values #####################
 
 observables(sr::SimResult) = observables(sr.sim)
-observables(sim::Simulation) = collect(LabelledArrays.symnames(eltype(sim.vals.u)))
+observables(sim::Simulation) = collect(SciMLBase.variable_symbols(sim.vals))
 observables(sim::MCResult) = observables(sim[1])
 #parameters(sim::SimResult) = sim.scenario.prob.p
 
@@ -9,27 +9,19 @@ observables(sim::MCResult) = observables(sim[1])
 @inline Base.getindex(sim::Simulation, I::AbstractVector{<:Integer}) = vals(sim)[I]
 @inline Base.getindex(sim::Simulation, ::Colon, i::Integer) = vals(sim)[i]
 @inline Base.getindex(sim::Simulation, I...) = Base.getindex(sim.vals, I...)
-@inline Base.getindex(sim::Simulation, i::Symbol,::Colon) = [vals(sim)[j][i] for j in 1:length(sim)]
 @inline Base.getindex(sr::SimResult, I...) = sr.sim[I...]
 @inline Base.getindex(mc::MCResult, I...) = mc.sim[I...]
 
 solat(sr::SimResult, args...) = solat(sr.sim, args...)
 
-solat(sim::Simulation, t, idx, scope) = solat(sim, t, scope)[idx]
-solat(sim::Simulation, t, idx::Colon, scope) = solat(sim, t, scope)
-
-function solat(sim::Simulation, t, scope)
-  if scope == :ode_ || scope == :start_
-      _id = findfirst(x->x==t, sim.vals.t) # change to searchsortedfirst ?
-  else
-      t_id = findall(x->x==t, sim.vals.t)
-      _id = t_id[findfirst(x->x==scope, @view(sim.scope[t_id]))]
-  end
-  return sim[_id]
+function solat(sim::Simulation, t, idx=:)
+  index = findfirst(==(t), sim.vals.t)
+  isnothing(index) && throw(ArgumentError("No saved value at time $t"))
+  return idx isa Colon ? sim[index] : sim[idx, index]
 end
 
-(s::Simulation)(t, idx=:, scope=:ode_) = solat(s, t, idx, scope)
-(sr::SimResult)(t, idx=:, scope=:ode_) = solat(sr.sim, t, idx, scope)
+(s::Simulation)(t, idx=:) = solat(s, t, idx)
+(sr::SimResult)(t, idx=:) = solat(sr.sim, t, idx)
 
 ############################ DataFrames ########################################
 
@@ -39,7 +31,6 @@ function DataFrame(s::Simulation; vars=observables(s), parameters_output::Vector
   length(parameters_output) > 0 && ([df[:, id] .= parameters(s)[id] for id in parameters_output])
 
   [df[!, v] = s[v,:] for v in vars[in.(vars, Ref(observables(s)))]]
-  !isnothing(s.scope) && (df[:,:scope]=s.scope)
   
   return df
 end
