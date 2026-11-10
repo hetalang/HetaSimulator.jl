@@ -47,6 +47,9 @@ SciMLBase = "3"
 XLSX = "0.7, 0.8"
 julia = "1.10"
 
+[sources]
+HetaImporter = {url = "https://github.com/hetalang/HetaImporter.jl", rev = "master"}
+
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
