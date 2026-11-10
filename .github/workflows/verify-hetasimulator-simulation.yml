@@ -13,12 +13,30 @@ concurrency:
   group: fcts-reports-publication
   cancel-in-progress: false
 
+env:
+  FCTS_ROOT: ${{ github.workspace }}/fcts-run/node_modules/@hetalang/format-conversion-test-suite
+  FCTS_JULIA_PROJECT: ${{ github.workspace }}/fcts-julia
+
 jobs:
   verify:
+    name: Verify SBML ${{ matrix.level }}
     runs-on: ubuntu-latest
-    env:
-      FCTS_ROOT: ${{ github.workspace }}/fcts-run/node_modules/@hetalang/format-conversion-test-suite
-      FCTS_JULIA_PROJECT: ${{ github.workspace }}/fcts-julia
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - level: L2V5
+            input_field: sbmlL2V5Path
+            report_directory: l2v5
+            skip_component_tags: 'StoichiometryMath,CSymbolDelay,EventWithDelay,AlgebraicRule'
+            skip_test_tags: 'FastReaction,VolumeConcentrationRates'
+            use_c_switcher: true
+          - level: L3V1
+            input_field: sbmlL3V1Path
+            report_directory: l3v1
+            skip_component_tags: 'CSymbolDelay,EventWithDelay,AlgebraicRule,CSymbolRateOf,comp:Deletion,comp:ModelDefinition,comp:Port,comp:ReplacedBy,comp:ReplacedElement,comp:SBaseRef,comp:Submodel,fbc:FluxBound,fbc:FluxObjective,fbc:Objective,EventPriority'
+            skip_test_tags: 'AssignedVariableStoichiometry,AssignedConstantStoichiometry,SpeciesReferenceInMath,NoMathML,comp:SubmodelOutput,fbc:BoundEqual,fbc:BoundGreaterEqual,fbc:BoundLessEqual,fbc:MaximizeObjective,fbc:MinimizeObjective,fbc:NonStrict,FastReaction,VolumeConcentrationRates'
+            use_c_switcher: false
 
     steps:
       - name: Checkout HetaSimulator.jl
@@ -53,7 +71,7 @@ jobs:
           npm --prefix "$FCTS_ROOT" run fetch:sbml
           npm --prefix "$FCTS_ROOT" run index:sbml
 
-      - name: Simulate SBML L2V5 HetaSimulator models
+      - name: Simulate SBML ${{ matrix.level }} HetaSimulator models
         shell: bash
         env:
           JULIA_PROJECT: ${{ env.FCTS_JULIA_PROJECT }}
@@ -61,26 +79,45 @@ jobs:
           cd fcts-run
           npx --no-install fcts sbml-hetasimulator-simulation \
             --source=cases/index \
-            --input-field=sbmlL2V5Path \
-            --target=results/l2v5 \
-            --skip-component-tags=StoichiometryMath,CSymbolDelay,EventWithDelay,AlgebraicRule \
-            --skip-test-tags=FastReaction,VolumeConcentrationRates \
+            --input-field=${{ matrix.input_field }} \
+            --target=results/${{ matrix.report_directory }} \
+            --skip-component-tags='${{ matrix.skip_component_tags }}' \
+            --skip-test-tags='${{ matrix.skip_test_tags }}' \
             --concurrency=4 \
-            --useCSwitcher
+            ${{ matrix.use_c_switcher && '--useCSwitcher' || '' }}
 
-      - name: Simulate SBML L3V1 HetaSimulator models
-        shell: bash
-        env:
-          JULIA_PROJECT: ${{ env.FCTS_JULIA_PROJECT }}
-        run: |
-          cd fcts-run
-          npx --no-install fcts sbml-hetasimulator-simulation \
-            --source=cases/index \
-            --input-field=sbmlL3V1Path \
-            --target=results/l3v1 \
-            --concurrency=4 \
-            --skip-component-tags=CSymbolDelay,EventWithDelay,AlgebraicRule,CSymbolRateOf,comp:Deletion,comp:ModelDefinition,comp:Port,comp:ReplacedBy,comp:ReplacedElement,comp:SBaseRef,comp:Submodel,fbc:FluxBound,fbc:FluxObjective,fbc:Objective,EventPriority \
-            --skip-test-tags=AssignedVariableStoichiometry,AssignedConstantStoichiometry,SpeciesReferenceInMath,NoMathML,comp:SubmodelOutput,fbc:BoundEqual,fbc:BoundGreaterEqual,fbc:BoundLessEqual,fbc:MaximizeObjective,fbc:MinimizeObjective,fbc:NonStrict,FastReaction,VolumeConcentrationRates
+      - name: Upload simulation report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: fcts-hetasimulator-simulation-${{ github.run_id }}-${{ matrix.level }}
+          path: ${{ env.FCTS_ROOT }}/results/${{ matrix.report_directory }}
+          if-no-files-found: warn
+
+  publish:
+    name: Summarize and publish simulation reports
+    if: always()
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - name: Download SBML L2V5 report
+        if: always()
+        uses: actions/download-artifact@v7
+        with:
+          name: fcts-hetasimulator-simulation-${{ github.run_id }}-L2V5
+          path: ${{ env.FCTS_ROOT }}/results/l2v5
+
+      - name: Download SBML L3V1 report
+        if: always()
+        uses: actions/download-artifact@v7
+        with:
+          name: fcts-hetasimulator-simulation-${{ github.run_id }}-L3V1
+          path: ${{ env.FCTS_ROOT }}/results/l3v1
 
       - name: Summarize simulation report
         if: always()
