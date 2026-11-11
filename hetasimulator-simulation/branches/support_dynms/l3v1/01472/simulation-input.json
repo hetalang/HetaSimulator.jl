@@ -1,0 +1,37 @@
+{
+  "sourceSettingsPath": "semantic/01472/01472-settings.txt",
+  "referenceResultsPath": "semantic/01472/01472-results.csv",
+  "variables": [
+    "S",
+    "D",
+    "A__submod1__E",
+    "A__submod1__ES",
+    "comp"
+  ],
+  "absoluteTolerance": 0.0001,
+  "relativeTolerance": 0.0001,
+  "amountVariables": [
+    "S",
+    "D",
+    "A__submod1__E",
+    "A__submod1__ES"
+  ],
+  "concentrationVariables": [],
+  "timeCourse": {
+    "start": 0,
+    "duration": 1,
+    "steps": 10
+  },
+  "speciesOutputs": {
+    "S": {
+      "compartment": "comp",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "D": {
+      "compartment": "comp",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    }
+  }
+}

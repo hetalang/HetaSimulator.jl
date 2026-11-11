@@ -1,0 +1,31 @@
+{
+  "sourceSettingsPath": "semantic/01168/01168-settings.txt",
+  "referenceResultsPath": "semantic/01168/01168-results.csv",
+  "variables": [
+    "A__S",
+    "A__A__E",
+    "A__A__D",
+    "A__A__ES",
+    "A__B__E",
+    "A__B__D",
+    "A__B__ES"
+  ],
+  "absoluteTolerance": 0.0001,
+  "relativeTolerance": 0.0001,
+  "amountVariables": [
+    "A__S",
+    "A__A__E",
+    "A__A__D",
+    "A__A__ES",
+    "A__B__E",
+    "A__B__D",
+    "A__B__ES"
+  ],
+  "concentrationVariables": [],
+  "timeCourse": {
+    "start": 0,
+    "duration": 1,
+    "steps": 10
+  },
+  "speciesOutputs": {}
+}

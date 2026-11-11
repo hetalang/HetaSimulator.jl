@@ -1,0 +1,26 @@
+{
+  "sourceSettingsPath": "semantic/01120/01120-settings.txt",
+  "referenceResultsPath": "semantic/01120/01120-results.csv",
+  "variables": [
+    "comp",
+    "S3"
+  ],
+  "absoluteTolerance": 0.0001,
+  "relativeTolerance": 0.0001,
+  "amountVariables": [
+    "S3"
+  ],
+  "concentrationVariables": [],
+  "timeCourse": {
+    "start": 0,
+    "duration": 2,
+    "steps": 20
+  },
+  "speciesOutputs": {
+    "S3": {
+      "compartment": "comp",
+      "modelValue": "amount",
+      "referenceValue": "amount"
+    }
+  }
+}

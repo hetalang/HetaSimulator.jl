@@ -1,0 +1,84 @@
+{
+  "sourceSettingsPath": "semantic/00999/00999-settings.txt",
+  "referenceResultsPath": "semantic/00999/00999-results.csv",
+  "variables": [
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6",
+    "S7",
+    "S8",
+    "p1",
+    "p2",
+    "p3",
+    "p4",
+    "p5",
+    "p6",
+    "p7",
+    "p8",
+    "comp1",
+    "comp2"
+  ],
+  "absoluteTolerance": 0.0001,
+  "relativeTolerance": 0.0001,
+  "amountVariables": [
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6",
+    "S7",
+    "S8"
+  ],
+  "concentrationVariables": [],
+  "timeCourse": {
+    "start": 0,
+    "duration": 10,
+    "steps": 10
+  },
+  "speciesOutputs": {
+    "S1": {
+      "compartment": "comp1",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S2": {
+      "compartment": "comp1",
+      "modelValue": "amount",
+      "referenceValue": "amount"
+    },
+    "S3": {
+      "compartment": "comp1",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S4": {
+      "compartment": "comp1",
+      "modelValue": "amount",
+      "referenceValue": "amount"
+    },
+    "S5": {
+      "compartment": "comp2",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S6": {
+      "compartment": "comp2",
+      "modelValue": "amount",
+      "referenceValue": "amount"
+    },
+    "S7": {
+      "compartment": "comp2",
+      "modelValue": "concentration",
+      "referenceValue": "amount"
+    },
+    "S8": {
+      "compartment": "comp2",
+      "modelValue": "amount",
+      "referenceValue": "amount"
+    }
+  }
+}
