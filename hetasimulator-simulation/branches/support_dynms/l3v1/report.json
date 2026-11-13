@@ -6,8 +6,8 @@
     "packageVersion": "0.3.1"
   },
   "status": "completed-with-errors",
-  "startedAt": "2026-11-11T15:12:05.827Z",
-  "completedAt": "2026-11-11T15:43:17.379Z",
+  "startedAt": "2026-11-13T11:10:52.167Z",
+  "completedAt": "2026-11-13T11:30:02.546Z",
   "command": {
     "source": "cases/index.json",
     "target": "results/l3v1",
@@ -12674,8 +12674,8 @@
             "time": 0.2,
             "variable": "S1",
             "expected": 0.06196212273334437,
-            "actual": 0.06608653409101609,
-            "absoluteError": 0.004124411357671713,
+            "actual": 0.06608653409101607,
+            "absoluteError": 0.004124411357671699,
             "tolerance": 0.00010619621227333445
           },
           {
@@ -32812,14 +32812,23 @@
       "caseId": "00879",
       "synopsis": "Linear chain of reactions in one compartment",
       "sourcePath": "semantic/00879/00879-sbml-l3v1.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00879/input.heta",
       "simulationInputPath": "00879/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "UndefVarError: `t` not defined in `HetaImporter`\nSuggestion: check for spelling errors or missing imports.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00879/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 4.0535608723801797e-16
+      },
+      "simulationPlotPaths": [
+        "00879/plot-001.png",
+        "00879/plot-002.png",
+        "00879/plot-003.png",
+        "00879/plot-004.png"
+      ]
     },
     {
       "caseId": "00880",
@@ -55516,14 +55525,21 @@
       "caseId": "01641",
       "synopsis": "The csymbols avogadro and time with each other's names.",
       "sourcePath": "semantic/01641/01641-sbml-l3v1.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "01641/input.heta",
       "simulationInputPath": "01641/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "UndefVarError: `t` not defined in `HetaImporter`\nSuggestion: check for spelling errors or missing imports.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "01641/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 22,
+        "maxAbsoluteError": 103000000002261000
+      },
+      "simulationPlotPaths": [
+        "01641/plot-001.png",
+        "01641/plot-002.png"
+      ]
     },
     {
       "caseId": "01642",

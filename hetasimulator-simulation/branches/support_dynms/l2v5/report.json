@@ -6,8 +6,8 @@
     "packageVersion": "0.3.1"
   },
   "status": "completed-with-errors",
-  "startedAt": "2026-11-11T14:45:58.051Z",
-  "completedAt": "2026-11-11T15:11:59.559Z",
+  "startedAt": "2026-11-13T10:55:20.651Z",
+  "completedAt": "2026-11-13T11:10:47.498Z",
   "command": {
     "source": "cases/index.json",
     "target": "results/l2v5",
@@ -9251,208 +9251,22 @@
       "caseId": "00387",
       "synopsis": "Basic two reactions with three species in one compartment\nand one event that assigns value to a species.",
       "sourcePath": "semantic/00387/00387-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00387/input.heta",
       "simulationInputPath": "00387/simulation-input.json",
       "outputs": {
         "simulation": "00387/simulation.csv"
       },
       "comparison": {
-        "status": "failed",
+        "status": "valid",
         "comparedValues": 153,
-        "maxAbsoluteError": 0.5862605386991366,
-        "failures": [
-          {
-            "row": 45,
-            "time": 2.2,
-            "variable": "S1",
-            "expected": 0.752085374452218,
-            "actual": 0.7443225823917926,
-            "absoluteError": 0.007762792060425405,
-            "tolerance": 0.0010752085374452218
-          },
-          {
-            "row": 45,
-            "time": 2.2,
-            "variable": "S2",
-            "expected": 0.3950322028379428,
-            "actual": 0.9812927415370795,
-            "absoluteError": 0.5862605386991366,
-            "tolerance": 0.0010395032202837942
-          },
-          {
-            "row": 45,
-            "time": 2.2,
-            "variable": "S3",
-            "expected": 1.247914625547782,
-            "actual": 1.255677417608207,
-            "absoluteError": 0.007762792060425072,
-            "tolerance": 0.0011247914625547783
-          },
-          {
-            "row": 46,
-            "time": 2.25,
-            "variable": "S1",
-            "expected": 0.7565756956830718,
-            "actual": 0.7334293741301923,
-            "absoluteError": 0.023146321552879545,
-            "tolerance": 0.0010756575695683073
-          },
-          {
-            "row": 46,
-            "time": 2.25,
-            "variable": "S2",
-            "expected": 0.388441909983748,
-            "actual": 0.9437406400084108,
-            "absoluteError": 0.5552987300246628,
-            "tolerance": 0.0010388441909983748
-          },
-          {
-            "row": 46,
-            "time": 2.25,
-            "variable": "S3",
-            "expected": 1.243424304316928,
-            "actual": 1.2665706258698073,
-            "absoluteError": 0.023146321552879323,
-            "tolerance": 0.0011243424304316929
-          },
-          {
-            "row": 47,
-            "time": 2.3,
-            "variable": "S1",
-            "expected": 0.761128022114755,
-            "actual": 0.7240155917703576,
-            "absoluteError": 0.037112430344397485,
-            "tolerance": 0.0010761128022114756
-          },
-          {
-            "row": 47,
-            "time": 2.3,
-            "variable": "S2",
-            "expected": 0.3820321488692294,
-            "actual": 0.9090206551907105,
-            "absoluteError": 0.5269885063214811,
-            "tolerance": 0.001038203214886923
-          },
-          {
-            "row": 47,
-            "time": 2.3,
-            "variable": "S3",
-            "expected": 1.238871977885244,
-            "actual": 1.2759844082296423,
-            "absoluteError": 0.03711243034439837,
-            "tolerance": 0.0011238871977885243
-          },
-          {
-            "row": 48,
-            "time": 2.35,
-            "variable": "S1",
-            "expected": 0.7657379115964317,
-            "actual": 0.7159175415851665,
-            "absoluteError": 0.04982037001126516,
-            "tolerance": 0.0010765737911596432
-          },
-          {
-            "row": 48,
-            "time": 2.35,
-            "variable": "S2",
-            "expected": 0.3757947821707579,
-            "actual": 0.8768228438340455,
-            "absoluteError": 0.5010280616632876,
-            "tolerance": 0.0010375794782170758
-          },
-          {
-            "row": 48,
-            "time": 2.35,
-            "variable": "S3",
-            "expected": 1.234262088403568,
-            "actual": 1.2840824584148334,
-            "absoluteError": 0.04982037001126538,
-            "tolerance": 0.0011234262088403568
-          },
-          {
-            "row": 49,
-            "time": 2.4,
-            "variable": "S1",
-            "expected": 0.7704012138400148,
-            "actual": 0.7089939283274079,
-            "absoluteError": 0.06140728551260688,
-            "tolerance": 0.0010770401213840014
-          },
-          {
-            "row": 49,
-            "time": 2.4,
-            "variable": "S2",
-            "expected": 0.3697222026244524,
-            "actual": 0.8468801577452734,
-            "absoluteError": 0.477157955120821,
-            "tolerance": 0.0010369722202624452
-          },
-          {
-            "row": 49,
-            "time": 2.4,
-            "variable": "S3",
-            "expected": 1.229598786159985,
-            "actual": 1.291006071672592,
-            "absoluteError": 0.06140728551260688,
-            "tolerance": 0.0011229598786159985
-          },
-          {
-            "row": 50,
-            "time": 2.45,
-            "variable": "S1",
-            "expected": 0.7751140476542882,
-            "actual": 0.7031221620423349,
-            "absoluteError": 0.07199188561195324,
-            "tolerance": 0.0010775114047654288
-          },
-          {
-            "row": 50,
-            "time": 2.45,
-            "variable": "S2",
-            "expected": 0.3638072909949677,
-            "actual": 0.818961313477899,
-            "absoluteError": 0.4551540224829313,
-            "tolerance": 0.0010363807290994969
-          },
-          {
-            "row": 50,
-            "time": 2.45,
-            "variable": "S3",
-            "expected": 1.224885952345711,
-            "actual": 1.296877837957665,
-            "absoluteError": 0.07199188561195413,
-            "tolerance": 0.001122488595234571
-          },
-          {
-            "row": 51,
-            "time": 2.5,
-            "variable": "S1",
-            "expected": 0.7798727805244279,
-            "actual": 0.698195373746014,
-            "absoluteError": 0.08167740677841384,
-            "tolerance": 0.001077987278052443
-          },
-          {
-            "row": 51,
-            "time": 2.5,
-            "variable": "S2",
-            "expected": 0.3580433783986561,
-            "actual": 0.7928650382029586,
-            "absoluteError": 0.43482165980430254,
-            "tolerance": 0.0010358043378398657
-          }
-        ]
+        "maxAbsoluteError": 4.091701422126448e-9
       },
       "simulationPlotPaths": [
         "00387/plot-001.png",
         "00387/plot-002.png",
         "00387/plot-003.png"
-      ],
-      "error": {
-        "phase": "comparison",
-        "message": "Simulation results exceed the Semantic Test Suite tolerances"
-      }
+      ]
     },
     {
       "caseId": "00388",
@@ -20665,14 +20479,23 @@
       "caseId": "00879",
       "synopsis": "Linear chain of reactions in one compartment",
       "sourcePath": "semantic/00879/00879-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00879/input.heta",
       "simulationInputPath": "00879/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "UndefVarError: `t` not defined in `HetaImporter`\nSuggestion: check for spelling errors or missing imports.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "00879/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 204,
+        "maxAbsoluteError": 4.0535608723801797e-16
+      },
+      "simulationPlotPaths": [
+        "00879/plot-001.png",
+        "00879/plot-002.png",
+        "00879/plot-003.png",
+        "00879/plot-004.png"
+      ]
     },
     {
       "caseId": "00880",
@@ -30749,14 +30572,26 @@
       "caseId": "01821",
       "synopsis": "Test SBML IDs named 'time'",
       "sourcePath": "semantic/01821/01821-sbml-l2v5.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "01821/input.heta",
       "simulationInputPath": "01821/simulation-input.json",
-      "error": {
-        "phase": "heta-load-simulation",
-        "message": "UndefVarError: `t` not defined in `HetaImporter`\nSuggestion: check for spelling errors or missing imports.",
-        "exitCode": 0
-      }
+      "outputs": {
+        "simulation": "01821/simulation.csv"
+      },
+      "comparison": {
+        "status": "valid",
+        "comparedValues": 77,
+        "maxAbsoluteError": 0
+      },
+      "simulationPlotPaths": [
+        "01821/plot-001.png",
+        "01821/plot-002.png",
+        "01821/plot-003.png",
+        "01821/plot-004.png",
+        "01821/plot-005.png",
+        "01821/plot-006.png",
+        "01821/plot-007.png"
+      ]
     }
   ]
 }
