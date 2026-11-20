@@ -6,8 +6,8 @@
     "packageVersion": "0.3.1"
   },
   "status": "completed-with-errors",
-  "startedAt": "2026-11-13T11:10:52.167Z",
-  "completedAt": "2026-11-13T11:30:02.546Z",
+  "startedAt": "2026-11-20T09:14:52.298Z",
+  "completedAt": "2026-11-20T09:45:52.877Z",
   "command": {
     "source": "cases/index.json",
     "target": "results/l3v1",
@@ -48,7 +48,7 @@
     ]
   },
   "environment": {
-    "hetaVersion": "0.12.3",
+    "hetaVersion": "0.12.4",
     "hetaSimulatorVersion": "0.8.8",
     "testSuite": {
       "version": "3.5.0",
@@ -8127,624 +8127,66 @@
       "caseId": "00328",
       "synopsis": "One reactions and two rate rules with four species in a compartment.",
       "sourcePath": "semantic/00328/00328-sbml-l3v1.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00328/input.heta",
       "simulationInputPath": "00328/simulation-input.json",
       "outputs": {
         "simulation": "00328/simulation.csv"
       },
       "comparison": {
-        "status": "failed",
+        "status": "valid",
         "comparedValues": 204,
-        "maxAbsoluteError": 1.8750000000001137,
-        "failures": [
-          {
-            "row": 2,
-            "time": 0.2,
-            "variable": "S3",
-            "expected": 1.5375,
-            "actual": 1.5749999999999986,
-            "absoluteError": 0.037499999999998535,
-            "tolerance": 0.01015375
-          },
-          {
-            "row": 2,
-            "time": 0.2,
-            "variable": "S4",
-            "expected": 3.9875,
-            "actual": 3.9749999999999965,
-            "absoluteError": 0.012500000000003286,
-            "tolerance": 0.01039875
-          },
-          {
-            "row": 3,
-            "time": 0.4,
-            "variable": "S3",
-            "expected": 1.575,
-            "actual": 1.649999999999997,
-            "absoluteError": 0.07499999999999707,
-            "tolerance": 0.0101575
-          },
-          {
-            "row": 3,
-            "time": 0.4,
-            "variable": "S4",
-            "expected": 3.975,
-            "actual": 3.949999999999993,
-            "absoluteError": 0.025000000000007017,
-            "tolerance": 0.0103975
-          },
-          {
-            "row": 4,
-            "time": 0.6,
-            "variable": "S3",
-            "expected": 1.6125,
-            "actual": 1.7249999999999956,
-            "absoluteError": 0.1124999999999956,
-            "tolerance": 0.01016125
-          },
-          {
-            "row": 4,
-            "time": 0.6,
-            "variable": "S4",
-            "expected": 3.9625,
-            "actual": 3.9249999999999896,
-            "absoluteError": 0.0375000000000103,
-            "tolerance": 0.010396250000000001
-          },
-          {
-            "row": 5,
-            "time": 0.8,
-            "variable": "S3",
-            "expected": 1.65,
-            "actual": 1.799999999999994,
-            "absoluteError": 0.14999999999999414,
-            "tolerance": 0.010165
-          },
-          {
-            "row": 5,
-            "time": 0.8,
-            "variable": "S4",
-            "expected": 3.95,
-            "actual": 3.8999999999999857,
-            "absoluteError": 0.05000000000001448,
-            "tolerance": 0.010395
-          },
-          {
-            "row": 6,
-            "time": 1,
-            "variable": "S3",
-            "expected": 1.6875,
-            "actual": 1.8749999999999925,
-            "absoluteError": 0.18749999999999245,
-            "tolerance": 0.01016875
-          },
-          {
-            "row": 6,
-            "time": 1,
-            "variable": "S4",
-            "expected": 3.9375,
-            "actual": 3.8749999999999822,
-            "absoluteError": 0.06250000000001776,
-            "tolerance": 0.01039375
-          },
-          {
-            "row": 7,
-            "time": 1.2,
-            "variable": "S3",
-            "expected": 1.725000000000001,
-            "actual": 1.949999999999991,
-            "absoluteError": 0.2249999999999901,
-            "tolerance": 0.010172500000000001
-          },
-          {
-            "row": 7,
-            "time": 1.2,
-            "variable": "S4",
-            "expected": 3.925,
-            "actual": 3.8499999999999788,
-            "absoluteError": 0.07500000000002105,
-            "tolerance": 0.0103925
-          },
-          {
-            "row": 8,
-            "time": 1.4,
-            "variable": "S3",
-            "expected": 1.7625,
-            "actual": 2.024999999999991,
-            "absoluteError": 0.2624999999999911,
-            "tolerance": 0.01017625
-          },
-          {
-            "row": 8,
-            "time": 1.4,
-            "variable": "S4",
-            "expected": 3.9125,
-            "actual": 3.824999999999975,
-            "absoluteError": 0.08750000000002522,
-            "tolerance": 0.01039125
-          },
-          {
-            "row": 9,
-            "time": 1.6,
-            "variable": "S3",
-            "expected": 1.8,
-            "actual": 2.099999999999994,
-            "absoluteError": 0.2999999999999938,
-            "tolerance": 0.01018
-          },
-          {
-            "row": 9,
-            "time": 1.6,
-            "variable": "S4",
-            "expected": 3.9,
-            "actual": 3.7999999999999714,
-            "absoluteError": 0.10000000000002851,
-            "tolerance": 0.01039
-          },
-          {
-            "row": 10,
-            "time": 1.8,
-            "variable": "S3",
-            "expected": 1.8375,
-            "actual": 2.1749999999999967,
-            "absoluteError": 0.3374999999999968,
-            "tolerance": 0.01018375
-          },
-          {
-            "row": 10,
-            "time": 1.8,
-            "variable": "S4",
-            "expected": 3.8875,
-            "actual": 3.774999999999968,
-            "absoluteError": 0.11250000000003224,
-            "tolerance": 0.01038875
-          },
-          {
-            "row": 11,
-            "time": 2,
-            "variable": "S3",
-            "expected": 1.875,
-            "actual": 2.2499999999999996,
-            "absoluteError": 0.37499999999999956,
-            "tolerance": 0.0101875
-          },
-          {
-            "row": 11,
-            "time": 2,
-            "variable": "S4",
-            "expected": 3.875,
-            "actual": 3.749999999999964,
-            "absoluteError": 0.12500000000003597,
-            "tolerance": 0.010387500000000001
-          }
-        ]
+        "maxAbsoluteError": 3.8025509285777304e-7
       },
       "simulationPlotPaths": [
         "00328/plot-001.png",
         "00328/plot-002.png",
         "00328/plot-003.png",
         "00328/plot-004.png"
-      ],
-      "error": {
-        "phase": "comparison",
-        "message": "Simulation results exceed the Semantic Test Suite tolerances"
-      }
+      ]
     },
     {
       "caseId": "00329",
       "synopsis": "Basic reaction and rate rule with three species in a compartment.",
       "sourcePath": "semantic/00329/00329-sbml-l3v1.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00329/input.heta",
       "simulationInputPath": "00329/simulation-input.json",
       "outputs": {
         "simulation": "00329/simulation.csv"
       },
       "comparison": {
-        "status": "failed",
+        "status": "valid",
         "comparedValues": 153,
-        "maxAbsoluteError": 0.5624999999999988,
-        "failures": [
-          {
-            "row": 2,
-            "time": 0.1,
-            "variable": "S3",
-            "expected": 0.02625,
-            "actual": 0.014999999999999998,
-            "absoluteError": 0.011250000000000001,
-            "tolerance": 0.001002625
-          },
-          {
-            "row": 3,
-            "time": 0.2,
-            "variable": "S3",
-            "expected": 0.05250000000000001,
-            "actual": 0.02999999999999999,
-            "absoluteError": 0.022500000000000023,
-            "tolerance": 0.00100525
-          },
-          {
-            "row": 4,
-            "time": 0.3,
-            "variable": "S3",
-            "expected": 0.07875000000000001,
-            "actual": 0.045,
-            "absoluteError": 0.033750000000000016,
-            "tolerance": 0.001007875
-          },
-          {
-            "row": 5,
-            "time": 0.4,
-            "variable": "S3",
-            "expected": 0.105,
-            "actual": 0.060000000000000005,
-            "absoluteError": 0.04499999999999999,
-            "tolerance": 0.0010105000000000001
-          },
-          {
-            "row": 6,
-            "time": 0.5,
-            "variable": "S3",
-            "expected": 0.13125,
-            "actual": 0.075,
-            "absoluteError": 0.05625000000000001,
-            "tolerance": 0.001013125
-          },
-          {
-            "row": 7,
-            "time": 0.6,
-            "variable": "S3",
-            "expected": 0.1575,
-            "actual": 0.09,
-            "absoluteError": 0.0675,
-            "tolerance": 0.00101575
-          },
-          {
-            "row": 8,
-            "time": 0.7,
-            "variable": "S3",
-            "expected": 0.18375,
-            "actual": 0.105,
-            "absoluteError": 0.07875,
-            "tolerance": 0.001018375
-          },
-          {
-            "row": 9,
-            "time": 0.8,
-            "variable": "S3",
-            "expected": 0.21,
-            "actual": 0.12000000000000001,
-            "absoluteError": 0.08999999999999998,
-            "tolerance": 0.001021
-          },
-          {
-            "row": 10,
-            "time": 0.9,
-            "variable": "S3",
-            "expected": 0.23625,
-            "actual": 0.135,
-            "absoluteError": 0.10124999999999998,
-            "tolerance": 0.001023625
-          },
-          {
-            "row": 11,
-            "time": 1,
-            "variable": "S3",
-            "expected": 0.2625,
-            "actual": 0.15,
-            "absoluteError": 0.11250000000000002,
-            "tolerance": 0.00102625
-          },
-          {
-            "row": 12,
-            "time": 1.1,
-            "variable": "S3",
-            "expected": 0.28875,
-            "actual": 0.16500000000000006,
-            "absoluteError": 0.12374999999999994,
-            "tolerance": 0.001028875
-          },
-          {
-            "row": 13,
-            "time": 1.2,
-            "variable": "S3",
-            "expected": 0.315,
-            "actual": 0.18000000000000002,
-            "absoluteError": 0.13499999999999998,
-            "tolerance": 0.0010315
-          },
-          {
-            "row": 14,
-            "time": 1.3,
-            "variable": "S3",
-            "expected": 0.34125,
-            "actual": 0.19500000000000006,
-            "absoluteError": 0.14624999999999994,
-            "tolerance": 0.001034125
-          },
-          {
-            "row": 15,
-            "time": 1.4,
-            "variable": "S3",
-            "expected": 0.3675000000000001,
-            "actual": 0.21000000000000005,
-            "absoluteError": 0.15750000000000006,
-            "tolerance": 0.0010367500000000001
-          },
-          {
-            "row": 16,
-            "time": 1.5,
-            "variable": "S3",
-            "expected": 0.39375,
-            "actual": 0.2250000000000001,
-            "absoluteError": 0.1687499999999999,
-            "tolerance": 0.001039375
-          },
-          {
-            "row": 17,
-            "time": 1.6,
-            "variable": "S3",
-            "expected": 0.42,
-            "actual": 0.2400000000000001,
-            "absoluteError": 0.17999999999999988,
-            "tolerance": 0.001042
-          },
-          {
-            "row": 18,
-            "time": 1.7,
-            "variable": "S3",
-            "expected": 0.44625,
-            "actual": 0.25500000000000006,
-            "absoluteError": 0.19124999999999992,
-            "tolerance": 0.001044625
-          },
-          {
-            "row": 19,
-            "time": 1.8,
-            "variable": "S3",
-            "expected": 0.4725,
-            "actual": 0.2700000000000001,
-            "absoluteError": 0.2024999999999999,
-            "tolerance": 0.00104725
-          },
-          {
-            "row": 20,
-            "time": 1.9,
-            "variable": "S3",
-            "expected": 0.49875,
-            "actual": 0.28500000000000003,
-            "absoluteError": 0.21375,
-            "tolerance": 0.001049875
-          },
-          {
-            "row": 21,
-            "time": 2,
-            "variable": "S3",
-            "expected": 0.525,
-            "actual": 0.30000000000000004,
-            "absoluteError": 0.22499999999999998,
-            "tolerance": 0.0010525
-          }
-        ]
+        "maxAbsoluteError": 0.0000012639573616635147
       },
       "simulationPlotPaths": [
         "00329/plot-001.png",
         "00329/plot-002.png",
         "00329/plot-003.png"
-      ],
-      "error": {
-        "phase": "comparison",
-        "message": "Simulation results exceed the Semantic Test Suite tolerances"
-      }
+      ]
     },
     {
       "caseId": "00330",
       "synopsis": "Two reactions and a rate rule with four species in a compartment.",
       "sourcePath": "semantic/00330/00330-sbml-l3v1.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00330/input.heta",
       "simulationInputPath": "00330/simulation-input.json",
       "outputs": {
         "simulation": "00330/simulation.csv"
       },
       "comparison": {
-        "status": "failed",
+        "status": "valid",
         "comparedValues": 204,
-        "maxAbsoluteError": 0.0035000000000007317,
-        "failures": [
-          {
-            "row": 2,
-            "time": 0.1,
-            "variable": "S4",
-            "expected": 0.01093,
-            "actual": 0.010999999999999994,
-            "absoluteError": 0.00006999999999999368,
-            "tolerance": 0.000011093
-          },
-          {
-            "row": 3,
-            "time": 0.2,
-            "variable": "S4",
-            "expected": 0.01186,
-            "actual": 0.011999999999999988,
-            "absoluteError": 0.00013999999999998736,
-            "tolerance": 0.000011186000000000001
-          },
-          {
-            "row": 4,
-            "time": 0.3,
-            "variable": "S4",
-            "expected": 0.01279,
-            "actual": 0.01299999999999998,
-            "absoluteError": 0.00020999999999998104,
-            "tolerance": 0.000011279000000000002
-          },
-          {
-            "row": 5,
-            "time": 0.4,
-            "variable": "S4",
-            "expected": 0.01372,
-            "actual": 0.013999999999999974,
-            "absoluteError": 0.0002799999999999747,
-            "tolerance": 0.000011372
-          },
-          {
-            "row": 6,
-            "time": 0.5,
-            "variable": "S4",
-            "expected": 0.01465,
-            "actual": 0.014999999999999968,
-            "absoluteError": 0.0003499999999999684,
-            "tolerance": 0.000011465000000000001
-          },
-          {
-            "row": 7,
-            "time": 0.6,
-            "variable": "S4",
-            "expected": 0.01558,
-            "actual": 0.015999999999999962,
-            "absoluteError": 0.00041999999999996207,
-            "tolerance": 0.000011558
-          },
-          {
-            "row": 8,
-            "time": 0.7,
-            "variable": "S4",
-            "expected": 0.01651,
-            "actual": 0.016999999999999956,
-            "absoluteError": 0.0004899999999999557,
-            "tolerance": 0.000011651
-          },
-          {
-            "row": 9,
-            "time": 0.8,
-            "variable": "S4",
-            "expected": 0.01744,
-            "actual": 0.01799999999999995,
-            "absoluteError": 0.0005599999999999494,
-            "tolerance": 0.000011744000000000001
-          },
-          {
-            "row": 10,
-            "time": 0.9,
-            "variable": "S4",
-            "expected": 0.01837,
-            "actual": 0.018999999999999944,
-            "absoluteError": 0.0006299999999999431,
-            "tolerance": 0.000011837
-          },
-          {
-            "row": 11,
-            "time": 1,
-            "variable": "S4",
-            "expected": 0.0193,
-            "actual": 0.019999999999999938,
-            "absoluteError": 0.0006999999999999368,
-            "tolerance": 0.000011930000000000001
-          },
-          {
-            "row": 12,
-            "time": 1.1,
-            "variable": "S4",
-            "expected": 0.02023,
-            "actual": 0.020999999999999935,
-            "absoluteError": 0.0007699999999999339,
-            "tolerance": 0.000012023000000000002
-          },
-          {
-            "row": 13,
-            "time": 1.2,
-            "variable": "S4",
-            "expected": 0.02116,
-            "actual": 0.02199999999999993,
-            "absoluteError": 0.0008399999999999276,
-            "tolerance": 0.000012116
-          },
-          {
-            "row": 14,
-            "time": 1.3,
-            "variable": "S4",
-            "expected": 0.02209,
-            "actual": 0.022999999999999923,
-            "absoluteError": 0.0009099999999999248,
-            "tolerance": 0.000012209000000000001
-          },
-          {
-            "row": 15,
-            "time": 1.4,
-            "variable": "S4",
-            "expected": 0.02302,
-            "actual": 0.023999999999999917,
-            "absoluteError": 0.0009799999999999184,
-            "tolerance": 0.000012302000000000002
-          },
-          {
-            "row": 16,
-            "time": 1.5,
-            "variable": "S4",
-            "expected": 0.02395,
-            "actual": 0.024999999999999915,
-            "absoluteError": 0.0010499999999999156,
-            "tolerance": 0.000012395
-          },
-          {
-            "row": 17,
-            "time": 1.6,
-            "variable": "S4",
-            "expected": 0.02488,
-            "actual": 0.02599999999999991,
-            "absoluteError": 0.0011199999999999093,
-            "tolerance": 0.000012488000000000001
-          },
-          {
-            "row": 18,
-            "time": 1.7,
-            "variable": "S4",
-            "expected": 0.02581,
-            "actual": 0.026999999999999903,
-            "absoluteError": 0.001189999999999903,
-            "tolerance": 0.000012581
-          },
-          {
-            "row": 19,
-            "time": 1.8,
-            "variable": "S4",
-            "expected": 0.02674,
-            "actual": 0.0279999999999999,
-            "absoluteError": 0.0012599999999999,
-            "tolerance": 0.000012674000000000001
-          },
-          {
-            "row": 20,
-            "time": 1.9,
-            "variable": "S4",
-            "expected": 0.02767,
-            "actual": 0.028999999999999894,
-            "absoluteError": 0.0013299999999998938,
-            "tolerance": 0.000012767000000000002
-          },
-          {
-            "row": 21,
-            "time": 2,
-            "variable": "S4",
-            "expected": 0.0286,
-            "actual": 0.02999999999999989,
-            "absoluteError": 0.001399999999999891,
-            "tolerance": 0.00001286
-          }
-        ]
+        "maxAbsoluteError": 1.2418369204486579e-8
       },
       "simulationPlotPaths": [
         "00330/plot-001.png",
         "00330/plot-002.png",
         "00330/plot-003.png",
         "00330/plot-004.png"
-      ],
-      "error": {
-        "phase": "comparison",
-        "message": "Simulation results exceed the Semantic Test Suite tolerances"
-      }
+      ]
     },
     {
       "caseId": "00331",
@@ -12674,8 +12116,8 @@
             "time": 0.2,
             "variable": "S1",
             "expected": 0.06196212273334437,
-            "actual": 0.06608653409101607,
-            "absoluteError": 0.004124411357671699,
+            "actual": 0.06608653409101609,
+            "absoluteError": 0.004124411357671713,
             "tolerance": 0.00010619621227333445
           },
           {
@@ -23340,625 +22782,67 @@
       "caseId": "00670",
       "synopsis": "Two reactions with four species in one",
       "sourcePath": "semantic/00670/00670-sbml-l3v1.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00670/input.heta",
       "simulationInputPath": "00670/simulation-input.json",
       "outputs": {
         "simulation": "00670/simulation.csv"
       },
       "comparison": {
-        "status": "failed",
+        "status": "valid",
         "comparedValues": 204,
-        "maxAbsoluteError": 0.000005220179362874194,
-        "failures": [
-          {
-            "row": 2,
-            "time": 0.1,
-            "variable": "S2",
-            "expected": 0.00001547272290807239,
-            "actual": 0.000015189089163249192,
-            "absoluteError": 2.83633744823198e-7,
-            "tolerance": 1.1547272290807239e-8
-          },
-          {
-            "row": 3,
-            "time": 0.2,
-            "variable": "S2",
-            "expected": 0.00001592171686099901,
-            "actual": 0.00001536868674067157,
-            "absoluteError": 5.530301203274388e-7,
-            "tolerance": 1.15921716860999e-8
-          },
-          {
-            "row": 4,
-            "time": 0.3,
-            "variable": "S2",
-            "expected": 0.00001634817294963562,
-            "actual": 0.00001553926917523171,
-            "absoluteError": 8.089037744039105e-7,
-            "tolerance": 1.1634817294963563e-8
-          },
-          {
-            "row": 5,
-            "time": 0.4,
-            "variable": "S2",
-            "expected": 0.00001675322248439684,
-            "actual": 0.00001570128899419637,
-            "absoluteError": 0.00000105193349020047,
-            "tolerance": 1.1675322248439684e-8
-          },
-          {
-            "row": 6,
-            "time": 0.5,
-            "variable": "S2",
-            "expected": 0.00001713794003318384,
-            "actual": 0.00001585517600961522,
-            "absoluteError": 0.0000012827640235686194,
-            "tolerance": 1.1713794003318384e-8
-          },
-          {
-            "row": 7,
-            "time": 0.6,
-            "variable": "S2",
-            "expected": 0.00001750334615524839,
-            "actual": 0.000016001338458541834,
-            "absoluteError": 0.000001502007696706557,
-            "tolerance": 1.175033461552484e-8
-          },
-          {
-            "row": 8,
-            "time": 0.7,
-            "variable": "S2",
-            "expected": 0.0000178504102138709,
-            "actual": 0.000016140164086019743,
-            "absoluteError": 0.0000017102461278511583,
-            "tolerance": 1.178504102138709e-8
-          },
-          {
-            "row": 9,
-            "time": 0.8,
-            "variable": "S2",
-            "expected": 0.0000181800529450872,
-            "actual": 0.000016272021173706556,
-            "absoluteError": 0.0000019080317713806443,
-            "tolerance": 1.181800529450872e-8
-          },
-          {
-            "row": 10,
-            "time": 0.9,
-            "variable": "S2",
-            "expected": 0.00001849314879531206,
-            "actual": 0.000016397259516864872,
-            "absoluteError": 0.0000020958892784471885,
-            "tolerance": 1.1849314879531206e-8
-          },
-          {
-            "row": 11,
-            "time": 1,
-            "variable": "S2",
-            "expected": 0.0000187905283825987,
-            "actual": 0.00001651621135231187,
-            "absoluteError": 0.000002274317030286828,
-            "tolerance": 1.187905283825987e-8
-          },
-          {
-            "row": 12,
-            "time": 1.1,
-            "variable": "S2",
-            "expected": 0.00001907298061033766,
-            "actual": 0.000016629192239789127,
-            "absoluteError": 0.0000024437883705485345,
-            "tolerance": 1.1907298061033767e-8
-          },
-          {
-            "row": 13,
-            "time": 1.2,
-            "variable": "S2",
-            "expected": 0.00001934125474451172,
-            "actual": 0.000016736501899090997,
-            "absoluteError": 0.000002604752845420723,
-            "tolerance": 1.1934125474451172e-8
-          },
-          {
-            "row": 14,
-            "time": 1.3,
-            "variable": "S2",
-            "expected": 0.00001959606252093427,
-            "actual": 0.00001683842500517211,
-            "absoluteError": 0.0000027576375157621597,
-            "tolerance": 1.1959606252093427e-8
-          },
-          {
-            "row": 15,
-            "time": 1.4,
-            "variable": "S2",
-            "expected": 0.00001983807986193586,
-            "actual": 0.000016935231943343438,
-            "absoluteError": 0.0000029028479185924224,
-            "tolerance": 1.1983807986193586e-8
-          },
-          {
-            "row": 16,
-            "time": 1.5,
-            "variable": "S2",
-            "expected": 0.00002006794881713041,
-            "actual": 0.000017027179526560235,
-            "absoluteError": 0.000003040769290570175,
-            "tolerance": 1.200679488171304e-8
-          },
-          {
-            "row": 17,
-            "time": 1.6,
-            "variable": "S2",
-            "expected": 0.00002028627920117503,
-            "actual": 0.000017114511676704742,
-            "absoluteError": 0.0000031717675244702873,
-            "tolerance": 1.2028627920117503e-8
-          },
-          {
-            "row": 18,
-            "time": 1.7,
-            "variable": "S2",
-            "expected": 0.00002049365017529212,
-            "actual": 0.000017197460071671035,
-            "absoluteError": 0.0000032961901036210845,
-            "tolerance": 1.2049365017529213e-8
-          },
-          {
-            "row": 19,
-            "time": 1.8,
-            "variable": "S2",
-            "expected": 0.00002069061190914948,
-            "actual": 0.00001727624475996854,
-            "absoluteError": 0.000003414367149180939,
-            "tolerance": 1.2069061190914948e-8
-          },
-          {
-            "row": 20,
-            "time": 1.9,
-            "variable": "S2",
-            "expected": 0.00002087768685855639,
-            "actual": 0.000017351074744474645,
-            "absoluteError": 0.0000035266121140817454,
-            "tolerance": 1.208776868585564e-8
-          },
-          {
-            "row": 21,
-            "time": 2,
-            "variable": "S2",
-            "expected": 0.00002105537134774513,
-            "actual": 0.000017422148536885147,
-            "absoluteError": 0.000003633222810859983,
-            "tolerance": 1.2105537134774513e-8
-          }
-        ]
+        "maxAbsoluteError": 1.733451910116389e-14
       },
       "simulationPlotPaths": [
         "00670/plot-001.png",
         "00670/plot-002.png",
         "00670/plot-003.png",
         "00670/plot-004.png"
-      ],
-      "error": {
-        "phase": "comparison",
-        "message": "Simulation results exceed the Semantic Test Suite tolerances"
-      }
+      ]
     },
     {
       "caseId": "00671",
       "synopsis": "Two reactions with four species in one",
       "sourcePath": "semantic/00671/00671-sbml-l3v1.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00671/input.heta",
       "simulationInputPath": "00671/simulation-input.json",
       "outputs": {
         "simulation": "00671/simulation.csv"
       },
       "comparison": {
-        "status": "failed",
+        "status": "valid",
         "comparedValues": 204,
-        "maxAbsoluteError": 0.0000029726262789657547,
-        "failures": [
-          {
-            "row": 2,
-            "time": 0.3,
-            "variable": "S2",
-            "expected": 0.00001634817293824854,
-            "actual": 0.00001677391176063064,
-            "absoluteError": 4.257388223820987e-7,
-            "tolerance": 1.1634817293824854e-8
-          },
-          {
-            "row": 3,
-            "time": 0.6,
-            "variable": "S2",
-            "expected": 0.00001750334614455987,
-            "actual": 0.000018293876508361323,
-            "absoluteError": 7.905303638014545e-7,
-            "tolerance": 1.1750334614455987e-8
-          },
-          {
-            "row": 4,
-            "time": 0.9,
-            "variable": "S2",
-            "expected": 0.00001849314879048961,
-            "actual": 0.000019596248410739773,
-            "absoluteError": 0.0000011030996202501623,
-            "tolerance": 1.1849314879048961e-8
-          },
-          {
-            "row": 5,
-            "time": 1.2,
-            "variable": "S2",
-            "expected": 0.00001934125475071857,
-            "actual": 0.000020712177299641475,
-            "absoluteError": 0.0000013709225489229042,
-            "tolerance": 1.1934125475071858e-8
-          },
-          {
-            "row": 6,
-            "time": 1.5,
-            "variable": "S2",
-            "expected": 0.00002006794882594152,
-            "actual": 0.000021668353705790253,
-            "absoluteError": 0.0000016004048798487316,
-            "tolerance": 1.2006794882594153e-8
-          },
-          {
-            "row": 7,
-            "time": 1.8,
-            "variable": "S2",
-            "expected": 0.00002069061190527839,
-            "actual": 0.000022487647236738648,
-            "absoluteError": 0.0000017970353314602576,
-            "tolerance": 1.2069061190527839e-8
-          },
-          {
-            "row": 8,
-            "time": 2.1,
-            "variable": "S2",
-            "expected": 0.00002122413670645853,
-            "actual": 0.000023189653566885908,
-            "absoluteError": 0.000001965516860427378,
-            "tolerance": 1.2122413670645854e-8
-          },
-          {
-            "row": 9,
-            "time": 2.4,
-            "variable": "S2",
-            "expected": 0.00002168128398036123,
-            "actual": 0.000023791163122315138,
-            "absoluteError": 0.000002109879141953907,
-            "tolerance": 1.2168128398036122e-8
-          },
-          {
-            "row": 10,
-            "time": 2.7,
-            "variable": "S2",
-            "expected": 0.00002207298762855752,
-            "actual": 0.00002430656267034597,
-            "absoluteError": 0.0000022335750417884484,
-            "tolerance": 1.2207298762855753e-8
-          },
-          {
-            "row": 11,
-            "time": 3,
-            "variable": "S2",
-            "expected": 0.00002240861636134248,
-            "actual": 0.000024748179418929164,
-            "absoluteError": 0.0000023395630575866827,
-            "tolerance": 1.224086163613425e-8
-          },
-          {
-            "row": 12,
-            "time": 3.3,
-            "variable": "S2",
-            "expected": 0.00002269619765037861,
-            "actual": 0.000025126575855973627,
-            "absoluteError": 0.000002430378205595018,
-            "tolerance": 1.2269619765037861e-8
-          },
-          {
-            "row": 13,
-            "time": 3.6,
-            "variable": "S2",
-            "expected": 0.00002294260981399005,
-            "actual": 0.000025450802380504922,
-            "absoluteError": 0.000002508192566514872,
-            "tolerance": 1.2294260981399006e-8
-          },
-          {
-            "row": 14,
-            "time": 3.9,
-            "variable": "S2",
-            "expected": 0.00002315374645755412,
-            "actual": 0.000025728613768029427,
-            "absoluteError": 0.0000025748673104753065,
-            "tolerance": 1.2315374645755413e-8
-          },
-          {
-            "row": 15,
-            "time": 4.2,
-            "variable": "S2",
-            "expected": 0.00002333465753915935,
-            "actual": 0.000025966654647472765,
-            "absoluteError": 0.0000026319971083134162,
-            "tolerance": 1.2333465753915935e-8
-          },
-          {
-            "row": 16,
-            "time": 4.5,
-            "variable": "S2",
-            "expected": 0.00002348967000469,
-            "actual": 0.00002617061842588757,
-            "absoluteError": 0.00000268094842119757,
-            "tolerance": 1.2348967000469001e-8
-          },
-          {
-            "row": 17,
-            "time": 4.8,
-            "variable": "S2",
-            "expected": 0.00002362249142443949,
-            "actual": 0.000026345383462055003,
-            "absoluteError": 0.000002722892037615512,
-            "tolerance": 1.236224914244395e-8
-          },
-          {
-            "row": 18,
-            "time": 5.1,
-            "variable": "S2",
-            "expected": 0.0000237362986091734,
-            "actual": 0.000026495129745949048,
-            "absoluteError": 0.0000027588311367756476,
-            "tolerance": 1.237362986091734e-8
-          },
-          {
-            "row": 19,
-            "time": 5.4,
-            "variable": "S2",
-            "expected": 0.00002383381355195243,
-            "actual": 0.00002662343887477612,
-            "absoluteError": 0.00000278962532282369,
-            "tolerance": 1.2383381355195244e-8
-          },
-          {
-            "row": 20,
-            "time": 5.7,
-            "variable": "S2",
-            "expected": 0.00002391736858846766,
-            "actual": 0.000026733379716794018,
-            "absoluteError": 0.000002816011128326357,
-            "tolerance": 1.2391736858846767e-8
-          },
-          {
-            "row": 21,
-            "time": 6,
-            "variable": "S2",
-            "expected": 0.0000239889621752193,
-            "actual": 0.000026827581811797673,
-            "absoluteError": 0.0000028386196365783743,
-            "tolerance": 1.239889621752193e-8
-          }
-        ]
+        "maxAbsoluteError": 1.431139752604109e-14
       },
       "simulationPlotPaths": [
         "00671/plot-001.png",
         "00671/plot-002.png",
         "00671/plot-003.png",
         "00671/plot-004.png"
-      ],
-      "error": {
-        "phase": "comparison",
-        "message": "Simulation results exceed the Semantic Test Suite tolerances"
-      }
+      ]
     },
     {
       "caseId": "00672",
       "synopsis": "Two reactions with four species in one",
       "sourcePath": "semantic/00672/00672-sbml-l3v1.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00672/input.heta",
       "simulationInputPath": "00672/simulation-input.json",
       "outputs": {
         "simulation": "00672/simulation.csv"
       },
       "comparison": {
-        "status": "failed",
+        "status": "valid",
         "comparedValues": 204,
-        "maxAbsoluteError": 0.000002675102842948554,
-        "failures": [
-          {
-            "row": 2,
-            "time": 0.2,
-            "variable": "S2",
-            "expected": 0.00001592171686336574,
-            "actual": 0.000015658369179770662,
-            "absoluteError": 2.63347683595077e-7,
-            "tolerance": 1.1592171686336573e-8
-          },
-          {
-            "row": 3,
-            "time": 0.4,
-            "variable": "S2",
-            "expected": 0.0000167532224938544,
-            "actual": 0.000016252301775350676,
-            "absoluteError": 5.009207185037226e-7,
-            "tolerance": 1.1675322249385441e-8
-          },
-          {
-            "row": 4,
-            "time": 0.6,
-            "variable": "S2",
-            "expected": 0.0000175033461446473,
-            "actual": 0.000016788104390253304,
-            "absoluteError": 7.152417543939957e-7,
-            "tolerance": 1.175033461446473e-8
-          },
-          {
-            "row": 5,
-            "time": 0.8,
-            "variable": "S2",
-            "expected": 0.00001818005293978571,
-            "actual": 0.000017271466381618893,
-            "absoluteError": 9.085865581668162e-7,
-            "tolerance": 1.181800529397857e-8
-          },
-          {
-            "row": 6,
-            "time": 1,
-            "variable": "S2",
-            "expected": 0.00001879052839194028,
-            "actual": 0.000017707520271985526,
-            "absoluteError": 0.0000010830081199547543,
-            "tolerance": 1.1879052839194028e-8
-          },
-          {
-            "row": 7,
-            "time": 1.2,
-            "variable": "S2",
-            "expected": 0.000019341254753172,
-            "actual": 0.000018100896248376813,
-            "absoluteError": 0.000001240358504795188,
-            "tolerance": 1.19341254753172e-8
-          },
-          {
-            "row": 8,
-            "time": 1.4,
-            "variable": "S2",
-            "expected": 0.0000198380798563247,
-            "actual": 0.00001845577132739903,
-            "absoluteError": 0.0000013823085289256688,
-            "tolerance": 1.198380798563247e-8
-          },
-          {
-            "row": 9,
-            "time": 1.6,
-            "variable": "S2",
-            "expected": 0.00002028627918819784,
-            "actual": 0.000018775913708401355,
-            "absoluteError": 0.000001510365479796486,
-            "tolerance": 1.2028627918819785e-8
-          },
-          {
-            "row": 10,
-            "time": 1.8,
-            "variable": "S2",
-            "expected": 0.00002069061190223708,
-            "actual": 0.000019064722785658154,
-            "absoluteError": 0.0000016258891165789274,
-            "tolerance": 1.2069061190223708e-8
-          },
-          {
-            "row": 11,
-            "time": 2,
-            "variable": "S2",
-            "expected": 0.00002105537134947852,
-            "actual": 0.000019325265244437815,
-            "absoluteError": 0.0000017301061050407035,
-            "tolerance": 1.2105537134947852e-8
-          },
-          {
-            "row": 12,
-            "time": 2.2,
-            "variable": "S2",
-            "expected": 0.00002138443068295208,
-            "actual": 0.000019560307624240147,
-            "absoluteError": 0.0000018241230587119342,
-            "tolerance": 1.213844306829521e-8
-          },
-          {
-            "row": 13,
-            "time": 2.4,
-            "variable": "S2",
-            "expected": 0.00002168128398152093,
-            "actual": 0.00001977234569497112,
-            "absoluteError": 0.0000019089382865498114,
-            "tolerance": 1.2168128398152093e-8
-          },
-          {
-            "row": 14,
-            "time": 2.6,
-            "variable": "S2",
-            "expected": 0.00002194908334842872,
-            "actual": 0.000019963630957982505,
-            "absoluteError": 0.0000019854523904462154,
-            "tolerance": 1.2194908334842872e-8
-          },
-          {
-            "row": 15,
-            "time": 2.8,
-            "variable": "S2",
-            "expected": 0.00002219067238072236,
-            "actual": 0.000020136194553374582,
-            "absoluteError": 0.0000020544778273477787,
-            "tolerance": 1.2219067238072237e-8
-          },
-          {
-            "row": 16,
-            "time": 3,
-            "variable": "S2",
-            "expected": 0.00002240861636362842,
-            "actual": 0.00002029186882741872,
-            "absoluteError": 0.000002116747536209699,
-            "tolerance": 1.2240861636362842e-8
-          },
-          {
-            "row": 17,
-            "time": 3.2,
-            "variable": "S2",
-            "expected": 0.00002260522950989352,
-            "actual": 0.0000204323067891111,
-            "absoluteError": 0.00000217292272078242,
-            "tolerance": 1.2260522950989352e-8
-          },
-          {
-            "row": 18,
-            "time": 3.4,
-            "variable": "S2",
-            "expected": 0.00002278259953309373,
-            "actual": 0.00002055899966245456,
-            "absoluteError": 0.00000222359987063917,
-            "tolerance": 1.2278259953309373e-8
-          },
-          {
-            "row": 19,
-            "time": 3.6,
-            "variable": "S2",
-            "expected": 0.00002294260981578046,
-            "actual": 0.000020673292720845572,
-            "absoluteError": 0.000002269317094934889,
-            "tolerance": 1.2294260981578047e-8
-          },
-          {
-            "row": 20,
-            "time": 3.8,
-            "variable": "S2",
-            "expected": 0.0000230869594078728,
-            "actual": 0.0000207763995717018,
-            "absoluteError": 0.000002310559836170999,
-            "tolerance": 1.230869594078728e-8
-          },
-          {
-            "row": 21,
-            "time": 4,
-            "variable": "S2",
-            "expected": 0.00002321718106773181,
-            "actual": 0.000020869415043009943,
-            "absoluteError": 0.000002347766024721868,
-            "tolerance": 1.232171810677318e-8
-          }
-        ]
+        "maxAbsoluteError": 1.75302243695611e-14
       },
       "simulationPlotPaths": [
         "00672/plot-001.png",
         "00672/plot-002.png",
         "00672/plot-003.png",
         "00672/plot-004.png"
-      ],
-      "error": {
-        "phase": "comparison",
-        "message": "Simulation results exceed the Semantic Test Suite tolerances"
-      }
+      ]
     },
     {
       "caseId": "00673",
@@ -24768,209 +23652,23 @@
       "caseId": "00686",
       "synopsis": "Two reactions with four species in one",
       "sourcePath": "semantic/00686/00686-sbml-l3v1.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00686/input.heta",
       "simulationInputPath": "00686/simulation-input.json",
       "outputs": {
         "simulation": "00686/simulation.csv"
       },
       "comparison": {
-        "status": "failed",
+        "status": "valid",
         "comparedValues": 204,
-        "maxAbsoluteError": 0.000005617715977910525,
-        "failures": [
-          {
-            "row": 2,
-            "time": 0.2,
-            "variable": "S2",
-            "expected": 0.00001592171685585319,
-            "actual": 0.00001536868674067157,
-            "absoluteError": 5.530301151816188e-7,
-            "tolerance": 1.159217168558532e-8
-          },
-          {
-            "row": 3,
-            "time": 0.4,
-            "variable": "S2",
-            "expected": 0.0000167532224973336,
-            "actual": 0.000015701288994196382,
-            "absoluteError": 0.0000010519335031372178,
-            "tolerance": 1.167532224973336e-8
-          },
-          {
-            "row": 4,
-            "time": 0.6,
-            "variable": "S2",
-            "expected": 0.00001750334614832108,
-            "actual": 0.000016001338458541844,
-            "absoluteError": 0.0000015020076897792369,
-            "tolerance": 1.1750334614832108e-8
-          },
-          {
-            "row": 5,
-            "time": 0.8,
-            "variable": "S2",
-            "expected": 0.00001818005293210199,
-            "actual": 0.000016272021173706573,
-            "absoluteError": 0.0000019080317583954157,
-            "tolerance": 1.1818005293210199e-8
-          },
-          {
-            "row": 6,
-            "time": 1,
-            "variable": "S2",
-            "expected": 0.00001879052838875793,
-            "actual": 0.000016516211352311882,
-            "absoluteError": 0.0000022743170364460483,
-            "tolerance": 1.1879052838875793e-8
-          },
-          {
-            "row": 7,
-            "time": 1.2,
-            "variable": "S2",
-            "expected": 0.00001934125475743994,
-            "actual": 0.000016736501899091004,
-            "absoluteError": 0.000002604752858348936,
-            "tolerance": 1.1934125475743994e-8
-          },
-          {
-            "row": 8,
-            "time": 1.4,
-            "variable": "S2",
-            "expected": 0.00001983807986168667,
-            "actual": 0.000016935231943343444,
-            "absoluteError": 0.0000029028479183432253,
-            "tolerance": 1.1983807986168668e-8
-          },
-          {
-            "row": 9,
-            "time": 1.6,
-            "variable": "S2",
-            "expected": 0.00002028627918874568,
-            "actual": 0.000017114511676704742,
-            "absoluteError": 0.0000031717675120409394,
-            "tolerance": 1.2028627918874568e-8
-          },
-          {
-            "row": 10,
-            "time": 1.8,
-            "variable": "S2",
-            "expected": 0.00002069061189542579,
-            "actual": 0.000017276244759968548,
-            "absoluteError": 0.0000034143671354572434,
-            "tolerance": 1.206906118954258e-8
-          },
-          {
-            "row": 11,
-            "time": 2,
-            "variable": "S2",
-            "expected": 0.00002105537134218619,
-            "actual": 0.000017422148536885154,
-            "absoluteError": 0.0000036332228053010345,
-            "tolerance": 1.210553713421862e-8
-          },
-          {
-            "row": 12,
-            "time": 2.2,
-            "variable": "S2",
-            "expected": 0.00002138443067851054,
-            "actual": 0.000017553772269574454,
-            "absoluteError": 0.000003830658408936084,
-            "tolerance": 1.2138443067851055e-8
-          },
-          {
-            "row": 13,
-            "time": 2.4,
-            "variable": "S2",
-            "expected": 0.00002168128398014249,
-            "actual": 0.00001767251358918379,
-            "absoluteError": 0.000004008770390958698,
-            "tolerance": 1.2168128398014248e-8
-          },
-          {
-            "row": 14,
-            "time": 2.6,
-            "variable": "S2",
-            "expected": 0.00002194908334932253,
-            "actual": 0.000017779633336470173,
-            "absoluteError": 0.000004169450012852357,
-            "tolerance": 1.2194908334932254e-8
-          },
-          {
-            "row": 15,
-            "time": 2.8,
-            "variable": "S2",
-            "expected": 0.00002219067238298232,
-            "actual": 0.00001787626894988974,
-            "absoluteError": 0.00000431440343309258,
-            "tolerance": 1.2219067238298232e-8
-          },
-          {
-            "row": 16,
-            "time": 3,
-            "variable": "S2",
-            "expected": 0.00002240861636649318,
-            "actual": 0.00001796344654335446,
-            "absoluteError": 0.000004445169823138722,
-            "tolerance": 1.2240861636649318e-8
-          },
-          {
-            "row": 17,
-            "time": 3.2,
-            "variable": "S2",
-            "expected": 0.00002260522951272398,
-            "actual": 0.00001804209180190219,
-            "absoluteError": 0.000004563137710821787,
-            "tolerance": 1.2260522951272398e-8
-          },
-          {
-            "row": 18,
-            "time": 3.4,
-            "variable": "S2",
-            "expected": 0.00002278259953525527,
-            "actual": 0.00001811303981097453,
-            "absoluteError": 0.000004669559724280741,
-            "tolerance": 1.2278259953525528e-8
-          },
-          {
-            "row": 19,
-            "time": 3.6,
-            "variable": "S2",
-            "expected": 0.00002294260981654122,
-            "actual": 0.000018177043923673488,
-            "absoluteError": 0.000004765565892867731,
-            "tolerance": 1.2294260981654121e-8
-          },
-          {
-            "row": 20,
-            "time": 3.8,
-            "variable": "S2",
-            "expected": 0.00002308695940641623,
-            "actual": 0.00001823478376015297,
-            "absoluteError": 0.000004852175646263258,
-            "tolerance": 1.2308695940641624e-8
-          },
-          {
-            "row": 21,
-            "time": 4,
-            "variable": "S2",
-            "expected": 0.00002321718106341819,
-            "actual": 0.000018286872424085523,
-            "absoluteError": 0.000004930308639332667,
-            "tolerance": 1.2321718106341819e-8
-          }
-        ]
+        "maxAbsoluteError": 1.776399529860792e-14
       },
       "simulationPlotPaths": [
         "00686/plot-001.png",
         "00686/plot-002.png",
         "00686/plot-003.png",
         "00686/plot-004.png"
-      ],
-      "error": {
-        "phase": "comparison",
-        "message": "Simulation results exceed the Semantic Test Suite tolerances"
-      }
+      ]
     },
     {
       "caseId": "00687",
@@ -25964,624 +24662,66 @@
       "caseId": "00709",
       "synopsis": "One reactions and two rate rules with four species in a compartment.",
       "sourcePath": "semantic/00709/00709-sbml-l3v1.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00709/input.heta",
       "simulationInputPath": "00709/simulation-input.json",
       "outputs": {
         "simulation": "00709/simulation.csv"
       },
       "comparison": {
-        "status": "failed",
+        "status": "valid",
         "comparedValues": 204,
-        "maxAbsoluteError": 3.7500000000001545,
-        "failures": [
-          {
-            "row": 2,
-            "time": 0.2,
-            "variable": "S3",
-            "expected": 1.575,
-            "actual": 1.650000000000001,
-            "absoluteError": 0.07500000000000107,
-            "tolerance": 0.0101575
-          },
-          {
-            "row": 2,
-            "time": 0.2,
-            "variable": "S4",
-            "expected": 3.975,
-            "actual": 3.9500000000000006,
-            "absoluteError": 0.024999999999999467,
-            "tolerance": 0.0103975
-          },
-          {
-            "row": 3,
-            "time": 0.4,
-            "variable": "S3",
-            "expected": 1.65,
-            "actual": 1.800000000000002,
-            "absoluteError": 0.15000000000000213,
-            "tolerance": 0.010165
-          },
-          {
-            "row": 3,
-            "time": 0.4,
-            "variable": "S4",
-            "expected": 3.95,
-            "actual": 3.9000000000000017,
-            "absoluteError": 0.04999999999999849,
-            "tolerance": 0.010395
-          },
-          {
-            "row": 4,
-            "time": 0.6,
-            "variable": "S3",
-            "expected": 1.725,
-            "actual": 1.9500000000000028,
-            "absoluteError": 0.22500000000000275,
-            "tolerance": 0.010172500000000001
-          },
-          {
-            "row": 4,
-            "time": 0.6,
-            "variable": "S4",
-            "expected": 3.925,
-            "actual": 3.8500000000000023,
-            "absoluteError": 0.07499999999999751,
-            "tolerance": 0.0103925
-          },
-          {
-            "row": 5,
-            "time": 0.8,
-            "variable": "S3",
-            "expected": 1.8,
-            "actual": 2.1000000000000014,
-            "absoluteError": 0.3000000000000014,
-            "tolerance": 0.01018
-          },
-          {
-            "row": 5,
-            "time": 0.8,
-            "variable": "S4",
-            "expected": 3.9,
-            "actual": 3.8000000000000034,
-            "absoluteError": 0.09999999999999654,
-            "tolerance": 0.01039
-          },
-          {
-            "row": 6,
-            "time": 1,
-            "variable": "S3",
-            "expected": 1.875,
-            "actual": 2.2499999999999982,
-            "absoluteError": 0.3749999999999982,
-            "tolerance": 0.0101875
-          },
-          {
-            "row": 6,
-            "time": 1,
-            "variable": "S4",
-            "expected": 3.875,
-            "actual": 3.750000000000004,
-            "absoluteError": 0.124999999999996,
-            "tolerance": 0.010387500000000001
-          },
-          {
-            "row": 7,
-            "time": 1.2,
-            "variable": "S3",
-            "expected": 1.95,
-            "actual": 2.3999999999999955,
-            "absoluteError": 0.4499999999999955,
-            "tolerance": 0.010195000000000001
-          },
-          {
-            "row": 7,
-            "time": 1.2,
-            "variable": "S4",
-            "expected": 3.85,
-            "actual": 3.7000000000000046,
-            "absoluteError": 0.14999999999999547,
-            "tolerance": 0.010385
-          },
-          {
-            "row": 8,
-            "time": 1.4,
-            "variable": "S3",
-            "expected": 2.025,
-            "actual": 2.5499999999999923,
-            "absoluteError": 0.5249999999999924,
-            "tolerance": 0.0102025
-          },
-          {
-            "row": 8,
-            "time": 1.4,
-            "variable": "S4",
-            "expected": 3.825,
-            "actual": 3.6500000000000057,
-            "absoluteError": 0.1749999999999945,
-            "tolerance": 0.0103825
-          },
-          {
-            "row": 9,
-            "time": 1.6,
-            "variable": "S3",
-            "expected": 2.1,
-            "actual": 2.6999999999999895,
-            "absoluteError": 0.5999999999999894,
-            "tolerance": 0.01021
-          },
-          {
-            "row": 9,
-            "time": 1.6,
-            "variable": "S4",
-            "expected": 3.8,
-            "actual": 3.6000000000000063,
-            "absoluteError": 0.19999999999999352,
-            "tolerance": 0.01038
-          },
-          {
-            "row": 10,
-            "time": 1.8,
-            "variable": "S3",
-            "expected": 2.175,
-            "actual": 2.8499999999999868,
-            "absoluteError": 0.6749999999999869,
-            "tolerance": 0.010217500000000001
-          },
-          {
-            "row": 10,
-            "time": 1.8,
-            "variable": "S4",
-            "expected": 3.775,
-            "actual": 3.550000000000007,
-            "absoluteError": 0.22499999999999298,
-            "tolerance": 0.0103775
-          },
-          {
-            "row": 11,
-            "time": 2,
-            "variable": "S3",
-            "expected": 2.25,
-            "actual": 2.9999999999999836,
-            "absoluteError": 0.7499999999999836,
-            "tolerance": 0.010225
-          },
-          {
-            "row": 11,
-            "time": 2,
-            "variable": "S4",
-            "expected": 3.75,
-            "actual": 3.500000000000008,
-            "absoluteError": 0.249999999999992,
-            "tolerance": 0.010375
-          }
-        ]
+        "maxAbsoluteError": 0.0000050582490427331095
       },
       "simulationPlotPaths": [
         "00709/plot-001.png",
         "00709/plot-002.png",
         "00709/plot-003.png",
         "00709/plot-004.png"
-      ],
-      "error": {
-        "phase": "comparison",
-        "message": "Simulation results exceed the Semantic Test Suite tolerances"
-      }
+      ]
     },
     {
       "caseId": "00710",
       "synopsis": "Basic reaction and rate rule with three species in a compartment.",
       "sourcePath": "semantic/00710/00710-sbml-l3v1.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00710/input.heta",
       "simulationInputPath": "00710/simulation-input.json",
       "outputs": {
         "simulation": "00710/simulation.csv"
       },
       "comparison": {
-        "status": "failed",
+        "status": "valid",
         "comparedValues": 153,
-        "maxAbsoluteError": 0.6428571428571281,
-        "failures": [
-          {
-            "row": 2,
-            "time": 0.2,
-            "variable": "S3",
-            "expected": 0.03,
-            "actual": 0.017142857142857137,
-            "absoluteError": 0.012857142857142862,
-            "tolerance": 0.001003
-          },
-          {
-            "row": 3,
-            "time": 0.4,
-            "variable": "S3",
-            "expected": 0.06,
-            "actual": 0.03428571428571429,
-            "absoluteError": 0.02571428571428571,
-            "tolerance": 0.001006
-          },
-          {
-            "row": 4,
-            "time": 0.6,
-            "variable": "S3",
-            "expected": 0.09,
-            "actual": 0.05142857142857143,
-            "absoluteError": 0.03857142857142857,
-            "tolerance": 0.001009
-          },
-          {
-            "row": 5,
-            "time": 0.8,
-            "variable": "S3",
-            "expected": 0.12,
-            "actual": 0.06857142857142857,
-            "absoluteError": 0.05142857142857142,
-            "tolerance": 0.001012
-          },
-          {
-            "row": 6,
-            "time": 1,
-            "variable": "S3",
-            "expected": 0.15,
-            "actual": 0.08571428571428572,
-            "absoluteError": 0.06428571428571428,
-            "tolerance": 0.001015
-          },
-          {
-            "row": 7,
-            "time": 1.2,
-            "variable": "S3",
-            "expected": 0.18,
-            "actual": 0.10285714285714287,
-            "absoluteError": 0.07714285714285712,
-            "tolerance": 0.001018
-          },
-          {
-            "row": 8,
-            "time": 1.4,
-            "variable": "S3",
-            "expected": 0.21,
-            "actual": 0.12000000000000002,
-            "absoluteError": 0.08999999999999997,
-            "tolerance": 0.001021
-          },
-          {
-            "row": 9,
-            "time": 1.6,
-            "variable": "S3",
-            "expected": 0.24,
-            "actual": 0.1371428571428572,
-            "absoluteError": 0.10285714285714279,
-            "tolerance": 0.001024
-          },
-          {
-            "row": 10,
-            "time": 1.8,
-            "variable": "S3",
-            "expected": 0.27,
-            "actual": 0.15428571428571433,
-            "absoluteError": 0.11571428571428569,
-            "tolerance": 0.001027
-          },
-          {
-            "row": 11,
-            "time": 2,
-            "variable": "S3",
-            "expected": 0.3,
-            "actual": 0.17142857142857146,
-            "absoluteError": 0.12857142857142853,
-            "tolerance": 0.00103
-          },
-          {
-            "row": 12,
-            "time": 2.2,
-            "variable": "S3",
-            "expected": 0.33,
-            "actual": 0.188571428571429,
-            "absoluteError": 0.14142857142857101,
-            "tolerance": 0.001033
-          },
-          {
-            "row": 13,
-            "time": 2.4,
-            "variable": "S3",
-            "expected": 0.36,
-            "actual": 0.20571428571428646,
-            "absoluteError": 0.15428571428571353,
-            "tolerance": 0.001036
-          },
-          {
-            "row": 14,
-            "time": 2.6,
-            "variable": "S3",
-            "expected": 0.39,
-            "actual": 0.222857142857144,
-            "absoluteError": 0.167142857142856,
-            "tolerance": 0.001039
-          },
-          {
-            "row": 15,
-            "time": 2.8,
-            "variable": "S3",
-            "expected": 0.42,
-            "actual": 0.2400000000000015,
-            "absoluteError": 0.1799999999999985,
-            "tolerance": 0.001042
-          },
-          {
-            "row": 16,
-            "time": 3,
-            "variable": "S3",
-            "expected": 0.45,
-            "actual": 0.257142857142859,
-            "absoluteError": 0.192857142857141,
-            "tolerance": 0.001045
-          },
-          {
-            "row": 17,
-            "time": 3.2,
-            "variable": "S3",
-            "expected": 0.48,
-            "actual": 0.2742857142857165,
-            "absoluteError": 0.20571428571428346,
-            "tolerance": 0.001048
-          },
-          {
-            "row": 18,
-            "time": 3.4,
-            "variable": "S3",
-            "expected": 0.51,
-            "actual": 0.29142857142857387,
-            "absoluteError": 0.21857142857142614,
-            "tolerance": 0.001051
-          },
-          {
-            "row": 19,
-            "time": 3.6,
-            "variable": "S3",
-            "expected": 0.54,
-            "actual": 0.3085714285714308,
-            "absoluteError": 0.23142857142856926,
-            "tolerance": 0.001054
-          },
-          {
-            "row": 20,
-            "time": 3.8,
-            "variable": "S3",
-            "expected": 0.57,
-            "actual": 0.3257142857142877,
-            "absoluteError": 0.24428571428571227,
-            "tolerance": 0.001057
-          },
-          {
-            "row": 21,
-            "time": 4,
-            "variable": "S3",
-            "expected": 0.6,
-            "actual": 0.34285714285714464,
-            "absoluteError": 0.25714285714285534,
-            "tolerance": 0.00106
-          }
-        ]
+        "maxAbsoluteError": 0.000005857636304895664
       },
       "simulationPlotPaths": [
         "00710/plot-001.png",
         "00710/plot-002.png",
         "00710/plot-003.png"
-      ],
-      "error": {
-        "phase": "comparison",
-        "message": "Simulation results exceed the Semantic Test Suite tolerances"
-      }
+      ]
     },
     {
       "caseId": "00711",
       "synopsis": "Two reactions and a rate rule with four species in a compartment.",
       "sourcePath": "semantic/00711/00711-sbml-l3v1.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00711/input.heta",
       "simulationInputPath": "00711/simulation-input.json",
       "outputs": {
         "simulation": "00711/simulation.csv"
       },
       "comparison": {
-        "status": "failed",
+        "status": "valid",
         "comparedValues": 204,
-        "maxAbsoluteError": 0.00003763440860215877,
-        "failures": [
-          {
-            "row": 2,
-            "time": 0.1,
-            "variable": "S4",
-            "expected": 0.00011,
-            "actual": 0.00011075268817204299,
-            "absoluteError": 7.526881720429872e-7,
-            "tolerance": 1.11e-7
-          },
-          {
-            "row": 3,
-            "time": 0.2,
-            "variable": "S4",
-            "expected": 0.00012,
-            "actual": 0.00012150537634408596,
-            "absoluteError": 0.000001505376344085961,
-            "tolerance": 1.12e-7
-          },
-          {
-            "row": 4,
-            "time": 0.3,
-            "variable": "S4",
-            "expected": 0.00013,
-            "actual": 0.00013225806451612894,
-            "absoluteError": 0.000002258064516128948,
-            "tolerance": 1.1299999999999999e-7
-          },
-          {
-            "row": 5,
-            "time": 0.4,
-            "variable": "S4",
-            "expected": 0.00014,
-            "actual": 0.00014301075268817194,
-            "absoluteError": 0.000003010752688171949,
-            "tolerance": 1.1399999999999999e-7
-          },
-          {
-            "row": 6,
-            "time": 0.5,
-            "variable": "S4",
-            "expected": 0.00015,
-            "actual": 0.00015376344086021494,
-            "absoluteError": 0.0000037634408602149497,
-            "tolerance": 1.15e-7
-          },
-          {
-            "row": 7,
-            "time": 0.6,
-            "variable": "S4",
-            "expected": 0.00016,
-            "actual": 0.0001645161290322579,
-            "absoluteError": 0.000004516129032257896,
-            "tolerance": 1.1599999999999999e-7
-          },
-          {
-            "row": 8,
-            "time": 0.7,
-            "variable": "S4",
-            "expected": 0.00017,
-            "actual": 0.00017526881720430086,
-            "absoluteError": 0.000005268817204300843,
-            "tolerance": 1.17e-7
-          },
-          {
-            "row": 9,
-            "time": 0.8,
-            "variable": "S4",
-            "expected": 0.00018,
-            "actual": 0.00018602150537634388,
-            "absoluteError": 0.000006021505376343871,
-            "tolerance": 1.18e-7
-          },
-          {
-            "row": 10,
-            "time": 0.9,
-            "variable": "S4",
-            "expected": 0.00019,
-            "actual": 0.00019677419354838685,
-            "absoluteError": 0.000006774193548386844,
-            "tolerance": 1.19e-7
-          },
-          {
-            "row": 11,
-            "time": 1,
-            "variable": "S4",
-            "expected": 0.0002000000000000001,
-            "actual": 0.00020752688172042983,
-            "absoluteError": 0.000007526881720429737,
-            "tolerance": 1.2000000000000002e-7
-          },
-          {
-            "row": 12,
-            "time": 1.1,
-            "variable": "S4",
-            "expected": 0.0002100000000000001,
-            "actual": 0.00021827956989247285,
-            "absoluteError": 0.000008279569892472765,
-            "tolerance": 1.21e-7
-          },
-          {
-            "row": 13,
-            "time": 1.2,
-            "variable": "S4",
-            "expected": 0.0002200000000000001,
-            "actual": 0.00022903225806451583,
-            "absoluteError": 0.000009032258064515738,
-            "tolerance": 1.22e-7
-          },
-          {
-            "row": 14,
-            "time": 1.3,
-            "variable": "S4",
-            "expected": 0.0002300000000000001,
-            "actual": 0.0002397849462365588,
-            "absoluteError": 0.000009784946236558712,
-            "tolerance": 1.23e-7
-          },
-          {
-            "row": 15,
-            "time": 1.4,
-            "variable": "S4",
-            "expected": 0.0002400000000000001,
-            "actual": 0.0002505376344086018,
-            "absoluteError": 0.000010537634408601686,
-            "tolerance": 1.24e-7
-          },
-          {
-            "row": 16,
-            "time": 1.5,
-            "variable": "S4",
-            "expected": 0.0002500000000000001,
-            "actual": 0.0002612903225806448,
-            "absoluteError": 0.00001129032258064466,
-            "tolerance": 1.2500000000000002e-7
-          },
-          {
-            "row": 17,
-            "time": 1.6,
-            "variable": "S4",
-            "expected": 0.0002600000000000001,
-            "actual": 0.00027204301075268794,
-            "absoluteError": 0.00001204301075268785,
-            "tolerance": 1.2600000000000002e-7
-          },
-          {
-            "row": 18,
-            "time": 1.7,
-            "variable": "S4",
-            "expected": 0.0002700000000000001,
-            "actual": 0.0002827956989247312,
-            "absoluteError": 0.000012795698924731095,
-            "tolerance": 1.27e-7
-          },
-          {
-            "row": 19,
-            "time": 1.8,
-            "variable": "S4",
-            "expected": 0.00028,
-            "actual": 0.0002935483870967745,
-            "absoluteError": 0.000013548387096774502,
-            "tolerance": 1.2799999999999998e-7
-          },
-          {
-            "row": 20,
-            "time": 1.9,
-            "variable": "S4",
-            "expected": 0.0002900000000000001,
-            "actual": 0.00030430107526881775,
-            "absoluteError": 0.000014301075268817638,
-            "tolerance": 1.29e-7
-          },
-          {
-            "row": 21,
-            "time": 2,
-            "variable": "S4",
-            "expected": 0.0003,
-            "actual": 0.000315053763440861,
-            "absoluteError": 0.000015053763440861046,
-            "tolerance": 1.3e-7
-          }
-        ]
+        "maxAbsoluteError": 8.52962847922023e-11
       },
       "simulationPlotPaths": [
         "00711/plot-001.png",
         "00711/plot-002.png",
         "00711/plot-003.png",
         "00711/plot-004.png"
-      ],
-      "error": {
-        "phase": "comparison",
-        "message": "Simulation results exceed the Semantic Test Suite tolerances"
-      }
+      ]
     },
     {
       "caseId": "00712",
@@ -26650,417 +24790,45 @@
       "caseId": "00715",
       "synopsis": "Two reactions with four species in one",
       "sourcePath": "semantic/00715/00715-sbml-l3v1.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00715/input.heta",
       "simulationInputPath": "00715/simulation-input.json",
       "outputs": {
         "simulation": "00715/simulation.csv"
       },
       "comparison": {
-        "status": "failed",
+        "status": "valid",
         "comparedValues": 204,
-        "maxAbsoluteError": 0.000002956692630684405,
-        "failures": [
-          {
-            "row": 2,
-            "time": 0.2,
-            "variable": "S2",
-            "expected": 0.00001592171685585319,
-            "actual": 0.000016212785331156476,
-            "absoluteError": 2.910684753032858e-7,
-            "tolerance": 1.159217168558532e-8
-          },
-          {
-            "row": 3,
-            "time": 0.4,
-            "variable": "S2",
-            "expected": 0.0000167532224973336,
-            "actual": 0.00001730687169143544,
-            "absoluteError": 5.536491941018401e-7,
-            "tolerance": 1.167532224973336e-8
-          },
-          {
-            "row": 4,
-            "time": 0.6,
-            "variable": "S2",
-            "expected": 0.00001750334614832109,
-            "actual": 0.00001829387650836131,
-            "absoluteError": 7.905303600402183e-7,
-            "tolerance": 1.175033461483211e-8
-          },
-          {
-            "row": 5,
-            "time": 0.8,
-            "variable": "S2",
-            "expected": 0.00001818005293210199,
-            "actual": 0.000019184280176666333,
-            "absoluteError": 0.0000010042272445643448,
-            "tolerance": 1.1818005293210199e-8
-          },
-          {
-            "row": 6,
-            "time": 1,
-            "variable": "S2",
-            "expected": 0.00001879052838875794,
-            "actual": 0.00001998753734313118,
-            "absoluteError": 0.000001197008954373239,
-            "tolerance": 1.1879052838875795e-8
-          },
-          {
-            "row": 7,
-            "time": 1.2,
-            "variable": "S2",
-            "expected": 0.00001934125475743994,
-            "actual": 0.00002071217729964146,
-            "absoluteError": 0.0000013709225422015215,
-            "tolerance": 1.1934125475743994e-8
-          },
-          {
-            "row": 8,
-            "time": 1.4,
-            "variable": "S2",
-            "expected": 0.00001983807986168667,
-            "actual": 0.00002136589455047186,
-            "absoluteError": 0.000001527814688785191,
-            "tolerance": 1.1983807986168668e-8
-          },
-          {
-            "row": 9,
-            "time": 1.6,
-            "variable": "S2",
-            "expected": 0.00002028627918874569,
-            "actual": 0.000021955630515476133,
-            "absoluteError": 0.0000016693513267304443,
-            "tolerance": 1.202862791887457e-8
-          },
-          {
-            "row": 10,
-            "time": 1.8,
-            "variable": "S2",
-            "expected": 0.0000206906118954258,
-            "actual": 0.00002248764723673864,
-            "absoluteError": 0.0000017970353413128399,
-            "tolerance": 1.2069061189542581e-8
-          },
-          {
-            "row": 11,
-            "time": 2,
-            "variable": "S2",
-            "expected": 0.00002105537134218619,
-            "actual": 0.00002296759387133275,
-            "absoluteError": 0.000001912222529146563,
-            "tolerance": 1.210553713421862e-8
-          },
-          {
-            "row": 12,
-            "time": 2.2,
-            "variable": "S2",
-            "expected": 0.00002138443067851054,
-            "actual": 0.00002340056667623178,
-            "absoluteError": 0.000002016135997721242,
-            "tolerance": 1.2138443067851055e-8
-          },
-          {
-            "row": 13,
-            "time": 2.4,
-            "variable": "S2",
-            "expected": 0.0000216812839801425,
-            "actual": 0.00002379116312231514,
-            "absoluteError": 0.0000021098791421726413,
-            "tolerance": 1.216812839801425e-8
-          },
-          {
-            "row": 14,
-            "time": 2.6,
-            "variable": "S2",
-            "expected": 0.00002194908334932253,
-            "actual": 0.000024143530712072954,
-            "absoluteError": 0.000002194447362750424,
-            "tolerance": 1.2194908334932254e-8
-          },
-          {
-            "row": 15,
-            "time": 2.8,
-            "variable": "S2",
-            "expected": 0.00002219067238298232,
-            "actual": 0.000024461411019374147,
-            "absoluteError": 0.0000022707386363918274,
-            "tolerance": 1.2219067238298232e-8
-          },
-          {
-            "row": 16,
-            "time": 3,
-            "variable": "S2",
-            "expected": 0.00002240861636649319,
-            "actual": 0.000024748179418929144,
-            "absoluteError": 0.0000023395630524359533,
-            "tolerance": 1.224086163664932e-8
-          },
-          {
-            "row": 17,
-            "time": 3.2,
-            "variable": "S2",
-            "expected": 0.00002260522951272398,
-            "actual": 0.000025006880927309842,
-            "absoluteError": 0.0000024016514145858634,
-            "tolerance": 1.2260522951272398e-8
-          },
-          {
-            "row": 18,
-            "time": 3.4,
-            "variable": "S2",
-            "expected": 0.00002278259953525528,
-            "actual": 0.000025240262536100423,
-            "absoluteError": 0.000002457663000845143,
-            "tolerance": 1.2278259953525528e-8
-          },
-          {
-            "row": 19,
-            "time": 3.6,
-            "variable": "S2",
-            "expected": 0.00002294260981654122,
-            "actual": 0.00002545080238050491,
-            "absoluteError": 0.00000250819256396369,
-            "tolerance": 1.2294260981654121e-8
-          },
-          {
-            "row": 20,
-            "time": 3.8,
-            "variable": "S2",
-            "expected": 0.00002308695940641624,
-            "actual": 0.000025640736053134795,
-            "absoluteError": 0.000002553776646718556,
-            "tolerance": 1.2308695940641624e-8
-          },
-          {
-            "row": 21,
-            "time": 4,
-            "variable": "S2",
-            "expected": 0.0000232171810634182,
-            "actual": 0.000025812080342386623,
-            "absoluteError": 0.0000025948992789684226,
-            "tolerance": 1.232171810634182e-8
-          }
-        ]
+        "maxAbsoluteError": 1.7764005463003288e-14
       },
       "simulationPlotPaths": [
         "00715/plot-001.png",
         "00715/plot-002.png",
         "00715/plot-003.png",
         "00715/plot-004.png"
-      ],
-      "error": {
-        "phase": "comparison",
-        "message": "Simulation results exceed the Semantic Test Suite tolerances"
-      }
+      ]
     },
     {
       "caseId": "00716",
       "synopsis": "Two reactions with four species in one",
       "sourcePath": "semantic/00716/00716-sbml-l3v1.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "00716/input.heta",
       "simulationInputPath": "00716/simulation-input.json",
       "outputs": {
         "simulation": "00716/simulation.csv"
       },
       "comparison": {
-        "status": "failed",
+        "status": "valid",
         "comparedValues": 204,
-        "maxAbsoluteError": 0.0000026751028429411713,
-        "failures": [
-          {
-            "row": 2,
-            "time": 0.2,
-            "variable": "S2",
-            "expected": 0.00001592171685585319,
-            "actual": 0.000015658369179770655,
-            "absoluteError": 2.6334767608253513e-7,
-            "tolerance": 1.159217168558532e-8
-          },
-          {
-            "row": 3,
-            "time": 0.4,
-            "variable": "S2",
-            "expected": 0.00001675322249733361,
-            "actual": 0.000016252301775350676,
-            "absoluteError": 5.009207219829341e-7,
-            "tolerance": 1.1675322249733361e-8
-          },
-          {
-            "row": 4,
-            "time": 0.6,
-            "variable": "S2",
-            "expected": 0.00001750334614832109,
-            "actual": 0.000016788104390253297,
-            "absoluteError": 7.152417580677944e-7,
-            "tolerance": 1.175033461483211e-8
-          },
-          {
-            "row": 5,
-            "time": 0.8,
-            "variable": "S2",
-            "expected": 0.00001818005293210199,
-            "actual": 0.000017271466381618872,
-            "absoluteError": 9.08586550483116e-7,
-            "tolerance": 1.1818005293210199e-8
-          },
-          {
-            "row": 6,
-            "time": 1,
-            "variable": "S2",
-            "expected": 0.00001879052838875794,
-            "actual": 0.000017707520271985502,
-            "absoluteError": 0.000001083008116772438,
-            "tolerance": 1.1879052838875795e-8
-          },
-          {
-            "row": 7,
-            "time": 1.2,
-            "variable": "S2",
-            "expected": 0.00001934125475743994,
-            "actual": 0.0000181008962483768,
-            "absoluteError": 0.0000012403585090631397,
-            "tolerance": 1.1934125475743994e-8
-          },
-          {
-            "row": 8,
-            "time": 1.4,
-            "variable": "S2",
-            "expected": 0.00001983807986168668,
-            "actual": 0.000018455771327399015,
-            "absoluteError": 0.0000013823085342876652,
-            "tolerance": 1.1983807986168668e-8
-          },
-          {
-            "row": 9,
-            "time": 1.6,
-            "variable": "S2",
-            "expected": 0.00002028627918874569,
-            "actual": 0.000018775913708401338,
-            "absoluteError": 0.0000015103654803443503,
-            "tolerance": 1.202862791887457e-8
-          },
-          {
-            "row": 10,
-            "time": 1.8,
-            "variable": "S2",
-            "expected": 0.00002069061189542581,
-            "actual": 0.000019064722785658127,
-            "absoluteError": 0.0000016258891097676848,
-            "tolerance": 1.2069061189542581e-8
-          },
-          {
-            "row": 11,
-            "time": 2,
-            "variable": "S2",
-            "expected": 0.0000210553713421862,
-            "actual": 0.000019325265244437785,
-            "absoluteError": 0.000001730106097748414,
-            "tolerance": 1.210553713421862e-8
-          },
-          {
-            "row": 12,
-            "time": 2.2,
-            "variable": "S2",
-            "expected": 0.00002138443067851055,
-            "actual": 0.000019560307624240116,
-            "absoluteError": 0.0000018241230542704322,
-            "tolerance": 1.2138443067851055e-8
-          },
-          {
-            "row": 13,
-            "time": 2.4,
-            "variable": "S2",
-            "expected": 0.0000216812839801425,
-            "actual": 0.000019772345694971082,
-            "absoluteError": 0.0000019089382851714178,
-            "tolerance": 1.216812839801425e-8
-          },
-          {
-            "row": 14,
-            "time": 2.6,
-            "variable": "S2",
-            "expected": 0.00002194908334932254,
-            "actual": 0.000019963630957982468,
-            "absoluteError": 0.0000019854523913400724,
-            "tolerance": 1.2194908334932254e-8
-          },
-          {
-            "row": 15,
-            "time": 2.8,
-            "variable": "S2",
-            "expected": 0.00002219067238298233,
-            "actual": 0.000020136194553374545,
-            "absoluteError": 0.0000020544778296077846,
-            "tolerance": 1.2219067238298234e-8
-          },
-          {
-            "row": 16,
-            "time": 3,
-            "variable": "S2",
-            "expected": 0.00002240861636649319,
-            "actual": 0.000020291868827418687,
-            "absoluteError": 0.0000021167475390745035,
-            "tolerance": 1.224086163664932e-8
-          },
-          {
-            "row": 17,
-            "time": 3.2,
-            "variable": "S2",
-            "expected": 0.00002260522951272399,
-            "actual": 0.000020432306789111066,
-            "absoluteError": 0.0000021729227236129227,
-            "tolerance": 1.22605229512724e-8
-          },
-          {
-            "row": 18,
-            "time": 3.4,
-            "variable": "S2",
-            "expected": 0.00002278259953525529,
-            "actual": 0.000020558999662454525,
-            "absoluteError": 0.0000022235998728007643,
-            "tolerance": 1.2278259953525528e-8
-          },
-          {
-            "row": 19,
-            "time": 3.6,
-            "variable": "S2",
-            "expected": 0.00002294260981654123,
-            "actual": 0.000020673292720845532,
-            "absoluteError": 0.0000022693170956956973,
-            "tolerance": 1.2294260981654123e-8
-          },
-          {
-            "row": 20,
-            "time": 3.8,
-            "variable": "S2",
-            "expected": 0.00002308695940641624,
-            "actual": 0.000020776399571701758,
-            "absoluteError": 0.0000023105598347144818,
-            "tolerance": 1.2308695940641624e-8
-          },
-          {
-            "row": 21,
-            "time": 4,
-            "variable": "S2",
-            "expected": 0.0000232171810634182,
-            "actual": 0.000020869415043009892,
-            "absoluteError": 0.0000023477660204083086,
-            "tolerance": 1.232171810634182e-8
-          }
-        ]
+        "maxAbsoluteError": 1.7764008851135077e-14
       },
       "simulationPlotPaths": [
         "00716/plot-001.png",
         "00716/plot-002.png",
         "00716/plot-003.png",
         "00716/plot-004.png"
-      ],
-      "error": {
-        "phase": "comparison",
-        "message": "Simulation results exceed the Semantic Test Suite tolerances"
-      }
+      ]
     },
     {
       "caseId": "00717",
@@ -45211,15 +42979,15 @@
       "comparison": {
         "status": "failed",
         "comparedValues": 33,
-        "maxAbsoluteError": 0.17142857142857137,
+        "maxAbsoluteError": 0.05714285714285727,
         "failures": [
           {
             "row": 2,
             "time": 0.1,
             "variable": "S1",
             "expected": 0.0208,
-            "actual": 0.039999999999999994,
-            "absoluteError": 0.019199999999999995,
+            "actual": 0.020400000000000012,
+            "absoluteError": 0.00039999999999998717,
             "tolerance": 0.00010208
           },
           {
@@ -45227,8 +42995,8 @@
             "time": 0.1,
             "variable": "x",
             "expected": 0.04,
-            "actual": 0.07692307692307691,
-            "absoluteError": 0.03692307692307691,
+            "actual": 0.03923076923076925,
+            "absoluteError": 0.0007692307692307512,
             "tolerance": 0.00010400000000000001
           },
           {
@@ -45236,8 +43004,8 @@
             "time": 0.2,
             "variable": "S1",
             "expected": 0.0432,
-            "actual": 0.08,
-            "absoluteError": 0.0368,
+            "actual": 0.041600000000000005,
+            "absoluteError": 0.0015999999999999973,
             "tolerance": 0.00010432
           },
           {
@@ -45245,8 +43013,8 @@
             "time": 0.2,
             "variable": "x",
             "expected": 0.08,
-            "actual": 0.14814814814814814,
-            "absoluteError": 0.06814814814814814,
+            "actual": 0.07703703703703704,
+            "absoluteError": 0.002962962962962959,
             "tolerance": 0.00010800000000000001
           },
           {
@@ -45254,8 +43022,8 @@
             "time": 0.3,
             "variable": "S1",
             "expected": 0.0672,
-            "actual": 0.12,
-            "absoluteError": 0.0528,
+            "actual": 0.06359999999999999,
+            "absoluteError": 0.003600000000000006,
             "tolerance": 0.00010672000000000001
           },
           {
@@ -45263,8 +43031,8 @@
             "time": 0.3,
             "variable": "x",
             "expected": 0.12,
-            "actual": 0.21428571428571425,
-            "absoluteError": 0.09428571428571425,
+            "actual": 0.11357142857142855,
+            "absoluteError": 0.00642857142857145,
             "tolerance": 0.00011200000000000001
           },
           {
@@ -45272,8 +43040,8 @@
             "time": 0.4,
             "variable": "S1",
             "expected": 0.0928,
-            "actual": 0.15999999999999998,
-            "absoluteError": 0.06719999999999998,
+            "actual": 0.08639999999999998,
+            "absoluteError": 0.006400000000000017,
             "tolerance": 0.00010928000000000001
           },
           {
@@ -45281,8 +43049,8 @@
             "time": 0.4,
             "variable": "x",
             "expected": 0.16,
-            "actual": 0.2758620689655172,
-            "absoluteError": 0.11586206896551718,
+            "actual": 0.14896551724137924,
+            "absoluteError": 0.011034482758620762,
             "tolerance": 0.000116
           },
           {
@@ -45290,8 +43058,8 @@
             "time": 0.5,
             "variable": "S1",
             "expected": 0.12,
-            "actual": 0.2,
-            "absoluteError": 0.08000000000000002,
+            "actual": 0.10999999999999997,
+            "absoluteError": 0.010000000000000023,
             "tolerance": 0.00011200000000000001
           },
           {
@@ -45299,8 +43067,8 @@
             "time": 0.5,
             "variable": "x",
             "expected": 0.2,
-            "actual": 0.3333333333333333,
-            "absoluteError": 0.1333333333333333,
+            "actual": 0.18333333333333326,
+            "absoluteError": 0.016666666666666746,
             "tolerance": 0.00012
           },
           {
@@ -45308,8 +43076,8 @@
             "time": 0.6,
             "variable": "S1",
             "expected": 0.1488,
-            "actual": 0.24000000000000002,
-            "absoluteError": 0.09120000000000003,
+            "actual": 0.1344,
+            "absoluteError": 0.014399999999999996,
             "tolerance": 0.00011488000000000001
           },
           {
@@ -45317,8 +43085,8 @@
             "time": 0.6,
             "variable": "x",
             "expected": 0.24,
-            "actual": 0.38709677419354843,
-            "absoluteError": 0.14709677419354844,
+            "actual": 0.2167741935483871,
+            "absoluteError": 0.0232258064516129,
             "tolerance": 0.000124
           },
           {
@@ -45326,8 +43094,8 @@
             "time": 0.7,
             "variable": "S1",
             "expected": 0.1792,
-            "actual": 0.28,
-            "absoluteError": 0.10080000000000003,
+            "actual": 0.1596,
+            "absoluteError": 0.019600000000000006,
             "tolerance": 0.00011792000000000001
           },
           {
@@ -45335,8 +43103,8 @@
             "time": 0.7,
             "variable": "x",
             "expected": 0.28,
-            "actual": 0.43750000000000006,
-            "absoluteError": 0.15750000000000003,
+            "actual": 0.24937499999999999,
+            "absoluteError": 0.03062500000000004,
             "tolerance": 0.00012800000000000002
           },
           {
@@ -45344,8 +43112,8 @@
             "time": 0.8,
             "variable": "S1",
             "expected": 0.2112,
-            "actual": 0.32000000000000006,
-            "absoluteError": 0.10880000000000006,
+            "actual": 0.1856,
+            "absoluteError": 0.02560000000000001,
             "tolerance": 0.00012112
           },
           {
@@ -45353,8 +43121,8 @@
             "time": 0.8,
             "variable": "x",
             "expected": 0.32,
-            "actual": 0.4848484848484849,
-            "absoluteError": 0.1648484848484849,
+            "actual": 0.2812121212121212,
+            "absoluteError": 0.038787878787878816,
             "tolerance": 0.000132
           },
           {
@@ -45362,8 +43130,8 @@
             "time": 0.9,
             "variable": "S1",
             "expected": 0.2448,
-            "actual": 0.36000000000000004,
-            "absoluteError": 0.11520000000000005,
+            "actual": 0.21239999999999992,
+            "absoluteError": 0.03240000000000007,
             "tolerance": 0.00012448
           },
           {
@@ -45371,8 +43139,8 @@
             "time": 0.9,
             "variable": "x",
             "expected": 0.36,
-            "actual": 0.5294117647058824,
-            "absoluteError": 0.16941176470588237,
+            "actual": 0.31235294117647044,
+            "absoluteError": 0.04764705882352954,
             "tolerance": 0.000136
           },
           {
@@ -45380,8 +43148,8 @@
             "time": 1,
             "variable": "S1",
             "expected": 0.28,
-            "actual": 0.4,
-            "absoluteError": 0.12,
+            "actual": 0.23999999999999994,
+            "absoluteError": 0.04000000000000009,
             "tolerance": 0.00012800000000000002
           },
           {
@@ -45389,8 +43157,8 @@
             "time": 1,
             "variable": "x",
             "expected": 0.4,
-            "actual": 0.5714285714285714,
-            "absoluteError": 0.17142857142857137,
+            "actual": 0.34285714285714275,
+            "absoluteError": 0.05714285714285727,
             "tolerance": 0.00014000000000000001
           }
         ]
@@ -45538,208 +43306,22 @@
       "caseId": "01205",
       "synopsis": "A species concentration under control of a rate rule.",
       "sourcePath": "semantic/01205/01205-sbml-l3v1.xml",
-      "status": "failed",
+      "status": "success",
       "buildSourcePath": "01205/input.heta",
       "simulationInputPath": "01205/simulation-input.json",
       "outputs": {
         "simulation": "01205/simulation.csv"
       },
       "comparison": {
-        "status": "failed",
+        "status": "valid",
         "comparedValues": 33,
-        "maxAbsoluteError": 0.4,
-        "failures": [
-          {
-            "row": 2,
-            "time": 0.1,
-            "variable": "S1",
-            "expected": 0.02,
-            "actual": 0.039999999999999994,
-            "absoluteError": 0.019999999999999993,
-            "tolerance": 0.000102
-          },
-          {
-            "row": 2,
-            "time": 0.1,
-            "variable": "x",
-            "expected": 0.04,
-            "actual": 0.07999999999999999,
-            "absoluteError": 0.03999999999999999,
-            "tolerance": 0.00010400000000000001
-          },
-          {
-            "row": 3,
-            "time": 0.2,
-            "variable": "S1",
-            "expected": 0.04,
-            "actual": 0.08,
-            "absoluteError": 0.04,
-            "tolerance": 0.00010400000000000001
-          },
-          {
-            "row": 3,
-            "time": 0.2,
-            "variable": "x",
-            "expected": 0.08,
-            "actual": 0.16,
-            "absoluteError": 0.08,
-            "tolerance": 0.00010800000000000001
-          },
-          {
-            "row": 4,
-            "time": 0.3,
-            "variable": "S1",
-            "expected": 0.06,
-            "actual": 0.12,
-            "absoluteError": 0.06,
-            "tolerance": 0.000106
-          },
-          {
-            "row": 4,
-            "time": 0.3,
-            "variable": "x",
-            "expected": 0.12,
-            "actual": 0.24,
-            "absoluteError": 0.12,
-            "tolerance": 0.00011200000000000001
-          },
-          {
-            "row": 5,
-            "time": 0.4,
-            "variable": "S1",
-            "expected": 0.08,
-            "actual": 0.16,
-            "absoluteError": 0.08,
-            "tolerance": 0.00010800000000000001
-          },
-          {
-            "row": 5,
-            "time": 0.4,
-            "variable": "x",
-            "expected": 0.16,
-            "actual": 0.32,
-            "absoluteError": 0.16,
-            "tolerance": 0.000116
-          },
-          {
-            "row": 6,
-            "time": 0.5,
-            "variable": "S1",
-            "expected": 0.1,
-            "actual": 0.2,
-            "absoluteError": 0.1,
-            "tolerance": 0.00011
-          },
-          {
-            "row": 6,
-            "time": 0.5,
-            "variable": "x",
-            "expected": 0.2,
-            "actual": 0.4,
-            "absoluteError": 0.2,
-            "tolerance": 0.00012
-          },
-          {
-            "row": 7,
-            "time": 0.6,
-            "variable": "S1",
-            "expected": 0.12,
-            "actual": 0.24000000000000002,
-            "absoluteError": 0.12000000000000002,
-            "tolerance": 0.00011200000000000001
-          },
-          {
-            "row": 7,
-            "time": 0.6,
-            "variable": "x",
-            "expected": 0.24,
-            "actual": 0.48000000000000004,
-            "absoluteError": 0.24000000000000005,
-            "tolerance": 0.000124
-          },
-          {
-            "row": 8,
-            "time": 0.7,
-            "variable": "S1",
-            "expected": 0.14,
-            "actual": 0.27999999999999997,
-            "absoluteError": 0.13999999999999996,
-            "tolerance": 0.000114
-          },
-          {
-            "row": 8,
-            "time": 0.7,
-            "variable": "x",
-            "expected": 0.28,
-            "actual": 0.5599999999999999,
-            "absoluteError": 0.2799999999999999,
-            "tolerance": 0.00012800000000000002
-          },
-          {
-            "row": 9,
-            "time": 0.8,
-            "variable": "S1",
-            "expected": 0.16,
-            "actual": 0.32,
-            "absoluteError": 0.16,
-            "tolerance": 0.000116
-          },
-          {
-            "row": 9,
-            "time": 0.8,
-            "variable": "x",
-            "expected": 0.32,
-            "actual": 0.64,
-            "absoluteError": 0.32,
-            "tolerance": 0.000132
-          },
-          {
-            "row": 10,
-            "time": 0.9,
-            "variable": "S1",
-            "expected": 0.18,
-            "actual": 0.36,
-            "absoluteError": 0.18,
-            "tolerance": 0.00011800000000000001
-          },
-          {
-            "row": 10,
-            "time": 0.9,
-            "variable": "x",
-            "expected": 0.36,
-            "actual": 0.72,
-            "absoluteError": 0.36,
-            "tolerance": 0.000136
-          },
-          {
-            "row": 11,
-            "time": 1,
-            "variable": "S1",
-            "expected": 0.2,
-            "actual": 0.4,
-            "absoluteError": 0.2,
-            "tolerance": 0.00012
-          },
-          {
-            "row": 11,
-            "time": 1,
-            "variable": "x",
-            "expected": 0.4,
-            "actual": 0.8,
-            "absoluteError": 0.4,
-            "tolerance": 0.00014000000000000001
-          }
-        ]
+        "maxAbsoluteError": 5.551115123125783e-17
       },
       "simulationPlotPaths": [
         "01205/plot-001.png",
         "01205/plot-002.png",
         "01205/plot-003.png"
-      ],
-      "error": {
-        "phase": "comparison",
-        "message": "Simulation results exceed the Semantic Test Suite tolerances"
-      }
+      ]
     },
     {
       "caseId": "01206",
@@ -45796,15 +43378,15 @@
       "comparison": {
         "status": "failed",
         "comparedValues": 33,
-        "maxAbsoluteError": 1.865492649641105,
+        "maxAbsoluteError": 1.2244895395567266,
         "failures": [
           {
             "row": 2,
             "time": 0.1,
             "variable": "S1",
             "expected": 3,
-            "actual": 2.777883235926949,
-            "absoluteError": 0.2221167640730508,
+            "actual": 2.8846153846153846,
+            "absoluteError": 0.11538461538461542,
             "tolerance": 0.0004
           },
           {
@@ -45812,8 +43394,8 @@
             "time": 0.1,
             "variable": "x",
             "expected": 5.769230769,
-            "actual": 5.342083146013364,
-            "absoluteError": 0.4271476229866362,
+            "actual": 5.547337278106508,
+            "absoluteError": 0.22189349089349175,
             "tolerance": 0.0006769230769000001
           },
           {
@@ -45821,8 +43403,8 @@
             "time": 0.2,
             "variable": "S1",
             "expected": 3,
-            "actual": 2.586910356646673,
-            "absoluteError": 0.4130896433533269,
+            "actual": 2.7777778299809848,
+            "absoluteError": 0.22222217001901523,
             "tolerance": 0.0004
           },
           {
@@ -45830,8 +43412,8 @@
             "time": 0.2,
             "variable": "x",
             "expected": 5.555555556,
-            "actual": 4.790574734530876,
-            "absoluteError": 0.7649808214691243,
+            "actual": 5.144033018483305,
+            "absoluteError": 0.4115225375166949,
             "tolerance": 0.0006555555556000001
           },
           {
@@ -45839,8 +43421,8 @@
             "time": 0.3,
             "variable": "S1",
             "expected": 3,
-            "actual": 2.4213537303788293,
-            "absoluteError": 0.5786462696211707,
+            "actual": 2.678571521771355,
+            "absoluteError": 0.3214284782286452,
             "tolerance": 0.0004
           },
           {
@@ -45848,8 +43430,8 @@
             "time": 0.3,
             "variable": "x",
             "expected": 5.357142857,
-            "actual": 4.323845947105052,
-            "absoluteError": 1.0332969098949487,
+            "actual": 4.783163431734562,
+            "absoluteError": 0.5739794252654384,
             "tolerance": 0.0006357142857000001
           },
           {
@@ -45857,8 +43439,8 @@
             "time": 0.4,
             "variable": "S1",
             "expected": 3,
-            "actual": 2.2767532656353517,
-            "absoluteError": 0.7232467343646483,
+            "actual": 2.5862069865378596,
+            "absoluteError": 0.41379301346214037,
             "tolerance": 0.0004
           },
           {
@@ -45866,8 +43448,8 @@
             "time": 0.4,
             "variable": "x",
             "expected": 5.172413793,
-            "actual": 3.925436664888537,
-            "absoluteError": 1.2469771281114626,
+            "actual": 4.458977562996309,
+            "absoluteError": 0.7134362300036905,
             "tolerance": 0.0006172413793000001
           },
           {
@@ -45875,8 +43457,8 @@
             "time": 0.5,
             "variable": "S1",
             "expected": 3,
-            "actual": 2.1495945297051104,
-            "absoluteError": 0.8504054702948896,
+            "actual": 2.5000001213277563,
+            "absoluteError": 0.4999998786722437,
             "tolerance": 0.0004
           },
           {
@@ -45884,8 +43466,8 @@
             "time": 0.5,
             "variable": "x",
             "expected": 5,
-            "actual": 3.5826575495085167,
-            "absoluteError": 1.4173424504914833,
+            "actual": 4.166666868879593,
+            "absoluteError": 0.8333331311204066,
             "tolerance": 0.0006000000000000001
           },
           {
@@ -45893,8 +43475,8 @@
             "time": 0.6,
             "variable": "S1",
             "expected": 3,
-            "actual": 2.0370768351399184,
-            "absoluteError": 0.9629231648600816,
+            "actual": 2.419354984864449,
+            "absoluteError": 0.5806450151355511,
             "tolerance": 0.0004
           },
           {
@@ -45902,8 +43484,8 @@
             "time": 0.6,
             "variable": "x",
             "expected": 4.838709677,
-            "actual": 3.2856077986127716,
-            "absoluteError": 1.5531018783872281,
+            "actual": 3.9021854594587886,
+            "absoluteError": 0.9365242175412112,
             "tolerance": 0.0005838709677
           },
           {
@@ -45911,8 +43493,8 @@
             "time": 0.7,
             "variable": "S1",
             "expected": 3,
-            "actual": 1.9369462677320455,
-            "absoluteError": 1.0630537322679545,
+            "actual": 2.3437501477328766,
+            "absoluteError": 0.6562498522671234,
             "tolerance": 0.0004
           },
           {
@@ -45920,8 +43502,8 @@
             "time": 0.7,
             "variable": "x",
             "expected": 4.6875,
-            "actual": 3.026478543331321,
-            "absoluteError": 1.6610214566686792,
+            "actual": 3.6621096058326197,
+            "absoluteError": 1.0253903941673803,
             "tolerance": 0.00056875
           },
           {
@@ -45929,8 +43511,8 @@
             "time": 0.8,
             "variable": "S1",
             "expected": 3,
-            "actual": 1.847372204185073,
-            "absoluteError": 1.152627795814927,
+            "actual": 2.272727433530494,
+            "absoluteError": 0.7272725664695061,
             "tolerance": 0.0004
           },
           {
@@ -45938,8 +43520,8 @@
             "time": 0.8,
             "variable": "x",
             "expected": 4.545454545,
-            "actual": 2.7990487942198077,
-            "absoluteError": 1.7464057507801924,
+            "actual": 3.443526414440142,
+            "absoluteError": 1.101928130559858,
             "tolerance": 0.0005545454545000001
           },
           {
@@ -45947,8 +43529,8 @@
             "time": 0.9,
             "variable": "S1",
             "expected": 3,
-            "actual": 1.7668547077363563,
-            "absoluteError": 1.2331452922636437,
+            "actual": 2.205882529000315,
+            "absoluteError": 0.794117470999685,
             "tolerance": 0.0004
           },
           {
@@ -45956,8 +43538,8 @@
             "time": 0.9,
             "variable": "x",
             "expected": 4.411764706,
-            "actual": 2.598315746671112,
-            "absoluteError": 1.8134489593288876,
+            "actual": 3.2439448955886983,
+            "absoluteError": 1.1678198104113013,
             "tolerance": 0.0005411764706
           },
           {
@@ -45965,8 +43547,8 @@
             "time": 1,
             "variable": "S1",
             "expected": 3,
-            "actual": 1.6941551454512267,
-            "absoluteError": 1.3058448545487733,
+            "actual": 2.1428573225102916,
+            "absoluteError": 0.8571426774897084,
             "tolerance": 0.0004
           },
           {
@@ -45974,8 +43556,8 @@
             "time": 1,
             "variable": "x",
             "expected": 4.285714286,
-            "actual": 2.420221636358895,
-            "absoluteError": 1.865492649641105,
+            "actual": 3.0612247464432736,
+            "absoluteError": 1.2244895395567266,
             "tolerance": 0.0005285714286
           }
         ]
@@ -50563,15 +48145,15 @@
       "comparison": {
         "status": "failed",
         "comparedValues": 33,
-        "maxAbsoluteError": 0.17142857142857137,
+        "maxAbsoluteError": 0.05714285714285727,
         "failures": [
           {
             "row": 2,
             "time": 0.1,
             "variable": "S1",
             "expected": 0.0208,
-            "actual": 0.039999999999999994,
-            "absoluteError": 0.019199999999999995,
+            "actual": 0.020400000000000012,
+            "absoluteError": 0.00039999999999998717,
             "tolerance": 0.00010208
           },
           {
@@ -50579,8 +48161,8 @@
             "time": 0.1,
             "variable": "x",
             "expected": 0.04,
-            "actual": 0.07692307692307691,
-            "absoluteError": 0.03692307692307691,
+            "actual": 0.03923076923076925,
+            "absoluteError": 0.0007692307692307512,
             "tolerance": 0.00010400000000000001
           },
           {
@@ -50588,8 +48170,8 @@
             "time": 0.2,
             "variable": "S1",
             "expected": 0.0432,
-            "actual": 0.08,
-            "absoluteError": 0.0368,
+            "actual": 0.041600000000000005,
+            "absoluteError": 0.0015999999999999973,
             "tolerance": 0.00010432
           },
           {
@@ -50597,8 +48179,8 @@
             "time": 0.2,
             "variable": "x",
             "expected": 0.08,
-            "actual": 0.14814814814814814,
-            "absoluteError": 0.06814814814814814,
+            "actual": 0.07703703703703704,
+            "absoluteError": 0.002962962962962959,
             "tolerance": 0.00010800000000000001
           },
           {
@@ -50606,8 +48188,8 @@
             "time": 0.3,
             "variable": "S1",
             "expected": 0.0672,
-            "actual": 0.12,
-            "absoluteError": 0.0528,
+            "actual": 0.06359999999999999,
+            "absoluteError": 0.003600000000000006,
             "tolerance": 0.00010672000000000001
           },
           {
@@ -50615,8 +48197,8 @@
             "time": 0.3,
             "variable": "x",
             "expected": 0.12,
-            "actual": 0.21428571428571425,
-            "absoluteError": 0.09428571428571425,
+            "actual": 0.11357142857142855,
+            "absoluteError": 0.00642857142857145,
             "tolerance": 0.00011200000000000001
           },
           {
@@ -50624,8 +48206,8 @@
             "time": 0.4,
             "variable": "S1",
             "expected": 0.0928,
-            "actual": 0.15999999999999998,
-            "absoluteError": 0.06719999999999998,
+            "actual": 0.08639999999999998,
+            "absoluteError": 0.006400000000000017,
             "tolerance": 0.00010928000000000001
           },
           {
@@ -50633,8 +48215,8 @@
             "time": 0.4,
             "variable": "x",
             "expected": 0.16,
-            "actual": 0.2758620689655172,
-            "absoluteError": 0.11586206896551718,
+            "actual": 0.14896551724137924,
+            "absoluteError": 0.011034482758620762,
             "tolerance": 0.000116
           },
           {
@@ -50642,8 +48224,8 @@
             "time": 0.5,
             "variable": "S1",
             "expected": 0.12,
-            "actual": 0.2,
-            "absoluteError": 0.08000000000000002,
+            "actual": 0.10999999999999997,
+            "absoluteError": 0.010000000000000023,
             "tolerance": 0.00011200000000000001
           },
           {
@@ -50651,8 +48233,8 @@
             "time": 0.5,
             "variable": "x",
             "expected": 0.2,
-            "actual": 0.3333333333333333,
-            "absoluteError": 0.1333333333333333,
+            "actual": 0.18333333333333326,
+            "absoluteError": 0.016666666666666746,
             "tolerance": 0.00012
           },
           {
@@ -50660,8 +48242,8 @@
             "time": 0.6,
             "variable": "S1",
             "expected": 0.1488,
-            "actual": 0.24000000000000002,
-            "absoluteError": 0.09120000000000003,
+            "actual": 0.1344,
+            "absoluteError": 0.014399999999999996,
             "tolerance": 0.00011488000000000001
           },
           {
@@ -50669,8 +48251,8 @@
             "time": 0.6,
             "variable": "x",
             "expected": 0.24,
-            "actual": 0.38709677419354843,
-            "absoluteError": 0.14709677419354844,
+            "actual": 0.2167741935483871,
+            "absoluteError": 0.0232258064516129,
             "tolerance": 0.000124
           },
           {
@@ -50678,8 +48260,8 @@
             "time": 0.7,
             "variable": "S1",
             "expected": 0.1792,
-            "actual": 0.28,
-            "absoluteError": 0.10080000000000003,
+            "actual": 0.1596,
+            "absoluteError": 0.019600000000000006,
             "tolerance": 0.00011792000000000001
           },
           {
@@ -50687,8 +48269,8 @@
             "time": 0.7,
             "variable": "x",
             "expected": 0.28,
-            "actual": 0.43750000000000006,
-            "absoluteError": 0.15750000000000003,
+            "actual": 0.24937499999999999,
+            "absoluteError": 0.03062500000000004,
             "tolerance": 0.00012800000000000002
           },
           {
@@ -50696,8 +48278,8 @@
             "time": 0.8,
             "variable": "S1",
             "expected": 0.2112,
-            "actual": 0.32000000000000006,
-            "absoluteError": 0.10880000000000006,
+            "actual": 0.1856,
+            "absoluteError": 0.02560000000000001,
             "tolerance": 0.00012112
           },
           {
@@ -50705,8 +48287,8 @@
             "time": 0.8,
             "variable": "x",
             "expected": 0.32,
-            "actual": 0.4848484848484849,
-            "absoluteError": 0.1648484848484849,
+            "actual": 0.2812121212121212,
+            "absoluteError": 0.038787878787878816,
             "tolerance": 0.000132
           },
           {
@@ -50714,8 +48296,8 @@
             "time": 0.9,
             "variable": "S1",
             "expected": 0.2448,
-            "actual": 0.36000000000000004,
-            "absoluteError": 0.11520000000000005,
+            "actual": 0.21239999999999992,
+            "absoluteError": 0.03240000000000007,
             "tolerance": 0.00012448
           },
           {
@@ -50723,8 +48305,8 @@
             "time": 0.9,
             "variable": "x",
             "expected": 0.36,
-            "actual": 0.5294117647058824,
-            "absoluteError": 0.16941176470588237,
+            "actual": 0.31235294117647044,
+            "absoluteError": 0.04764705882352954,
             "tolerance": 0.000136
           },
           {
@@ -50732,8 +48314,8 @@
             "time": 1,
             "variable": "S1",
             "expected": 0.28,
-            "actual": 0.4,
-            "absoluteError": 0.12,
+            "actual": 0.23999999999999994,
+            "absoluteError": 0.04000000000000009,
             "tolerance": 0.00012800000000000002
           },
           {
@@ -50741,8 +48323,8 @@
             "time": 1,
             "variable": "x",
             "expected": 0.4,
-            "actual": 0.5714285714285714,
-            "absoluteError": 0.17142857142857137,
+            "actual": 0.34285714285714275,
+            "absoluteError": 0.05714285714285727,
             "tolerance": 0.00014000000000000001
           }
         ]
@@ -51165,15 +48747,15 @@
       "comparison": {
         "status": "failed",
         "comparedValues": 33,
-        "maxAbsoluteError": 0.11586206896551718,
+        "maxAbsoluteError": 0.05011571428571443,
         "failures": [
           {
             "row": 2,
             "time": 0.1,
             "variable": "S1",
             "expected": 0.0208,
-            "actual": 0.039999999999999994,
-            "absoluteError": 0.019199999999999995,
+            "actual": 0.020400000000000012,
+            "absoluteError": 0.00039999999999998717,
             "tolerance": 0.00010208
           },
           {
@@ -51181,8 +48763,8 @@
             "time": 0.1,
             "variable": "x",
             "expected": 0.04,
-            "actual": 0.07692307692307691,
-            "absoluteError": 0.03692307692307691,
+            "actual": 0.03923076923076925,
+            "absoluteError": 0.0007692307692307512,
             "tolerance": 0.00010400000000000001
           },
           {
@@ -51190,8 +48772,8 @@
             "time": 0.2,
             "variable": "S1",
             "expected": 0.0432,
-            "actual": 0.08,
-            "absoluteError": 0.0368,
+            "actual": 0.041600000000000005,
+            "absoluteError": 0.0015999999999999973,
             "tolerance": 0.00010432
           },
           {
@@ -51199,8 +48781,8 @@
             "time": 0.2,
             "variable": "x",
             "expected": 0.08,
-            "actual": 0.14814814814814814,
-            "absoluteError": 0.06814814814814814,
+            "actual": 0.07703703703703704,
+            "absoluteError": 0.002962962962962959,
             "tolerance": 0.00010800000000000001
           },
           {
@@ -51208,8 +48790,8 @@
             "time": 0.3,
             "variable": "S1",
             "expected": 0.0672,
-            "actual": 0.12,
-            "absoluteError": 0.0528,
+            "actual": 0.06359999999999999,
+            "absoluteError": 0.003600000000000006,
             "tolerance": 0.00010672000000000001
           },
           {
@@ -51217,8 +48799,8 @@
             "time": 0.3,
             "variable": "x",
             "expected": 0.12,
-            "actual": 0.21428571428571425,
-            "absoluteError": 0.09428571428571425,
+            "actual": 0.11357142857142855,
+            "absoluteError": 0.00642857142857145,
             "tolerance": 0.00011200000000000001
           },
           {
@@ -51226,8 +48808,8 @@
             "time": 0.4,
             "variable": "S1",
             "expected": 0.0928,
-            "actual": 0.15999999999999998,
-            "absoluteError": 0.06719999999999998,
+            "actual": 0.08639999999999998,
+            "absoluteError": 0.006400000000000017,
             "tolerance": 0.00010928000000000001
           },
           {
@@ -51235,8 +48817,8 @@
             "time": 0.4,
             "variable": "x",
             "expected": 0.16,
-            "actual": 0.2758620689655172,
-            "absoluteError": 0.11586206896551718,
+            "actual": 0.14896551724137924,
+            "absoluteError": 0.011034482758620762,
             "tolerance": 0.000116
           },
           {
@@ -51244,8 +48826,8 @@
             "time": 0.5,
             "variable": "S1",
             "expected": 0.132,
-            "actual": 0.13619999999999993,
-            "absoluteError": 0.004199999999999926,
+            "actual": 0.12891899999999995,
+            "absoluteError": 0.003081000000000056,
             "tolerance": 0.0001132
           },
           {
@@ -51253,8 +48835,8 @@
             "time": 0.5,
             "variable": "x",
             "expected": 0.22,
-            "actual": 0.22699999999999984,
-            "absoluteError": 0.00699999999999984,
+            "actual": 0.2148649999999999,
+            "absoluteError": 0.005135000000000112,
             "tolerance": 0.00012200000000000001
           },
           {
@@ -51262,8 +48844,8 @@
             "time": 0.6,
             "variable": "S1",
             "expected": 0.1612,
-            "actual": 0.17619999999999997,
-            "absoluteError": 0.014999999999999958,
+            "actual": 0.15331899999999998,
+            "absoluteError": 0.007881000000000027,
             "tolerance": 0.00011612
           },
           {
@@ -51271,8 +48853,8 @@
             "time": 0.6,
             "variable": "x",
             "expected": 0.26,
-            "actual": 0.2841935483870967,
-            "absoluteError": 0.024193548387096697,
+            "actual": 0.24728870967741934,
+            "absoluteError": 0.01271129032258067,
             "tolerance": 0.000126
           },
           {
@@ -51280,8 +48862,8 @@
             "time": 0.7,
             "variable": "S1",
             "expected": 0.192,
-            "actual": 0.21619999999999995,
-            "absoluteError": 0.024199999999999944,
+            "actual": 0.17851899999999998,
+            "absoluteError": 0.01348100000000002,
             "tolerance": 0.00011920000000000001
           },
           {
@@ -51289,8 +48871,8 @@
             "time": 0.7,
             "variable": "x",
             "expected": 0.3,
-            "actual": 0.3378124999999999,
-            "absoluteError": 0.037812499999999916,
+            "actual": 0.27893593749999995,
+            "absoluteError": 0.021064062500000036,
             "tolerance": 0.00013000000000000002
           },
           {
@@ -51298,8 +48880,8 @@
             "time": 0.8,
             "variable": "S1",
             "expected": 0.2244,
-            "actual": 0.2562,
-            "absoluteError": 0.031799999999999995,
+            "actual": 0.20451899999999998,
+            "absoluteError": 0.01988100000000001,
             "tolerance": 0.00012244
           },
           {
@@ -51307,8 +48889,8 @@
             "time": 0.8,
             "variable": "x",
             "expected": 0.34,
-            "actual": 0.38818181818181813,
-            "absoluteError": 0.048181818181818103,
+            "actual": 0.30987727272727267,
+            "absoluteError": 0.030122727272727357,
             "tolerance": 0.000134
           },
           {
@@ -51316,8 +48898,8 @@
             "time": 0.9,
             "variable": "S1",
             "expected": 0.2584,
-            "actual": 0.29619999999999996,
-            "absoluteError": 0.037799999999999945,
+            "actual": 0.2313189999999999,
+            "absoluteError": 0.027081000000000105,
             "tolerance": 0.00012584
           },
           {
@@ -51325,8 +48907,8 @@
             "time": 0.9,
             "variable": "x",
             "expected": 0.38,
-            "actual": 0.43558823529411755,
-            "absoluteError": 0.05558823529411755,
+            "actual": 0.34017499999999984,
+            "absoluteError": 0.039825000000000166,
             "tolerance": 0.000138
           },
           {
@@ -51334,8 +48916,8 @@
             "time": 1,
             "variable": "S1",
             "expected": 0.294,
-            "actual": 0.33619999999999994,
-            "absoluteError": 0.04219999999999996,
+            "actual": 0.2589189999999999,
+            "absoluteError": 0.035081000000000084,
             "tolerance": 0.0001294
           },
           {
@@ -51343,8 +48925,8 @@
             "time": 1,
             "variable": "x",
             "expected": 0.42,
-            "actual": 0.48028571428571415,
-            "absoluteError": 0.060285714285714165,
+            "actual": 0.36988428571428555,
+            "absoluteError": 0.05011571428571443,
             "tolerance": 0.000142
           }
         ]
@@ -51376,15 +48958,15 @@
       "comparison": {
         "status": "failed",
         "comparedValues": 33,
-        "maxAbsoluteError": 0.5434983818770228,
+        "maxAbsoluteError": 0.2501521035598706,
         "failures": [
           {
             "row": 2,
             "time": 0.1,
             "variable": "S1",
             "expected": 0.0208,
-            "actual": 0.039999999999999994,
-            "absoluteError": 0.019199999999999995,
+            "actual": 0.020400000000000012,
+            "absoluteError": 0.00039999999999998717,
             "tolerance": 0.00010208
           },
           {
@@ -51392,8 +48974,8 @@
             "time": 0.1,
             "variable": "x",
             "expected": 0.04,
-            "actual": 0.07692307692307691,
-            "absoluteError": 0.03692307692307691,
+            "actual": 0.03923076923076925,
+            "absoluteError": 0.0007692307692307512,
             "tolerance": 0.00010400000000000001
           },
           {
@@ -51401,8 +48983,8 @@
             "time": 0.2,
             "variable": "S1",
             "expected": 0.0432,
-            "actual": 0.08,
-            "absoluteError": 0.0368,
+            "actual": 0.041600000000000005,
+            "absoluteError": 0.0015999999999999973,
             "tolerance": 0.00010432
           },
           {
@@ -51410,8 +48992,8 @@
             "time": 0.2,
             "variable": "x",
             "expected": 0.08,
-            "actual": 0.14814814814814814,
-            "absoluteError": 0.06814814814814814,
+            "actual": 0.07703703703703704,
+            "absoluteError": 0.002962962962962959,
             "tolerance": 0.00010800000000000001
           },
           {
@@ -51419,8 +49001,8 @@
             "time": 0.3,
             "variable": "S1",
             "expected": 0.0672,
-            "actual": 0.12,
-            "absoluteError": 0.0528,
+            "actual": 0.06359999999999999,
+            "absoluteError": 0.003600000000000006,
             "tolerance": 0.00010672000000000001
           },
           {
@@ -51428,8 +49010,8 @@
             "time": 0.3,
             "variable": "x",
             "expected": 0.12,
-            "actual": 0.21428571428571425,
-            "absoluteError": 0.09428571428571425,
+            "actual": 0.11357142857142855,
+            "absoluteError": 0.00642857142857145,
             "tolerance": 0.00011200000000000001
           },
           {
@@ -51437,8 +49019,8 @@
             "time": 0.4,
             "variable": "S1",
             "expected": 0.0928,
-            "actual": 0.15999999999999998,
-            "absoluteError": 0.06719999999999998,
+            "actual": 0.08639999999999998,
+            "absoluteError": 0.006400000000000017,
             "tolerance": 0.00010928000000000001
           },
           {
@@ -51446,8 +49028,8 @@
             "time": 0.4,
             "variable": "x",
             "expected": 0.16,
-            "actual": 0.2758620689655172,
-            "absoluteError": 0.11586206896551718,
+            "actual": 0.14896551724137924,
+            "absoluteError": 0.011034482758620762,
             "tolerance": 0.000116
           },
           {
@@ -51464,8 +49046,8 @@
             "time": 0.5,
             "variable": "S1",
             "expected": 0.11571,
-            "actual": 0.2,
-            "absoluteError": 0.08429000000000002,
+            "actual": 0.102962,
+            "absoluteError": 0.012747999999999995,
             "tolerance": 0.000111571
           },
           {
@@ -51473,8 +49055,8 @@
             "time": 0.5,
             "variable": "x",
             "expected": 0.551,
-            "actual": 0.9569377990430624,
-            "absoluteError": 0.4059377990430624,
+            "actual": 0.49264114832535894,
+            "absoluteError": 0.05835885167464111,
             "tolerance": 0.0001551
           },
           {
@@ -51491,8 +49073,8 @@
             "time": 0.6,
             "variable": "S1",
             "expected": 0.13593,
-            "actual": 0.24,
-            "absoluteError": 0.10407,
+            "actual": 0.11172199999999999,
+            "absoluteError": 0.024208000000000007,
             "tolerance": 0.00011359300000000001
           },
           {
@@ -51500,8 +49082,8 @@
             "time": 0.6,
             "variable": "x",
             "expected": 0.591,
-            "actual": 1.0480349344978168,
-            "absoluteError": 0.45703493449781685,
+            "actual": 0.4878689956331878,
+            "absoluteError": 0.10313100436681216,
             "tolerance": 0.00015910000000000002
           },
           {
@@ -51518,8 +49100,8 @@
             "time": 0.7,
             "variable": "S1",
             "expected": 0.15775,
-            "actual": 0.28,
-            "absoluteError": 0.12225000000000003,
+            "actual": 0.12128199999999997,
+            "absoluteError": 0.03646800000000003,
             "tolerance": 0.00011577500000000001
           },
           {
@@ -51527,8 +49109,8 @@
             "time": 0.7,
             "variable": "x",
             "expected": 0.631,
-            "actual": 1.1244979919678717,
-            "absoluteError": 0.4934979919678717,
+            "actual": 0.48707630522088347,
+            "absoluteError": 0.14392369477911654,
             "tolerance": 0.0001631
           },
           {
@@ -51545,8 +49127,8 @@
             "time": 0.8,
             "variable": "S1",
             "expected": 0.18117,
-            "actual": 0.32000000000000006,
-            "absoluteError": 0.13883000000000006,
+            "actual": 0.13164199999999998,
+            "absoluteError": 0.049528000000000016,
             "tolerance": 0.00011811700000000001
           },
           {
@@ -51554,8 +49136,8 @@
             "time": 0.8,
             "variable": "x",
             "expected": 0.671,
-            "actual": 1.189591078066915,
-            "absoluteError": 0.518591078066915,
+            "actual": 0.4893754646840149,
+            "absoluteError": 0.18162453531598516,
             "tolerance": 0.0001671
           }
         ]
@@ -51587,15 +49169,15 @@
       "comparison": {
         "status": "failed",
         "comparedValues": 33,
-        "maxAbsoluteError": 0.27802588996763733,
+        "maxAbsoluteError": 0.24792556634304197,
         "failures": [
           {
             "row": 2,
             "time": 0.1,
             "variable": "S1",
             "expected": 0.0208,
-            "actual": 0.039999999999999994,
-            "absoluteError": 0.019199999999999995,
+            "actual": 0.020400000000000012,
+            "absoluteError": 0.00039999999999998717,
             "tolerance": 0.00010208
           },
           {
@@ -51603,8 +49185,8 @@
             "time": 0.1,
             "variable": "x",
             "expected": 0.04,
-            "actual": 0.07692307692307691,
-            "absoluteError": 0.03692307692307691,
+            "actual": 0.03923076923076925,
+            "absoluteError": 0.0007692307692307512,
             "tolerance": 0.00010400000000000001
           },
           {
@@ -51612,8 +49194,8 @@
             "time": 0.2,
             "variable": "S1",
             "expected": 0.0432,
-            "actual": 0.08,
-            "absoluteError": 0.0368,
+            "actual": 0.041600000000000005,
+            "absoluteError": 0.0015999999999999973,
             "tolerance": 0.00010432
           },
           {
@@ -51621,8 +49203,8 @@
             "time": 0.2,
             "variable": "x",
             "expected": 0.08,
-            "actual": 0.14814814814814814,
-            "absoluteError": 0.06814814814814814,
+            "actual": 0.07703703703703704,
+            "absoluteError": 0.002962962962962959,
             "tolerance": 0.00010800000000000001
           },
           {
@@ -51630,8 +49212,8 @@
             "time": 0.3,
             "variable": "S1",
             "expected": 0.0672,
-            "actual": 0.12,
-            "absoluteError": 0.0528,
+            "actual": 0.06359999999999999,
+            "absoluteError": 0.003600000000000006,
             "tolerance": 0.00010672000000000001
           },
           {
@@ -51639,8 +49221,8 @@
             "time": 0.3,
             "variable": "x",
             "expected": 0.12,
-            "actual": 0.21428571428571425,
-            "absoluteError": 0.09428571428571425,
+            "actual": 0.11357142857142855,
+            "absoluteError": 0.00642857142857145,
             "tolerance": 0.00011200000000000001
           },
           {
@@ -51648,8 +49230,8 @@
             "time": 0.4,
             "variable": "S1",
             "expected": 0.0928,
-            "actual": 0.15999999999999998,
-            "absoluteError": 0.06719999999999998,
+            "actual": 0.08639999999999998,
+            "absoluteError": 0.006400000000000017,
             "tolerance": 0.00010928000000000001
           },
           {
@@ -51657,8 +49239,8 @@
             "time": 0.4,
             "variable": "x",
             "expected": 0.16,
-            "actual": 0.2758620689655172,
-            "absoluteError": 0.11586206896551718,
+            "actual": 0.14896551724137924,
+            "absoluteError": 0.011034482758620762,
             "tolerance": 0.000116
           },
           {
@@ -51675,8 +49257,8 @@
             "time": 0.5,
             "variable": "S1",
             "expected": 0.1281,
-            "actual": 0.13619999999999993,
-            "absoluteError": 0.00809999999999994,
+            "actual": 0.12188099999999998,
+            "absoluteError": 0.006219000000000016,
             "tolerance": 0.00011281
           },
           {
@@ -51684,8 +49266,8 @@
             "time": 0.5,
             "variable": "x",
             "expected": 0.61,
-            "actual": 0.6516746411483252,
-            "absoluteError": 0.0416746411483252,
+            "actual": 0.5831626794258373,
+            "absoluteError": 0.02683732057416266,
             "tolerance": 0.000161
           },
           {
@@ -51702,8 +49284,8 @@
             "time": 0.6,
             "variable": "S1",
             "expected": 0.1495,
-            "actual": 0.17619999999999994,
-            "absoluteError": 0.026699999999999946,
+            "actual": 0.130641,
+            "absoluteError": 0.018858999999999987,
             "tolerance": 0.00011495
           },
           {
@@ -51711,8 +49293,8 @@
             "time": 0.6,
             "variable": "x",
             "expected": 0.65,
-            "actual": 0.7694323144104802,
-            "absoluteError": 0.11943231441048019,
+            "actual": 0.5704847161572054,
+            "absoluteError": 0.0795152838427946,
             "tolerance": 0.000165
           },
           {
@@ -51729,8 +49311,8 @@
             "time": 0.7,
             "variable": "S1",
             "expected": 0.1725,
-            "actual": 0.21619999999999995,
-            "absoluteError": 0.04369999999999996,
+            "actual": 0.14020100000000002,
+            "absoluteError": 0.03229899999999997,
             "tolerance": 0.00011725
           },
           {
@@ -51738,8 +49320,8 @@
             "time": 0.7,
             "variable": "x",
             "expected": 0.69,
-            "actual": 0.8682730923694778,
-            "absoluteError": 0.17827309236947786,
+            "actual": 0.5630562248995985,
+            "absoluteError": 0.12694377510040145,
             "tolerance": 0.000169
           },
           {
@@ -51756,8 +49338,8 @@
             "time": 0.8,
             "variable": "S1",
             "expected": 0.1971,
-            "actual": 0.2562,
-            "absoluteError": 0.059099999999999986,
+            "actual": 0.15056100000000003,
+            "absoluteError": 0.04653899999999997,
             "tolerance": 0.00011971
           },
           {
@@ -51765,8 +49347,8 @@
             "time": 0.8,
             "variable": "x",
             "expected": 0.73,
-            "actual": 0.9524163568773235,
-            "absoluteError": 0.22241635687732353,
+            "actual": 0.5597063197026024,
+            "absoluteError": 0.17029368029739755,
             "tolerance": 0.000173
           }
         ]
@@ -51883,8 +49465,8 @@
             "time": 0.1,
             "variable": "S1",
             "expected": 0.0208,
-            "actual": 0.039999999999999994,
-            "absoluteError": 0.019199999999999995,
+            "actual": 0.020400000000000012,
+            "absoluteError": 0.00039999999999998717,
             "tolerance": 0.00010208
           },
           {
@@ -51892,8 +49474,8 @@
             "time": 0.1,
             "variable": "x",
             "expected": 0.04,
-            "actual": 0.07692307692307691,
-            "absoluteError": 0.03692307692307691,
+            "actual": 0.03923076923076925,
+            "absoluteError": 0.0007692307692307512,
             "tolerance": 0.00010400000000000001
           },
           {
@@ -51901,8 +49483,8 @@
             "time": 0.2,
             "variable": "S1",
             "expected": 0.0432,
-            "actual": 0.08,
-            "absoluteError": 0.0368,
+            "actual": 0.041600000000000005,
+            "absoluteError": 0.0015999999999999973,
             "tolerance": 0.00010432
           },
           {
@@ -51910,8 +49492,8 @@
             "time": 0.2,
             "variable": "x",
             "expected": 0.08,
-            "actual": 0.14814814814814814,
-            "absoluteError": 0.06814814814814814,
+            "actual": 0.07703703703703704,
+            "absoluteError": 0.002962962962962959,
             "tolerance": 0.00010800000000000001
           },
           {
@@ -51919,8 +49501,8 @@
             "time": 0.3,
             "variable": "S1",
             "expected": 0.0672,
-            "actual": 0.12,
-            "absoluteError": 0.0528,
+            "actual": 0.06359999999999999,
+            "absoluteError": 0.003600000000000006,
             "tolerance": 0.00010672000000000001
           },
           {
@@ -51928,8 +49510,8 @@
             "time": 0.3,
             "variable": "x",
             "expected": 0.12,
-            "actual": 0.21428571428571425,
-            "absoluteError": 0.09428571428571425,
+            "actual": 0.11357142857142855,
+            "absoluteError": 0.00642857142857145,
             "tolerance": 0.00011200000000000001
           },
           {
@@ -51937,8 +49519,8 @@
             "time": 0.4,
             "variable": "S1",
             "expected": 0.0928,
-            "actual": 0.15999999999999998,
-            "absoluteError": 0.06719999999999998,
+            "actual": 0.08639999999999998,
+            "absoluteError": 0.006400000000000017,
             "tolerance": 0.00010928000000000001
           },
           {
@@ -51946,8 +49528,8 @@
             "time": 0.4,
             "variable": "x",
             "expected": 0.16,
-            "actual": 0.2758620689655172,
-            "absoluteError": 0.11586206896551718,
+            "actual": 0.14896551724137924,
+            "absoluteError": 0.011034482758620762,
             "tolerance": 0.000116
           },
           {
@@ -51955,8 +49537,8 @@
             "time": 0.5,
             "variable": "S1",
             "expected": 0.12,
-            "actual": 0.2,
-            "absoluteError": 0.08000000000000002,
+            "actual": 0.10999999999999997,
+            "absoluteError": 0.010000000000000023,
             "tolerance": 0.00011200000000000001
           },
           {
@@ -51964,8 +49546,8 @@
             "time": 0.5,
             "variable": "x",
             "expected": 0.2,
-            "actual": 0.3333333333333333,
-            "absoluteError": 0.1333333333333333,
+            "actual": 0.18333333333333326,
+            "absoluteError": 0.016666666666666746,
             "tolerance": 0.00012
           },
           {
@@ -51973,8 +49555,8 @@
             "time": 0.6,
             "variable": "S1",
             "expected": 0.1488,
-            "actual": 0.24000000000000002,
-            "absoluteError": 0.09120000000000003,
+            "actual": 0.1344,
+            "absoluteError": 0.014399999999999996,
             "tolerance": 0.00011488000000000001
           },
           {
@@ -51982,8 +49564,8 @@
             "time": 0.6,
             "variable": "x",
             "expected": 0.24,
-            "actual": 0.38709677419354843,
-            "absoluteError": 0.14709677419354844,
+            "actual": 0.2167741935483871,
+            "absoluteError": 0.0232258064516129,
             "tolerance": 0.000124
           },
           {
@@ -51991,8 +49573,8 @@
             "time": 0.7,
             "variable": "S1",
             "expected": 0.1792,
-            "actual": 0.28,
-            "absoluteError": 0.10080000000000003,
+            "actual": 0.1596,
+            "absoluteError": 0.019600000000000006,
             "tolerance": 0.00011792000000000001
           },
           {
@@ -52000,8 +49582,8 @@
             "time": 0.7,
             "variable": "x",
             "expected": 0.28,
-            "actual": 0.43750000000000006,
-            "absoluteError": 0.15750000000000003,
+            "actual": 0.24937499999999999,
+            "absoluteError": 0.03062500000000004,
             "tolerance": 0.00012800000000000002
           },
           {
@@ -52009,8 +49591,8 @@
             "time": 0.8,
             "variable": "S1",
             "expected": 0.2112,
-            "actual": 0.32000000000000006,
-            "absoluteError": 0.10880000000000006,
+            "actual": 0.1856,
+            "absoluteError": 0.02560000000000001,
             "tolerance": 0.00012112
           },
           {
@@ -52018,8 +49600,8 @@
             "time": 0.8,
             "variable": "x",
             "expected": 0.32,
-            "actual": 0.4848484848484849,
-            "absoluteError": 0.1648484848484849,
+            "actual": 0.2812121212121212,
+            "absoluteError": 0.038787878787878816,
             "tolerance": 0.000132
           },
           {
@@ -52027,8 +49609,8 @@
             "time": 0.9,
             "variable": "S1",
             "expected": 0.2448,
-            "actual": 0.36000000000000004,
-            "absoluteError": 0.11520000000000005,
+            "actual": 0.21239999999999992,
+            "absoluteError": 0.03240000000000007,
             "tolerance": 0.00012448
           },
           {
@@ -52036,8 +49618,8 @@
             "time": 0.9,
             "variable": "x",
             "expected": 0.36,
-            "actual": 0.5294117647058824,
-            "absoluteError": 0.16941176470588237,
+            "actual": 0.31235294117647044,
+            "absoluteError": 0.04764705882352954,
             "tolerance": 0.000136
           }
         ]
@@ -52089,15 +49671,15 @@
       "comparison": {
         "status": "failed",
         "comparedValues": 44,
-        "maxAbsoluteError": 0.17142857142857137,
+        "maxAbsoluteError": 0.05714285714285727,
         "failures": [
           {
             "row": 2,
             "time": 0.1,
             "variable": "S1",
             "expected": 0.0208,
-            "actual": 0.039999999999999994,
-            "absoluteError": 0.019199999999999995,
+            "actual": 0.020400000000000012,
+            "absoluteError": 0.00039999999999998717,
             "tolerance": 0.00010208
           },
           {
@@ -52105,8 +49687,8 @@
             "time": 0.1,
             "variable": "x",
             "expected": 0.04,
-            "actual": 0.07692307692307691,
-            "absoluteError": 0.03692307692307691,
+            "actual": 0.03923076923076925,
+            "absoluteError": 0.0007692307692307512,
             "tolerance": 0.00010400000000000001
           },
           {
@@ -52114,8 +49696,8 @@
             "time": 0.2,
             "variable": "S1",
             "expected": 0.0432,
-            "actual": 0.08,
-            "absoluteError": 0.0368,
+            "actual": 0.041600000000000005,
+            "absoluteError": 0.0015999999999999973,
             "tolerance": 0.00010432
           },
           {
@@ -52123,8 +49705,8 @@
             "time": 0.2,
             "variable": "x",
             "expected": 0.08,
-            "actual": 0.14814814814814814,
-            "absoluteError": 0.06814814814814814,
+            "actual": 0.07703703703703704,
+            "absoluteError": 0.002962962962962959,
             "tolerance": 0.00010800000000000001
           },
           {
@@ -52132,8 +49714,8 @@
             "time": 0.3,
             "variable": "S1",
             "expected": 0.0672,
-            "actual": 0.12,
-            "absoluteError": 0.0528,
+            "actual": 0.06359999999999999,
+            "absoluteError": 0.003600000000000006,
             "tolerance": 0.00010672000000000001
           },
           {
@@ -52141,8 +49723,8 @@
             "time": 0.3,
             "variable": "x",
             "expected": 0.12,
-            "actual": 0.21428571428571425,
-            "absoluteError": 0.09428571428571425,
+            "actual": 0.11357142857142855,
+            "absoluteError": 0.00642857142857145,
             "tolerance": 0.00011200000000000001
           },
           {
@@ -52150,8 +49732,8 @@
             "time": 0.4,
             "variable": "S1",
             "expected": 0.0928,
-            "actual": 0.15999999999999998,
-            "absoluteError": 0.06719999999999998,
+            "actual": 0.08639999999999998,
+            "absoluteError": 0.006400000000000017,
             "tolerance": 0.00010928000000000001
           },
           {
@@ -52159,8 +49741,8 @@
             "time": 0.4,
             "variable": "x",
             "expected": 0.16,
-            "actual": 0.2758620689655172,
-            "absoluteError": 0.11586206896551718,
+            "actual": 0.14896551724137924,
+            "absoluteError": 0.011034482758620762,
             "tolerance": 0.000116
           },
           {
@@ -52168,8 +49750,8 @@
             "time": 0.5,
             "variable": "S1",
             "expected": 0.12,
-            "actual": 0.2,
-            "absoluteError": 0.08000000000000002,
+            "actual": 0.10999999999999997,
+            "absoluteError": 0.010000000000000023,
             "tolerance": 0.00011200000000000001
           },
           {
@@ -52177,8 +49759,8 @@
             "time": 0.5,
             "variable": "x",
             "expected": 0.2,
-            "actual": 0.3333333333333333,
-            "absoluteError": 0.1333333333333333,
+            "actual": 0.18333333333333326,
+            "absoluteError": 0.016666666666666746,
             "tolerance": 0.00012
           },
           {
@@ -52186,8 +49768,8 @@
             "time": 0.6,
             "variable": "S1",
             "expected": 0.1488,
-            "actual": 0.24000000000000002,
-            "absoluteError": 0.09120000000000003,
+            "actual": 0.1344,
+            "absoluteError": 0.014399999999999996,
             "tolerance": 0.00011488000000000001
           },
           {
@@ -52195,8 +49777,8 @@
             "time": 0.6,
             "variable": "x",
             "expected": 0.24,
-            "actual": 0.38709677419354843,
-            "absoluteError": 0.14709677419354844,
+            "actual": 0.2167741935483871,
+            "absoluteError": 0.0232258064516129,
             "tolerance": 0.000124
           },
           {
@@ -52204,8 +49786,8 @@
             "time": 0.7,
             "variable": "S1",
             "expected": 0.1792,
-            "actual": 0.28,
-            "absoluteError": 0.10080000000000003,
+            "actual": 0.1596,
+            "absoluteError": 0.019600000000000006,
             "tolerance": 0.00011792000000000001
           },
           {
@@ -52213,8 +49795,8 @@
             "time": 0.7,
             "variable": "x",
             "expected": 0.28,
-            "actual": 0.43750000000000006,
-            "absoluteError": 0.15750000000000003,
+            "actual": 0.24937499999999999,
+            "absoluteError": 0.03062500000000004,
             "tolerance": 0.00012800000000000002
           },
           {
@@ -52222,8 +49804,8 @@
             "time": 0.8,
             "variable": "S1",
             "expected": 0.2112,
-            "actual": 0.32000000000000006,
-            "absoluteError": 0.10880000000000006,
+            "actual": 0.1856,
+            "absoluteError": 0.02560000000000001,
             "tolerance": 0.00012112
           },
           {
@@ -52231,8 +49813,8 @@
             "time": 0.8,
             "variable": "x",
             "expected": 0.32,
-            "actual": 0.4848484848484849,
-            "absoluteError": 0.1648484848484849,
+            "actual": 0.2812121212121212,
+            "absoluteError": 0.038787878787878816,
             "tolerance": 0.000132
           },
           {
@@ -52240,8 +49822,8 @@
             "time": 0.9,
             "variable": "S1",
             "expected": 0.2448,
-            "actual": 0.36000000000000004,
-            "absoluteError": 0.11520000000000005,
+            "actual": 0.21239999999999992,
+            "absoluteError": 0.03240000000000007,
             "tolerance": 0.00012448
           },
           {
@@ -52249,8 +49831,8 @@
             "time": 0.9,
             "variable": "x",
             "expected": 0.36,
-            "actual": 0.5294117647058824,
-            "absoluteError": 0.16941176470588237,
+            "actual": 0.31235294117647044,
+            "absoluteError": 0.04764705882352954,
             "tolerance": 0.000136
           },
           {
@@ -52258,8 +49840,8 @@
             "time": 1,
             "variable": "S1",
             "expected": 0.28,
-            "actual": 0.4,
-            "absoluteError": 0.12,
+            "actual": 0.23999999999999994,
+            "absoluteError": 0.04000000000000009,
             "tolerance": 0.00012800000000000002
           },
           {
@@ -52267,8 +49849,8 @@
             "time": 1,
             "variable": "x",
             "expected": 0.4,
-            "actual": 0.5714285714285714,
-            "absoluteError": 0.17142857142857137,
+            "actual": 0.34285714285714275,
+            "absoluteError": 0.05714285714285727,
             "tolerance": 0.00014000000000000001
           }
         ]
@@ -52304,15 +49886,15 @@
       "comparison": {
         "status": "failed",
         "comparedValues": 33,
-        "maxAbsoluteError": 0.2571428571428571,
+        "maxAbsoluteError": 0.485714285714286,
         "failures": [
           {
             "row": 2,
             "time": 0.1,
             "variable": "S1",
             "expected": 0.8008,
-            "actual": 0.79,
-            "absoluteError": 0.01079999999999992,
+            "actual": 0.7704000000000001,
+            "absoluteError": 0.03039999999999987,
             "tolerance": 0.00018008
           },
           {
@@ -52320,8 +49902,8 @@
             "time": 0.1,
             "variable": "x",
             "expected": 1.54,
-            "actual": 1.5192307692307692,
-            "absoluteError": 0.020769230769230873,
+            "actual": 1.4815384615384617,
+            "absoluteError": 0.05846153846153834,
             "tolerance": 0.000254
           },
           {
@@ -52329,8 +49911,8 @@
             "time": 0.2,
             "variable": "S1",
             "expected": 0.8532,
-            "actual": 0.8300000000000001,
-            "absoluteError": 0.023199999999999887,
+            "actual": 0.7916000000000001,
+            "absoluteError": 0.06159999999999988,
             "tolerance": 0.00018532
           },
           {
@@ -52338,8 +49920,8 @@
             "time": 0.2,
             "variable": "x",
             "expected": 1.58,
-            "actual": 1.537037037037037,
-            "absoluteError": 0.04296296296296309,
+            "actual": 1.465925925925926,
+            "absoluteError": 0.114074074074074,
             "tolerance": 0.00025800000000000004
           },
           {
@@ -52347,8 +49929,8 @@
             "time": 0.3,
             "variable": "S1",
             "expected": 0.9072,
-            "actual": 0.8700000000000001,
-            "absoluteError": 0.0371999999999999,
+            "actual": 0.8136,
+            "absoluteError": 0.09360000000000002,
             "tolerance": 0.00019072000000000002
           },
           {
@@ -52356,8 +49938,8 @@
             "time": 0.3,
             "variable": "x",
             "expected": 1.62,
-            "actual": 1.5535714285714286,
-            "absoluteError": 0.0664285714285715,
+            "actual": 1.4528571428571426,
+            "absoluteError": 0.16714285714285748,
             "tolerance": 0.000262
           },
           {
@@ -52365,8 +49947,8 @@
             "time": 0.4,
             "variable": "S1",
             "expected": 0.9628,
-            "actual": 0.91,
-            "absoluteError": 0.05279999999999996,
+            "actual": 0.8364,
+            "absoluteError": 0.12639999999999996,
             "tolerance": 0.00019628
           },
           {
@@ -52374,8 +49956,8 @@
             "time": 0.4,
             "variable": "x",
             "expected": 1.66,
-            "actual": 1.5689655172413792,
-            "absoluteError": 0.0910344827586207,
+            "actual": 1.4420689655172412,
+            "absoluteError": 0.21793103448275875,
             "tolerance": 0.000266
           },
           {
@@ -52383,8 +49965,8 @@
             "time": 0.5,
             "variable": "S1",
             "expected": 1.02,
-            "actual": 0.9500000000000001,
-            "absoluteError": 0.06999999999999995,
+            "actual": 0.8600000000000001,
+            "absoluteError": 0.15999999999999992,
             "tolerance": 0.00020200000000000003
           },
           {
@@ -52392,8 +49974,8 @@
             "time": 0.5,
             "variable": "x",
             "expected": 1.7,
-            "actual": 1.5833333333333333,
-            "absoluteError": 0.1166666666666667,
+            "actual": 1.4333333333333333,
+            "absoluteError": 0.2666666666666666,
             "tolerance": 0.00027
           },
           {
@@ -52401,8 +49983,8 @@
             "time": 0.6,
             "variable": "S1",
             "expected": 1.0788,
-            "actual": 0.9900000000000001,
-            "absoluteError": 0.08879999999999988,
+            "actual": 0.8844000000000001,
+            "absoluteError": 0.1943999999999999,
             "tolerance": 0.00020788000000000002
           },
           {
@@ -52410,8 +49992,8 @@
             "time": 0.6,
             "variable": "x",
             "expected": 1.74,
-            "actual": 1.5967741935483872,
-            "absoluteError": 0.14322580645161276,
+            "actual": 1.4264516129032259,
+            "absoluteError": 0.31354838709677413,
             "tolerance": 0.000274
           },
           {
@@ -52419,8 +50001,8 @@
             "time": 0.7,
             "variable": "S1",
             "expected": 1.1392,
-            "actual": 1.03,
-            "absoluteError": 0.10919999999999996,
+            "actual": 0.9095999999999999,
+            "absoluteError": 0.22960000000000014,
             "tolerance": 0.00021392
           },
           {
@@ -52428,8 +50010,8 @@
             "time": 0.7,
             "variable": "x",
             "expected": 1.78,
-            "actual": 1.609375,
-            "absoluteError": 0.17062500000000003,
+            "actual": 1.4212499999999997,
+            "absoluteError": 0.35875000000000035,
             "tolerance": 0.00027800000000000004
           },
           {
@@ -52437,8 +50019,8 @@
             "time": 0.8,
             "variable": "S1",
             "expected": 1.2012,
-            "actual": 1.07,
-            "absoluteError": 0.13119999999999998,
+            "actual": 0.9355999999999999,
+            "absoluteError": 0.26560000000000017,
             "tolerance": 0.00022012000000000003
           },
           {
@@ -52446,8 +50028,8 @@
             "time": 0.8,
             "variable": "x",
             "expected": 1.82,
-            "actual": 1.6212121212121213,
-            "absoluteError": 0.19878787878787874,
+            "actual": 1.4175757575757573,
+            "absoluteError": 0.4024242424242428,
             "tolerance": 0.000282
           },
           {
@@ -52455,8 +50037,8 @@
             "time": 0.9,
             "variable": "S1",
             "expected": 1.2648,
-            "actual": 1.11,
-            "absoluteError": 0.15479999999999983,
+            "actual": 0.9623999999999999,
+            "absoluteError": 0.3024,
             "tolerance": 0.00022648
           },
           {
@@ -52464,8 +50046,8 @@
             "time": 0.9,
             "variable": "x",
             "expected": 1.86,
-            "actual": 1.6323529411764706,
-            "absoluteError": 0.22764705882352954,
+            "actual": 1.4152941176470586,
+            "absoluteError": 0.4447058823529415,
             "tolerance": 0.000286
           },
           {
@@ -52473,8 +50055,8 @@
             "time": 1,
             "variable": "S1",
             "expected": 1.33,
-            "actual": 1.1500000000000001,
-            "absoluteError": 0.17999999999999994,
+            "actual": 0.9899999999999999,
+            "absoluteError": 0.3400000000000002,
             "tolerance": 0.00023300000000000003
           },
           {
@@ -52482,8 +50064,8 @@
             "time": 1,
             "variable": "x",
             "expected": 1.9,
-            "actual": 1.6428571428571428,
-            "absoluteError": 0.2571428571428571,
+            "actual": 1.414285714285714,
+            "absoluteError": 0.485714285714286,
             "tolerance": 0.00029
           }
         ]
@@ -52515,15 +50097,15 @@
       "comparison": {
         "status": "failed",
         "comparedValues": 33,
-        "maxAbsoluteError": 0.2571428571428571,
+        "maxAbsoluteError": 0.485714285714286,
         "failures": [
           {
             "row": 2,
             "time": 0.1,
             "variable": "S1",
             "expected": 0.8008,
-            "actual": 0.79,
-            "absoluteError": 0.01079999999999992,
+            "actual": 0.7704000000000001,
+            "absoluteError": 0.03039999999999987,
             "tolerance": 0.00018008
           },
           {
@@ -52531,8 +50113,8 @@
             "time": 0.1,
             "variable": "x",
             "expected": 1.54,
-            "actual": 1.5192307692307692,
-            "absoluteError": 0.020769230769230873,
+            "actual": 1.4815384615384617,
+            "absoluteError": 0.05846153846153834,
             "tolerance": 0.000254
           },
           {
@@ -52540,8 +50122,8 @@
             "time": 0.2,
             "variable": "S1",
             "expected": 0.8532,
-            "actual": 0.8300000000000001,
-            "absoluteError": 0.023199999999999887,
+            "actual": 0.7916000000000001,
+            "absoluteError": 0.06159999999999988,
             "tolerance": 0.00018532
           },
           {
@@ -52549,8 +50131,8 @@
             "time": 0.2,
             "variable": "x",
             "expected": 1.58,
-            "actual": 1.537037037037037,
-            "absoluteError": 0.04296296296296309,
+            "actual": 1.465925925925926,
+            "absoluteError": 0.114074074074074,
             "tolerance": 0.00025800000000000004
           },
           {
@@ -52558,8 +50140,8 @@
             "time": 0.3,
             "variable": "S1",
             "expected": 0.9072,
-            "actual": 0.8700000000000001,
-            "absoluteError": 0.0371999999999999,
+            "actual": 0.8136,
+            "absoluteError": 0.09360000000000002,
             "tolerance": 0.00019072000000000002
           },
           {
@@ -52567,8 +50149,8 @@
             "time": 0.3,
             "variable": "x",
             "expected": 1.62,
-            "actual": 1.5535714285714286,
-            "absoluteError": 0.0664285714285715,
+            "actual": 1.4528571428571426,
+            "absoluteError": 0.16714285714285748,
             "tolerance": 0.000262
           },
           {
@@ -52576,8 +50158,8 @@
             "time": 0.4,
             "variable": "S1",
             "expected": 0.9628,
-            "actual": 0.91,
-            "absoluteError": 0.05279999999999996,
+            "actual": 0.8364,
+            "absoluteError": 0.12639999999999996,
             "tolerance": 0.00019628
           },
           {
@@ -52585,8 +50167,8 @@
             "time": 0.4,
             "variable": "x",
             "expected": 1.66,
-            "actual": 1.5689655172413792,
-            "absoluteError": 0.0910344827586207,
+            "actual": 1.4420689655172412,
+            "absoluteError": 0.21793103448275875,
             "tolerance": 0.000266
           },
           {
@@ -52594,8 +50176,8 @@
             "time": 0.5,
             "variable": "S1",
             "expected": 1.02,
-            "actual": 0.9500000000000001,
-            "absoluteError": 0.06999999999999995,
+            "actual": 0.8600000000000001,
+            "absoluteError": 0.15999999999999992,
             "tolerance": 0.00020200000000000003
           },
           {
@@ -52603,8 +50185,8 @@
             "time": 0.5,
             "variable": "x",
             "expected": 1.7,
-            "actual": 1.5833333333333333,
-            "absoluteError": 0.1166666666666667,
+            "actual": 1.4333333333333333,
+            "absoluteError": 0.2666666666666666,
             "tolerance": 0.00027
           },
           {
@@ -52612,8 +50194,8 @@
             "time": 0.6,
             "variable": "S1",
             "expected": 1.0788,
-            "actual": 0.9900000000000001,
-            "absoluteError": 0.08879999999999988,
+            "actual": 0.8844000000000001,
+            "absoluteError": 0.1943999999999999,
             "tolerance": 0.00020788000000000002
           },
           {
@@ -52621,8 +50203,8 @@
             "time": 0.6,
             "variable": "x",
             "expected": 1.74,
-            "actual": 1.5967741935483872,
-            "absoluteError": 0.14322580645161276,
+            "actual": 1.4264516129032259,
+            "absoluteError": 0.31354838709677413,
             "tolerance": 0.000274
           },
           {
@@ -52630,8 +50212,8 @@
             "time": 0.7,
             "variable": "S1",
             "expected": 1.1392,
-            "actual": 1.03,
-            "absoluteError": 0.10919999999999996,
+            "actual": 0.9095999999999999,
+            "absoluteError": 0.22960000000000014,
             "tolerance": 0.00021392
           },
           {
@@ -52639,8 +50221,8 @@
             "time": 0.7,
             "variable": "x",
             "expected": 1.78,
-            "actual": 1.609375,
-            "absoluteError": 0.17062500000000003,
+            "actual": 1.4212499999999997,
+            "absoluteError": 0.35875000000000035,
             "tolerance": 0.00027800000000000004
           },
           {
@@ -52648,8 +50230,8 @@
             "time": 0.8,
             "variable": "S1",
             "expected": 1.2012,
-            "actual": 1.07,
-            "absoluteError": 0.13119999999999998,
+            "actual": 0.9355999999999999,
+            "absoluteError": 0.26560000000000017,
             "tolerance": 0.00022012000000000003
           },
           {
@@ -52657,8 +50239,8 @@
             "time": 0.8,
             "variable": "x",
             "expected": 1.82,
-            "actual": 1.6212121212121213,
-            "absoluteError": 0.19878787878787874,
+            "actual": 1.4175757575757573,
+            "absoluteError": 0.4024242424242428,
             "tolerance": 0.000282
           },
           {
@@ -52666,8 +50248,8 @@
             "time": 0.9,
             "variable": "S1",
             "expected": 1.2648,
-            "actual": 1.11,
-            "absoluteError": 0.15479999999999983,
+            "actual": 0.9623999999999999,
+            "absoluteError": 0.3024,
             "tolerance": 0.00022648
           },
           {
@@ -52675,8 +50257,8 @@
             "time": 0.9,
             "variable": "x",
             "expected": 1.86,
-            "actual": 1.6323529411764706,
-            "absoluteError": 0.22764705882352954,
+            "actual": 1.4152941176470586,
+            "absoluteError": 0.4447058823529415,
             "tolerance": 0.000286
           },
           {
@@ -52684,8 +50266,8 @@
             "time": 1,
             "variable": "S1",
             "expected": 1.33,
-            "actual": 1.1500000000000001,
-            "absoluteError": 0.17999999999999994,
+            "actual": 0.9899999999999999,
+            "absoluteError": 0.3400000000000002,
             "tolerance": 0.00023300000000000003
           },
           {
@@ -52693,8 +50275,8 @@
             "time": 1,
             "variable": "x",
             "expected": 1.9,
-            "actual": 1.6428571428571428,
-            "absoluteError": 0.2571428571428571,
+            "actual": 1.414285714285714,
+            "absoluteError": 0.485714285714286,
             "tolerance": 0.00029
           }
         ]
